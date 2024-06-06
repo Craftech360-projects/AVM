@@ -20,7 +20,8 @@ class WelcomeWidget extends StatefulWidget {
   State<WelcomeWidget> createState() => _WelcomeWidgetState();
 }
 
-class _WelcomeWidgetState extends State<WelcomeWidget> with SingleTickerProviderStateMixin {
+class _WelcomeWidgetState extends State<WelcomeWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
   late Animation<double> _bounceAnimation;
@@ -40,7 +41,8 @@ class _WelcomeWidgetState extends State<WelcomeWidget> with SingleTickerProvider
       duration: const Duration(seconds: 1),
     )..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: pi / 200, end: pi / 200).animate(_animationController);
+    _animation = Tween<double>(begin: pi / 200, end: pi / 200)
+        .animate(_animationController);
 
     // Initialize the bounce animation
     _bounceAnimation = Tween<double>(begin: 0, end: 10).animate(
@@ -57,7 +59,8 @@ class _WelcomeWidgetState extends State<WelcomeWidget> with SingleTickerProvider
   void dispose() {
     _animationController.dispose();
     // Show the status bar again when the widget is disposed
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     super.dispose();
   }
 
@@ -102,13 +105,14 @@ class _WelcomeWidgetState extends State<WelcomeWidget> with SingleTickerProvider
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(30.0, 80.0, 30.0, 40.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(
+                      30.0, 80.0, 30.0, 40.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Friend helps you remember everything",
+                        "AVM helps you remember everything",
                         textAlign: TextAlign.start,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
                               fontFamily: 'SF Pro Display',
@@ -116,7 +120,8 @@ class _WelcomeWidgetState extends State<WelcomeWidget> with SingleTickerProvider
                               fontSize: 29.0,
                               letterSpacing: 0.0,
                               fontWeight: FontWeight.w900,
-                              useGoogleFonts: GoogleFonts.asMap().containsKey('SF Pro Display'),
+                              useGoogleFonts: GoogleFonts.asMap()
+                                  .containsKey('SF Pro Display'),
                               lineHeight: 1.2,
                             ),
                       ),
@@ -144,19 +149,25 @@ class _WelcomeWidgetState extends State<WelcomeWidget> with SingleTickerProvider
                             onTap: () async {
                               bool permissionsAccepted = false;
                               if (Platform.isIOS) {
-                                PermissionStatus bleStatus = await Permission.bluetooth.request();
+                                PermissionStatus bleStatus =
+                                    await Permission.bluetooth.request();
                                 debugPrint('bleStatus: $bleStatus');
                                 permissionsAccepted = bleStatus.isGranted;
                                 // TODO: apparently only needed for ios?
                               } else {
-                                PermissionStatus bleScanStatus = await Permission.bluetoothScan.request();
-                                PermissionStatus bleConnectStatus = await Permission.bluetoothConnect.request();
+                                PermissionStatus bleScanStatus =
+                                    await Permission.bluetoothScan.request();
+                                PermissionStatus bleConnectStatus =
+                                    await Permission.bluetoothConnect.request();
                                 // PermissionStatus locationStatus = await Permission.location.request();
 
-                                permissionsAccepted = bleConnectStatus.isGranted &&
-                                    bleScanStatus.isGranted; // && locationStatus.isGranted;
+                                permissionsAccepted = bleConnectStatus
+                                        .isGranted &&
+                                    bleScanStatus
+                                        .isGranted; // && locationStatus.isGranted;
 
-                                debugPrint('bleScanStatus: $bleScanStatus ~ bleConnectStatus: $bleConnectStatus');
+                                debugPrint(
+                                    'bleScanStatus: $bleScanStatus ~ bleConnectStatus: $bleConnectStatus');
                               }
                               if (!permissionsAccepted) {
                                 showDialog(
@@ -207,7 +218,10 @@ class _WelcomeWidgetState extends State<WelcomeWidget> with SingleTickerProvider
                                 return RadialGradient(
                                   center: Alignment.center,
                                   radius: 0.45,
-                                  colors: [Colors.white, Colors.white.withOpacity(0.0)],
+                                  colors: [
+                                    Colors.white,
+                                    Colors.white.withOpacity(0.0)
+                                  ],
                                   stops: [0.9, 1.0],
                                 ).createShader(bounds);
                               },
@@ -230,8 +244,8 @@ class _WelcomeWidgetState extends State<WelcomeWidget> with SingleTickerProvider
                                           opacity: 0.8,
                                           child: Lottie.asset(
                                             'assets/images/grid_wave.json',
-                                            width: 150,
-                                            height: 150,
+                                            width: 200,
+                                            height: 200,
                                             fit: BoxFit.cover,
                                           ),
                                         ),

@@ -20,10 +20,12 @@ class FindDevicesPage extends StatefulWidget {
   _FindDevicesPageState createState() => _FindDevicesPageState();
 }
 
-class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProviderStateMixin {
+class _FindDevicesPageState extends State<FindDevicesPage>
+    with SingleTickerProviderStateMixin {
   BTDeviceStruct? _friendDevice;
-  String _stringStatus1 = 'Looking for Friend wearable';
-  String _stringStatus2 = 'Locating your Friend device. Keep it near your phone for pairing';
+  String _stringStatus1 = 'Looking for AVM wearable';
+  String _stringStatus2 =
+      'Locating your AVM device. Keep it near your phone for pairing';
   bool _isConnected = false;
 
   @override
@@ -42,7 +44,8 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
         _isConnected = true;
         _friendDevice = friendDevice;
         _stringStatus1 = 'Friend Wearable';
-        _stringStatus2 = 'Successfully connected and ready to accelerate your journey with AI';
+        _stringStatus2 =
+            'Successfully connected and ready to accelerate your journey with AI';
       });
     }
   }
@@ -83,7 +86,8 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
                           fontSize: 30.0,
                           letterSpacing: 0.0,
                           fontWeight: FontWeight.w700,
-                          useGoogleFonts: GoogleFonts.asMap().containsKey('SF Pro Display'),
+                          useGoogleFonts:
+                              GoogleFonts.asMap().containsKey('SF Pro Display'),
                           lineHeight: 1.2,
                         ),
                     textAlign: TextAlign.center,
@@ -94,7 +98,8 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
                   duration: const Duration(milliseconds: 500),
                   opacity: _isConnected ? 1.0 : 0.0,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 32.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 32.0),
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.transparent,
@@ -118,7 +123,7 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
                           ),
                           const SizedBox(width: 8.0),
                           const Text(
-                            'Friend Connected',
+                            'AVM Connected',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -156,15 +161,21 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
                                   text: 'Continue',
                                   options: FFButtonOptions(
                                     height: 50,
-                                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                                    color: FlutterFlowTheme.of(context).secondary,
-                                    textStyle: FlutterFlowTheme.of(context).titleSmall.copyWith(
-                                          color: FlutterFlowTheme.of(context).primary,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 30),
+                                    color:
+                                        FlutterFlowTheme.of(context).secondary,
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .titleSmall
+                                        .copyWith(
+                                          color: FlutterFlowTheme.of(context)
+                                              .primary,
                                           fontSize: 24,
                                           fontWeight: FontWeight.w600,
                                         ),
                                     borderSide: BorderSide(
-                                      color: FlutterFlowTheme.of(context).secondary,
+                                      color: FlutterFlowTheme.of(context)
+                                          .secondary,
                                       width: 1,
                                     ),
                                     borderRadius: BorderRadius.circular(30),

@@ -41,16 +41,18 @@ Future<StreamSubscription<List<int>>?> getBleBatteryLevelListener(
 }) async {
   final device = BluetoothDevice.fromId(btDevice.id);
   final services = await device.discoverServices();
-  final batteryService = services
-      .firstWhereOrNull((service) => service.uuid.str128.toLowerCase() == '0000180f-0000-1000-8000-00805f9b34fb');
+  final batteryService = services.firstWhereOrNull((service) =>
+      service.uuid.str128.toLowerCase() ==
+      '0000180f-0000-1000-8000-00805f9b34fb');
   if (batteryService != null) {
-    var canRead = batteryService.characteristics.firstWhereOrNull((characteristic) => characteristic.properties.read);
+    var canRead = batteryService.characteristics
+        .firstWhereOrNull((characteristic) => characteristic.properties.read);
     var currValue = await canRead?.read();
     if (currValue != null && currValue.isNotEmpty) {
       onBatteryLevelChange!(currValue[0]);
     }
-    var canNotify =
-        batteryService.characteristics.firstWhereOrNull((characteristic) => characteristic.properties.notify);
+    var canNotify = batteryService.characteristics
+        .firstWhereOrNull((characteristic) => characteristic.properties.notify);
     if (canRead != null && canNotify != null) {
       await canNotify.setNotifyValue(true);
       return canNotify.lastValueStream.listen((value) {
@@ -71,13 +73,17 @@ Future<StreamSubscription?> getBleAudioBytesListener(
   final device = BluetoothDevice.fromId(btDevice.id);
   // await device.connect();
   final services = await device.discoverServices();
-  final bytesService = services
-      .firstWhereOrNull((service) => service.uuid.str128.toLowerCase() == '19b10000-e8f2-537e-4f6c-d104768a1214');
+  final bytesService = services.firstWhereOrNull((service) =>
+      service.uuid.str128.toLowerCase() ==
+      '19b10000-e8f2-537e-4f6c-d104768a1214');
 
   if (bytesService != null) {
-    var canNotify = bytesService.characteristics.firstWhereOrNull((characteristic) =>
-        characteristic.uuid.str128.toLowerCase() == '19b10001-e8f2-537e-4f6c-d104768a1214' ||
-        characteristic.uuid.str128.toLowerCase() == '19b10002-e8f2-537e-4f6c-d104768a1214');
+    var canNotify = bytesService.characteristics.firstWhereOrNull(
+        (characteristic) =>
+            characteristic.uuid.str128.toLowerCase() ==
+                '19b10001-e8f2-537e-4f6c-d104768a1214' ||
+            characteristic.uuid.str128.toLowerCase() ==
+                '19b10002-e8f2-537e-4f6c-d104768a1214');
     if (canNotify != null) {
       await canNotify.setNotifyValue(true);
       debugPrint('Subscribed to characteristic: ${canNotify.uuid.str128}');
