@@ -21,14 +21,15 @@ class _InfoButtonState extends State<InfoButton> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    titlePadding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                    titlePadding:
+                        const EdgeInsets.only(top: 20, left: 20, right: 20),
                     contentPadding: const EdgeInsets.all(20),
                     actionsPadding: const EdgeInsets.only(bottom: 8, right: 12),
                     title: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'How Friend Works?',
+                          'How AVM Works?',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -55,7 +56,8 @@ class _InfoButtonState extends State<InfoButton> {
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
                           backgroundColor: Colors.purpleAccent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
@@ -74,8 +76,11 @@ class _InfoButtonState extends State<InfoButton> {
                   ));
         },
         child: const Text(
-          'How Friend works?',
-          style: TextStyle(decoration: TextDecoration.underline, color: Colors.white, fontSize: 15),
+          'How AVM works?',
+          style: TextStyle(
+              decoration: TextDecoration.underline,
+              color: Colors.white,
+              fontSize: 15),
         ));
   }
 }

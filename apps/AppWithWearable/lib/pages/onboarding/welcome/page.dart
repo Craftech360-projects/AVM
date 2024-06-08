@@ -244,8 +244,8 @@ class _WelcomeWidgetState extends State<WelcomeWidget>
                                           opacity: 0.8,
                                           child: Lottie.asset(
                                             'assets/images/grid_wave.json',
-                                            width: 200,
-                                            height: 200,
+                                            width: 180,
+                                            height: 180,
                                             fit: BoxFit.cover,
                                           ),
                                         ),

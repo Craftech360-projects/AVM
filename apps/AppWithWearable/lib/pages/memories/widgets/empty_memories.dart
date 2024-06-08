@@ -52,7 +52,8 @@ class _EmptyMemoriesWidgetState extends State<EmptyMemoriesWidget> {
             borderRadius: BorderRadius.circular(12.0),
           ),
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 12.0, 12.0),
+            padding:
+                const EdgeInsetsDirectional.fromSTEB(12.0, 0.0, 12.0, 12.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,7 +65,8 @@ class _EmptyMemoriesWidgetState extends State<EmptyMemoriesWidget> {
                     borderRadius: BorderRadius.circular(24.0),
                   ),
                   child: Padding(
-                    padding: const EdgeInsetsDirectional.symmetric(vertical: 4, horizontal: 12),
+                    padding: const EdgeInsetsDirectional.symmetric(
+                        vertical: 4, horizontal: 12),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -81,13 +83,19 @@ class _EmptyMemoriesWidgetState extends State<EmptyMemoriesWidget> {
                               width: 8,
                             ),
                             Text(
-                              'Friend',
-                              style: FlutterFlowTheme.of(context).labelMedium.override(
-                                    fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
-                                    color: FlutterFlowTheme.of(context).secondary,
+                              'AVM',
+                              style: FlutterFlowTheme.of(context)
+                                  .labelMedium
+                                  .override(
+                                    fontFamily: FlutterFlowTheme.of(context)
+                                        .labelMediumFamily,
+                                    color:
+                                        FlutterFlowTheme.of(context).secondary,
                                     fontWeight: FontWeight.w500,
-                                    useGoogleFonts:
-                                        GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
+                                    useGoogleFonts: GoogleFonts.asMap()
+                                        .containsKey(
+                                            FlutterFlowTheme.of(context)
+                                                .labelMediumFamily),
                                   ),
                             ),
                             const SizedBox(width: 4),
@@ -98,16 +106,18 @@ class _EmptyMemoriesWidgetState extends State<EmptyMemoriesWidget> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(4.0, 4.0, 0.0, 8.0),
+                  padding:
+                      const EdgeInsetsDirectional.fromSTEB(4.0, 4.0, 0.0, 8.0),
                   child: Text(
                     'Your most important memories will be stored here. Try Recording or Adding your first Memory!',
                     textAlign: TextAlign.center,
                     style: FlutterFlowTheme.of(context).labelMedium.override(
-                          fontFamily: FlutterFlowTheme.of(context).labelMediumFamily,
+                          fontFamily:
+                              FlutterFlowTheme.of(context).labelMediumFamily,
                           color: FlutterFlowTheme.of(context).secondary,
                           fontWeight: FontWeight.bold,
-                          useGoogleFonts:
-                              GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).labelMediumFamily),
+                          useGoogleFonts: GoogleFonts.asMap().containsKey(
+                              FlutterFlowTheme.of(context).labelMediumFamily),
                           lineHeight: 1.5,
                         ),
                   ),
