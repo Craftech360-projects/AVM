@@ -30,7 +30,8 @@ class HomePageWrapper extends StatefulWidget {
   State<HomePageWrapper> createState() => _HomePageWrapperState();
 }
 
-class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingObserver {
+class _HomePageWrapperState extends State<HomePageWrapper>
+    with WidgetsBindingObserver {
   GlobalKey<TranscriptWidgetState> transcriptChildWidgetKey = GlobalKey();
   int _selectedIndex = 1;
   List<Widget> screens = [Container(), const SizedBox(), const SizedBox()];
@@ -43,7 +44,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
   }
 
   _setupHasSpeakerProfile() async {
-    SharedPreferencesUtil().hasSpeakerProfile = await userHasSpeakerProfile(SharedPreferencesUtil().uid);
+    SharedPreferencesUtil().hasSpeakerProfile =
+        await userHasSpeakerProfile(SharedPreferencesUtil().uid);
   }
 
   Future<void> _initiatePlugins() async {
@@ -52,7 +54,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
   }
 
   void _onItemTapped(int index) {
-    MixpanelManager().bottomNavigationTabClicked(['Memories', 'Device', 'Chat'][index]);
+    MixpanelManager()
+        .bottomNavigationTabClicked(['Memories', 'Device', 'Chat'][index]);
     setState(() {
       _selectedIndex = index;
     });
@@ -105,19 +108,23 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
     _connectionStateListener = getConnectionStateListener(
         deviceId: _device!.id,
         onDisconnected: () {
-          transcriptChildWidgetKey.currentState?.resetState(restartBytesProcessing: false);
+          transcriptChildWidgetKey.currentState
+              ?.resetState(restartBytesProcessing: false);
           setState(() {
             _device = null;
           });
-          InstabugLog.logWarn('Friend Device Disconnected');
+          InstabugLog.logWarn('AVM Device Disconnected');
           createNotification(
-              title: 'Friend Device Disconnected', body: 'Please reconnect to continue using your Friend.');
+              title: 'AVM Device Disconnected',
+              body: 'Please reconnect to continue using your AVM.');
           MixpanelManager().deviceDisconnected();
         },
-        onConnected: ((d) => _onConnected(d, initiateConnectionListener: false)));
+        onConnected: ((d) =>
+            _onConnected(d, initiateConnectionListener: false)));
   }
 
-  _onConnected(BTDeviceStruct? connectedDevice, {bool initiateConnectionListener = true}) {
+  _onConnected(BTDeviceStruct? connectedDevice,
+      {bool initiateConnectionListener = true}) {
     if (connectedDevice == null) return;
     clearNotification(1);
     setState(() {
@@ -125,13 +132,15 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
     });
     if (initiateConnectionListener) _initiateConnectionListener();
     _initiateBleBatteryListener();
-    transcriptChildWidgetKey.currentState?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
+    transcriptChildWidgetKey.currentState
+        ?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
     MixpanelManager().deviceConnected();
   }
 
   _initiateBleBatteryListener() async {
     _bleBatteryLevelListener?.cancel();
-    _bleBatteryLevelListener = await getBleBatteryLevelListener(_device!, onBatteryLevelChange: (int value) {
+    _bleBatteryLevelListener = await getBleBatteryLevelListener(_device!,
+        onBatteryLevelChange: (int value) {
       setState(() {
         batteryLevel = value;
       });
@@ -142,7 +151,7 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
-        onTap: (){
+        onTap: () {
           FocusScope.of(context).unfocus();
           chatTextFieldFocusNode.unfocus();
         },
@@ -160,7 +169,9 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                 transcriptChildWidgetKey: transcriptChildWidgetKey,
                 batteryLevel: batteryLevel,
               ),
-              ChatPage(textFieldFocusNode: chatTextFieldFocusNode,),
+              ChatPage(
+                textFieldFocusNode: chatTextFieldFocusNode,
+              ),
             ],
           ),
         ),
@@ -187,7 +198,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
               await context.pushNamed('settings');
               if (language != SharedPreferencesUtil().recordingsLanguage ||
                   deepgram != SharedPreferencesUtil().deepgramApiKey ||
-                  useFriendApiKeys != SharedPreferencesUtil().useFriendApiKeys) {
+                  useFriendApiKeys !=
+                      SharedPreferencesUtil().useFriendApiKeys) {
                 transcriptChildWidgetKey.currentState?.resetState();
               }
             },

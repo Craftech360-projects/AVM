@@ -58,7 +58,7 @@
     <!-- Add android:stopWithTask option only when necessary. -->
     <application
         android:icon="@mipmap/ic_launcher"
-        android:label="Friend"
+        android:label="AVM"
         android:requestLegacyExternalStorage="true"
         tools:replace="android:label"
         android:usesCleartextTraffic="true">

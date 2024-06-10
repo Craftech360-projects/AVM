@@ -19,17 +19,20 @@ void main() async {
   await SharedPreferencesUtil.init();
   await MixpanelManager.init();
   if (Env.instabugApiKey != null) {
-    await Instabug.init(
-        token: Env.instabugApiKey!,
-        invocationEvents: [InvocationEvent.shake, InvocationEvent.screenshot]); //InvocationEvent.floatingButton
+    await Instabug.init(token: Env.instabugApiKey!, invocationEvents: [
+      InvocationEvent.shake,
+      InvocationEvent.screenshot
+    ]); //InvocationEvent.floatingButton
     Instabug.setColorTheme(ColorTheme.dark);
   }
   _getRunApp();
 }
 
 _getRunApp() {
-  return runApp(
-      MyApp(entryPage: SharedPreferencesUtil().onboardingCompleted ? const HomePageWrapper(btDevice: null) : null));
+  return runApp(MyApp(
+      entryPage: SharedPreferencesUtil().onboardingCompleted
+          ? const HomePageWrapper(btDevice: null)
+          : null));
 }
 
 class MyApp extends StatefulWidget {
@@ -39,7 +42,8 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 
-  static _MyAppState of(BuildContext context) => context.findAncestorStateOfType<_MyAppState>()!;
+  static _MyAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>()!;
 
   final Widget? entryPage;
 }
@@ -58,8 +62,8 @@ class _MyAppState extends State<MyApp> {
     _appStateNotifier = AppStateNotifier.instance;
     _router = createRouter(_appStateNotifier, widget.entryPage);
 
-    Future.delayed(
-        const Duration(milliseconds: 1000), () => setState(() => _appStateNotifier.stopShowingSplashImage()));
+    Future.delayed(const Duration(milliseconds: 1000),
+        () => setState(() => _appStateNotifier.stopShowingSplashImage()));
   }
 
   void setLocale(String language) {

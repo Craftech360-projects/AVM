@@ -27,7 +27,6 @@ class DevicePage extends StatefulWidget {
 }
 
 class _DevicePageState extends State<DevicePage> {
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -52,8 +51,9 @@ class _DevicePageState extends State<DevicePage> {
         const SizedBox(height: 64),
         const ScanningAnimation(),
         const ScanningUI(
-          string1: 'Looking for Friend wearable',
-          string2: 'Locating your Friend device. Keep it near your phone for pairing',
+          string1: 'Looking for AVM wearable',
+          string2:
+              'Locating your AVM device. Keep it near your phone for pairing',
         ),
       ];
     }
@@ -93,7 +93,9 @@ class _DevicePageState extends State<DevicePage> {
             ),
             textAlign: TextAlign.center,
           ),
-          widget.batteryLevel == -1 ? const SizedBox.shrink() : const SizedBox(width: 16.0),
+          widget.batteryLevel == -1
+              ? const SizedBox.shrink()
+              : const SizedBox(width: 16.0),
           widget.batteryLevel == -1
               ? const SizedBox.shrink()
               : Container(
