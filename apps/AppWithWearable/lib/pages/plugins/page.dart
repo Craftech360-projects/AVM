@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/api_requests/api_calls.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/storage/plugin.dart';
+import 'package:avm/backend/api_requests/api_calls.dart';
+import 'package:avm/backend/preferences.dart';
+import 'package:avm/backend/storage/plugin.dart';
 
-import 'package:friend_private/flutter_flow/flutter_flow_theme.dart';
-import 'package:friend_private/widgets/blur_bot_widget.dart';
+import 'package:avm/flutter_flow/flutter_flow_theme.dart';
+import 'package:avm/widgets/blur_bot_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -51,7 +51,10 @@ class _PluginsPageState extends State<PluginsPage> {
   List<Plugin> _filteredPlugins() {
     return searchQuery.isEmpty
         ? plugins
-        : plugins.where((plugin) => plugin.name.toLowerCase().contains(searchQuery.toLowerCase())).toList();
+        : plugins
+            .where((plugin) =>
+                plugin.name.toLowerCase().contains(searchQuery.toLowerCase()))
+            .toList();
   }
 
   @override
@@ -67,7 +70,8 @@ class _PluginsPageState extends State<PluginsPage> {
         actions: [
           TextButton(
               onPressed: () {
-                launchUrl(Uri.parse('https://github.com/BasedHardware/Friend/blob/main/plugins-instruction.md'));
+                launchUrl(Uri.parse(
+                    'https://github.com/BasedHardware/Friend/blob/main/plugins-instruction.md'));
               },
               child: const Row(
                 children: [
@@ -92,7 +96,8 @@ class _PluginsPageState extends State<PluginsPage> {
               ),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   color: const Color(0x1AF7F4F4),
@@ -115,11 +120,13 @@ class _PluginsPageState extends State<PluginsPage> {
                   decoration: InputDecoration(
                     hintText: 'Search your plugin',
                     hintStyle: FlutterFlowTheme.of(context).bodySmall.override(
-                          fontFamily: FlutterFlowTheme.of(context).bodySmallFamily,
+                          fontFamily:
+                              FlutterFlowTheme.of(context).bodySmallFamily,
                           color: FlutterFlowTheme.of(context).primaryText,
                           fontSize: 14.0,
                           fontWeight: FontWeight.w500,
-                          useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodySmallFamily),
+                          useGoogleFonts: GoogleFonts.asMap().containsKey(
+                              FlutterFlowTheme.of(context).bodySmallFamily),
                         ),
                     enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(
@@ -163,10 +170,12 @@ class _PluginsPageState extends State<PluginsPage> {
                     ),
                   ),
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
-                        fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                        fontFamily:
+                            FlutterFlowTheme.of(context).bodyMediumFamily,
                         color: FlutterFlowTheme.of(context).primaryText,
                         fontWeight: FontWeight.w500,
-                        useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                        useGoogleFonts: GoogleFonts.asMap().containsKey(
+                            FlutterFlowTheme.of(context).bodyMediumFamily),
                       ),
                 ),
               ),
@@ -176,17 +185,22 @@ class _PluginsPageState extends State<PluginsPage> {
                   itemBuilder: (context, index) {
                     final plugin = filteredPlugins[index];
                     return Padding(
-                      padding: const EdgeInsets.only(top: 16, left: 10, right: 10),
+                      padding:
+                          const EdgeInsets.only(top: 16, left: 10, right: 10),
                       child: ListTile(
                         title: Text(
                           plugin.name,
-                          style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              fontSize: 16),
                         ),
                         subtitle: Padding(
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Text(
                             plugin.description,
-                            style: const TextStyle(color: Colors.grey, fontSize: 14),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 14),
                           ),
                         ),
                         trailing: Switch(

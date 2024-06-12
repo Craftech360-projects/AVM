@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:friend_private/widgets/blur_bot_widget.dart';
-import 'package:friend_private/widgets/scanning_animation.dart';
-import 'package:friend_private/widgets/scanning_ui.dart';
+import 'package:avm/widgets/blur_bot_widget.dart';
+import 'package:avm/widgets/scanning_animation.dart';
+import 'package:avm/widgets/scanning_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_theme.dart';

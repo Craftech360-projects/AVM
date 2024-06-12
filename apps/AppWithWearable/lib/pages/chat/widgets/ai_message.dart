@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:friend_private/backend/storage/message.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_theme.dart';
+import 'package:avm/backend/storage/message.dart';
+import 'package:avm/flutter_flow/flutter_flow_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AIMessage extends StatelessWidget {
@@ -56,12 +56,13 @@ class AIMessage extends StatelessWidget {
                         child: AutoSizeText(
                       message.text.replaceAll(r'\n', '\n'),
                       style: FlutterFlowTheme.of(context).titleMedium.override(
-                            fontFamily: FlutterFlowTheme.of(context).titleMediumFamily,
+                            fontFamily:
+                                FlutterFlowTheme.of(context).titleMediumFamily,
                             color: FlutterFlowTheme.of(context).secondary,
                             fontSize: 14.0,
                             fontWeight: FontWeight.w500,
-                            useGoogleFonts:
-                                GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleMediumFamily),
+                            useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                FlutterFlowTheme.of(context).titleMediumFamily),
                             lineHeight: 1.5,
                           ),
                     )),
@@ -83,11 +84,13 @@ class AIMessage extends StatelessWidget {
                       content: Text(
                         'Response copied to clipboard.',
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                              fontFamily:
+                                  FlutterFlowTheme.of(context).bodyMediumFamily,
                               color: const Color(0x00000000),
                               fontSize: 12.0,
-                              useGoogleFonts:
-                                  GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                              useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                  FlutterFlowTheme.of(context)
+                                      .bodyMediumFamily),
                             ),
                       ),
                       duration: const Duration(milliseconds: 2000),
@@ -99,7 +102,8 @@ class AIMessage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 0.0, 4.0, 0.0),
                       child: Icon(
                         Icons.content_copy,
                         color: FlutterFlowTheme.of(context).primary,
@@ -109,11 +113,12 @@ class AIMessage extends StatelessWidget {
                     Text(
                       'Copy response',
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                            fontFamily:
+                                FlutterFlowTheme.of(context).bodyMediumFamily,
                             color: FlutterFlowTheme.of(context).primary,
                             fontSize: 10.0,
-                            useGoogleFonts:
-                                GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                            useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                FlutterFlowTheme.of(context).bodyMediumFamily),
                           ),
                     ),
                   ],

@@ -1,5 +1,5 @@
-import 'package:friend_private/backend/storage/memories.dart';
-import 'package:friend_private/widgets/blur_bot_widget.dart';
+import 'package:avm/backend/storage/memories.dart';
+import 'package:avm/widgets/blur_bot_widget.dart';
 
 import 'package:flutter/material.dart';
 import 'widgets/empty_memories.dart';
@@ -9,7 +9,8 @@ class MemoriesPage extends StatefulWidget {
   final List<MemoryRecord> memories;
   final Function refreshMemories;
 
-  const MemoriesPage({super.key, required this.memories, required this.refreshMemories});
+  const MemoriesPage(
+      {super.key, required this.memories, required this.refreshMemories});
 
   @override
   State<MemoriesPage> createState() => _MemoriesPageState();

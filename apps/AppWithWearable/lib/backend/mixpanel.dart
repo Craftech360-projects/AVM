@@ -1,6 +1,6 @@
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/storage/memories.dart';
-import 'package:friend_private/env/env.dart';
+import 'package:avm/backend/preferences.dart';
+import 'package:avm/backend/storage/memories.dart';
+import 'package:avm/env/env.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class MixpanelManager {
@@ -11,8 +11,8 @@ class MixpanelManager {
   static Future<void> init() async {
     if (Env.mixpanelProjectToken == null) return;
     if (_mixpanel == null) {
-      _mixpanel =
-          await Mixpanel.init(Env.mixpanelProjectToken!, optOutTrackingDefault: false, trackAutomaticEvents: true);
+      _mixpanel = await Mixpanel.init(Env.mixpanelProjectToken!,
+          optOutTrackingDefault: false, trackAutomaticEvents: true);
       _mixpanel?.setLoggingEnabled(false);
       _instance.identify();
     }
@@ -56,7 +56,8 @@ class MixpanelManager {
   void recordingLanguageChanged(String language) =>
       track('Recording Language Changed', properties: {'language': language});
 
-  void bottomNavigationTabClicked(String tab) => track('Bottom Navigation Tab Clicked', properties: {'tab': tab});
+  void bottomNavigationTabClicked(String tab) =>
+      track('Bottom Navigation Tab Clicked', properties: {'tab': tab});
 
   void deviceConnected() => track('Device Connected');
 
@@ -101,12 +102,15 @@ class MixpanelManager {
   }
 
   void memoryListItemClicked(MemoryRecord memory, int idx) =>
-      track('Memory List Item Clicked', properties: _getMemoryEventProperties(memory));
+      track('Memory List Item Clicked',
+          properties: _getMemoryEventProperties(memory));
 
   void memoryShareButtonClick(MemoryRecord memory) =>
-      track('Memory Share Button Clicked', properties: _getMemoryEventProperties(memory));
+      track('Memory Share Button Clicked',
+          properties: _getMemoryEventProperties(memory));
 
-  void memoryDeleted(MemoryRecord memory) => track('Memory Deleted', properties: _getMemoryEventProperties(memory));
+  void memoryDeleted(MemoryRecord memory) =>
+      track('Memory Deleted', properties: _getMemoryEventProperties(memory));
 
   void memoryEdited(MemoryRecord memory, {required String fieldEdited}) {
     var properties = _getMemoryEventProperties(memory);
@@ -115,8 +119,10 @@ class MixpanelManager {
   }
 
   void chatMessageSent(String message) {
-    track('Chat Message Sent',
-        properties: {'message_length': message.length, 'message_word_count': message.split(' ').length});
+    track('Chat Message Sent', properties: {
+      'message_length': message.length,
+      'message_word_count': message.split(' ').length
+    });
   }
 
 // TBI

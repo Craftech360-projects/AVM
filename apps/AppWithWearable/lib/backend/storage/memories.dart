@@ -1,4 +1,4 @@
-import 'package:friend_private/flutter_flow/flutter_flow_util.dart';
+import 'package:avm/flutter_flow/flutter_flow_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Structured {
@@ -118,12 +118,14 @@ class MemoryStorage {
   static Future<List<MemoryRecord>> getAllMemories() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> allMemories = prefs.getStringList(_storageKey) ?? [];
-    List<MemoryRecord> memories =
-        allMemories.reversed.map((memory) => MemoryRecord.fromJson(jsonDecode(memory))).toList();
+    List<MemoryRecord> memories = allMemories.reversed
+        .map((memory) => MemoryRecord.fromJson(jsonDecode(memory)))
+        .toList();
     return memories.where((memory) => !memory.discarded).toList();
   }
 
-  static Future<List<MemoryRecord>> getAllMemoriesByIds(List<String> memoriesId) async {
+  static Future<List<MemoryRecord>> getAllMemoriesByIds(
+      List<String> memoriesId) async {
     List<MemoryRecord> memories = await getAllMemories();
     List<MemoryRecord> filtered = [];
     for (MemoryRecord memory in memories) {
@@ -134,23 +136,33 @@ class MemoryStorage {
     return filtered;
   }
 
-  static Future<List<MemoryRecord>> retrieveRecentMemoriesWithinMinutes({int minutes = 10, int count = 2}) async {
+  static Future<List<MemoryRecord>> retrieveRecentMemoriesWithinMinutes(
+      {int minutes = 10, int count = 2}) async {
     List<MemoryRecord> allMemories = await getAllMemories();
     DateTime now = DateTime.now();
     DateTime timeLimit = now.subtract(Duration(minutes: minutes));
-    var filtered = allMemories.where((memory) => memory.createdAt.isAfter(timeLimit)).toList();
+    var filtered = allMemories
+        .where((memory) => memory.createdAt.isAfter(timeLimit))
+        .toList();
     if (filtered.length > count) {
       filtered = filtered.sublist(0, count);
     }
     return filtered;
   }
 
-  static Future<void> updateMemory(String memoryId, String updatedTitle, String updatedDescription, List<String> updatedActionItems, List<String> updatedPluginsResponse) async {
+  static Future<void> updateMemory(
+      String memoryId,
+      String updatedTitle,
+      String updatedDescription,
+      List<String> updatedActionItems,
+      List<String> updatedPluginsResponse) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> allMemories = prefs.getStringList(_storageKey) ?? [];
-    int index = allMemories.indexWhere((memory) => MemoryRecord.fromJson(jsonDecode(memory)).id == memoryId);
+    int index = allMemories.indexWhere(
+        (memory) => MemoryRecord.fromJson(jsonDecode(memory)).id == memoryId);
     if (index >= 0 && index < allMemories.length) {
-      MemoryRecord oldMemory = MemoryRecord.fromJson(jsonDecode(allMemories[index]));
+      MemoryRecord oldMemory =
+          MemoryRecord.fromJson(jsonDecode(allMemories[index]));
       MemoryRecord updatedRecord = MemoryRecord(
         id: oldMemory.id,
         createdAt: oldMemory.createdAt,
@@ -159,7 +171,8 @@ class MemoryStorage {
           title: updatedTitle,
           overview: updatedDescription,
           actionItems: updatedActionItems,
-          pluginsResponse: updatedPluginsResponse ?? [], // Use updatedPluginsResponse here
+          pluginsResponse:
+              updatedPluginsResponse ?? [], // Use updatedPluginsResponse here
         ),
         discarded: oldMemory.discarded,
       );
@@ -171,7 +184,8 @@ class MemoryStorage {
   static Future<void> deleteMemory(String memoryId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> allMemories = prefs.getStringList(_storageKey) ?? [];
-    int index = allMemories.indexWhere((memory) => MemoryRecord.fromJson(jsonDecode(memory)).id == memoryId);
+    int index = allMemories.indexWhere(
+        (memory) => MemoryRecord.fromJson(jsonDecode(memory)).id == memoryId);
     if (index >= 0 && index < allMemories.length) {
       allMemories.removeAt(index);
       await prefs.setStringList(_storageKey, allMemories);
@@ -180,7 +194,9 @@ class MemoryStorage {
 
   static Future<List<MemoryRecord>> getMemoriesByDay(DateTime day) async {
     List<MemoryRecord> allMemories = await getAllMemories();
-    return allMemories.where((memory) => isSameDay(memory.createdAt, day)).toList();
+    return allMemories
+        .where((memory) => isSameDay(memory.createdAt, day))
+        .toList();
   }
 
   static Future<List<MemoryRecord>> getMemoriesOfLastWeek() async {
@@ -188,7 +204,9 @@ class MemoryStorage {
     DateTime lastWeekStart = now.subtract(Duration(days: now.weekday + 6));
     List<MemoryRecord> allMemories = await getAllMemories();
     return allMemories
-        .where((memory) => memory.createdAt.isAfter(lastWeekStart) && memory.createdAt.isBefore(now))
+        .where((memory) =>
+            memory.createdAt.isAfter(lastWeekStart) &&
+            memory.createdAt.isBefore(now))
         .toList();
   }
 
@@ -197,7 +215,9 @@ class MemoryStorage {
     DateTime lastMonthStart = DateTime(now.year, now.month - 1, 1);
     List<MemoryRecord> allMemories = await getAllMemories();
     return allMemories
-        .where((memory) => memory.createdAt.isAfter(lastMonthStart) && memory.createdAt.isBefore(now))
+        .where((memory) =>
+            memory.createdAt.isAfter(lastMonthStart) &&
+            memory.createdAt.isBefore(now))
         .toList();
   }
 

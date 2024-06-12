@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/api_requests/cloud_storage.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/utils.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_theme.dart';
-import 'package:friend_private/widgets/blur_bot_widget.dart';
+import 'package:avm/backend/api_requests/cloud_storage.dart';
+import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/backend/preferences.dart';
+import 'package:avm/backend/utils.dart';
+import 'package:avm/flutter_flow/flutter_flow_theme.dart';
+import 'package:avm/widgets/blur_bot_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -15,11 +15,14 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final TextEditingController deepgramApiKeyController = TextEditingController();
+  final TextEditingController deepgramApiKeyController =
+      TextEditingController();
   final TextEditingController openaiApiKeyController = TextEditingController();
-  final TextEditingController gcpCredentialsController = TextEditingController();
+  final TextEditingController gcpCredentialsController =
+      TextEditingController();
   final TextEditingController gcpBucketNameController = TextEditingController();
-  final TextEditingController customWebsocketUrlController = TextEditingController();
+  final TextEditingController customWebsocketUrlController =
+      TextEditingController();
   bool deepgramApiIsVisible = false;
   bool openaiApiIsVisible = false;
   late String _selectedLanguage;
@@ -33,7 +36,8 @@ class _SettingsPageState extends State<SettingsPage> {
     openaiApiKeyController.text = SharedPreferencesUtil().openAIApiKey;
     gcpCredentialsController.text = SharedPreferencesUtil().gcpCredentials;
     gcpBucketNameController.text = SharedPreferencesUtil().gcpBucketName;
-    customWebsocketUrlController.text = SharedPreferencesUtil().customWebsocketUrl;
+    customWebsocketUrlController.text =
+        SharedPreferencesUtil().customWebsocketUrl;
 
     _selectedLanguage = SharedPreferencesUtil().recordingsLanguage;
     useFriendAPIKeys = SharedPreferencesUtil().useFriendApiKeys;
@@ -60,7 +64,10 @@ class _SettingsPageState extends State<SettingsPage> {
               padding: EdgeInsets.symmetric(horizontal: 4.0),
               child: Text(
                 'Save',
-                style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.w600, fontSize: 16),
+                style: TextStyle(
+                    color: Colors.deepPurple,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16),
               ),
             ),
           )
@@ -95,7 +102,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     margin: const EdgeInsets.symmetric(horizontal: 12),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                     child: DropdownButton<String>(
                       menuMaxHeight: 350,
                       value: _selectedLanguage,
@@ -112,7 +120,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       isExpanded: true,
                       itemHeight: 48,
-                      items: availableLanguages.keys.map<DropdownMenuItem<String>>((String key) {
+                      items: availableLanguages.keys
+                          .map<DropdownMenuItem<String>>((String key) {
                         return DropdownMenuItem<String>(
                           value: availableLanguages[key],
                           child: Text(
@@ -120,7 +129,9 @@ class _SettingsPageState extends State<SettingsPage> {
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight:
-                                    _selectedLanguage == availableLanguages[key] ? FontWeight.w600 : FontWeight.w500,
+                                    _selectedLanguage == availableLanguages[key]
+                                        ? FontWeight.w600
+                                        : FontWeight.w500,
                                 fontSize: 16),
                           ),
                         );
@@ -217,7 +228,8 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Column(
               children: [
                 const SizedBox(height: 8.0),
-                _getText('Deepgram is used for converting speech to text.', underline: false, canBeDisabled: true),
+                _getText('Deepgram is used for converting speech to text.',
+                    underline: false, canBeDisabled: true),
                 const SizedBox(height: 8.0),
                 TextField(
                   controller: deepgramApiKeyController,
@@ -226,8 +238,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   decoration: _getTextFieldDecoration('Deepgram API Key',
                       suffixIcon: IconButton(
                         icon: Icon(
-                          deepgramApiIsVisible ? Icons.visibility : Icons.visibility_off,
-                          color: useFriendAPIKeys ? Colors.white.withOpacity(0.2) : Theme.of(context).primaryColor,
+                          deepgramApiIsVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: useFriendAPIKeys
+                              ? Colors.white.withOpacity(0.2)
+                              : Theme.of(context).primaryColor,
                         ),
                         onPressed: () {
                           // setModalState(() {
@@ -243,9 +259,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(height: 8.0),
                 TextButton(
                     onPressed: () {
-                      launchUrl(Uri.parse('https://developers.deepgram.com/docs/create-additional-api-keys'));
+                      launchUrl(Uri.parse(
+                          'https://developers.deepgram.com/docs/create-additional-api-keys'));
                     },
-                    child: _getText('How to generate a Deepgram API key?', underline: true, canBeDisabled: true)),
+                    child: _getText('How to generate a Deepgram API key?',
+                        underline: true, canBeDisabled: true)),
                 const SizedBox(height: 16.0),
                 _getText('OpenAI is used for chat.', canBeDisabled: true),
                 const SizedBox(height: 8.0),
@@ -258,8 +276,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   decoration: _getTextFieldDecoration('OpenAI API Key',
                       suffixIcon: IconButton(
                         icon: Icon(
-                          openaiApiIsVisible ? Icons.visibility : Icons.visibility_off,
-                          color: useFriendAPIKeys ? Colors.white.withOpacity(0.2) : Theme.of(context).primaryColor,
+                          openaiApiIsVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: useFriendAPIKeys
+                              ? Colors.white.withOpacity(0.2)
+                              : Theme.of(context).primaryColor,
                         ),
                         onPressed: () {
                           setState(() {
@@ -273,16 +295,19 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(height: 8.0),
                 TextButton(
                     onPressed: () {
-                      launchUrl(Uri.parse('https://platform.openai.com/api-keys'));
+                      launchUrl(
+                          Uri.parse('https://platform.openai.com/api-keys'));
                     },
-                    child: _getText('How to generate an OpenAI API key?', underline: true, canBeDisabled: true)),
+                    child: _getText('How to generate an OpenAI API key?',
+                        underline: true, canBeDisabled: true)),
               ],
             ),
           ),
         ],
       ),
       const SizedBox(height: 16.0),
-      _getText('[Optional] Store your recordings in Google Cloud', underline: false),
+      _getText('[Optional] Store your recordings in Google Cloud',
+          underline: false),
       const SizedBox(height: 16.0),
       TextField(
         controller: gcpCredentialsController,
@@ -306,10 +331,11 @@ class _SettingsPageState extends State<SettingsPage> {
       const SizedBox(height: 12),
       TextButton(
           onPressed: () {
-            launchUrl(
-                Uri.parse('https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-console'));
+            launchUrl(Uri.parse(
+                'https://cloud.google.com/storage/docs/creating-buckets#storage-create-bucket-console'));
           },
-          child: _getText('How to create a Google Cloud Storage Bucket', underline: true)),
+          child: _getText('How to create a Google Cloud Storage Bucket',
+              underline: true)),
       const SizedBox(height: 16.0),
       TextField(
         controller: customWebsocketUrlController,
@@ -323,22 +349,35 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
-  _getTextFieldDecoration(String label, {IconButton? suffixIcon, bool canBeDisabled = false}) {
+  _getTextFieldDecoration(String label,
+      {IconButton? suffixIcon, bool canBeDisabled = false}) {
     return InputDecoration(
       labelText: label,
       enabled: useFriendAPIKeys && canBeDisabled,
-      labelStyle: TextStyle(color: useFriendAPIKeys && canBeDisabled ? Colors.white.withOpacity(0.2) : Colors.white),
+      labelStyle: TextStyle(
+          color: useFriendAPIKeys && canBeDisabled
+              ? Colors.white.withOpacity(0.2)
+              : Colors.white),
       border: const OutlineInputBorder(),
       enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: useFriendAPIKeys && canBeDisabled ? Colors.white.withOpacity(0.2) : Colors.white),
+        borderSide: BorderSide(
+            color: useFriendAPIKeys && canBeDisabled
+                ? Colors.white.withOpacity(0.2)
+                : Colors.white),
         borderRadius: const BorderRadius.all(Radius.circular(20.0)),
       ),
       disabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: useFriendAPIKeys && canBeDisabled ? Colors.white.withOpacity(0.2) : Colors.white),
+        borderSide: BorderSide(
+            color: useFriendAPIKeys && canBeDisabled
+                ? Colors.white.withOpacity(0.2)
+                : Colors.white),
         borderRadius: const BorderRadius.all(Radius.circular(20.0)),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: useFriendAPIKeys && canBeDisabled ? Colors.white.withOpacity(0.2) : Colors.white),
+        borderSide: BorderSide(
+            color: useFriendAPIKeys && canBeDisabled
+                ? Colors.white.withOpacity(0.2)
+                : Colors.white),
       ),
       suffixIcon: suffixIcon,
     );
@@ -349,15 +388,20 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Text(
         text,
         style: TextStyle(
-          color: useFriendAPIKeys && canBeDisabled ? Colors.white.withOpacity(0.2) : Colors.white,
-          decoration: underline ? TextDecoration.underline : TextDecoration.none,
+          color: useFriendAPIKeys && canBeDisabled
+              ? Colors.white.withOpacity(0.2)
+              : Colors.white,
+          decoration:
+              underline ? TextDecoration.underline : TextDecoration.none,
         ),
       ),
     );
   }
 
   _saveSettings() {
-    if ((deepgramApiKeyController.text.isEmpty || openaiApiKeyController.text.isEmpty) && (!useFriendAPIKeys)) {
+    if ((deepgramApiKeyController.text.isEmpty ||
+            openaiApiKeyController.text.isEmpty) &&
+        (!useFriendAPIKeys)) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -389,7 +433,9 @@ class _SettingsPageState extends State<SettingsPage> {
     prefs.optInAnalytics = optInAnalytics;
     prefs.devModeEnabled = devModeEnabled;
 
-    optInAnalytics ? MixpanelManager().optInTracking() : MixpanelManager().optOutTracking();
+    optInAnalytics
+        ? MixpanelManager().optInTracking()
+        : MixpanelManager().optOutTracking();
 
     if (_selectedLanguage != prefs.recordingsLanguage) {
       prefs.recordingsLanguage = _selectedLanguage;
@@ -405,7 +451,8 @@ class _SettingsPageState extends State<SettingsPage> {
       prefs.useFriendApiKeys = useFriendAPIKeys;
     }
 
-    if (gcpCredentialsController.text.isNotEmpty && gcpBucketNameController.text.isNotEmpty) {
+    if (gcpCredentialsController.text.isNotEmpty &&
+        gcpBucketNameController.text.isNotEmpty) {
       authenticateGCP();
     }
 

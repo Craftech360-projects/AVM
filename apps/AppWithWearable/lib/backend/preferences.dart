@@ -1,12 +1,13 @@
 import 'dart:convert';
-import 'package:friend_private/backend/storage/message.dart';
-import 'package:friend_private/backend/storage/plugin.dart';
-import 'package:friend_private/env/env.dart';
+import 'package:avm/backend/storage/message.dart';
+import 'package:avm/backend/storage/plugin.dart';
+import 'package:avm/env/env.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class SharedPreferencesUtil {
-  static final SharedPreferencesUtil _instance = SharedPreferencesUtil._internal();
+  static final SharedPreferencesUtil _instance =
+      SharedPreferencesUtil._internal();
   static SharedPreferences? _preferences;
 
   factory SharedPreferencesUtil() {
@@ -42,7 +43,8 @@ class SharedPreferencesUtil {
 
   String get recordingsLanguage => getString('recordingsLanguage') ?? 'en';
 
-  set recordingsLanguage(String value) => saveString('recordingsLanguage', value);
+  set recordingsLanguage(String value) =>
+      saveString('recordingsLanguage', value);
 
   bool get useFriendApiKeys => getBool('useFriendApiKeys') ?? true;
 
@@ -54,11 +56,14 @@ class SharedPreferencesUtil {
 
   String get customWebsocketUrl => getString('customWebsocketUrl') ?? '';
 
-  set customWebsocketUrl(String value) => saveString('customWebsocketUrl', value);
+  set customWebsocketUrl(String value) =>
+      saveString('customWebsocketUrl', value);
 
-  String gptCompletionCache(String key) => getString('gptCompletionCache:$key') ?? '';
+  String gptCompletionCache(String key) =>
+      getString('gptCompletionCache:$key') ?? '';
 
-  setGptCompletionCache(String key, String value) => saveString('gptCompletionCache:$key', value);
+  setGptCompletionCache(String key, String value) =>
+      saveString('gptCompletionCache:$key', value);
 
   bool get optInAnalytics => getBool('optInAnalytics') ?? true;
 
@@ -74,7 +79,8 @@ class SharedPreferencesUtil {
   }
 
   set chatMessages(List<Message> value) {
-    final List<String> messages = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> messages =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('messages', messages);
   }
 
@@ -88,13 +94,15 @@ class SharedPreferencesUtil {
   }
 
   set pluginsList(List<Plugin> value) {
-    final List<String> plugins = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> plugins =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('pluginsList', plugins);
   }
 
   List<String> get pluginsEnabled => getStringList('pluginsEnabled') ?? [];
 
-  set pluginsEnabled(List<String> value) => saveStringList('pluginsEnabled', value);
+  set pluginsEnabled(List<String> value) =>
+      saveStringList('pluginsEnabled', value);
 
   enablePlugin(String value) {
     final List<String> plugins = pluginsEnabled;
@@ -157,8 +165,10 @@ class SharedPreferencesUtil {
   }
 }
 
-String getOpenAIApiKeyForUsage() =>
-    SharedPreferencesUtil().useFriendApiKeys ? (Env.openAIAPIKey ?? '') : SharedPreferencesUtil().openAIApiKey;
+String getOpenAIApiKeyForUsage() => SharedPreferencesUtil().useFriendApiKeys
+    ? (Env.openAIAPIKey ?? '')
+    : SharedPreferencesUtil().openAIApiKey;
 
-String getDeepgramApiKeyForUsage() =>
-    SharedPreferencesUtil().useFriendApiKeys ? (Env.deepgramApiKey ?? '') : SharedPreferencesUtil().deepgramApiKey;
+String getDeepgramApiKeyForUsage() => SharedPreferencesUtil().useFriendApiKeys
+    ? (Env.deepgramApiKey ?? '')
+    : SharedPreferencesUtil().deepgramApiKey;

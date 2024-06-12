@@ -1,11 +1,12 @@
+import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/backend/storage/memories.dart';
+import 'package:avm/flutter_flow/flutter_flow_theme.dart';
+import 'package:avm/flutter_flow/flutter_flow_util.dart';
+import 'package:avm/pages/memories/widgets/confirm_deletion_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/storage/memories.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_theme.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_util.dart';
-import 'package:friend_private/pages/memories/widgets/confirm_deletion_widget.dart';
+
 import 'package:share_plus/share_plus.dart';
 
 getMemoryOperations(MemoryRecord memory, StateSetter setState) {
@@ -49,7 +50,8 @@ geyShareMemoryOperationWidget(MemoryRecord memory, {double iconSize = 20}) {
   );
 }
 
-getDeleteMemoryOperationWidget(MemoryRecord memory, FocusNode? unFocusNode, StateSetter setState,
+getDeleteMemoryOperationWidget(
+    MemoryRecord memory, FocusNode? unFocusNode, StateSetter setState,
     {double iconSize = 20, VoidCallback? onDelete}) {
   return Builder(
     builder: (context) => InkWell(
@@ -65,7 +67,8 @@ getDeleteMemoryOperationWidget(MemoryRecord memory, FocusNode? unFocusNode, Stat
               elevation: 0,
               insetPadding: EdgeInsets.zero,
               backgroundColor: Colors.transparent,
-              alignment: const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+              alignment: const AlignmentDirectional(0.0, 0.0)
+                  .resolve(Directionality.of(context)),
               child: ConfirmDeletionWidget(memory: memory, onDelete: onDelete),
             );
           },

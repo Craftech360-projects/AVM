@@ -1,6 +1,6 @@
-import 'package:friend_private/backend/api_requests/api_calls.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/storage/memories.dart';
+import 'package:avm/backend/api_requests/api_calls.dart';
+import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/backend/storage/memories.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -65,13 +65,15 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
                   style: FlutterFlowTheme.of(context).headlineMedium,
                 ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(24.0, 12.0, 24.0, 0.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(
+                      24.0, 12.0, 24.0, 0.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 12.0, 0.0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0.0, 0.0, 12.0, 0.0),
                         child: FFButtonWidget(
                           onPressed: () async {
                             Navigator.pop(context);
@@ -79,15 +81,22 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
                           text: 'Cancel',
                           options: FFButtonOptions(
                             height: 40.0,
-                            padding: const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                            iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
-                            color: FlutterFlowTheme.of(context).secondaryBackground,
-                            textStyle: FlutterFlowTheme.of(context).bodyLarge.override(
-                                  fontFamily: FlutterFlowTheme.of(context).bodyLargeFamily,
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                20.0, 0.0, 20.0, 0.0),
+                            iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
+                            color: FlutterFlowTheme.of(context)
+                                .secondaryBackground,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .bodyLarge
+                                .override(
+                                  fontFamily: FlutterFlowTheme.of(context)
+                                      .bodyLargeFamily,
                                   color: FlutterFlowTheme.of(context).primary,
                                   fontWeight: FontWeight.bold,
-                                  useGoogleFonts:
-                                      GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyLargeFamily),
+                                  useGoogleFonts: GoogleFonts.asMap()
+                                      .containsKey(FlutterFlowTheme.of(context)
+                                          .bodyLargeFamily),
                                 ),
                             elevation: 0.0,
                             borderRadius: BorderRadius.circular(40.0),
@@ -95,7 +104,8 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 12.0, 0.0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0.0, 0.0, 12.0, 0.0),
                         child: FFButtonWidget(
                           onPressed: () async {
                             deleteVector(widget.memory.id);
@@ -107,15 +117,21 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
                           text: 'Delete',
                           options: FFButtonOptions(
                             height: 40.0,
-                            padding: const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
-                            iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                20.0, 0.0, 20.0, 0.0),
+                            iconPadding: const EdgeInsetsDirectional.fromSTEB(
+                                0.0, 0.0, 0.0, 0.0),
                             color: const Color(0xFF780000),
-                            textStyle: FlutterFlowTheme.of(context).bodyLarge.override(
-                                  fontFamily: FlutterFlowTheme.of(context).bodyLargeFamily,
+                            textStyle: FlutterFlowTheme.of(context)
+                                .bodyLarge
+                                .override(
+                                  fontFamily: FlutterFlowTheme.of(context)
+                                      .bodyLargeFamily,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
-                                  useGoogleFonts:
-                                      GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyLargeFamily),
+                                  useGoogleFonts: GoogleFonts.asMap()
+                                      .containsKey(FlutterFlowTheme.of(context)
+                                          .bodyLargeFamily),
                                 ),
                             elevation: 0.0,
                             borderRadius: BorderRadius.circular(40.0),

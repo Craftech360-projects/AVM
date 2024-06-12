@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Friend</string>
+	<string>AVM</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Friend</string>
+	<string>AVM</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -45,6 +45,10 @@
 	<string>Bluetooth permissions is required to connect with a device.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Bluetooth permissions is required to connect with a device.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to your microphone so you can share audio explanations of Bugs you find.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need access to your photo library to allow you to upload and share photos through Instabug.</string>
 	<key>PermissionGroupNotification</key>
 	<string>You need to enable notifications to receive your pro-active feedback.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
@@ -74,9 +78,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-    <string>We need access to your photo library to allow you to upload and share photos through Instabug.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>We need access to your microphone so you can share audio explanations of Bugs you find.</string>
 </dict>
 </plist>

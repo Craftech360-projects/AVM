@@ -1,13 +1,13 @@
-import 'package:friend_private/backend/api_requests/api_calls.dart';
-import 'package:friend_private/backend/api_requests/stream_api_response.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/storage/memories.dart';
-import 'package:friend_private/backend/storage/message.dart';
-import 'package:friend_private/flutter_flow/custom_functions.dart';
-import 'package:friend_private/pages/chat/widgets/ai_message.dart';
-import 'package:friend_private/pages/chat/widgets/user_message.dart';
-import 'package:friend_private/widgets/blur_bot_widget.dart';
+import 'package:avm/backend/api_requests/api_calls.dart';
+import 'package:avm/backend/api_requests/stream_api_response.dart';
+import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/backend/preferences.dart';
+import 'package:avm/backend/storage/memories.dart';
+import 'package:avm/backend/storage/message.dart';
+import 'package:avm/flutter_flow/custom_functions.dart';
+import 'package:avm/pages/chat/widgets/ai_message.dart';
+import 'package:avm/pages/chat/widgets/user_message.dart';
+import 'package:avm/widgets/blur_bot_widget.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:flutter/material.dart';
@@ -42,7 +42,8 @@ class _ChatPageState extends State<ChatPage> {
   void initState() {
     super.initState();
     _messages = prefs.chatMessages;
-    SchedulerBinding.instance.addPostFrameCallback((_) => _moveListToBottom(initial: true));
+    SchedulerBinding.instance
+        .addPostFrameCallback((_) => _moveListToBottom(initial: true));
   }
 
   @override
@@ -69,7 +70,8 @@ class _ChatPageState extends State<ChatPage> {
                   itemCount: _messages.length,
                   itemBuilder: (context, chatIndex) {
                     final message = _messages[chatIndex];
-                    if (message.type == 'ai') return AIMessage(message: message);
+                    if (message.type == 'ai')
+                      return AIMessage(message: message);
                     if (message.type == 'human') {
                       return HumanMessage(message: message);
                     }
@@ -82,7 +84,8 @@ class _ChatPageState extends State<ChatPage> {
             Container(
               width: double.infinity,
               padding: const EdgeInsetsDirectional.fromSTEB(20.0, 12, 10.0, 8),
-              margin: const EdgeInsetsDirectional.fromSTEB(12.0, 16.0, 12.0, 12.0),
+              margin:
+                  const EdgeInsetsDirectional.fromSTEB(12.0, 16.0, 12.0, 12.0),
               decoration: BoxDecoration(
                 color: const Color(0x1AF7F4F4),
                 boxShadow: const [
@@ -108,38 +111,44 @@ class _ChatPageState extends State<ChatPage> {
                   canRequestFocus: true,
                   decoration: InputDecoration(
                       hintText: 'Chat with memories...',
-                      hintStyle: TextStyle(fontSize: 14.0, color: Colors.grey.shade200),
+                      hintStyle: TextStyle(
+                          fontSize: 14.0, color: Colors.grey.shade200),
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
                       suffixIcon: IconButton(
                         icon: loading
                             ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
                             : const Icon(
-                          Icons.send_rounded,
-                          color: Color(0xFFF7F4F4),
-                          size: 30.0,
-                        ),
+                                Icons.send_rounded,
+                                color: Color(0xFFF7F4F4),
+                                size: 30.0,
+                              ),
                         onPressed: loading
                             ? null
                             : () async {
-                          String message = textController.text;
-                          if (message.isEmpty) return;
-                          changeLoadingState();
-                          _prepareStreaming(message);
-                          String ragContext = await _retrieveRAGContext(message);
-                          debugPrint('RAG Context: $ragContext');
-                          MixpanelManager().chatMessageSent(message);
-                          await streamApiResponse(ragContext, _callbackFunctionChatStreaming(), _messages, () {
-                            prefs.chatMessages = _messages;
-                          });
-                          changeLoadingState();
-                        },
+                                String message = textController.text;
+                                if (message.isEmpty) return;
+                                changeLoadingState();
+                                _prepareStreaming(message);
+                                String ragContext =
+                                    await _retrieveRAGContext(message);
+                                debugPrint('RAG Context: $ragContext');
+                                MixpanelManager().chatMessageSent(message);
+                                await streamApiResponse(
+                                    ragContext,
+                                    _callbackFunctionChatStreaming(),
+                                    _messages, () {
+                                  prefs.chatMessages = _messages;
+                                });
+                                changeLoadingState();
+                              },
                       )),
                   maxLines: 8,
                   minLines: 1,
@@ -156,18 +165,22 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<String> _retrieveRAGContext(String message) async {
-    String? betterContextQuestion = await determineRequiresContext(retrieveMostRecentMessages(_messages));
-    debugPrint('_retrieveRAGContext betterContextQuestion: $betterContextQuestion');
+    String? betterContextQuestion =
+        await determineRequiresContext(retrieveMostRecentMessages(_messages));
+    debugPrint(
+        '_retrieveRAGContext betterContextQuestion: $betterContextQuestion');
     if (betterContextQuestion == null) {
       return '';
     }
-    List<double> vectorizedMessage = await getEmbeddingsFromInput(betterContextQuestion);
+    List<double> vectorizedMessage =
+        await getEmbeddingsFromInput(betterContextQuestion);
     List<String> memoriesId = await queryPineconeVectors(vectorizedMessage);
     debugPrint('queryPineconeVectors memories retrieved: $memoriesId');
     if (memoriesId.isEmpty) {
       return '';
     }
-    List<MemoryRecord> memories = await MemoryStorage.getAllMemoriesByIds(memoriesId);
+    List<MemoryRecord> memories =
+        await MemoryStorage.getAllMemoriesByIds(memoriesId);
     return MemoryRecord.memoriesToString(memories);
   }
 

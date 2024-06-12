@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_theme.dart';
+import 'package:avm/flutter_flow/flutter_flow_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ScanningUI extends StatefulWidget {
@@ -28,7 +28,8 @@ class _ScanningUIState extends State<ScanningUI> {
                   fontSize: 32.0,
                   letterSpacing: 0.0,
                   fontWeight: FontWeight.w700,
-                  useGoogleFonts: GoogleFonts.asMap().containsKey('SF Pro Display'),
+                  useGoogleFonts:
+                      GoogleFonts.asMap().containsKey('SF Pro Display'),
                   lineHeight: 1.2,
                 ),
             textAlign: TextAlign.center,

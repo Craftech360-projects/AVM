@@ -1,5 +1,5 @@
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/storage/message.dart';
+import 'package:avm/backend/preferences.dart';
+import 'package:avm/backend/storage/message.dart';
 import '/flutter_flow/custom_functions.dart';
 import 'package:flutter/material.dart';
 import './streaming_models.dart';
@@ -20,7 +20,8 @@ Future streamApiResponse(
     'Authorization': 'Bearer ${getOpenAIApiKeyForUsage()}',
   };
 
-  String body = qaStreamedBody(context, retrieveMostRecentMessages(chatHistory));
+  String body =
+      qaStreamedBody(context, retrieveMostRecentMessages(chatHistory));
   var request = http.Request("POST", Uri.parse(url))
     ..headers.addAll(headers)
     ..body = body;
@@ -55,7 +56,10 @@ _listStream(response, callback, onDone) {
         // Check for a complete message (or more than one)
         if (bufferString.contains("data:")) {
           // Split the buffer by 'data:' delimiter
-          var jsonBlocks = bufferString.split('data:').where((block) => block.isNotEmpty).toList();
+          var jsonBlocks = bufferString
+              .split('data:')
+              .where((block) => block.isNotEmpty)
+              .toList();
 
           int processedBlocks = 0;
           for (var jsonBlock in jsonBlocks) {
@@ -90,13 +94,16 @@ bool isValidJson(String jsonString) {
   }
 }
 
-void handlePartialResponseContent(String data, Future<dynamic> Function(String) callback) {
+void handlePartialResponseContent(
+    String data, Future<dynamic> Function(String) callback) {
   if (data.contains("content")) {
-    ContentResponse contentResponse = ContentResponse.fromJson(jsonDecode(data));
+    ContentResponse contentResponse =
+        ContentResponse.fromJson(jsonDecode(data));
     if (contentResponse.choices != null &&
         contentResponse.choices![0].delta != null &&
         contentResponse.choices![0].delta!.content != null) {
-      String content = jsonEncodeString(contentResponse.choices![0].delta!.content!)!;
+      String content =
+          jsonEncodeString(contentResponse.choices![0].delta!.content!)!;
       callback(content);
     }
   }

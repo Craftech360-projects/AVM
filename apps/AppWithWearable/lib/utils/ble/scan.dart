@@ -1,6 +1,6 @@
-import 'package:friend_private/backend/schema/structs/b_t_device_struct.dart';
-import 'package:friend_private/utils/ble/connect.dart';
-import 'package:friend_private/utils/ble/find.dart';
+import 'package:avm/backend/schema/structs/b_t_device_struct.dart';
+import 'package:avm/utils/ble/connect.dart';
+import 'package:avm/utils/ble/find.dart';
 
 Future<BTDeviceStruct?> scanAndConnectDevice() async {
   while (true) {

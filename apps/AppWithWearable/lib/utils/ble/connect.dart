@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:friend_private/backend/schema/structs/b_t_device_struct.dart';
+import 'package:avm/backend/schema/structs/b_t_device_struct.dart';
 
 Future<void> bleConnectDevice(BTDeviceStruct btDevice) async {
   final device = BluetoothDevice.fromId(btDevice.id);
@@ -13,7 +13,9 @@ Future<void> bleConnectDevice(BTDeviceStruct btDevice) async {
     await device.connect(autoConnect: true, mtu: null);
     // TODO: compare this with the connection state listener, both doing same thing? what's better?
     // Step 2: Listen to the connection state to ensure the device is connected
-    await device.connectionState.where((state) => state == BluetoothConnectionState.connected).first;
+    await device.connectionState
+        .where((state) => state == BluetoothConnectionState.connected)
+        .first;
 
     // Step 3: Request the desired MTU size if the platform is Android
     if (Platform.isAndroid) {

@@ -38,7 +38,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:fonnx/models/sileroVad/silero_vad.dart';
-import 'package:friend_private/backend/preferences.dart';
+import 'package:avm/backend/preferences.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path/path.dart' as path;
 
@@ -49,7 +49,6 @@ class VadUtil {
   dynamic hn;
   dynamic cn;
 
-
   init() async {
     final modelPath = await getModelPath('silero_vad.onnx');
     vad = SileroVad.load(modelPath);
@@ -57,7 +56,7 @@ class VadUtil {
 
   Future<bool> predict(Uint8List bytes) async {
     if (vad == null) return true;
-    final result = await vad!.doInference(bytes, previousState:  {
+    final result = await vad!.doInference(bytes, previousState: {
       'hn': hn,
       'cn': cn,
     });
@@ -71,8 +70,10 @@ class VadUtil {
     if (kIsWeb) {
       return 'assets/$modelFilenameWithExtension';
     }
-    final assetCacheDirectory = await path_provider.getApplicationSupportDirectory();
-    final modelPath = path.join(assetCacheDirectory.path, modelFilenameWithExtension);
+    final assetCacheDirectory =
+        await path_provider.getApplicationSupportDirectory();
+    final modelPath =
+        path.join(assetCacheDirectory.path, modelFilenameWithExtension);
 
     File file = File(modelPath);
     bool fileExists = await file.exists();
@@ -86,7 +87,8 @@ class VadUtil {
     final assetLength = assetByteData.lengthInBytes;
     final fileSameSize = fileLength == assetLength;
     if (!fileExists || !fileSameSize) {
-      debugPrint('Copying model to $modelPath. Why? Either the file does not exist (${!fileExists}), '
+      debugPrint(
+          'Copying model to $modelPath. Why? Either the file does not exist (${!fileExists}), '
           'or it does exist but is not the same size as the one in the assets '
           'directory. (${!fileSameSize})');
       debugPrint('About to get byte data for $modelPath');

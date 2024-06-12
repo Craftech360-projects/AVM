@@ -1,4 +1,4 @@
-import 'package:friend_private/backend/storage/dvdb/collection.dart';
+import 'package:avm/backend/storage/dvdb/collection.dart';
 
 class DVDB {
   DVDB._internal();

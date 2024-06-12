@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/storage/memories.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_theme.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_util.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_widgets.dart';
-import 'package:friend_private/pages/memories/widgets/memory_operations.dart';
-import 'package:friend_private/widgets/blur_bot_widget.dart';
+import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/backend/storage/memories.dart';
+import 'package:avm/flutter_flow/flutter_flow_theme.dart';
+import 'package:avm/flutter_flow/flutter_flow_util.dart';
+import 'package:avm/flutter_flow/flutter_flow_widgets.dart';
+import 'package:avm/pages/memories/widgets/memory_operations.dart';
+import 'package:avm/widgets/blur_bot_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MemoryDetailPage extends StatefulWidget {
@@ -80,14 +80,17 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
               options: FFButtonOptions(
                 width: 44.0,
                 height: 44.0,
-                padding: const EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
-                iconPadding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                padding:
+                    const EdgeInsetsDirectional.fromSTEB(8.0, 0.0, 0.0, 0.0),
+                iconPadding:
+                    const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
                 color: const Color(0x1AF7F4F4),
                 textStyle: FlutterFlowTheme.of(context).titleSmall.override(
                       fontFamily: FlutterFlowTheme.of(context).titleSmallFamily,
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).titleSmallFamily),
+                      useGoogleFonts: GoogleFonts.asMap().containsKey(
+                          FlutterFlowTheme.of(context).titleSmallFamily),
                     ),
                 elevation: 3.0,
                 borderSide: const BorderSide(
@@ -124,55 +127,75 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
                 ),
                 const SizedBox(height: 12),
                 _getFieldHeader('title', focusTitleField),
-                _getEditTextField(titleController, editingTitle, focusTitleField),
+                _getEditTextField(
+                    titleController, editingTitle, focusTitleField),
                 _getEditTextFieldButtons(editingTitle, () {
                   setState(() {
                     editingTitle = false;
                     titleController.text = memory.structured.title;
                   });
                 }, () async {
-                  await MemoryStorage.updateMemory(memory.id, titleController.text, memory.structured.overview,
-                      memory.structured.actionItems, memory.structured.pluginsResponse);
+                  await MemoryStorage.updateMemory(
+                      memory.id,
+                      titleController.text,
+                      memory.structured.overview,
+                      memory.structured.actionItems,
+                      memory.structured.pluginsResponse);
                   memory.structured.title = titleController.text;
                   setState(() {
                     editingTitle = false;
                   });
-                  MixpanelManager().memoryEdited(widget.memory, fieldEdited: 'title');
+                  MixpanelManager()
+                      .memoryEdited(widget.memory, fieldEdited: 'title');
                 }),
                 const SizedBox(height: 32),
                 _getFieldHeader('overview', focusOverviewField),
-                _getEditTextField(overviewController, editingOverview, focusOverviewField),
+                _getEditTextField(
+                    overviewController, editingOverview, focusOverviewField),
                 _getEditTextFieldButtons(editingOverview, () {
                   setState(() {
                     editingOverview = false;
                     overviewController.text = memory.structured.overview;
                   });
                 }, () async {
-                  await MemoryStorage.updateMemory(memory.id, memory.structured.title, overviewController.text,
-                      memory.structured.actionItems, memory.structured.pluginsResponse);
+                  await MemoryStorage.updateMemory(
+                      memory.id,
+                      memory.structured.title,
+                      overviewController.text,
+                      memory.structured.actionItems,
+                      memory.structured.pluginsResponse);
                   memory.structured.overview = overviewController.text;
                   setState(() {
                     editingOverview = false;
                   });
-                  MixpanelManager().memoryEdited(widget.memory, fieldEdited: 'overview');
+                  MixpanelManager()
+                      .memoryEdited(widget.memory, fieldEdited: 'overview');
                 }),
                 const SizedBox(height: 32),
                 _getFieldHeader('actionItems', focusActionItemsField),
-                _getEditTextField(actionItemsController, editingActionItems, focusActionItemsField),
+                _getEditTextField(actionItemsController, editingActionItems,
+                    focusActionItemsField),
                 _getEditTextFieldButtons(editingActionItems, () {
                   setState(() {
                     editingActionItems = false;
-                    actionItemsController.text = memory.structured.actionItems.join('\n');
+                    actionItemsController.text =
+                        memory.structured.actionItems.join('\n');
                   });
                 }, () async {
-                  List<String> updatedActionItems = actionItemsController.text.split('\n');
-                  await MemoryStorage.updateMemory(memory.id, memory.structured.title, memory.structured.overview,
-                      updatedActionItems, memory.structured.pluginsResponse);
+                  List<String> updatedActionItems =
+                      actionItemsController.text.split('\n');
+                  await MemoryStorage.updateMemory(
+                      memory.id,
+                      memory.structured.title,
+                      memory.structured.overview,
+                      updatedActionItems,
+                      memory.structured.pluginsResponse);
                   memory.structured.actionItems = updatedActionItems;
                   setState(() {
                     editingActionItems = false;
                   });
-                  MixpanelManager().memoryEdited(widget.memory, fieldEdited: 'actionItems');
+                  MixpanelManager()
+                      .memoryEdited(widget.memory, fieldEdited: 'actionItems');
                 }),
                 const SizedBox(height: 32),
                 if (memory.structured.pluginsResponse.isNotEmpty) ...[
@@ -180,33 +203,45 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
                   const Padding(
                     padding: EdgeInsets.only(left: 4.0),
                     child: Text('Generated by Plugins',
-                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600)),
                   ),
                   const SizedBox(height: 16),
-                  ...memory.structured.pluginsResponse.map((response) => Container(
-                        padding: const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 8),
-                        margin: const EdgeInsets.only(bottom: 16),
-                        decoration: BoxDecoration(
-                          color: const Color(0x1AF7F4F4),
-                          borderRadius: BorderRadius.circular(24.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            response,
-                            style: TextStyle(color: Colors.grey.shade300, fontSize: 15, height: 1.3),
-                          ),
-                        ),
-                      )),
+                  ...memory.structured.pluginsResponse
+                      .map((response) => Container(
+                            padding: const EdgeInsetsDirectional.symmetric(
+                                horizontal: 12, vertical: 8),
+                            margin: const EdgeInsets.only(bottom: 16),
+                            decoration: BoxDecoration(
+                              color: const Color(0x1AF7F4F4),
+                              borderRadius: BorderRadius.circular(24.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                response,
+                                style: TextStyle(
+                                    color: Colors.grey.shade300,
+                                    fontSize: 15,
+                                    height: 1.3),
+                              ),
+                            ),
+                          )),
                 ],
                 const Padding(
                   padding: EdgeInsets.only(left: 4.0),
                   child: Text('Raw Transcript:',
-                      style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600)),
                 ),
                 const SizedBox(height: 16),
                 Container(
-                  padding: const EdgeInsetsDirectional.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsetsDirectional.symmetric(
+                      horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: const Color(0x1AF7F4F4),
                     borderRadius: BorderRadius.circular(24.0),
@@ -215,7 +250,10 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
                       memory.transcript,
-                      style: TextStyle(color: Colors.grey.shade300, fontSize: 15, height: 1.3),
+                      style: TextStyle(
+                          color: Colors.grey.shade300,
+                          fontSize: 15,
+                          height: 1.3),
                     ),
                   ),
                 ),
@@ -240,7 +278,11 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(name, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+        Text(name,
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600)),
         Container(
           padding: const EdgeInsetsDirectional.symmetric(horizontal: 12),
           child: Row(
@@ -258,7 +300,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
                         editingActionItems = true;
                       }
                     });
-                    Timer(const Duration(milliseconds: 100), () => focusNode.requestFocus());
+                    Timer(const Duration(milliseconds: 100),
+                        () => focusNode.requestFocus());
                   },
                   icon: Icon(
                     Icons.edit,
@@ -272,7 +315,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
     );
   }
 
-  _getEditTextField(TextEditingController controller, bool enabled, FocusNode focusNode) {
+  _getEditTextField(
+      TextEditingController controller, bool enabled, FocusNode focusNode) {
     return TextField(
       controller: controller,
       keyboardType: TextInputType.multiline,
@@ -287,7 +331,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
     );
   }
 
-  _getEditTextFieldButtons(bool display, VoidCallback onCanceled, VoidCallback onSaved) {
+  _getEditTextFieldButtons(
+      bool display, VoidCallback onCanceled, VoidCallback onSaved) {
     return display
         ? Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -311,7 +356,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> {
                     textStyle: const TextStyle(color: Colors.white),
                     backgroundColor: Colors.deepPurple,
                   ),
-                  child: const Text('Save', style: TextStyle(color: Colors.white))),
+                  child: const Text('Save',
+                      style: TextStyle(color: Colors.white))),
             ],
           )
         : const SizedBox.shrink();

@@ -2,14 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/storage/memories.dart';
-import 'package:friend_private/backend/storage/message.dart';
-import 'package:friend_private/backend/storage/segment.dart';
-import 'package:friend_private/backend/storage/plugin.dart';
-import 'package:friend_private/backend/utils.dart';
-import 'package:friend_private/env/env.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_util.dart';
+import 'package:avm/backend/preferences.dart';
+import 'package:avm/backend/storage/memories.dart';
+import 'package:avm/backend/storage/message.dart';
+import 'package:avm/backend/storage/segment.dart';
+import 'package:avm/backend/storage/plugin.dart';
+import 'package:avm/backend/utils.dart';
+import 'package:avm/env/env.dart';
+import 'package:avm/flutter_flow/flutter_flow_util.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import '../../utils/string_utils.dart';
@@ -268,7 +268,11 @@ Future<String?> determineRequiresContext(List<Message> messages) async {
   ]);
   debugPrint('determineRequiresContext response: $response');
   try {
-    return jsonDecode(response.toString().replaceAll('```','').replaceAll('json', '').trim())['query'];
+    return jsonDecode(response
+        .toString()
+        .replaceAll('```', '')
+        .replaceAll('json', '')
+        .trim())['query'];
   } catch (e) {
     return null;
   }

@@ -4,17 +4,17 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:friend_private/backend/api_requests/api_calls.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/storage/segment.dart';
-import 'package:friend_private/utils/ble/communication.dart';
-import 'package:friend_private/utils/memories.dart';
-import 'package:friend_private/backend/api_requests/cloud_storage.dart';
-import 'package:friend_private/utils/notifications.dart';
-import 'package:friend_private/utils/sentry_log.dart';
-import 'package:friend_private/utils/stt/wav_bytes.dart';
-import 'package:friend_private/utils/vad.dart';
+import 'package:avm/backend/api_requests/api_calls.dart';
+import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/backend/preferences.dart';
+import 'package:avm/backend/storage/segment.dart';
+import 'package:avm/utils/ble/communication.dart';
+import 'package:avm/utils/memories.dart';
+import 'package:avm/backend/api_requests/cloud_storage.dart';
+import 'package:avm/utils/notifications.dart';
+import 'package:avm/utils/sentry_log.dart';
+import 'package:avm/utils/stt/wav_bytes.dart';
+import 'package:avm/utils/vad.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
@@ -72,32 +72,41 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
     List<int> currentOrdered = current.keys.toList()
       ..sort((a, b) => current[a]!['starts'].compareTo(current[b]!['starts']));
 
-    if (previous.length == 1 && current.length == 1 && previous.keys.toList()[0] == current.keys.toList()[0]) {
+    if (previous.length == 1 &&
+        current.length == 1 &&
+        previous.keys.toList()[0] == current.keys.toList()[0]) {
       // Last diarized, it's just 1, and here's just one, just add
       int speakerIdx = current.keys.toList()[0];
-      previous[speakerIdx] = '${previous[speakerIdx]!} ' + current[current.keys.toList()[0]]!['transcript'];
+      previous[speakerIdx] = '${previous[speakerIdx]!} ' +
+          current[current.keys.toList()[0]]!['transcript'];
       whispersDiarized[whispersDiarized.length - 1] = previous;
       // Same speaker, just add
-    } else if (previous.length == 1 && current.length == 2 && previous.keys.toList()[0] == currentOrdered[0]) {
+    } else if (previous.length == 1 &&
+        current.length == 2 &&
+        previous.keys.toList()[0] == currentOrdered[0]) {
       // add that transcript fot the speakers, but append the remaining ones as new speakers
       // Last diarized it's just 1, and here's 2 but the previous speaker, is one that starts first here
-      previous[currentOrdered[0]] = (previous[currentOrdered[0]] ?? '') + current[currentOrdered[0]]!['transcript'];
+      previous[currentOrdered[0]] = (previous[currentOrdered[0]] ?? '') +
+          current[currentOrdered[0]]!['transcript'];
       whispersDiarized[whispersDiarized.length - 1] = previous;
       var newTranscription = <int, String>{};
       for (var speaker in currentOrdered) {
-        if (speaker != currentOrdered[0]) newTranscription[speaker] = current[speaker]!['transcript'];
+        if (speaker != currentOrdered[0])
+          newTranscription[speaker] = current[speaker]!['transcript'];
       }
       whispersDiarized.add(newTranscription);
     } else if (previous.isEmpty) {
       // Different speakers, just add
       current.forEach((speaker, data) {
-        whispersDiarized[whispersDiarized.length - 1][speaker] = data['transcript'];
+        whispersDiarized[whispersDiarized.length - 1][speaker] =
+            data['transcript'];
       });
     } else {
       // Different speakers, just add
       whispersDiarized.add({});
       current.forEach((speaker, data) {
-        whispersDiarized[whispersDiarized.length - 1][speaker] = data['transcript'];
+        whispersDiarized[whispersDiarized.length - 1][speaker] =
+            data['transcript'];
       });
     }
 
@@ -112,7 +121,8 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
     // VadUtil vad = VadUtil();
     // await vad.init();
 
-    StreamSubscription? stream = await getBleAudioBytesListener(btDevice!, onAudioBytesReceived: (List<int> value) {
+    StreamSubscription? stream = await getBleAudioBytesListener(btDevice!,
+        onAudioBytesReceived: (List<int> value) {
       if (value.isEmpty) return;
       value.removeRange(0, 3);
       // ~ losing because of pipe precision, voltage on device is 0.912391923, it sends 1,
@@ -127,13 +137,16 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
       if (toProcessBytes.audioBytes.length % 240000 == 0) {
         var bytesCopy = List<int>.from(toProcessBytes.audioBytes);
         toProcessBytes.clearAudioBytesSegment(remainingSeconds: 1);
-        WavBytesUtil.createWavFile(bytesCopy, filename: 'temp.wav').then((f) async {
+        WavBytesUtil.createWavFile(bytesCopy, filename: 'temp.wav')
+            .then((f) async {
           // var containsAudio = await vad.predict(f.readAsBytesSync());
           try {
-            List<TranscriptSegment> segments = await transcribeAudioFile(f, SharedPreferencesUtil().uid);
+            List<TranscriptSegment> segments =
+                await transcribeAudioFile(f, SharedPreferencesUtil().uid);
             processCustomTranscript(segments);
           } catch (e) {
-            toProcessBytes.insertAudioBytes(bytesCopy.sublist(0, 232000)); // remove last 1 sec to avoid duplicate
+            toProcessBytes.insertAudioBytes(bytesCopy.sublist(
+                0, 232000)); // remove last 1 sec to avoid duplicate
           }
         });
       }
@@ -143,7 +156,8 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
     audioStorage = wavBytesUtil;
   }
 
-  _manualTranscriptUpdate(int idx, String transcript, double starts, double ends) {
+  _manualTranscriptUpdate(
+      int idx, String transcript, double starts, double ends) {
     updateTranscript({
       idx: {'transcript': transcript, 'starts': starts, 'ends': ends}
     });
@@ -159,11 +173,13 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
     for (int i = 0; i < data.length; i++) {
       var segment = data[i];
       debugPrint(segment.toString());
-      int currentSpeakerId = segment.isUser ? -1 : int.parse(segment.speaker.split('_')[1]);
+      int currentSpeakerId =
+          segment.isUser ? -1 : int.parse(segment.speaker.split('_')[1]);
       if (prevSpeakerId == currentSpeakerId) {
         currTranscript += ' ${segment.text}';
       } else if (prevSpeakerId != -2) {
-        _manualTranscriptUpdate(prevSpeakerId, currTranscript, data[sameSpeakerFromIdx].start, data[i - 1].end);
+        _manualTranscriptUpdate(prevSpeakerId, currTranscript,
+            data[sameSpeakerFromIdx].start, data[i - 1].end);
         currTranscript = segment.text;
         sameSpeakerFromIdx = i;
       } else {
@@ -174,12 +190,14 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
     }
 
     if (currTranscript.isNotEmpty) {
-      _manualTranscriptUpdate(prevSpeakerId, currTranscript, data[sameSpeakerFromIdx].start, data[data.length - 1].end);
+      _manualTranscriptUpdate(prevSpeakerId, currTranscript,
+          data[sameSpeakerFromIdx].start, data[data.length - 1].end);
     }
     _initiateMemoryCreationTimer();
   }
 
-  void resetState({bool restartBytesProcessing = true, BTDeviceStruct? btDevice}) {
+  void resetState(
+      {bool restartBytesProcessing = true, BTDeviceStruct? btDevice}) {
     debugPrint('transcript.dart resetState called');
     audioBytesStream?.cancel();
     _memoryCreationTimer?.cancel();
@@ -190,7 +208,8 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
     if (restartBytesProcessing) initiateBytesProcessing();
     if (restartBytesProcessing &&
         whispersDiarized.isNotEmpty &&
-        (whispersDiarized.length > 1 || whispersDiarized[0].isNotEmpty)) _initiateMemoryCreationTimer();
+        (whispersDiarized.length > 1 || whispersDiarized[0].isNotEmpty))
+      _initiateMemoryCreationTimer();
   }
 
   String _buildDiarizedTranscriptMessage() {
@@ -227,7 +246,8 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
     // - Each advice should be stored, and ideally mapped to a memory
     // - Advice should consider conversations in other languages
     // - Advice should have a tone, like a conversation purpose, chill with friends, networking, family, etc...
-    _conversationAdvisorTimer = Timer.periodic(const Duration(seconds: 60 * 10), (timer) async {
+    _conversationAdvisorTimer =
+        Timer.periodic(const Duration(seconds: 60 * 10), (timer) async {
       addEventToContext('Conversation Advisor Timer Triggered');
       var transcript = _buildDiarizedTranscriptMessage();
       debugPrint('_initiateConversationAdvisorTimer: $transcript');
@@ -235,7 +255,10 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
       if (advice.isNotEmpty) {
         MixpanelManager().coachAdvisorFeedback(transcript, advice);
         clearNotification(3);
-        createNotification(notificationId: 3, title: 'Your Conversation Coach Says', body: advice);
+        createNotification(
+            notificationId: 3,
+            title: 'Your Conversation Coach Says',
+            body: advice);
       }
     });
   }
@@ -288,7 +311,9 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
             //   style: TextStyle(color: Colors.white, fontSize: 14),
             //   textAlign: TextAlign.center,
             // ),
-            btDevice == null ? const SizedBox.shrink() : Lottie.asset('assets/lottie_animations/wave.json', width: 80),
+            btDevice == null
+                ? const SizedBox.shrink()
+                : Lottie.asset('assets/lottie_animations/wave.json', width: 80),
           ],
         ),
       );
@@ -309,7 +334,10 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0),
             child: Lottie.asset('assets/lottie_animations/wave.json',
-                width: 80, height: 60, alignment: Alignment.center, fit: BoxFit.contain),
+                width: 80,
+                height: 60,
+                alignment: Alignment.center,
+                fit: BoxFit.contain),
           );
         }
         final data = whispersDiarized[idx];
@@ -332,7 +360,8 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
             style: FlutterFlowTheme.of(context).bodyMedium.override(
                   fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
                   letterSpacing: 0.0,
-                  useGoogleFonts: GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                  useGoogleFonts: GoogleFonts.asMap().containsKey(
+                      FlutterFlowTheme.of(context).bodyMediumFamily),
                 ),
           ),
         );

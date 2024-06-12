@@ -1,10 +1,13 @@
+import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/pages/home/page.dart';
+import 'package:avm/utils/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/pages/home/page.dart';
-import 'package:friend_private/utils/notifications.dart';
+import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/pages/home/page.dart';
+import 'package:avm/utils/notifications.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'backend/preferences.dart';
 import 'env/env.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_theme.dart';
+import 'package:avm/flutter_flow/flutter_flow_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MemoryProcessing extends StatelessWidget {
@@ -27,7 +27,8 @@ class MemoryProcessing extends StatelessWidget {
                   Align(
                     alignment: const AlignmentDirectional(0.0, 0.0),
                     child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(4.0, 0.0, 4.0, 0.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          4.0, 0.0, 4.0, 0.0),
                       child: Container(
                         width: MediaQuery.sizeOf(context).width * 0.5,
                         decoration: BoxDecoration(
@@ -38,7 +39,8 @@ class MemoryProcessing extends StatelessWidget {
                         child: const Align(
                           alignment: AlignmentDirectional(0.0, 0.0),
                           child: Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0.0, 4.0, 0.0, 4.0),
+                            padding: EdgeInsetsDirectional.fromSTEB(
+                                0.0, 4.0, 0.0, 4.0),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -52,17 +54,20 @@ class MemoryProcessing extends StatelessWidget {
                   Align(
                     alignment: const AlignmentDirectional(-1.0, 0.0),
                     child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(12.0, 12.0, 0.0, 12.0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          12.0, 12.0, 0.0, 12.0),
                       child: SelectionArea(
                           child: Text(
                         'Memory being created...',
                         textAlign: TextAlign.start,
                         style: FlutterFlowTheme.of(context).bodyMedium.override(
-                              fontFamily: FlutterFlowTheme.of(context).bodyMediumFamily,
+                              fontFamily:
+                                  FlutterFlowTheme.of(context).bodyMediumFamily,
                               fontSize: 16.0,
                               fontWeight: FontWeight.w500,
-                              useGoogleFonts:
-                                  GoogleFonts.asMap().containsKey(FlutterFlowTheme.of(context).bodyMediumFamily),
+                              useGoogleFonts: GoogleFonts.asMap().containsKey(
+                                  FlutterFlowTheme.of(context)
+                                      .bodyMediumFamily),
                               lineHeight: 1.5,
                             ),
                       )),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/schema/structs/index.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_theme.dart';
+import 'package:avm/backend/schema/structs/index.dart';
+import 'package:avm/flutter_flow/flutter_flow_theme.dart';
 
 class InfoButton extends StatefulWidget {
   const InfoButton({super.key});

@@ -1,8 +1,8 @@
 import 'dart:async';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/storage/segment.dart';
-import 'package:friend_private/utils/ble/communication.dart';
-import 'package:friend_private/utils/stt/wav_bytes.dart';
+import 'package:avm/backend/preferences.dart';
+import 'package:avm/backend/storage/segment.dart';
+import 'package:avm/utils/ble/communication.dart';
+import 'package:avm/utils/stt/wav_bytes.dart';
 import 'package:flutter/material.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:tuple/tuple.dart';
@@ -14,7 +14,8 @@ import 'package:web_socket_channel/io.dart';
 // UUIDs for the specific service and characteristics
 const String audioServiceUuid = "19b10000-e8f2-537e-4f6c-d104768a1214";
 const String audioCharacteristicUuid = "19b10001-e8f2-537e-4f6c-d104768a1214";
-const String audioCharacteristicFormatUuid = "19b10002-e8f2-537e-4f6c-d104768a1214";
+const String audioCharacteristicFormatUuid =
+    "19b10002-e8f2-537e-4f6c-d104768a1214";
 
 Future<IOWebSocketChannel?> _initCustomStream(
     void Function(String)? onCustomWebSocketCallback,
@@ -25,8 +26,8 @@ Future<IOWebSocketChannel?> _initCustomStream(
   debugPrint('Websocket Opening');
   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
   // https://38aa-190-25-123-167.ngrok-free.app
-  IOWebSocketChannel channel = IOWebSocketChannel.connect(
-      Uri.parse('ws://38aa-190-25-123-167.ngrok-free.app/transcribe-ws?language=$recordingsLanguage'));
+  IOWebSocketChannel channel = IOWebSocketChannel.connect(Uri.parse(
+      'ws://38aa-190-25-123-167.ngrok-free.app/transcribe-ws?language=$recordingsLanguage'));
   channel.ready.then((_) {
     channel.stream.listen(
       (event) {
@@ -85,7 +86,8 @@ Future<IOWebSocketChannel> _initStream(
       (event) {
         // debugPrint('Event from Stream: $event');
         final parsedJson = jsonDecode(event);
-        if (parsedJson['channel'] == null || parsedJson['channel']['alternatives'] == null) return;
+        if (parsedJson['channel'] == null ||
+            parsedJson['channel']['alternatives'] == null) return;
 
         final data = parsedJson['channel']['alternatives'][0];
         // debugPrint('parsedJson: ${data.toString()}');
@@ -125,7 +127,9 @@ Future<IOWebSocketChannel> _initStream(
   return channel;
 }
 
-Future<Tuple4<IOWebSocketChannel?, StreamSubscription?, WavBytesUtil, IOWebSocketChannel?>> bleReceiveWAV({
+Future<
+    Tuple4<IOWebSocketChannel?, StreamSubscription?, WavBytesUtil,
+        IOWebSocketChannel?>> bleReceiveWAV({
   required BTDeviceStruct? btDevice,
   void Function(List<dynamic>, String)? speechFinalCallback,
   void Function(Map<int, String>, String)? interimCallback,
@@ -157,7 +161,8 @@ Future<Tuple4<IOWebSocketChannel?, StreamSubscription?, WavBytesUtil, IOWebSocke
     // );
     IOWebSocketChannel? channel2;
 
-    StreamSubscription? stream = await getBleAudioBytesListener(btDevice!, onAudioBytesReceived: (List<int> value) {
+    StreamSubscription? stream = await getBleAudioBytesListener(btDevice!,
+        onAudioBytesReceived: (List<int> value) {
       if (value.isEmpty) return;
       value.removeRange(0, 3);
       for (int i = 0; i < value.length; i += 2) {
@@ -171,13 +176,13 @@ Future<Tuple4<IOWebSocketChannel?, StreamSubscription?, WavBytesUtil, IOWebSocke
       channel.sink.add(value);
       // channel2?.sink.add(value);
     });
-    return Tuple4<IOWebSocketChannel?, StreamSubscription?, WavBytesUtil, IOWebSocketChannel?>(
-        channel, stream, wavBytesUtil, channel2);
+    return Tuple4<IOWebSocketChannel?, StreamSubscription?, WavBytesUtil,
+        IOWebSocketChannel?>(channel, stream, wavBytesUtil, channel2);
   } catch (e) {
     debugPrint('Error receiving data: $e');
   } finally {}
 
   // return completer.future;
-  return Tuple4<IOWebSocketChannel?, StreamSubscription?, WavBytesUtil, IOWebSocketChannel?>(
-      null, null, wavBytesUtil, null);
+  return Tuple4<IOWebSocketChannel?, StreamSubscription?, WavBytesUtil,
+      IOWebSocketChannel?>(null, null, wavBytesUtil, null);
 }

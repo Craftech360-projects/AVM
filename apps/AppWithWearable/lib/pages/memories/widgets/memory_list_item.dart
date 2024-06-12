@@ -1,15 +1,19 @@
+import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/backend/storage/memories.dart';
+import 'package:avm/flutter_flow/flutter_flow_util.dart';
+import 'package:avm/pages/memories/widgets/memory_operations.dart';
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/storage/memories.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_util.dart';
-import 'package:friend_private/pages/memories/widgets/memory_operations.dart';
 
 class MemoryListItem extends StatefulWidget {
   final int memoryIdx;
   final MemoryRecord memory;
   final Function loadMemories;
 
-  const MemoryListItem({super.key, required this.memory, required this.loadMemories, required this.memoryIdx});
+  const MemoryListItem(
+      {super.key,
+      required this.memory,
+      required this.loadMemories,
+      required this.memoryIdx});
 
   @override
   State<MemoryListItem> createState() => _MemoryListItemState();
@@ -21,7 +25,8 @@ class _MemoryListItemState extends State<MemoryListItem> {
     return GestureDetector(
       onTap: () async {
         debugPrint('Tapped memory: ${widget.memory.id}');
-        MixpanelManager().memoryListItemClicked(widget.memory, widget.memoryIdx);
+        MixpanelManager()
+            .memoryListItemClicked(widget.memory, widget.memoryIdx);
         await context.pushNamed(
           'memoryDetailPage',
           queryParameters: {
@@ -49,11 +54,15 @@ class _MemoryListItemState extends State<MemoryListItem> {
               _getMemoryHeader(),
               const SizedBox(height: 12),
               Text(widget.memory.structured.overview,
-                  style: TextStyle(color: Colors.grey.shade300, fontSize: 15, height: 1.2)),
+                  style: TextStyle(
+                      color: Colors.grey.shade300, fontSize: 15, height: 1.2)),
               if (widget.memory.structured.actionItems.isNotEmpty) ...[
                 const SizedBox(height: 20),
                 const Text('Action Items:',
-                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600)),
                 const SizedBox(height: 8),
                 ..._getActionItems(),
               ],
@@ -76,7 +85,8 @@ class _MemoryListItemState extends State<MemoryListItem> {
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Text(
           '- $actionItem',
-          style: TextStyle(color: Colors.grey.shade300, fontSize: 14, height: 1.2),
+          style:
+              TextStyle(color: Colors.grey.shade300, fontSize: 14, height: 1.2),
         ),
       );
     }).toList();
@@ -90,7 +100,10 @@ class _MemoryListItemState extends State<MemoryListItem> {
         children: [
           Expanded(
               child: Text(widget.memory.structured.title,
-                  style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600))),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600))),
           getMemoryOperations(widget.memory, setState),
         ],
       ),

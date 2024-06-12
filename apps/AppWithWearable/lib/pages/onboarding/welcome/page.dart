@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:friend_private/utils/notifications.dart';
-import 'package:friend_private/widgets/blur_bot_widget.dart';
+import 'package:avm/utils/notifications.dart';
+import 'package:avm/widgets/blur_bot_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_tilt/flutter_tilt.dart';
 

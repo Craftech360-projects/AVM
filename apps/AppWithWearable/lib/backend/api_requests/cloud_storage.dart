@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/preferences.dart';
+import 'package:avm/backend/preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:googleapis_auth/auth_io.dart';
@@ -17,7 +17,8 @@ void authenticateGCP() async {
   }
   final credentialsBytes = base64Decode(credentialsBase64);
   String decodedString = utf8.decode(credentialsBytes);
-  final credentials = ServiceAccountCredentials.fromJson(jsonDecode(decodedString));
+  final credentials =
+      ServiceAccountCredentials.fromJson(jsonDecode(decodedString));
   var scopes = ['https://www.googleapis.com/auth/devstorage.full_control'];
   authClient = await clientViaServiceAccount(credentials, scopes);
   debugPrint('Authenticated');
@@ -30,7 +31,8 @@ Future<String?> uploadFile(File file) async {
     return null;
   }
   String fileName = file.path.split('/')[file.path.split('/').length - 1];
-  String url = 'https://storage.googleapis.com/upload/storage/v1/b/$bucketName/o?uploadType=media&name=$fileName';
+  String url =
+      'https://storage.googleapis.com/upload/storage/v1/b/$bucketName/o?uploadType=media&name=$fileName';
 
   try {
     var response = await http.post(
@@ -73,8 +75,11 @@ Future<File?> downloadFile(String objectName, String saveFileName) async {
 
   try {
     var response = await http.get(
-      Uri.parse('https://storage.googleapis.com/storage/v1/b/$bucketName/o/$objectName?alt=media'),
-      headers: {'Authorization': 'Bearer ${authClient?.credentials.accessToken.data}'},
+      Uri.parse(
+          'https://storage.googleapis.com/storage/v1/b/$bucketName/o/$objectName?alt=media'),
+      headers: {
+        'Authorization': 'Bearer ${authClient?.credentials.accessToken.data}'
+      },
     );
 
     if (response.statusCode == 200) {

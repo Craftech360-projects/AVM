@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_theme.dart';
-import 'package:friend_private/flutter_flow/flutter_flow_widgets.dart';
+import 'package:avm/flutter_flow/flutter_flow_theme.dart';
+import 'package:avm/flutter_flow/flutter_flow_widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 getChatAppBar(BuildContext context) {
