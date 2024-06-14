@@ -3,9 +3,9 @@ import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:friend_private/backend/storage/dvdb/document.dart';
-import 'package:friend_private/backend/storage/dvdb/math.dart';
-import 'package:friend_private/backend/storage/dvdb/search_result.dart';
+import 'package:AVMe/backend/storage/dvdb/document.dart';
+import 'package:AVMe/backend/storage/dvdb/math.dart';
+import 'package:AVMe/backend/storage/dvdb/search_result.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -16,7 +16,8 @@ class Collection {
   final String name;
   final Map<String, Document> documents = {};
 
-  void addDocument(String? id, String text, Float64List embedding, {Map<String, String>? metadata}) {
+  void addDocument(String? id, String text, Float64List embedding,
+      {Map<String, String>? metadata}) {
     var uuid = const Uuid();
     final Document document = Document(
       id: id ?? uuid.v1(),
@@ -43,19 +44,23 @@ class Collection {
     }
   }
 
-  List<SearchResult> search(Float64List query, {int numResults = 10, double? threshold}) {
+  List<SearchResult> search(Float64List query,
+      {int numResults = 10, double? threshold}) {
     final List<SearchResult> similarities = <SearchResult>[];
     for (var document in documents.values) {
-      final double similarity = MathFunctions().cosineSimilarity(query, document.embedding);
+      final double similarity =
+          MathFunctions().cosineSimilarity(query, document.embedding);
 
       if (threshold != null && similarity < threshold) {
         continue;
       }
 
-      similarities.add(SearchResult(id: document.id, text: document.text, score: similarity));
+      similarities.add(SearchResult(
+          id: document.id, text: document.text, score: similarity));
     }
 
-    similarities.sort((SearchResult a, SearchResult b) => b.score.compareTo(a.score));
+    similarities
+        .sort((SearchResult a, SearchResult b) => b.score.compareTo(a.score));
     return similarities.take(numResults).toList();
   }
 

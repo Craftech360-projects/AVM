@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/pages/speaker_id/page.dart';
-import 'package:friend_private/widgets/device_widget.dart';
-import 'package:friend_private/widgets/scanning_ui.dart';
+import 'package:AVMe/backend/mixpanel.dart';
+import 'package:AVMe/backend/preferences.dart';
+import 'package:AVMe/backend/schema/bt_device.dart';
+import 'package:AVMe/pages/speaker_id/page.dart';
+import 'package:AVMe/widgets/device_widget.dart';
+import 'package:AVMe/widgets/scanning_ui.dart';
 
 import 'widgets/transcript.dart';
 
@@ -26,7 +26,8 @@ class CapturePage extends StatefulWidget {
   State<CapturePage> createState() => _CapturePageState();
 }
 
-class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClientMixin {
+class _CapturePageState extends State<CapturePage>
+    with AutomaticKeepAliveClientMixin {
   bool _hasTranscripts = false;
 
   @override
@@ -41,7 +42,8 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (c) => const SpeakerIdPage()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (c) => const SpeakerIdPage()));
                     MixpanelManager().speechProfileCapturePageClicked();
                   },
                   child: Container(
@@ -49,7 +51,8 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
                       color: Colors.grey.shade900,
                       borderRadius: const BorderRadius.all(Radius.circular(12)),
                     ),
-                    margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 24),
                     padding: const EdgeInsets.all(16),
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,7 +64,8 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
                               SizedBox(width: 16),
                               Text(
                                 'Set up speech profile',
-                                style: TextStyle(color: Colors.white, fontSize: 16),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
                               ),
                             ],
                           ),
@@ -77,7 +81,8 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
                   child: Container(
                     width: 12,
                     height: 12,
-                    decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                    decoration: const BoxDecoration(
+                        color: Colors.red, shape: BoxShape.circle),
                   ),
                 ),
               ],
@@ -105,8 +110,9 @@ class _CapturePageState extends State<CapturePage> with AutomaticKeepAliveClient
           sizeMultiplier: 0.7,
         ),
         const ScanningUI(
-          string1: 'Looking for Friend wearable',
-          string2: 'Locating your Friend device. Keep it near your phone for pairing',
+          string1: 'Looking for AVMe wearable',
+          string2:
+              'Locating your AVMe device. Keep it near your phone for pairing',
         ),
       ];
     }

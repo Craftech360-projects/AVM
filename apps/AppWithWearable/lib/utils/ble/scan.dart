@@ -1,8 +1,8 @@
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/utils/ble/connect.dart';
-import 'package:friend_private/utils/ble/find.dart';
+import 'package:AVMe/backend/preferences.dart';
+import 'package:AVMe/backend/schema/bt_device.dart';
+import 'package:AVMe/utils/ble/connect.dart';
+import 'package:AVMe/utils/ble/find.dart';
 
 Future<BTDeviceStruct?> scanAndConnectDevice({bool autoConnect = true}) async {
   var deviceId = SharedPreferencesUtil().deviceId;
@@ -39,6 +39,7 @@ Future<BTDeviceStruct?> scanAndConnectDevice({bool autoConnect = true}) async {
 
 Future<List<BTDeviceStruct?>> scanDevices() async {
   List<BTDeviceStruct> foundDevices = await bleFindDevices();
-  var filteredDevices = foundDevices.where((device) => device.name == "Friend").toList();
+  var filteredDevices =
+      foundDevices.where((device) => device.name == "Friend").toList();
   return filteredDevices;
 }

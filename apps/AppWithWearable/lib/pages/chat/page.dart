@@ -2,16 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:friend_private/backend/api_requests/api_calls.dart';
-import 'package:friend_private/backend/api_requests/stream_api_response.dart';
-import 'package:friend_private/backend/database/memory.dart';
-import 'package:friend_private/backend/database/memory_provider.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/storage/message.dart';
-import 'package:friend_private/pages/chat/widgets/ai_message.dart';
-import 'package:friend_private/pages/chat/widgets/user_message.dart';
-import 'package:friend_private/utils/temp.dart';
+import 'package:AVMe/backend/api_requests/api_calls.dart';
+import 'package:AVMe/backend/api_requests/stream_api_response.dart';
+import 'package:AVMe/backend/database/memory.dart';
+import 'package:AVMe/backend/database/memory_provider.dart';
+import 'package:AVMe/backend/mixpanel.dart';
+import 'package:AVMe/backend/preferences.dart';
+import 'package:AVMe/backend/storage/message.dart';
+import 'package:AVMe/pages/chat/widgets/ai_message.dart';
+import 'package:AVMe/pages/chat/widgets/user_message.dart';
+import 'package:AVMe/utils/temp.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:uuid/uuid.dart';
 
@@ -29,7 +29,8 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
+class _ChatPageState extends State<ChatPage>
+    with AutomaticKeepAliveClientMixin {
   TextEditingController textController = TextEditingController();
   ScrollController listViewController = ScrollController();
 
@@ -52,8 +53,12 @@ class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin 
   void initState() {
     super.initState();
     var msg = prefs.chatMessages;
-    _messages =
-        msg.isEmpty ? [Message(text: 'What would you like to search for?', type: 'ai', id: '1')] : prefs.chatMessages;
+    _messages = msg.isEmpty
+        ? [
+            Message(
+                text: 'What would you like to search for?', type: 'ai', id: '1')
+          ]
+        : prefs.chatMessages;
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _moveListToBottom(initial: true);
     });
@@ -80,17 +85,25 @@ class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin 
               final message = _messages[chatIndex];
               final isLastMessage = chatIndex == _messages.length - 1;
               double topPadding = chatIndex == 0 ? 24 : 0;
-              double bottomPadding = isLastMessage ? (widget.textFieldFocusNode.hasFocus ? 120 : 180) : 0;
+              double bottomPadding = isLastMessage
+                  ? (widget.textFieldFocusNode.hasFocus ? 120 : 180)
+                  : 0;
               return Padding(
                 key: ValueKey(message.id),
-                padding: EdgeInsets.only(bottom: bottomPadding, left: 18, right: 18, top: topPadding),
+                padding: EdgeInsets.only(
+                    bottom: bottomPadding,
+                    left: 18,
+                    right: 18,
+                    top: topPadding),
                 child: message.type == 'ai'
                     ? AIMessage(
                         message: message,
                         sendMessage: _sendMessageUtil,
                         displayOptions: _messages.length <= 1,
                         memories: widget.memories
-                            .where((m) => message.memoryIds?.contains(m.id.toString()) ?? false)
+                            .where((m) =>
+                                message.memoryIds?.contains(m.id.toString()) ??
+                                false)
                             .toList(),
                       )
                     : HumanMessage(message: message),
@@ -101,7 +114,8 @@ class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin 
         Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: EdgeInsets.only(bottom: widget.textFieldFocusNode.hasFocus ? 40 : 120),
+            padding: EdgeInsets.only(
+                bottom: widget.textFieldFocusNode.hasFocus ? 40 : 120),
             child: Container(
               width: double.maxFinite,
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
@@ -128,8 +142,9 @@ class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin 
                 focusNode: widget.textFieldFocusNode,
                 // canRequestFocus: true,
                 decoration: InputDecoration(
-                    hintText: 'Ask your Friend anything',
-                    hintStyle: const TextStyle(fontSize: 14.0, color: Colors.grey),
+                    hintText: 'Ask your AVMe anything',
+                    hintStyle:
+                        const TextStyle(fontSize: 14.0, color: Colors.grey),
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     suffixIcon: IconButton(
@@ -138,7 +153,8 @@ class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin 
                               width: 24,
                               height: 24,
                               child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
                           : const Icon(
@@ -174,7 +190,8 @@ class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin 
     List<String> memoryIds = ragInfo[1].cast<String>();
     debugPrint('RAG Context: $ragContext');
     MixpanelManager().chatMessageSent(message);
-    await streamApiResponse(ragContext, _callbackFunctionChatStreaming(memoryIds), _messages, () {
+    await streamApiResponse(
+        ragContext, _callbackFunctionChatStreaming(memoryIds), _messages, () {
       _messages.last.memoryIds = memoryIds;
       prefs.chatMessages = _messages;
     });
@@ -182,20 +199,27 @@ class _ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin 
   }
 
   Future<List<dynamic>> _retrieveRAGContext(String message) async {
-    String? betterContextQuestion = await determineRequiresContext(retrieveMostRecentMessages(_messages));
-    debugPrint('_retrieveRAGContext betterContextQuestion: $betterContextQuestion');
+    String? betterContextQuestion =
+        await determineRequiresContext(retrieveMostRecentMessages(_messages));
+    debugPrint(
+        '_retrieveRAGContext betterContextQuestion: $betterContextQuestion');
     if (betterContextQuestion == null) {
       return ['', []];
     }
-    List<double> vectorizedMessage = await getEmbeddingsFromInput(betterContextQuestion);
+    List<double> vectorizedMessage =
+        await getEmbeddingsFromInput(betterContextQuestion);
     List<String> memoriesId = await queryPineconeVectors(vectorizedMessage);
     debugPrint('queryPineconeVectors memories retrieved: $memoriesId');
     if (memoriesId.isEmpty) {
       return ['', []];
     }
-    List<int> memoriesIdAsInt = memoriesId.map((e) => int.tryParse(e) ?? -1).where((e) => e != -1).toList();
+    List<int> memoriesIdAsInt = memoriesId
+        .map((e) => int.tryParse(e) ?? -1)
+        .where((e) => e != -1)
+        .toList();
     debugPrint('memoriesIdAsInt: $memoriesIdAsInt');
-    List<Memory> memories = await MemoryProvider().getMemoriesById(memoriesIdAsInt);
+    List<Memory> memories =
+        await MemoryProvider().getMemoriesById(memoriesIdAsInt);
     return [Memory.memoriesToString(memories), memoriesId];
   }
 

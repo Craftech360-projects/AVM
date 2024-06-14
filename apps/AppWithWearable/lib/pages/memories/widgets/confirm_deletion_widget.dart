@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/api_requests/api_calls.dart';
-import 'package:friend_private/backend/database/memory.dart';
-import 'package:friend_private/backend/database/memory_provider.dart';
-import 'package:friend_private/backend/mixpanel.dart';
+import 'package:AVMe/backend/api_requests/api_calls.dart';
+import 'package:AVMe/backend/database/memory.dart';
+import 'package:AVMe/backend/database/memory_provider.dart';
+import 'package:AVMe/backend/mixpanel.dart';
 
 class ConfirmDeletionWidget extends StatefulWidget {
   final Memory memory;
@@ -60,28 +60,33 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
                   textAlign: TextAlign.center,
                 ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(24.0, 12.0, 24.0, 0.0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(
+                      24.0, 12.0, 24.0, 0.0),
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 12.0, 0.0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0.0, 0.0, 12.0, 0.0),
                         child: MaterialButton(
                           onPressed: () async {
                             Navigator.pop(context);
                           },
                           height: 40.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              20.0, 0.0, 20.0, 0.0),
                           color: Theme.of(context).colorScheme.surface,
                           textColor: Theme.of(context).primaryColor,
                           elevation: 0.0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40)),
                           child: const Text('Cancel'),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 12.0, 0.0),
+                        padding: const EdgeInsetsDirectional.fromSTEB(
+                            0.0, 0.0, 12.0, 0.0),
                         child: MaterialButton(
                           onPressed: () async {
                             deleteVector(widget.memory.id.toString());
@@ -91,12 +96,14 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
                             MixpanelManager().memoryDeleted(widget.memory);
                           },
                           height: 40.0,
-                          padding: const EdgeInsetsDirectional.fromSTEB(20.0, 0.0, 20.0, 0.0),
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              20.0, 0.0, 20.0, 0.0),
                           color: const Color(0xFF780000),
                           textColor: Colors.white,
                           // STYLE ME
                           elevation: 0.0,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40)),
                           child: const Text('Delete'),
                         ),
                       ),

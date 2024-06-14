@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/pages/speaker_id/page.dart';
-import 'package:friend_private/utils/ble/communication.dart';
-import 'package:friend_private/utils/ble/connect.dart';
-import 'package:friend_private/widgets/device_widget.dart';
+import 'package:AVMe/backend/schema/bt_device.dart';
+import 'package:AVMe/backend/preferences.dart';
+import 'package:AVMe/backend/mixpanel.dart';
+import 'package:AVMe/pages/speaker_id/page.dart';
+import 'package:AVMe/utils/ble/communication.dart';
+import 'package:AVMe/utils/ble/connect.dart';
+import 'package:AVMe/widgets/device_widget.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 
 class FoundDevices extends StatefulWidget {
@@ -22,7 +22,8 @@ class FoundDevices extends StatefulWidget {
   _FoundDevicesState createState() => _FoundDevicesState();
 }
 
-class _FoundDevicesState extends State<FoundDevices> with TickerProviderStateMixin {
+class _FoundDevicesState extends State<FoundDevices>
+    with TickerProviderStateMixin {
   bool _isClicked = false;
   bool _isConnected = false;
   int batteryPercentage = -1;
@@ -43,7 +44,8 @@ class _FoundDevicesState extends State<FoundDevices> with TickerProviderStateMix
       SharedPreferencesUtil().deviceId = btDevice.id;
       MixpanelManager().onboardingCompleted();
       debugPrint("Onboarding completed");
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (c) => const SpeakerIdPage(onbording: true)));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (c) => const SpeakerIdPage(onbording: true)));
       // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (c) => const HomePageWrapper()));
     } catch (e) {
       print("Error fetching battery level: $e");
@@ -59,7 +61,8 @@ class _FoundDevicesState extends State<FoundDevices> with TickerProviderStateMix
     if (_isClicked) return; // if any item is clicked, don't do anything
     setState(() {
       _isClicked = true; // Prevent further clicks
-      _connectingToDeviceId = device.id; // Mark this device as being connected to
+      _connectingToDeviceId =
+          device.id; // Mark this device as being connected to
     });
     await bleConnectDevice(device.id);
     deviceName = device.id;
@@ -107,14 +110,18 @@ class _FoundDevicesState extends State<FoundDevices> with TickerProviderStateMix
                     itemCount: widget.deviceList.length,
                     itemBuilder: (context, index) {
                       final device = widget.deviceList[index];
-                      if (device == null) return Container(); // If device is null, return an empty container
+                      if (device == null)
+                        return Container(); // If device is null, return an empty container
 
-                      bool isConnecting =
-                          _connectingToDeviceId == device.id; // Check if it's the device being connected to
+                      bool isConnecting = _connectingToDeviceId ==
+                          device
+                              .id; // Check if it's the device being connected to
 
                       return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0, vertical: 0),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 4),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: screenSize.width * 0, vertical: 0),
                         decoration: BoxDecoration(
                           border: const GradientBoxBorder(
                             gradient: LinearGradient(colors: [
@@ -145,7 +152,8 @@ class _FoundDevicesState extends State<FoundDevices> with TickerProviderStateMix
                                   width: 24,
                                   child: const CircularProgressIndicator(
                                     strokeWidth: 3.0,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   ),
                                 )
                               : null, // Show loading indicator if connecting

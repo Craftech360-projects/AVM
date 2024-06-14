@@ -29,7 +29,7 @@ class PrivacyInfoPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'At Friend, we take your privacy very seriously. We want to be transparent about the data we collect and how we use it to improve our product for you. Here\'s what you need to know:',
+                  'At AVMe, we take your privacy very seriously. We want to be transparent about the data we collect and how we use it to improve our product for you. Here\'s what you need to know:',
                   style: TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 16),
@@ -45,12 +45,16 @@ class PrivacyInfoPage extends StatelessWidget {
                     'Onboarding Events: We track when you connect your device and complete the onboarding process.'),
                 _buildBulletPoint(
                     'Settings Interactions: We track when you open and save settings, and when you enable or disable developer mode.'),
-                _buildBulletPoint('Device Status: We track when your device connects or disconnects.'),
-                _buildBulletPoint('Language Changes: We track changes to your recording language.'),
-                _buildBulletPoint('Navigation: We track clicks on different tabs in the bottom navigation.'),
+                _buildBulletPoint(
+                    'Device Status: We track when your device connects or disconnects.'),
+                _buildBulletPoint(
+                    'Language Changes: We track changes to your recording language.'),
+                _buildBulletPoint(
+                    'Navigation: We track clicks on different tabs in the bottom navigation.'),
                 _buildBulletPoint(
                     'Transcript and Memory Data: We track the length, word count, and number of speakers in your transcripts. For memories, we track their creation, editing, sharing, and deletion.'),
-                _buildBulletPoint('Feedback: We track feedback given to the Coach Advisor.'),
+                _buildBulletPoint(
+                    'Feedback: We track feedback given to the Coach Advisor.'),
                 _buildBulletPoint(
                     'Chat Interactions: We track messages sent and interactions with memories through chat.'),
                 _buildBulletPoint(
@@ -79,8 +83,10 @@ class PrivacyInfoPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                _buildBulletPoint('Opt-In: You can choose to opt in to tracking to help us enhance your experience.'),
-                _buildBulletPoint('Opt-Out: You can opt out of tracking at any time, and we will reset all your data.'),
+                _buildBulletPoint(
+                    'Opt-In: You can choose to opt in to tracking to help us enhance your experience.'),
+                _buildBulletPoint(
+                    'Opt-Out: You can opt out of tracking at any time, and we will reset all your data.'),
                 const SizedBox(height: 16),
                 const Text(
                   'Our Commitment',
@@ -91,12 +97,12 @@ class PrivacyInfoPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 const Text(
-                  'We are committed to using the data we collect only to make Friend a better product for you. Your privacy and trust are paramount to us.',
+                  'We are committed to using the data we collect only to make AVMe a better product for you. Your privacy and trust are paramount to us.',
                   style: TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 16),
                 const Text(
-                  'Thank you for being a valued user of Friend. If you have any questions or concerns, feel free to reach out to us to nik@basedhardware.com.',
+                  'Thank you for being a valued user of AVMe. If you have any questions or concerns, feel free to reach out to us to nik@basedhardware.com.',
                   style: TextStyle(fontSize: 16),
                 ),
               ],

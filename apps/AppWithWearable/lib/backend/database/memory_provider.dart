@@ -1,6 +1,6 @@
-import 'package:friend_private/backend/database/box.dart';
-import 'package:friend_private/backend/database/memory.dart';
-import 'package:friend_private/objectbox.g.dart';
+import 'package:AVMe/backend/database/box.dart';
+import 'package:AVMe/backend/database/memory.dart';
+import 'package:AVMe/objectbox.g.dart';
 
 class MemoryProvider {
   static final MemoryProvider _instance = MemoryProvider._internal();
@@ -16,7 +16,8 @@ class MemoryProvider {
     return _box.getAll();
   }
 
-  Future<List<Memory>> getMemoriesOrdered({bool includeDiscarded = false}) async {
+  Future<List<Memory>> getMemoriesOrdered(
+      {bool includeDiscarded = false}) async {
     if (includeDiscarded) {
       return _box.query().build().find();
     } else {
@@ -53,9 +54,12 @@ class MemoryProvider {
     return memories.whereType<Memory>().toList();
   }
 
-  Future<List<Memory>> retrieveRecentMemoriesWithinMinutes({int minutes = 10, int count = 2}) async {
+  Future<List<Memory>> retrieveRecentMemoriesWithinMinutes(
+      {int minutes = 10, int count = 2}) async {
     DateTime timeLimit = DateTime.now().subtract(Duration(minutes: minutes));
-    var query = _box.query(Memory_.createdAt.greaterThan(timeLimit.millisecondsSinceEpoch)).build();
+    var query = _box
+        .query(Memory_.createdAt.greaterThan(timeLimit.millisecondsSinceEpoch))
+        .build();
     List<Memory> filtered = query.find();
     query.close();
 

@@ -1,10 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:friend_private/backend/database/memory.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/storage/message.dart';
-import 'package:friend_private/pages/memory_detail/page.dart';
+import 'package:AVMe/backend/database/memory.dart';
+import 'package:AVMe/backend/mixpanel.dart';
+import 'package:AVMe/backend/storage/message.dart';
+import 'package:AVMe/pages/memory_detail/page.dart';
 
 class AIMessage extends StatelessWidget {
   final Message message;
@@ -56,26 +56,37 @@ class AIMessage extends StatelessWidget {
               const SizedBox(height: 6),
               SelectionArea(
                   child: AutoSizeText(
-                message.text.isEmpty ? '...' : message.text.replaceAll(r'\n', '\n'),
-                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: Colors.grey.shade300),
+                message.text.isEmpty
+                    ? '...'
+                    : message.text.replaceAll(r'\n', '\n'),
+                style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade300),
               )),
               if (message.id != '1') _getCopyButton(context),
-              if (message.id == '1' && displayOptions) const SizedBox(height: 8),
-              if (message.id == '1' && displayOptions) ..._getInitialOptions(context),
+              if (message.id == '1' && displayOptions)
+                const SizedBox(height: 8),
+              if (message.id == '1' && displayOptions)
+                ..._getInitialOptions(context),
               if (memories.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                for (var memory in (memories.length > 3 ? memories.sublist(0, 3) : memories)) ...[
+                for (var memory in (memories.length > 3
+                    ? memories.sublist(0, 3)
+                    : memories)) ...[
                   Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 4.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                        0.0, 0.0, 0.0, 4.0),
                     child: GestureDetector(
                       onTap: () async {
                         MixpanelManager().chatMessageMemoryClicked(memory);
-                        await Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (c) => MemoryDetailPage(memory: memory)));
+                        await Navigator.of(context).push(MaterialPageRoute(
+                            builder: (c) => MemoryDetailPage(memory: memory)));
                         // TODO: maybe refresh memories here too
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 8),
                         width: double.maxFinite,
                         decoration: BoxDecoration(
                           color: Colors.grey.shade900,
@@ -175,7 +186,8 @@ class AIMessage extends StatelessWidget {
       const SizedBox(height: 8),
       _getInitialOption(context, 'What conversations did I have with John?'),
       const SizedBox(height: 8),
-      _getInitialOption(context, 'What advise have I received about entrepreneurship?'),
+      _getInitialOption(
+          context, 'What advise have I received about entrepreneurship?'),
     ];
   }
 }

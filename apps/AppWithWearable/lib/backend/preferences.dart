@@ -1,14 +1,15 @@
 import 'dart:convert';
 
-import 'package:friend_private/backend/storage/message.dart';
-import 'package:friend_private/backend/storage/plugin.dart';
-import 'package:friend_private/backend/storage/segment.dart';
-import 'package:friend_private/env/env.dart';
+import 'package:AVMe/backend/storage/message.dart';
+import 'package:AVMe/backend/storage/plugin.dart';
+import 'package:AVMe/backend/storage/segment.dart';
+import 'package:AVMe/env/env.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class SharedPreferencesUtil {
-  static final SharedPreferencesUtil _instance = SharedPreferencesUtil._internal();
+  static final SharedPreferencesUtil _instance =
+      SharedPreferencesUtil._internal();
   static SharedPreferences? _preferences;
 
   factory SharedPreferencesUtil() {
@@ -49,7 +50,8 @@ class SharedPreferencesUtil {
 
   String get recordingsLanguage => getString('recordingsLanguage') ?? 'en';
 
-  set recordingsLanguage(String value) => saveString('recordingsLanguage', value);
+  set recordingsLanguage(String value) =>
+      saveString('recordingsLanguage', value);
 
   bool get useFriendApiKeys => getBool('useFriendApiKeys') ?? true;
 
@@ -61,11 +63,14 @@ class SharedPreferencesUtil {
 
   String get customWebsocketUrl => getString('customWebsocketUrl') ?? '';
 
-  set customWebsocketUrl(String value) => saveString('customWebsocketUrl', value);
+  set customWebsocketUrl(String value) =>
+      saveString('customWebsocketUrl', value);
 
-  String gptCompletionCache(String key) => getString('gptCompletionCache:$key') ?? '';
+  String gptCompletionCache(String key) =>
+      getString('gptCompletionCache:$key') ?? '';
 
-  setGptCompletionCache(String key, String value) => saveString('gptCompletionCache:$key', value);
+  setGptCompletionCache(String key, String value) =>
+      saveString('gptCompletionCache:$key', value);
 
   bool get optInAnalytics => getBool('optInAnalytics') ?? true;
 
@@ -79,9 +84,11 @@ class SharedPreferencesUtil {
 
   set coachIsChecked(bool value) => saveBool('coachIsChecked', value);
 
-  bool get reconnectNotificationIsChecked => getBool('reconnectNotificationIsChecked') ?? true;
+  bool get reconnectNotificationIsChecked =>
+      getBool('reconnectNotificationIsChecked') ?? true;
 
-  set reconnectNotificationIsChecked(bool value) => saveBool('reconnectNotificationIsChecked', value);
+  set reconnectNotificationIsChecked(bool value) =>
+      saveBool('reconnectNotificationIsChecked', value);
 
   List<Message> get chatMessages {
     final List<String> messages = getStringList('messages') ?? [];
@@ -89,7 +96,8 @@ class SharedPreferencesUtil {
   }
 
   set chatMessages(List<Message> value) {
-    final List<String> messages = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> messages =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('messages', messages);
   }
 
@@ -103,13 +111,15 @@ class SharedPreferencesUtil {
   }
 
   set pluginsList(List<Plugin> value) {
-    final List<String> plugins = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> plugins =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('pluginsList', plugins);
   }
 
   List<String> get pluginsEnabled => getStringList('pluginsEnabled') ?? [];
 
-  set pluginsEnabled(List<String> value) => saveStringList('pluginsEnabled', value);
+  set pluginsEnabled(List<String> value) =>
+      saveStringList('pluginsEnabled', value);
 
   enablePlugin(String value) {
     final List<String> plugins = pluginsEnabled;
@@ -135,11 +145,14 @@ class SharedPreferencesUtil {
 
   List<TranscriptSegment> get transcriptSegments {
     final List<String> segments = getStringList('transcriptSegments') ?? [];
-    return segments.map((e) => TranscriptSegment.fromJson(jsonDecode(e))).toList();
+    return segments
+        .map((e) => TranscriptSegment.fromJson(jsonDecode(e)))
+        .toList();
   }
 
   set transcriptSegments(List<TranscriptSegment> value) {
-    final List<String> segments = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> segments =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('transcriptSegments', segments);
   }
 
@@ -191,17 +204,24 @@ class SharedPreferencesUtil {
     return await _preferences?.clear() ?? false;
   }
 
-  set scriptCategoriesAndEmojisExecuted(bool value) => saveBool('scriptCategoriesAndEmojisExecuted', value);
+  set scriptCategoriesAndEmojisExecuted(bool value) =>
+      saveBool('scriptCategoriesAndEmojisExecuted', value);
 
-  bool get scriptCategoriesAndEmojisExecuted => getBool('scriptCategoriesAndEmojisExecuted') ?? false;
+  bool get scriptCategoriesAndEmojisExecuted =>
+      getBool('scriptCategoriesAndEmojisExecuted') ?? false;
 
-  set scriptMemoriesToObjectBoxExecuted(bool value) => saveBool('scriptMemoriesToObjectBoxExecuted', value);
+  set scriptMemoriesToObjectBoxExecuted(bool value) =>
+      saveBool('scriptMemoriesToObjectBoxExecuted', value);
 
-  bool get scriptMemoriesToObjectBoxExecuted => getBool('scriptMemoriesToObjectBoxExecuted') ?? false;
+  bool get scriptMemoriesToObjectBoxExecuted =>
+      getBool('scriptMemoriesToObjectBoxExecuted') ?? false;
 }
 
-String getOpenAIApiKeyForUsage() =>
-    SharedPreferencesUtil().openAIApiKey.isEmpty ? Env.openAIAPIKey! : SharedPreferencesUtil().openAIApiKey;
+String getOpenAIApiKeyForUsage() => SharedPreferencesUtil().openAIApiKey.isEmpty
+    ? Env.openAIAPIKey!
+    : SharedPreferencesUtil().openAIApiKey;
 
 String getDeepgramApiKeyForUsage() =>
-    SharedPreferencesUtil().deepgramApiKey.isEmpty ? Env.deepgramApiKey! : SharedPreferencesUtil().deepgramApiKey;
+    SharedPreferencesUtil().deepgramApiKey.isEmpty
+        ? Env.deepgramApiKey!
+        : SharedPreferencesUtil().deepgramApiKey;

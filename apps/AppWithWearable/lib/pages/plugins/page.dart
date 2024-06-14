@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/storage/plugin.dart';
+import 'package:AVMe/backend/preferences.dart';
+import 'package:AVMe/backend/storage/plugin.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -46,7 +46,10 @@ class _PluginsPageState extends State<PluginsPage> {
   List<Plugin> _filteredPlugins() {
     return searchQuery.isEmpty
         ? plugins
-        : plugins.where((plugin) => plugin.name.toLowerCase().contains(searchQuery.toLowerCase())).toList();
+        : plugins
+            .where((plugin) =>
+                plugin.name.toLowerCase().contains(searchQuery.toLowerCase()))
+            .toList();
   }
 
   @override
@@ -63,7 +66,8 @@ class _PluginsPageState extends State<PluginsPage> {
         actions: [
           TextButton(
               onPressed: () {
-                launchUrl(Uri.parse('https://docs.basedhardware.com/developer/Plugins'));
+                launchUrl(Uri.parse(
+                    'https://docs.basedhardware.com/developer/Plugins'));
               },
               child: const Row(
                 children: [
@@ -175,37 +179,49 @@ class _PluginsPageState extends State<PluginsPage> {
                     padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
-                      borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(16.0)),
                       color: Colors.grey.shade900,
                     ),
-                    margin: EdgeInsets.only(bottom: 12, top: index == 0 ? 24 : 0, left: 16, right: 16),
+                    margin: EdgeInsets.only(
+                        bottom: 12,
+                        top: index == 0 ? 24 : 0,
+                        left: 16,
+                        right: 16),
                     child: ListTile(
                       leading: CircleAvatar(
                         backgroundColor: Colors.white,
                         maxRadius: 28,
-                        backgroundImage:
-                            NetworkImage('https://raw.githubusercontent.com/BasedHardware/Friend/main/${plugin.image}'),
+                        backgroundImage: NetworkImage(
+                            'https://raw.githubusercontent.com/BasedHardware/Friend/main/${plugin.image}'),
                       ),
                       title: Text(
                         plugin.name,
                         maxLines: 1,
-                        style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                            fontSize: 16),
                       ),
                       subtitle: Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
                           plugin.description,
                           maxLines: 2,
-                          style: const TextStyle(color: Colors.grey, fontSize: 14),
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 14),
                         ),
                       ),
                       trailing: IconButton(
                         icon: Icon(
-                          plugin.isEnabled ? Icons.check : Icons.arrow_downward_rounded,
+                          plugin.isEnabled
+                              ? Icons.check
+                              : Icons.arrow_downward_rounded,
                           color: plugin.isEnabled ? Colors.white : Colors.grey,
                         ),
                         onPressed: () {
-                          _togglePlugin(plugin.id.toString(), !plugin.isEnabled);
+                          _togglePlugin(
+                              plugin.id.toString(), !plugin.isEnabled);
                         },
                       ),
                       // trailing: Switch(

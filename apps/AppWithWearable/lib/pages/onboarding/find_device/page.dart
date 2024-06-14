@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/utils/ble/scan.dart';
+import 'package:AVMe/backend/schema/bt_device.dart';
+import 'package:AVMe/utils/ble/scan.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'found_devices.dart';
@@ -15,7 +15,8 @@ class FindDevicesPage extends StatefulWidget {
   _FindDevicesPageState createState() => _FindDevicesPageState();
 }
 
-class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProviderStateMixin {
+class _FindDevicesPageState extends State<FindDevicesPage>
+    with SingleTickerProviderStateMixin {
   List<BTDeviceStruct?> deviceList = [];
   late Timer _didNotMakeItTimer;
   late Timer _findDevicesTimer;
@@ -46,7 +47,8 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
     // Update foundDevicesMap with new devices and remove the ones not found anymore
     Map<String, BTDeviceStruct?> foundDevicesMap = {};
 
-    _findDevicesTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+    _findDevicesTimer =
+        Timer.periodic(const Duration(seconds: 2), (timer) async {
       List<BTDeviceStruct?> foundDevices = await scanDevices();
 
       // Update foundDevicesMap with new devices and remove the ones not found anymore
@@ -58,7 +60,10 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
         }
       }
       // Remove devices that are no longer found
-      foundDevicesMap.keys.where((id) => !updatedDevicesMap.containsKey(id)).toList().forEach(foundDevicesMap.remove);
+      foundDevicesMap.keys
+          .where((id) => !updatedDevicesMap.containsKey(id))
+          .toList()
+          .forEach(foundDevicesMap.remove);
 
       // Merge the new devices into the current map to maintain order
       foundDevicesMap.addAll(updatedDevicesMap);
@@ -76,7 +81,8 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
   }
 
   void _launchURL() async {
-    const url = 'https://discord.com/servers/based-hardware-1192313062041067520';
+    const url =
+        'https://discord.com/servers/based-hardware-1192313062041067520';
     if (!await launch(url)) throw 'Could not launch $url';
   }
 
@@ -89,7 +95,8 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
       body: SafeArea(
         child: Container(
           height: size.height, // Make the container take up the full height
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 0), // Responsive padding
+          padding: const EdgeInsets.symmetric(
+              horizontal: 32, vertical: 0), // Responsive padding
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -98,19 +105,26 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
                   ? enableInstructions
                       ? Padding(
                           padding: EdgeInsets.only(
-                            bottom: 20, // Padding from the bottom for the button
-                            left: screenSize.width * 0.0, // Horizontal padding for button
+                            bottom:
+                                20, // Padding from the bottom for the button
+                            left: screenSize.width *
+                                0.0, // Horizontal padding for button
                             right: screenSize.width * 0.0,
                           ),
                           child: Padding(
                             padding: EdgeInsets.only(
-                              bottom: 10, // Padding from the bottom for the button
-                              left: screenSize.width * 0.0, // Horizontal padding for button
+                              bottom:
+                                  10, // Padding from the bottom for the button
+                              left: screenSize.width *
+                                  0.0, // Horizontal padding for button
                               right: screenSize.width * 0.0,
                             ),
                             child: Container(
                               decoration: BoxDecoration(
-                                border: Border.all(color: const Color.fromARGB(255, 55, 55, 55), width: 2.0),
+                                border: Border.all(
+                                    color:
+                                        const Color.fromARGB(255, 55, 55, 55),
+                                    width: 2.0),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: ElevatedButton(
@@ -119,13 +133,15 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.transparent,
-                                  shadowColor: const Color.fromARGB(255, 17, 17, 17),
+                                  shadowColor:
+                                      const Color.fromARGB(255, 17, 17, 17),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                                 child: Container(
-                                  width: double.infinity, // Button takes full width of the padding
+                                  width: double
+                                      .infinity, // Button takes full width of the padding
                                   height: 45, // Fixed height for the button
                                   alignment: Alignment.center,
                                   child: Text(
@@ -133,7 +149,8 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
                                     style: TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontSize: screenSize.width * 0.045,
-                                        color: const Color.fromARGB(255, 55, 55, 55)),
+                                        color: const Color.fromARGB(
+                                            255, 55, 55, 55)),
                                   ),
                                 ),
                               ),
@@ -167,7 +184,7 @@ class SearchingSection extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(bottom: 12, top: screenSize.height * 0.08),
             child: const Text(
-              'SEARCHING FOR FRIEND...',
+              'SEARCHING FOR AVMe...',
               style: TextStyle(
                 color: Color.fromARGB(255, 255, 255, 255),
                 fontSize: 17,

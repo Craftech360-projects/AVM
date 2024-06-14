@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/mixpanel.dart';
+import 'package:AVMe/backend/mixpanel.dart';
 
 class InstructionsTab extends StatefulWidget {
   final VoidCallback goNext;
@@ -86,7 +86,8 @@ class _InstructionsTabState extends State<InstructionsTab> {
           children: [
             Expanded(
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: MaterialButton(
                   onPressed: () {
                     widget.goNext();

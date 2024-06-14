@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:friend_private/backend/database/box.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/pages/home/page.dart';
-import 'package:friend_private/pages/onboarding/welcome/page.dart';
-import 'package:friend_private/utils/notifications.dart';
+import 'package:AVMe/backend/database/box.dart';
+import 'package:AVMe/backend/mixpanel.dart';
+import 'package:AVMe/pages/home/page.dart';
+import 'package:AVMe/pages/onboarding/welcome/page.dart';
+import 'package:AVMe/utils/notifications.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 
 import 'backend/preferences.dart';
@@ -50,7 +50,8 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 
-  static _MyAppState of(BuildContext context) => context.findAncestorStateOfType<_MyAppState>()!;
+  static _MyAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>()!;
 }
 
 class _MyAppState extends State<MyApp> {
@@ -59,7 +60,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       navigatorObservers: [InstabugNavigatorObserver()],
       debugShowCheckedModeBanner: false,
-      title: 'Friend',
+      title: 'AVMe',
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -75,7 +76,8 @@ class _MyAppState extends State<MyApp> {
           ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey.shade900,
-            contentTextStyle: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
+            contentTextStyle: const TextStyle(
+                fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
           ),
           textTheme: TextTheme(
             titleLarge: const TextStyle(fontSize: 18, color: Colors.white),
@@ -88,7 +90,8 @@ class _MyAppState extends State<MyApp> {
             selectionColor: Colors.deepPurple,
           )),
       themeMode: ThemeMode.dark,
-      home: (SharedPreferencesUtil().onboardingCompleted && SharedPreferencesUtil().deviceId != '')
+      home: (SharedPreferencesUtil().onboardingCompleted &&
+              SharedPreferencesUtil().deviceId != '')
           ? const HomePageWrapper()
           : const WelcomePage(),
     );

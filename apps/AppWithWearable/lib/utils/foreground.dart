@@ -60,7 +60,8 @@ class ForegroundUtil {
     // if (!await FlutterForegroundTask.canDrawOverlays) {
     //   await FlutterForegroundTask.openSystemAlertWindowSettings();
     // }
-    debugPrint('requestPermissionForAndroid: ${!await FlutterForegroundTask.isIgnoringBatteryOptimizations}');
+    debugPrint(
+        'requestPermissionForAndroid: ${!await FlutterForegroundTask.isIgnoringBatteryOptimizations}');
     if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
       await FlutterForegroundTask.requestIgnoreBatteryOptimization();
     }
@@ -80,7 +81,7 @@ class ForegroundUtil {
         // foregroundServiceType: AndroidForegroundServiceType.CONNECTED_DEVICE,
         channelId: 'foreground_service',
         channelName: 'Foreground Service Notification',
-        channelDescription: 'Your Friend Device is connected',
+        channelDescription: 'Your AVMe Device is connected',
         channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.HIGH,
         iconData: const NotificationIconData(
@@ -117,7 +118,7 @@ class ForegroundUtil {
     } else {
       print('starting service');
       return FlutterForegroundTask.startService(
-        notificationTitle: 'Your Friend Device is active',
+        notificationTitle: 'Your AVMe Device is active',
         notificationText: 'Tap to open the app',
         callback: startCallback,
       );
