@@ -3,17 +3,17 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:friend_private/backend/api_requests/api_calls.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/backend/storage/sample.dart';
-import 'package:friend_private/pages/home/page.dart';
-import 'package:friend_private/pages/speaker_id/tabs/completed.dart';
-import 'package:friend_private/pages/speaker_id/tabs/instructions.dart';
-import 'package:friend_private/pages/speaker_id/tabs/record_sample.dart';
-import 'package:friend_private/utils/ble/connected.dart';
-import 'package:friend_private/utils/ble/scan.dart';
+import 'package:AVMe/backend/api_requests/api_calls.dart';
+import 'package:AVMe/backend/mixpanel.dart';
+import 'package:AVMe/backend/preferences.dart';
+import 'package:AVMe/backend/schema/bt_device.dart';
+import 'package:AVMe/backend/storage/sample.dart';
+import 'package:AVMe/pages/home/page.dart';
+import 'package:AVMe/pages/speaker_id/tabs/completed.dart';
+import 'package:AVMe/pages/speaker_id/tabs/instructions.dart';
+import 'package:AVMe/pages/speaker_id/tabs/record_sample.dart';
+import 'package:AVMe/utils/ble/connected.dart';
+import 'package:AVMe/utils/ble/scan.dart';
 
 class SpeakerIdPage extends StatefulWidget {
   final bool onbording;
@@ -24,7 +24,8 @@ class SpeakerIdPage extends StatefulWidget {
   State<SpeakerIdPage> createState() => _SpeakerIdPageState();
 }
 
-class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateMixin {
+class _SpeakerIdPageState extends State<SpeakerIdPage>
+    with TickerProviderStateMixin {
   TabController? _controller;
   int _currentIdx = 0;
   List<SpeakerIdSample> _samples = [];
@@ -79,11 +80,14 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
                 ? const SizedBox()
                 : TextButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (c) => const HomePageWrapper()));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (c) => const HomePageWrapper()));
                     },
                     child: const Text(
                       'Skip',
-                      style: TextStyle(color: Colors.white, decoration: TextDecoration.underline),
+                      style: TextStyle(
+                          color: Colors.white,
+                          decoration: TextDecoration.underline),
                     ),
                   ),
           ],
@@ -94,12 +98,14 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
               : IconButton(
                   icon: const Icon(Icons.arrow_back_ios_new),
                   onPressed: () {
-                    if (_currentIdx > 0 && _currentIdx < (_controller?.length ?? 0) - 1) {
+                    if (_currentIdx > 0 &&
+                        _currentIdx < (_controller?.length ?? 0) - 1) {
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
                           title: const Text('Are you sure?'),
-                          content: const Text('You will lose all the samples you have recorded so far.'),
+                          content: const Text(
+                              'You will lose all the samples you have recorded so far.'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -143,18 +149,19 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
                       physics: const NeverScrollableScrollPhysics(),
                       children: [
                         InstructionsTab(goNext: _goNext),
-                        ..._samples.mapIndexed<Widget>((index, sample) => RecordSampleTab(
-                              sample: sample,
-                              btDevice: _device,
-                              sampleIdx: index,
-                              totalSamples: _samples.length,
-                              goNext: _goNext,
-                              onRecordCompleted: () {
-                                setState(() {
-                                  sample.displayNext = true;
-                                });
-                              },
-                            )),
+                        ..._samples.mapIndexed<Widget>(
+                            (index, sample) => RecordSampleTab(
+                                  sample: sample,
+                                  btDevice: _device,
+                                  sampleIdx: index,
+                                  totalSamples: _samples.length,
+                                  goNext: _goNext,
+                                  onRecordCompleted: () {
+                                    setState(() {
+                                      sample.displayNext = true;
+                                    });
+                                  },
+                                )),
                         CompletionTab(
                           goNext: _goNext,
                         ),
@@ -171,7 +178,8 @@ class _SpeakerIdPageState extends State<SpeakerIdPage> with TickerProviderStateM
   _goNext() async {
     if (_currentIdx == _controller!.length - 1) {
       if (widget.onbording) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (c) => const HomePageWrapper()));
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (c) => const HomePageWrapper()));
       } else {
         Navigator.pop(context);
       }

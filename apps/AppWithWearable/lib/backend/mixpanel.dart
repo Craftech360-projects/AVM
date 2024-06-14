@@ -1,6 +1,6 @@
-import 'package:friend_private/backend/database/memory.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/env/env.dart';
+import 'package:AVMe/backend/database/memory.dart';
+import 'package:AVMe/backend/preferences.dart';
+import 'package:AVMe/env/env.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class MixpanelManager {
@@ -11,8 +11,8 @@ class MixpanelManager {
   static Future<void> init() async {
     if (Env.mixpanelProjectToken == null) return;
     if (_mixpanel == null) {
-      _mixpanel =
-          await Mixpanel.init(Env.mixpanelProjectToken!, optOutTrackingDefault: false, trackAutomaticEvents: true);
+      _mixpanel = await Mixpanel.init(Env.mixpanelProjectToken!,
+          optOutTrackingDefault: false, trackAutomaticEvents: true);
       _mixpanel?.setLoggingEnabled(false);
       _instance.identify();
     }
@@ -58,7 +58,8 @@ class MixpanelManager {
   void recordingLanguageChanged(String language) =>
       track('Recording Language Changed', properties: {'language': language});
 
-  void bottomNavigationTabClicked(String tab) => track('Bottom Navigation Tab Clicked', properties: {'tab': tab});
+  void bottomNavigationTabClicked(String tab) =>
+      track('Bottom Navigation Tab Clicked', properties: {'tab': tab});
 
   void deviceConnected() => track('Device Connected');
 
@@ -97,18 +98,22 @@ class MixpanelManager {
   void memoryCreated(Memory memory) {
     var properties = _getMemoryEventProperties(memory);
     properties['memory_result'] = memory.discarded ? 'discarded' : 'saved';
-    properties['action_items_count'] = memory.structured.target!.actionItems.length;
+    properties['action_items_count'] =
+        memory.structured.target!.actionItems.length;
     properties['transcript_language'] = _preferences.recordingsLanguage;
     track('Memory Created', properties: properties);
   }
 
   void memoryListItemClicked(Memory memory, int idx) =>
-      track('Memory List Item Clicked', properties: _getMemoryEventProperties(memory));
+      track('Memory List Item Clicked',
+          properties: _getMemoryEventProperties(memory));
 
   void memoryShareButtonClick(Memory memory) =>
-      track('Memory Share Button Clicked', properties: _getMemoryEventProperties(memory));
+      track('Memory Share Button Clicked',
+          properties: _getMemoryEventProperties(memory));
 
-  void memoryDeleted(Memory memory) => track('Memory Deleted', properties: _getMemoryEventProperties(memory));
+  void memoryDeleted(Memory memory) =>
+      track('Memory Deleted', properties: _getMemoryEventProperties(memory));
 
   void memoryEdited(Memory memory, {required String fieldEdited}) {
     var properties = _getMemoryEventProperties(memory);
@@ -116,27 +121,34 @@ class MixpanelManager {
     track('Memory Edited', properties: properties);
   }
 
-  void chatMessageSent(String message) => track('Chat Message Sent',
-      properties: {'message_length': message.length, 'message_word_count': message.split(' ').length});
+  void chatMessageSent(String message) =>
+      track('Chat Message Sent', properties: {
+        'message_length': message.length,
+        'message_word_count': message.split(' ').length
+      });
 
-  void speechProfileCapturePageClicked() => track('Speech Profile Capture Page Clicked');
+  void speechProfileCapturePageClicked() =>
+      track('Speech Profile Capture Page Clicked');
 
   void speechProfileStarted() => track('Speech Profile Started');
 
-  void speechProfileStartedOnboarding() => track('Speech Profile Started Onboarding');
+  void speechProfileStartedOnboarding() =>
+      track('Speech Profile Started Onboarding');
 
   void speechProfileCompleted() => track('Speech Profile Completed');
 
   void showDiscardedMemoriesToggled(bool showDiscarded) =>
-      track('Show Discarded Memories Toggled', properties: {'show_discarded': showDiscarded});
+      track('Show Discarded Memories Toggled',
+          properties: {'show_discarded': showDiscarded});
 
   void chatMessageMemoryClicked(Memory memory) =>
-      track('Chat Message Memory Clicked', properties: _getMemoryEventProperties(memory));
+      track('Chat Message Memory Clicked',
+          properties: _getMemoryEventProperties(memory));
 
   void addManualMemoryClicked() => track('Add Manual Memory Clicked');
 
-  void manualMemoryCreated(Memory memory) =>
-      track('Manual Memory Created', properties: _getMemoryEventProperties(memory));
+  void manualMemoryCreated(Memory memory) => track('Manual Memory Created',
+      properties: _getMemoryEventProperties(memory));
 
 // TBI
 // void pageViewed(String pageName) => startTimingEvent('Page View $pageName');

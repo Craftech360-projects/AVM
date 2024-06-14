@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/api_requests/api_calls.dart';
-import 'package:friend_private/backend/database/memory_provider.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/storage/memories.dart';
+import 'package:AVMe/backend/api_requests/api_calls.dart';
+import 'package:AVMe/backend/database/memory_provider.dart';
+import 'package:AVMe/backend/preferences.dart';
+import 'package:AVMe/backend/storage/memories.dart';
 
 import 'backend/database/memory.dart';
 
@@ -13,13 +13,17 @@ migrateMemoriesCategoriesAndEmojis() async {
   debugPrint('migrateMemoriesCategoriesAndEmojis');
   var memories = await MemoryStorage.getAllMemories();
   // var filteredMemories = await MemoryStorage.getAllMemories();
-  var filteredMemories = memories.where((m) => m.structured.category.isEmpty || m.structured.emoji.isEmpty).toList();
+  var filteredMemories = memories
+      .where((m) => m.structured.category.isEmpty || m.structured.emoji.isEmpty)
+      .toList();
   if (filteredMemories.isEmpty) {
     SharedPreferencesUtil().scriptCategoriesAndEmojisExecuted = true;
     return;
   }
-  var str = jsonEncode(
-      filteredMemories.map((m) => '${m.createdAt}\n${m.structured.title}\n${m.structured.overview}').toList());
+  var str = jsonEncode(filteredMemories
+      .map((m) =>
+          '${m.createdAt}\n${m.structured.title}\n${m.structured.overview}')
+      .toList());
   var prompt = '''
   From the following user memories, extract the information requested below. 
   ```$str```
@@ -38,7 +42,8 @@ migrateMemoriesCategoriesAndEmojis() async {
       .trim();
 
   String response = await executeGptPrompt(prompt);
-  var structured = jsonDecode(response.replaceAll('```', '').replaceAll('json', '').trim())['parsed'];
+  var structured = jsonDecode(
+      response.replaceAll('```', '').replaceAll('json', '').trim())['parsed'];
   for (int i = 0; i < filteredMemories.length; i++) {
     String category = structured[i]['category'];
     MemoryRecord memory = filteredMemories[i];
@@ -54,20 +59,24 @@ migrateMemoriesToObjectBox() async {
   if (SharedPreferencesUtil().scriptMemoriesToObjectBoxExecuted) return;
   debugPrint('migrateMemoriesToObjectBox');
   var time = DateTime.now();
-  var memories = (await MemoryStorage.getAllMemories(includeDiscarded: true)).reversed.toList();
+  var memories = (await MemoryStorage.getAllMemories(includeDiscarded: true))
+      .reversed
+      .toList();
   // var mem = await MemoryProvider().getMemoriesOrdered(includeDiscarded: true);
   // mem.forEach((m)=> debugPrint('${m.id.toString()}: ${m.createdAt}: ${m.structured.target!.title}'));
   MemoryProvider().removeAllMemories();
   List<Memory> memoriesOB = [];
   for (var memory in memories) {
     debugPrint('Migrating memory: ${memory.id}');
-    var structured = Structured(memory.structured.title, memory.structured.overview,
+    var structured = Structured(
+        memory.structured.title, memory.structured.overview,
         emoji: memory.structured.emoji, category: memory.structured.category);
 
     for (var actionItem in memory.structured.actionItems) {
       structured.actionItems.add(ActionItem(actionItem));
     }
-    Memory memoryOB = Memory(memory.createdAt, memory.transcript, memory.discarded);
+    Memory memoryOB =
+        Memory(memory.createdAt, memory.transcript, memory.discarded);
     memoryOB.structured.target = structured;
 
     for (var pluginResponse in memory.structured.pluginsResponse) {
@@ -76,7 +85,8 @@ migrateMemoriesToObjectBox() async {
     memoriesOB.add(memoryOB);
   }
   MemoryProvider().storeMemories(memoriesOB);
-  debugPrint('migrateMemoriesToObjectBox completed in ${DateTime.now().difference(time).inMilliseconds} milliseconds');
+  debugPrint(
+      'migrateMemoriesToObjectBox completed in ${DateTime.now().difference(time).inMilliseconds} milliseconds');
   SharedPreferencesUtil().scriptMemoriesToObjectBoxExecuted = true;
 
   // updatePineconeMemoryId

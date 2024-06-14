@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
-import 'package:friend_private/backend/storage/dvdb/dvdb_helper.dart';
-import 'package:friend_private/backend/storage/memories.dart';
+import 'package:AVMe/backend/storage/dvdb/dvdb_helper.dart';
+import 'package:AVMe/backend/storage/memories.dart';
 
 var collection = DVDB().collection("memories");
 
@@ -10,6 +10,7 @@ var collection = DVDB().collection("memories");
 // }
 
 List<String> querySimilarVectors(List<double> queryEmbedding) {
-  final query = collection.search(Float64List.fromList(queryEmbedding), numResults: 10);
+  final query =
+      collection.search(Float64List.fromList(queryEmbedding), numResults: 10);
   return query.map((e) => e.id).toList();
 }

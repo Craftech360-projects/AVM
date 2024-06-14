@@ -1,4 +1,3 @@
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
@@ -13,14 +12,16 @@ Future<void> initializeNotifications() async {
         NotificationChannel(
             channelGroupKey: 'channel_group_key',
             channelKey: 'channel',
-            channelName: 'Friend Notifications',
-            channelDescription: 'Notification channel for Friend',
+            channelName: 'AVMe Notifications',
+            channelDescription: 'Notification channel for AVMe',
             defaultColor: const Color(0xFF9D50DD),
             ledColor: Colors.white)
       ],
       // Channel groups are only visual and are not required
       channelGroups: [
-        NotificationChannelGroup(channelGroupKey: 'channel_group_key', channelGroupName: 'Friend Notifications')
+        NotificationChannelGroup(
+            channelGroupKey: 'channel_group_key',
+            channelGroupName: 'AVMe Notifications')
       ],
       debug: false);
   debugPrint('initializeNotifications: $initialized');
@@ -36,7 +37,8 @@ Future<void> requestNotificationPermissions() async {
   }
 }
 
-void createNotification({String title = '', String body = '', int notificationId = 1}) async {
+void createNotification(
+    {String title = '', String body = '', int notificationId = 1}) async {
   var allowed = await AwesomeNotifications().isNotificationAllowed();
   if (!allowed) return;
   debugPrint('createNotification ~ Creating notification: $title');

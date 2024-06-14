@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/database/memory.dart';
-import 'package:friend_private/backend/mixpanel.dart';
+import 'package:AVMe/backend/database/memory.dart';
+import 'package:AVMe/backend/mixpanel.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 import 'widgets/add_memory_widget.dart';
@@ -23,7 +23,8 @@ class MemoriesPage extends StatefulWidget {
   State<MemoriesPage> createState() => _MemoriesPageState();
 }
 
-class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClientMixin {
+class _MemoriesPageState extends State<MemoriesPage>
+    with AutomaticKeepAliveClientMixin {
   TextEditingController textController = TextEditingController();
   FocusNode textFieldFocusNode = FocusNode();
   bool loading = false;
@@ -60,13 +61,16 @@ class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
-    var memories =
-        displayDiscardMemories ? widget.memories : widget.memories.where((memory) => !memory.discarded).toList();
+    var memories = displayDiscardMemories
+        ? widget.memories
+        : widget.memories.where((memory) => !memory.discarded).toList();
     memories = textController.text.isEmpty
         ? memories
         : memories
             .where(
-              (memory) => (memory.transcript + memory.structured.target!.title + memory.structured.target!.overview)
+              (memory) => (memory.transcript +
+                      memory.structured.target!.title +
+                      memory.structured.target!.overview)
                   .toLowerCase()
                   .contains(textController.text.toLowerCase()),
             )
@@ -145,7 +149,9 @@ class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClie
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      displayDiscardMemories ? 'Hide Discarded' : 'Show Discarded',
+                      displayDiscardMemories
+                          ? 'Hide Discarded'
+                          : 'Show Discarded',
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     const SizedBox(width: 8),
@@ -154,7 +160,9 @@ class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClie
                         _toggleDiscardMemories();
                       },
                       icon: Icon(
-                        displayDiscardMemories ? Icons.cancel_outlined : Icons.filter_list,
+                        displayDiscardMemories
+                            ? Icons.cancel_outlined
+                            : Icons.filter_list,
                         color: Colors.white,
                       ),
                     ),

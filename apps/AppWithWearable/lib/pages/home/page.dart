@@ -4,25 +4,25 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:friend_private/backend/api_requests/api_calls.dart';
-import 'package:friend_private/backend/api_requests/cloud_storage.dart';
-import 'package:friend_private/backend/database/memory.dart';
-import 'package:friend_private/backend/database/memory_provider.dart';
-import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/pages/capture/page.dart';
-import 'package:friend_private/pages/capture/widgets/transcript.dart';
-import 'package:friend_private/pages/chat/page.dart';
-import 'package:friend_private/pages/memories/page.dart';
-import 'package:friend_private/pages/settings/page.dart';
-import 'package:friend_private/scripts.dart';
-import 'package:friend_private/utils/ble/communication.dart';
-import 'package:friend_private/utils/ble/connected.dart';
-import 'package:friend_private/utils/ble/scan.dart';
-import 'package:friend_private/utils/foreground.dart';
-import 'package:friend_private/utils/notifications.dart';
-import 'package:friend_private/utils/sentry_log.dart';
+import 'package:AVMe/backend/api_requests/api_calls.dart';
+import 'package:AVMe/backend/api_requests/cloud_storage.dart';
+import 'package:AVMe/backend/database/memory.dart';
+import 'package:AVMe/backend/database/memory_provider.dart';
+import 'package:AVMe/backend/mixpanel.dart';
+import 'package:AVMe/backend/preferences.dart';
+import 'package:AVMe/backend/schema/bt_device.dart';
+import 'package:AVMe/pages/capture/page.dart';
+import 'package:AVMe/pages/capture/widgets/transcript.dart';
+import 'package:AVMe/pages/chat/page.dart';
+import 'package:AVMe/pages/memories/page.dart';
+import 'package:AVMe/pages/settings/page.dart';
+import 'package:AVMe/scripts.dart';
+import 'package:AVMe/utils/ble/communication.dart';
+import 'package:AVMe/utils/ble/connected.dart';
+import 'package:AVMe/utils/ble/scan.dart';
+import 'package:AVMe/utils/foreground.dart';
+import 'package:AVMe/utils/notifications.dart';
+import 'package:AVMe/utils/sentry_log.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 
@@ -35,7 +35,8 @@ class HomePageWrapper extends StatefulWidget {
   State<HomePageWrapper> createState() => _HomePageWrapperState();
 }
 
-class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingObserver, TickerProviderStateMixin {
+class _HomePageWrapperState extends State<HomePageWrapper>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   ForegroundUtil foregroundUtil = ForegroundUtil();
   TabController? _controller;
   List<Widget> screens = [Container(), const SizedBox(), const SizedBox()];
@@ -54,14 +55,18 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
 
   _initiateMemories() async {
     // memories = await MemoryStorage.getAllMemories(includeDiscarded: displayDiscardMemories);
-    memories = (await MemoryProvider().getMemoriesOrdered(includeDiscarded: true)).reversed.toList();
+    memories =
+        (await MemoryProvider().getMemoriesOrdered(includeDiscarded: true))
+            .reversed
+            .toList();
     setState(() {});
     // FocusScope.of(context).unfocus();
     // chatTextFieldFocusNode.unfocus();
   }
 
   _setupHasSpeakerProfile() async {
-    SharedPreferencesUtil().hasSpeakerProfile = await userHasSpeakerProfile(SharedPreferencesUtil().uid);
+    SharedPreferencesUtil().hasSpeakerProfile =
+        await userHasSpeakerProfile(SharedPreferencesUtil().uid);
   }
 
   Future<void> _initiatePlugins() async {
@@ -110,19 +115,22 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
     _connectionStateListener = getConnectionStateListener(
         deviceId: _device!.id,
         onDisconnected: () {
-          transcriptChildWidgetKey.currentState?.resetState(restartBytesProcessing: false);
+          transcriptChildWidgetKey.currentState
+              ?.resetState(restartBytesProcessing: false);
           setState(() {
             _device = null;
           });
-          InstabugLog.logWarn('Friend Device Disconnected');
+          InstabugLog.logWarn('AVMe Device Disconnected');
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
             createNotification(
-                title: 'Friend Device Disconnected', body: 'Please reconnect to continue using your Friend.');
+                title: 'AVMe Device Disconnected',
+                body: 'Please reconnect to continue using your AVMe.');
           }
           MixpanelManager().deviceDisconnected();
           foregroundUtil.stopForegroundTask();
         },
-        onConnected: ((d) => _onConnected(d, initiateConnectionListener: false)));
+        onConnected: ((d) =>
+            _onConnected(d, initiateConnectionListener: false)));
   }
 
   _startForeground() async {
@@ -132,7 +140,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
     debugPrint('_startForeground: $result');
   }
 
-  _onConnected(BTDeviceStruct? connectedDevice, {bool initiateConnectionListener = true}) {
+  _onConnected(BTDeviceStruct? connectedDevice,
+      {bool initiateConnectionListener = true}) {
     if (connectedDevice == null) return;
     clearNotification(1);
     setState(() {
@@ -140,7 +149,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
     });
     if (initiateConnectionListener) _initiateConnectionListener();
     _initiateBleBatteryListener();
-    transcriptChildWidgetKey.currentState?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
+    transcriptChildWidgetKey.currentState
+        ?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
     MixpanelManager().deviceConnected();
     SharedPreferencesUtil().deviceId = _device!.id;
     _startForeground();
@@ -148,7 +158,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
 
   _initiateBleBatteryListener() async {
     _bleBatteryLevelListener?.cancel();
-    _bleBatteryLevelListener = await getBleBatteryLevelListener(_device!, onBatteryLevelChange: (int value) {
+    _bleBatteryLevelListener = await getBleBatteryLevelListener(_device!,
+        onBatteryLevelChange: (int value) {
       setState(() {
         batteryLevel = value;
       });
@@ -156,7 +167,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
   }
 
   _tabChange(int index) {
-    MixpanelManager().bottomNavigationTabClicked(['Memories', 'Device', 'Chat'][index]);
+    MixpanelManager()
+        .bottomNavigationTabClicked(['Memories', 'Device', 'Chat'][index]);
     FocusScope.of(context).unfocus();
     setState(() {
       _controller!.index = index;
@@ -198,7 +210,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                 ],
               ),
             ),
-            if (chatTextFieldFocusNode.hasFocus || memoriesTextFieldFocusNode.hasFocus)
+            if (chatTextFieldFocusNode.hasFocus ||
+                memoriesTextFieldFocusNode.hasFocus)
               const SizedBox.shrink()
             else
               Align(
@@ -231,7 +244,10 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    color: _controller!.index == 0 ? Colors.white : Colors.grey, fontSize: 16)),
+                                    color: _controller!.index == 0
+                                        ? Colors.white
+                                        : Colors.grey,
+                                    fontSize: 16)),
                           ),
                         ),
                       ),
@@ -247,7 +263,10 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    color: _controller!.index == 1 ? Colors.white : Colors.grey, fontSize: 16)),
+                                    color: _controller!.index == 1
+                                        ? Colors.white
+                                        : Colors.grey,
+                                    fontSize: 16)),
                           ),
                         ),
                       ),
@@ -260,7 +279,10 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                    color: _controller!.index == 2 ? Colors.white : Colors.grey, fontSize: 16)),
+                                    color: _controller!.index == 2
+                                        ? Colors.white
+                                        : Colors.grey,
+                                    fontSize: 16)),
                           ),
                         ),
                       ),
@@ -326,9 +348,11 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                 MixpanelManager().settingsOpened();
                 var language = SharedPreferencesUtil().recordingsLanguage;
                 var useFriendApiKeys = SharedPreferencesUtil().useFriendApiKeys;
-                Navigator.of(context).push(MaterialPageRoute(builder: (c) => const SettingsPage()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (c) => const SettingsPage()));
                 if (language != SharedPreferencesUtil().recordingsLanguage ||
-                    useFriendApiKeys != SharedPreferencesUtil().useFriendApiKeys) {
+                    useFriendApiKeys !=
+                        SharedPreferencesUtil().useFriendApiKeys) {
                   transcriptChildWidgetKey.currentState?.resetState();
                 }
               },
