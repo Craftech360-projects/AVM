@@ -1,0 +1,63 @@
+version: 2.1
+
+jobs:
+  build_ios:
+    macos:
+      xcode: "15.4.0" # Specify a valid Xcode version
+    working_directory: ~/repo
+
+    steps:
+    - checkout
+
+    # Install Flutter dependencies
+    - run:
+        name: Install Flutter
+        command: |
+          git clone https://github.com/flutter/flutter.git -b stable
+          export PATH="$PATH:`pwd`/flutter/bin"
+          flutter doctor
+
+    - run:
+        name: Flutter pub get
+        command: flutter pub get
+
+      # Get Flutter packages
+    # Build iOS
+    - run:
+        name: Build iOS
+        command: flutter build ios --release --no-codesign
+
+    # Install Fastlane
+    - run:
+        name: Install Fastlane
+        command: |
+          gem install bundler
+          bundle install
+
+    - run:
+        name: Deploy to TestFlight
+        command: bundle exec fastlane beta
+        working_directory: ios
+
+      # Deploy to TestFlight using Fastlane
+    environment:
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+      FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+      PINECONE_INDEX_NAMESPACE: ${{ secrets.PINECONE_INDEX_NAMESPACE }}
+      CUSTOM_TRANSCRIPT_API_BASE_URL: ${{ secrets.CUSTOM_TRANSCRIPT_API_BASE_URL }}
+      PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+      PINECONE_INDEX_URL: ${{ secrets.PINECONE_INDEX_URL }}
+      SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+    - build_ios:
+        filters:
+          branches:
+            only: main
