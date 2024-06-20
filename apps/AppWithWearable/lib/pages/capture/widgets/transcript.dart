@@ -87,6 +87,8 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
     // VadUtil vad = VadUtil();
     // await vad.init();
 
+//here it listening to audio
+
     StreamSubscription? stream = await getBleAudioBytesListener(btDevice!.id,
         onAudioBytesReceived: (List<int> value) {
       if (value.isEmpty) return;

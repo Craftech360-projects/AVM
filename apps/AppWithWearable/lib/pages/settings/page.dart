@@ -1,3 +1,4 @@
+import 'package:AVMe/pages/login/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:AVMe/backend/api_requests/cloud_storage.dart';
 import 'package:AVMe/backend/mixpanel.dart';
@@ -100,7 +101,7 @@ class _SettingsPageState extends State<SettingsPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: [
-                  const SizedBox(height: 32.0),
+                  const SizedBox(height: 28.0),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 4),
                     child: Align(
@@ -114,7 +115,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
                   Center(
                       child: Container(
                     height: 60,
@@ -123,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       borderRadius: BorderRadius.circular(14),
                     ),
                     padding: const EdgeInsets.only(
-                        left: 16, right: 12, top: 8, bottom: 10),
+                        left: 16, right: 12, top: 8, bottom: 8),
                     child: DropdownButton<String>(
                       menuMaxHeight: 350,
                       value: _selectedLanguage,
@@ -155,7 +156,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       }).toList(),
                     ),
                   )),
-                  const SizedBox(height: 32.0),
+                  const SizedBox(height: 28.0),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -266,7 +267,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 28),
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -465,7 +466,90 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 12),
+                  // IconButton(
+                  //   icon: Icon(Icons.logout),
+                  //   onPressed: _logout,
+                  // ),
+
+                  // TextButton.icon(
+                  //   onPressed: _logout,
+                  //   style: TextButton.styleFrom(
+                  //     // Text color
+                  //     backgroundColor: Colors.transparent, // Background color
+                  //     padding: EdgeInsets.zero, // Remove padding
+                  //     alignment: Alignment
+                  //         .centerLeft, // Align icon and text to the left
+                  //   ),
+                  //   icon: Icon(Icons.logout, color: Colors.deepPurple), // Icon
+                  //   label: Padding(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  //     child: Text(
+                  //       'Logout',
+                  //       style: TextStyle(
+                  //         color: Colors.deepPurple, // Text color
+                  //         fontWeight: FontWeight.w600,
+                  //         fontSize: 16,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+
+//logout with alert box
+
+                  TextButton.icon(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Confirm Logout'),
+                            content: Text('Are you sure you want to logout?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); // Dismiss the dialog
+                                },
+                                child: Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); // Dismiss the dialog
+                                  _logout(); // Perform the logout action
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor:
+                                      Colors.red, // Set text color to red
+                                ),
+                                child: Text('Logout'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.transparent, // Background color
+                      padding: EdgeInsets.zero, // Remove padding
+                      alignment: Alignment
+                          .centerLeft, // Align icon and text to the left
+                    ),
+                    icon: Icon(Icons.logout, color: Colors.deepPurple), // Icon
+                    label: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(
+                          color: Colors.deepPurple, // Text color
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: Text(
@@ -495,6 +579,28 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
         ));
+  }
+
+  void _logout() async {
+    // Clear user data and navigate to login or home screen
+    SharedPreferencesUtil().clearEmail();
+    SharedPreferencesUtil().clearRememberMe();
+    SharedPreferencesUtil prefs = SharedPreferencesUtil();
+    // Add more clear methods if needed
+
+    await prefs.saveBool('isLoggedIn', false);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+    // Navigate to login or home screen
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+          builder: (context) => LoginPage()), // Replace with your login screen
+      (Route<dynamic> route) =>
+          false, // This prevents going back to the SettingsPage
+    );
   }
 
   _getDeveloperOnlyFields() {

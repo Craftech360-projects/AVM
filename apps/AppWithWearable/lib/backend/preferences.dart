@@ -20,11 +20,30 @@ class SharedPreferencesUtil {
 
   static Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
-    // _preferences!.clear();
+    // _preferences!.clear(); // Uncomment to clear preferences during debugging
     if (!_preferences!.containsKey('uid')) {
       _preferences!.setString('uid', const Uuid().v4());
     }
   }
+
+// Example additional methods
+  bool getRememberMe() => getBool('rememberMe') ?? false;
+  setRememberMe(bool value) => saveBool('rememberMe', value);
+
+  String getEmail() => getString('email') ?? '';
+  setEmail(String value) => saveString('email', value);
+
+  clearEmail() => remove('email');
+
+  void clearRememberMe() {
+    remove('rememberMe'); // Replace with your actual key
+  }
+
+  bool get isLoggedIn => getBool('isLoggedIn') ?? false;
+  set isLoggedIn(bool value) => saveBool('isLoggedIn', value);
+
+  String get username => getString('username') ?? '';
+  set username(String value) => saveString('username', value);
 
   String get uid => getString('uid') ?? '';
 
