@@ -497,6 +497,59 @@ class _SettingsPageState extends State<SettingsPage> {
 
 //logout with alert box
 
+                  // TextButton.icon(
+                  //   onPressed: () {
+                  //     showDialog(
+                  //       context: context,
+                  //       builder: (BuildContext context) {
+                  //         return AlertDialog(
+                  //           title: Text('Confirm Logout'),
+                  //           content: Text('Are you sure you want to logout?'),
+                  //           actions: <Widget>[
+                  //             TextButton(
+                  //               onPressed: () {
+                  //                 Navigator.of(context)
+                  //                     .pop(); // Dismiss the dialog
+                  //               },
+                  //               child: Text('Cancel'),
+                  //             ),
+                  //             TextButton(
+                  //               onPressed: () {
+                  //                 Navigator.of(context)
+                  //                     .pop(); // Dismiss the dialog
+                  //                 _logout(); // Perform the logout action
+                  //               },
+                  //               style: TextButton.styleFrom(
+                  //                 foregroundColor:
+                  //                     Colors.red, // Set text color to red
+                  //               ),
+                  //               child: Text('Logout'),
+                  //             ),
+                  //           ],
+                  //         );
+                  //       },
+                  //     );
+                  //   },
+                  //   style: TextButton.styleFrom(
+                  //     backgroundColor: Colors.transparent, // Background color
+                  //     padding: EdgeInsets.zero, // Remove padding
+                  //     alignment: Alignment
+                  //         .centerLeft, // Align icon and text to the left
+                  //   ),
+                  //   icon: Icon(Icons.logout, color: Colors.deepPurple), // Icon
+                  //   label: Padding(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  //     child: Text(
+                  //       'Logout',
+                  //       style: TextStyle(
+                  //         color: Colors.deepPurple, // Text color
+                  //         fontWeight: FontWeight.w600,
+                  //         fontSize: 16,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+
                   TextButton.icon(
                     onPressed: () {
                       showDialog(
