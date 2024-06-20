@@ -4,7 +4,7 @@ jobs:
   build_ios:
     macos:
       xcode: "15.4.0" # Specify a valid Xcode version
-    working_directory: ~/repo
+    working_directory: ~/repo/apps/AppWithWearable # Update working directory
 
     steps:
     - checkout
@@ -21,7 +21,6 @@ jobs:
         name: Flutter pub get
         command: flutter pub get
 
-      # Get Flutter packages
     # Build iOS
     - run:
         name: Build iOS
@@ -37,7 +36,7 @@ jobs:
     - run:
         name: Deploy to TestFlight
         command: bundle exec fastlane beta
-        working_directory: ios
+        working_directory: ios # Assuming your Fastfile is in the 'ios' directory
 
       # Deploy to TestFlight using Fastlane
     environment:
