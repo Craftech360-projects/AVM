@@ -60,4 +60,4 @@ workflows:
     - build_ios:
         filters:
           branches:
-            only: main
+            only: development
