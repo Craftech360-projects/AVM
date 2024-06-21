@@ -7,10 +7,24 @@ jobs:
       xcode: 14.0.1
     working_directory: ~/repo
 
+    environment:
+      RUBY_VERSION: 3.0
+
     steps:
     - checkout
 
-    # Install Flutter
+    # Set up Ruby environment
+    - run:
+        name: Install Ruby
+        command: |
+          brew install rbenv
+          rbenv install 3.0.0
+          rbenv global 3.0.0
+          ruby -v
+
+          gem install bundler
+          bundle --version
+
     - run:
         name: Install Flutter
         command: |
@@ -19,6 +33,7 @@ jobs:
           source $BASH_ENV
           flutter doctor
 
+      # Install Flutter
     - run:
         name: Flutter pub get
         command: |
@@ -41,13 +56,19 @@ jobs:
 
       # Build iOS
     - run:
-        name: Install Fastlane
+        name: Install Bundler
         command: |
           cd apps/AppWithWearable/ios
           gem install bundler
+
+      # Install Bundler
+    - run:
+        name: Bundle install
+        command: |
+          cd apps/AppWithWearable/ios
           bundle install
 
-      # Install Fastlane
+      # Bundle install
     - run:
         name: Deploy to TestFlight
         command: |
