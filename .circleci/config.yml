@@ -7,39 +7,38 @@ jobs:
     working_directory: ~/repo/apps/AppWithWearable # Update working directory
 
     steps:
-    - checkout
+      - checkout
 
-    # Install Flutter dependencies
-    - run:
-        name: Install Flutter
-        command: |
-          git clone https://github.com/flutter/flutter.git -b stable
-          export PATH="$PATH:`pwd`/flutter/bin"
-          flutter doctor
+      # Install Flutter dependencies
+      - run:
+          name: Install Flutter
+          command: |
+            git clone https://github.com/flutter/flutter.git -b stable
+            export PATH="$PATH:`pwd`/flutter/bin"
+            flutter doctor
 
-    - run:
-        name: Flutter pub get
-        command: flutter pub get
+      - run:
+          name: Flutter pub get
+          command: flutter pub get
 
-    # Build iOS
-    - run:
-        name: Build and Deploy with Fastlane
-        command: |
-            fastlane_plugin_circleci upload_to_testflight
+      # Build iOS
+      - run:
+          name: Build iOS
+          command: flutter build ios --release --no-codesign
 
-    # Install Fastlane
-    - run:
-        name: Install Fastlane
-        command: |
-          gem install bundler
-          bundle install
-    
-    - run:
-        name: Deploy to TestFlight
-        command: bundle exec fastlane beta
-        working_directory: ios # Assuming your Fastfile is in the 'ios' directory
+      # Install Fastlane
+      - run:
+          name: Install Fastlane
+          command: |
+            gem install bundler
+            bundle install
 
       # Deploy to TestFlight using Fastlane
+      - run:
+          name: Deploy to TestFlight
+          command: bundle exec fastlane beta
+          working_directory: ios # Assuming your Fastfile is in the 'ios' directory
+
     environment:
       APPLE_ID: ${{ secrets.APPLE_ID }}
       APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
@@ -57,7 +56,7 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-    - build_ios:
-        filters:
-          branches:
-            only: development
+      - build_ios:
+          filters:
+            branches:
+              only: development
