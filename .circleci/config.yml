@@ -32,7 +32,7 @@ jobs:
         command: |
           gem install bundler
           bundle install
-
+    
     - run:
         name: Deploy to TestFlight
         command: bundle exec fastlane beta
