@@ -27,6 +27,13 @@ jobs:
 
       # Get Flutter packages
     - run:
+        name: Run code generation
+        command: |
+          cd apps/AppWithWearable
+          flutter pub run build_runner build --delete-conflicting-outputs
+
+      # Run code generation
+    - run:
         name: Build iOS
         command: |
           cd apps/AppWithWearable
