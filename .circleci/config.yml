@@ -2,9 +2,10 @@ version: 2.1
 
 jobs:
   build_ios:
+    build_ios:
     macos:
-      resource_class: macos.medium
-      xcode: "15.4.0" # Specify a valid Xcode version
+      xcode: 14.2.0
+    resource_class: macos.m1.medium.gen1
     working_directory: ~/repo/apps/AppWithWearable # Update working directory
 
     steps:
