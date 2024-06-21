@@ -58,7 +58,7 @@ jobs:
         name: Deploy to TestFlight
         command: |
           cd apps/AppWithWearable/ios
-          bundle exec fastlane beta
+          bundle exec fastlane custom_lane
 
       # Deploy to TestFlight
     environment:
