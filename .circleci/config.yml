@@ -5,7 +5,7 @@ jobs:
   build_ios:
     macos:
       xcode: 14.0.1
-    working_directory: ~/repo/apps/AppWithWearable
+    working_directory: ~/repo
 
     steps:
     - checkout
@@ -21,25 +21,31 @@ jobs:
 
     - run:
         name: Flutter pub get
-        command: flutter pub get
+        command: |
+          cd apps/AppWithWearable
+          flutter pub get
 
       # Get Flutter packages
-    # Build iOS
     - run:
         name: Build iOS
-        command: flutter build ios --release --no-codesign
+        command: |
+          cd apps/AppWithWearable
+          flutter build ios --release --no-codesign
 
-    # Install Fastlane
+      # Build iOS
     - run:
         name: Install Fastlane
         command: |
+          cd apps/AppWithWearable/ios
           gem install bundler
           bundle install
 
+      # Install Fastlane
     - run:
         name: Deploy to TestFlight
-        command: bundle exec fastlane beta
-        working_directory: ios
+        command: |
+          cd apps/AppWithWearable/ios
+          bundle exec fastlane beta
 
       # Deploy to TestFlight
     environment:
