@@ -1,15 +1,16 @@
+# .circleci/config.yml
 version: 2.1
 
 jobs:
   build_ios:
     macos:
-      xcode: "15.4.0" # Specify a valid Xcode version
+      xcode: 14.0.1
     working_directory: ~/repo/apps/AppWithWearable # Update working directory
 
     steps:
     - checkout
 
-    # Install Flutter dependencies
+    # Install Flutter
     - run:
         name: Install Flutter
         command: |
@@ -21,6 +22,7 @@ jobs:
         name: Flutter pub get
         command: flutter pub get
 
+      # Get Flutter packages
     # Build iOS
     - run:
         name: Build iOS
@@ -38,7 +40,7 @@ jobs:
         command: bundle exec fastlane beta
         working_directory: ios # Assuming your Fastfile is in the 'ios' directory
 
-      # Deploy to TestFlight using Fastlane
+      # Deploy to TestFlight
     environment:
       APPLE_ID: ${{ secrets.APPLE_ID }}
       APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}

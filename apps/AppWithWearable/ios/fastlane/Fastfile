@@ -1,11 +1,12 @@
-
+# Fastfile
 
 default_platform(:ios)
 
 platform :ios do
-  desc "Push a new beta build to TestFlight"
+  desc "Build and upload to TestFlight"
   lane :beta do
-    build_app(scheme: "Runner") # Build your app
+    match(type: "appstore") # Ensure you have the correct certificates and profiles
+    build_app(scheme: "YourAppScheme") # Build your app
     upload_to_testflight # Upload to TestFlight
   end
 end
