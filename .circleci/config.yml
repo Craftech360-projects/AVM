@@ -7,7 +7,7 @@ jobs:
     working_directory: ~/repo
 
     environment:
-      RUBY_VERSION: 3.0
+      RUBY_VERSION: 3.3.3
       APPLE_ID: ${{ secrets.APPLE_ID }}
       APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
       FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
@@ -28,8 +28,8 @@ jobs:
         name: Install Ruby and Bundler
         command: |
           brew install rbenv
-          rbenv install 3.0.0
-          rbenv global 3.0.0
+          rbenv install 3.3.3
+          rbenv global 3.3.3
           ruby -v
 
           gem install bundler
@@ -97,3 +97,4 @@ workflows:
         filters:
           branches:
             only: development
+
