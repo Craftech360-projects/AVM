@@ -1,62 +1,45 @@
+# .circleci/config.yml
 version: 2.1
-
 jobs:
-  build:
+  build-and-test:
     macos:
-      xcode: 15.3.0
-    working_directory: ~/repo/apps/AppWithWearable # Update working directory
-
+      xcode: 14.0.1
+    environment:
+      FL_OUTPUT_DIR: output
+      FASTLANE_LANE: test
     steps:
       - checkout
-
-      # Install Flutter dependencies
+      - run: bundle install
       - run:
-          name: Install Flutter
-          command: |
-            git clone https://github.com/flutter/flutter.git -b stable
-            export PATH="$PATH:`pwd`/flutter/bin"
-            flutter doctor
+          name: Fastlane
+          command: bundle exec fastlane $FASTLANE_LANE
+      - store_artifacts:
+          path: output
+      - store_test_results:
+          path: output/scan
 
-      - run:
-          name: Flutter pub get
-          command: flutter pub get
-
-      # Build iOS
-      - run:
-          name: Build iOS
-          command: flutter build ios --release --no-codesign
-
-      # Install Fastlane
-      - run:
-          name: Install Fastlane
-          command: |
-            gem install bundler
-            bundle install
-
-      # Deploy to TestFlight using Fastlane
-      - run:
-          name: Deploy to TestFlight
-          command: bundle exec fastlane beta
-          working_directory: ios # Assuming your Fastfile is in the 'ios' directory
-
+  adhoc:
+    macos:
+      xcode: 14.0.1
     environment:
-      APPLE_ID: $APPLE_ID
-      APPLE_PASSWORD: $APPLE_PASSWORD
-      FASTLANE_USER: $FASTLANE_USER
-      FASTLANE_PASSWORD: $FASTLANE_PASSWORD
-      PINECONE_INDEX_NAMESPACE: $PINECONE_INDEX_NAMESPACE
-      CUSTOM_TRANSCRIPT_API_BASE_URL: $CUSTOM_TRANSCRIPT_API_BASE_URL
-      PINECONE_API_KEY: $PINECONE_API_KEY
-      PINECONE_INDEX_URL: $PINECONE_INDEX_URL
-      SENTRY_DSN_KEY: $SENTRY_DSN_KEY
-      OPENAI_API_KEY: $OPENAI_API_KEY
-      DEEPGRAM_API_KEY: $DEEPGRAM_API_KEY
+      FL_OUTPUT_DIR: output
+      FASTLANE_LANE: adhoc
+    steps:
+      - checkout
+      - run: bundle install
+      - run:
+          name: Fastlane
+          command: bundle exec fastlane $FASTLANE_LANE
+      - store_artifacts:
+          path: output
 
 workflows:
-  version: 2
-  build_and_deploy:
+  build-test-adhoc:
     jobs:
-      - build_ios:
+      - build-and-test
+      - adhoc:
           filters:
             branches:
               only: development
+          requires:
+            - build-and-test
