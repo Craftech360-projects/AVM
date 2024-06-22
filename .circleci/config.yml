@@ -101,7 +101,7 @@ jobs:
     # Store the provisioning profile content in a secure CircleCI environment variable
     - run: |
         echo $PROFILE_CONTENT | base64 -d > profile.mobileprovision
-        circleci environment variable ENCODED_PROFILE_CONTENT file:profile.mobileprovision
+        circleci env var ENCODED_PROFILE_CONTENT file:profile.mobileprovision
 
   build_ios:
     macos:
@@ -167,7 +167,6 @@ jobs:
           cd apps/AppWithWearable/ios
           bundle exec fastlane beta
 
-    # Deploy to TestFlight
     environment:
       APPLE_ID: ${{ secrets.APPLE_ID }}
       APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
@@ -193,4 +192,3 @@ workflows:
         filters:
           branches:
             only: development
-
