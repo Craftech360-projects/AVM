@@ -53,7 +53,15 @@ jobs:
           cd apps/AppWithWearable/ios
           bundle _2.4.22_ install
 
-      # Bundle install
+
+
+    - run:
+        name: Print Fastlane credentials
+        command: |
+          echo "Fastlane user: $FASTLANE_USER"
+          echo "Fastlane password: $FASTLANE_PASSWORD"
+
+      # Print Fastlane user and password
     - run:
         name: Deploy to TestFlight
         command: |
