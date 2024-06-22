@@ -21,7 +21,16 @@ platform :ios do
     match(type: "appstore", readonly: true, git_url: "git@github.com:Craftech360-projects/fastlane.git",  app_identifier:"com.craftech360.avm")
     # Ensure you have the correct certificates and profiles
     
-    build_app(scheme: "Runner") # Build your app
+    build_app(
+      scheme: "Runner",
+      export_options: {
+        provisioningProfiles: {
+          "com.craftech360.avm" => "match AppStore com.craftech360.avm"
+        }
+      },
+      export_xcargs: "-allowProvisioningUpdates" # Add this line
+    )
+    
     pilot( # Upload your app to TestFlight using Pilot
       username: "apps.cft360@gmail.com", # Replace with your Apple ID
       
