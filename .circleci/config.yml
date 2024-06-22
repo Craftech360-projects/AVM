@@ -10,13 +10,7 @@ jobs:
     steps:
     - checkout
   
-   # Set Fastlane User and Password from environment variables
-    - run:
-        name: Set Fastlane User and Password
-        command: |
-            echo "export FASTLANE_USER='${{ secrets.FASTLANE_USER }}'" >> $BASH_ENV
-            echo "export FASTLANE_PASSWORD='${{ secrets.FASTLANE_PASSWORD }}'" >> $BASH_ENV
-
+  
     # Install Flutter
     - run:
         name: Install Flutter
@@ -68,7 +62,19 @@ jobs:
           bundle exec fastlane custom_lane
 
       # Deploy to TestFlight
-   
+    environment:
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+      FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+      PINECONE_INDEX_NAMESPACE: ${{ secrets.PINECONE_INDEX_NAMESPACE }}
+      CUSTOM_TRANSCRIPT_API_BASE_URL: ${{ secrets.CUSTOM_TRANSCRIPT_API_BASE_URL }}
+      PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+      PINECONE_INDEX_URL: ${{ secrets.PINECONE_INDEX_URL }}
+      SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
+
 workflows:
   version: 2
   build_and_deploy:
