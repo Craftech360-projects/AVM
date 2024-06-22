@@ -88,6 +88,7 @@
 
 
 # .circleci/config.yml
+# .circleci/config.yml
 version: 2.1
 
 jobs:
@@ -156,7 +157,7 @@ jobs:
     - run:
         name: Download and install provisioning profile
         command: |
-          base64 -d <<< ${ENCODED_PROFILE_CONTENT} > profile.mobileprovision
+          base64 -d \<<< ${ENCODED_PROFILE_CONTENT} > profile.mobileprovision
           fastlane_match setup --readonly true
 
       # Bundle install
@@ -192,3 +193,4 @@ workflows:
         filters:
           branches:
             only: development
+
