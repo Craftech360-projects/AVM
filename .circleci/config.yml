@@ -1,113 +1,7 @@
 # # .circleci/config.yml
-# version: 2.1
-
-# jobs:
-#   build_ios:
-#     macos:
-#       xcode: 14.0.1
-#     working_directory: ~/repo
-
-#     steps:
-#     - checkout
-
-#     # Install Flutter
-#     - run:
-#         name: Install Flutter
-#         command: |
-#           git clone https://github.com/flutter/flutter.git -b stable
-#           echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
-#           source $BASH_ENV
-#           flutter doctor
-
-#     - run:
-#         name: Flutter pub get
-#         command: |
-#           cd apps/AppWithWearable
-#           flutter pub get
-
-#       # Get Flutter packages
-#     - run:
-#         name: Run code generation
-#         command: |
-#           cd apps/AppWithWearable
-#           flutter pub run build_runner build --delete-conflicting-outputs
-
-#       # Run code generation
-#     - run:
-#         name: Build iOS
-#         command: |
-#           cd apps/AppWithWearable
-#           flutter build ios --release --no-codesign
-
-#       # Build iOS
-#     - run:
-#         name: Install Bundler
-#         command: |
-#           cd apps/AppWithWearable/ios
-#           gem install bundler -v 2.4.22
-
-#       # Install Bundler (specific version)
-#     - run:
-#         name: Bundle install
-#         command: |
-#           cd apps/AppWithWearable/ios
-#           bundle _2.4.22_ install
-
-#       # Bundle install
-#     - run:
-#         name: Deploy to TestFlight
-#         command: |
-#           cd apps/AppWithWearable/ios
-#           bundle exec fastlane custom_lane
-
-#       # Deploy to TestFlight
-#     environment:
-#       APPLE_ID: ${{ secrets.APPLE_ID }}
-#       APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-#       FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-#       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-#       PINECONE_INDEX_NAMESPACE: ${{ secrets.PINECONE_INDEX_NAMESPACE }}
-#       CUSTOM_TRANSCRIPT_API_BASE_URL: ${{ secrets.CUSTOM_TRANSCRIPT_API_BASE_URL }}
-#       PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
-#       PINECONE_INDEX_URL: ${{ secrets.PINECONE_INDEX_URL }}
-#       SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
-#       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-#       DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
-
-# workflows:
-#   version: 2
-#   build_and_deploy:
-#     jobs:
-#     - build_ios:
-#         filters:
-#           branches:
-#             only: development
-
-
-## update
-
-
-# .circleci/config.yml
-# .circleci/config.yml
 version: 2.1
 
 jobs:
-  manage_profiles:
-    docker:
-    - image: circleci/ruby:2.7.0
-    steps:
-    - checkout # Checkout your code repository
-
-    - run:
-        name: Install Fastlane
-        command: |
-          gem install fastlane
-
-    - run: |
-        echo $PROFILE_CONTENT | base64 -d > profile.mobileprovision
-        circleci env var ENCODED_PROFILE_CONTENT file:profile.mobileprovision
-
-      # Store the provisioning profile content in a secure CircleCI environment variable
   build_ios:
     macos:
       xcode: 14.0.1
@@ -131,12 +25,14 @@ jobs:
           cd apps/AppWithWearable
           flutter pub get
 
+      # Get Flutter packages
     - run:
         name: Run code generation
         command: |
           cd apps/AppWithWearable
           flutter pub run build_runner build --delete-conflicting-outputs
 
+      # Run code generation
     - run:
         name: Build iOS
         command: |
@@ -159,17 +55,10 @@ jobs:
 
       # Bundle install
     - run:
-        name: Download and install provisioning profile
-        command: |
-          base64 -d \<<< ${ENCODED_PROFILE_CONTENT} > profile.mobileprovision
-          bundle exec fastlane match appstore --readonly
-
-      # Download and install provisioning profile
-    - run:
         name: Deploy to TestFlight
         command: |
           cd apps/AppWithWearable/ios
-          bundle exec fastlane beta
+          bundle exec fastlane custom_lane
 
       # Deploy to TestFlight
     environment:
@@ -184,16 +73,19 @@ jobs:
       SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
-      APP_SPECIFIC_PASSWORD: ${{ secrets.APP_SPECIFIC_PASSWORD }}
 
 workflows:
   version: 2
   build_and_deploy:
     jobs:
-    - manage_profiles
     - build_ios:
-        requires:
-        - manage_profiles
         filters:
           branches:
             only: development
+
+
+## update
+
+
+# .circleci/config.yml
+# .circleci/config.yml

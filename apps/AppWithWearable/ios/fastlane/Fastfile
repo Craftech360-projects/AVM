@@ -13,33 +13,45 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+# default_platform(:ios)
+
+# platform :ios do
+#   desc "Build and upload to TestFlight"
+#   lane :custom_lane do
+#     match(
+#       type: "appstore",
+#       readonly: true,
+#       git_url: "git@github.com:Craftech360-projects/fastlane.git",
+#       app_identifier: "com.craftech360.avm"
+#     )
+#     # Ensure you have the correct certificates and profiles
+    
+#     build_app(
+#       scheme: "Runner",
+#       export_options: {
+#         provisioningProfiles: {
+#           "com.craftech360.avm" => "match AppStore com.craftech360.avm"
+#         }
+#       },
+#       export_xcargs: "-allowProvisioningUpdates" # Allow provisioning updates
+#     )
+    
+#     pilot( # Upload your app to TestFlight using Pilot
+#       username: "apps.cft360@gmail.com", # Replace with your Apple ID
+#       app_identifier: "com.craftech360.avm", # Replace with your app's bundle identifier
+#       changelog: "Testing circle ci and fastlane" # Provide your changelog
+#     )
+#   end
+# end
+
 default_platform(:ios)
 
 platform :ios do
   desc "Build and upload to TestFlight"
   lane :custom_lane do
-    match(
-      type: "appstore",
-      readonly: true,
-      git_url: "git@github.com:Craftech360-projects/fastlane.git",
-      app_identifier: "com.craftech360.avm"
-    )
-    # Ensure you have the correct certificates and profiles
-    
-    build_app(
-      scheme: "Runner",
-      export_options: {
-        provisioningProfiles: {
-          "com.craftech360.avm" => "match AppStore com.craftech360.avm"
-        }
-      },
-      export_xcargs: "-allowProvisioningUpdates" # Allow provisioning updates
-    )
-    
-    pilot( # Upload your app to TestFlight using Pilot
-      username: "apps.cft360@gmail.com", # Replace with your Apple ID
-      app_identifier: "com.craftech360.avm", # Replace with your app's bundle identifier
-      changelog: "Testing circle ci and fastlane" # Provide your changelog
-    )
-  end
+    increment_build_number(xcodeproj: "Runner.xcodeproj")
+  match(type: "appstore")
+  sh("flutter build ios --release --no-codesign")
+  upload_to_testflight(skip_waiting_for_build_processing: true)
+end
 end
