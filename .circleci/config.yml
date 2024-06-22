@@ -9,13 +9,13 @@ jobs:
 
     steps:
     - checkout
-
-    # Set Fastlane User and Password from environment variables
+  
+   # Set Fastlane User and Password from environment variables
     - run:
         name: Set Fastlane User and Password
         command: |
-          echo "export FASTLANE_USER=${FASTLANE_USER}" >> $BASH_ENV
-          echo "export FASTLANE_PASSWORD=${FASTLANE_PASSWORD}" >> $BASH_ENV
+            echo "export FASTLANE_USER='${{ secrets.FASTLANE_USER }}'" >> $BASH_ENV
+            echo "export FASTLANE_PASSWORD='${{ secrets.FASTLANE_PASSWORD }}'" >> $BASH_ENV
 
     # Install Flutter
     - run:
