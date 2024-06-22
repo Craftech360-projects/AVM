@@ -10,6 +10,10 @@ jobs:
     steps:
     - checkout
 
+    - run:
+        name: Set Fastlane Password
+        command: echo 'export FASTLANE_PASSWORD=gmxo-nlvw-wldv-ldky' >> $BASH_ENV
+
     # Install Flutter
     - run:
         name: Install Flutter
