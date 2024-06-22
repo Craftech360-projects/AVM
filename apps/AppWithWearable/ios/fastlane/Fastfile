@@ -17,8 +17,13 @@ default_platform(:ios)
 
 platform :ios do
   desc "Build and upload to TestFlight"
-  lane :custom_lane  do
-    match(type: "appstore", readonly: true, git_url: "git@github.com:Craftech360-projects/fastlane.git",  app_identifier:"com.craftech360.avm")
+  lane :custom_lane do
+    match(
+      type: "appstore",
+      readonly: true,
+      git_url: "git@github.com:Craftech360-projects/fastlane.git",
+      app_identifier: "com.craftech360.avm"
+    )
     # Ensure you have the correct certificates and profiles
     
     build_app(
@@ -28,15 +33,13 @@ platform :ios do
           "com.craftech360.avm" => "match AppStore com.craftech360.avm"
         }
       },
-      export_xcargs: "-allowProvisioningUpdates" # Add this line
+      export_xcargs: "-allowProvisioningUpdates" # Allow provisioning updates
     )
     
     pilot( # Upload your app to TestFlight using Pilot
       username: "apps.cft360@gmail.com", # Replace with your Apple ID
-      
       app_identifier: "com.craftech360.avm", # Replace with your app's bundle identifier
-      
-      changelog: "Testing circle ci and fastlane  " # Provide your changelog
+      changelog: "Testing circle ci and fastlane" # Provide your changelog
     )
   end
 end
