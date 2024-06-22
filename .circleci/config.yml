@@ -98,11 +98,16 @@ jobs:
     steps:
     - checkout # Checkout your code repository
 
-    # Store the provisioning profile content in a secure CircleCI environment variable
+    - run:
+        name: Install Fastlane
+        command: |
+          gem install fastlane
+
     - run: |
         echo $PROFILE_CONTENT | base64 -d > profile.mobileprovision
         circleci env var ENCODED_PROFILE_CONTENT file:profile.mobileprovision
 
+      # Store the provisioning profile content in a secure CircleCI environment variable
   build_ios:
     macos:
       xcode: 14.0.1
@@ -132,41 +137,41 @@ jobs:
           cd apps/AppWithWearable
           flutter pub run build_runner build --delete-conflicting-outputs
 
-      # Get Flutter packages
     - run:
         name: Build iOS
         command: |
           cd apps/AppWithWearable
           flutter build ios --release --no-codesign
 
-      # Run code generation
+      # Build iOS
     - run:
         name: Install Bundler
         command: |
           cd apps/AppWithWearable/ios
           gem install bundler -v 2.4.22
 
-      # Build iOS
+      # Install Bundler (specific version)
     - run:
         name: Bundle install
         command: |
           cd apps/AppWithWearable/ios
           bundle _2.4.22_ install
 
-      # Install Bundler (specific version)
+      # Bundle install
     - run:
         name: Download and install provisioning profile
         command: |
           base64 -d \<<< ${ENCODED_PROFILE_CONTENT} > profile.mobileprovision
-          fastlane_match setup --readonly true
+          bundle exec fastlane match appstore --readonly
 
-      # Bundle install
+      # Download and install provisioning profile
     - run:
         name: Deploy to TestFlight
         command: |
           cd apps/AppWithWearable/ios
           bundle exec fastlane beta
 
+      # Deploy to TestFlight
     environment:
       APPLE_ID: ${{ secrets.APPLE_ID }}
       APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
