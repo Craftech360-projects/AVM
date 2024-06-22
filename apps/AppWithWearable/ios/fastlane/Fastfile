@@ -16,12 +16,16 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Description of what the lane does"
-  lane :custom_lane do
-    # add actions here: https://docs.fastlane.tools/actions
+  desc "Build and upload to TestFlight"
+  lane :custom_lane  do
     match(type: "appstore", git_url: "git@github.com:Craftech360-projects/fastlane.git") # Ensure you have the correct certificates and profiles
     
     build_app(scheme: "Runner") # Build your app
-    upload_to_testflight # Upload to TestFlight
+    pilot( # Upload your app to TestFlight using Pilot
+      username: "apps.cft360@gmail.com", # Replace with your Apple ID
+      app_identifier: "com.craftech360.avm", # Replace with your app's bundle identifier
+      
+      changelog: "Add your changelog here" # Provide your changelog
+    )
   end
 end
