@@ -18,7 +18,7 @@ default_platform(:ios)
 platform :ios do
   desc "Build and upload to TestFlight"
   lane :custom_lane  do
-    match(type: "appstore", readonly: true, git_url: "git@github.com:Craftech360-projects/fastlane.git")
+    match(type: "appstore", readonly: true, git_url: "git@github.com:Craftech360-projects/fastlane.git",  app_identifier:"com.craftech360.avm")
     # Ensure you have the correct certificates and profiles
     
     build_app(scheme: "Runner") # Build your app
@@ -27,7 +27,7 @@ platform :ios do
       
       app_identifier: "com.craftech360.avm", # Replace with your app's bundle identifier
       
-      changelog: "Add your changelog here" # Provide your changelog
+      changelog: "Testing circle ci and fastlane  " # Provide your changelog
     )
   end
 end
