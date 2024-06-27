@@ -6,13 +6,17 @@ jobs:
     macos:
       xcode: 14.0.1
     working_directory: ~/repo
+    environment:
+      FASTLANE_USER: $FASTLANE_USER
 
     steps:
     - checkout
 
     - run:
-        name: Run1
-        command: "echo \"method 1 Path: ${{ secrets.FASTLANE_USER }}\"  # Print the FASTLANE_USER variable\n ${{ secrets.FASTLANE_USER }} --version \n #magic___^_^___line\n"
+        name: Echo Fastlane User
+        command: |
+          echo "Fastlane user: $FASTLANE_USER"
+          # Your other commands that use $FASTLANE_USER
       # - run:
 #     name: Install Flutter
 #     command: |
