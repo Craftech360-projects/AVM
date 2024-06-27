@@ -17,7 +17,11 @@ jobs:
 
     - run:
         name: Run1
-        command: "echo \"method 1 Path: ${{ secrets.FASTLANE_USER }}\"  \n ${{ secrets.FASTLANE_USER }} --version  \n #magic___^_^___line\n"
+        command: |
+          echo "method 1 Path: ${FASTLANE_USER}"
+          ${FASTLANE_USER} --version
+
+
     - run:
         name: Install Flutter
         command: |
