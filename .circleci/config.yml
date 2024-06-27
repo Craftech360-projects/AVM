@@ -118,61 +118,59 @@ jobs:
     steps:
     - checkout
 
-    - run:
-        name: Debug Environment Variables
-        command: printenv
+    # - run:
+    #     name: Debug Environment Variables
+    #     command: printenv
 
-    - run:
-        name: Install Flutter
-        command: |
-          git clone https://github.com/flutter/flutter.git -b stable
-          echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
-          source $BASH_ENV
-          flutter doctor
+    # - run:
+    #     name: Install Flutter
+    #     command: |
+    #       git clone https://github.com/flutter/flutter.git -b stable
+    #       echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
+    #       source $BASH_ENV
+    #       flutter doctor
 
-    - run:
-        name: Flutter pub get
-        command: |
-          cd apps/AppWithWearable
-          flutter pub get
+    # - run:
+    #     name: Flutter pub get
+    #     command: |
+    #       cd apps/AppWithWearable
+    #       flutter pub get
 
-    - run:
-        name: Run code generation
-        command: |
-          cd apps/AppWithWearable
-          flutter pub run build_runner build --delete-conflicting-outputs
+    # - run:
+    #     name: Run code generation
+    #     command: |
+    #       cd apps/AppWithWearable
+    #       flutter pub run build_runner build --delete-conflicting-outputs
 
     - run:
         name: Install Ruby and CocoaPods
         command: |
-          brew install ruby@2.7
+          brew install ruby
           gem install bundler -v 2.4.22
-          gem install cocoapods -v 1.11.2
+          gem install cocoapods
           pod setup
           ruby -v
 
           pod --version
 
-    - run:
-        name: Build iOS
-        command: |
-          cd apps/AppWithWearable
-          flutter build ios --release --no-codesign
+    #     command: |
+    #       cd apps/AppWithWearable
+    #       flutter build ios --release --no-codesign
 
-    - run:
-        name: Bundle install
-        command: |
-          cd apps/AppWithWearable/ios
-          bundle install
+    # - run:
+    #     name: Bundle install
+    #     command: |
+    #       cd apps/AppWithWearable/ios
+    #       bundle install
 
-    - run:
-        name: Print Fastlane credentials
-        environment:
-          FASTLANE_USER: $FASTLANE_USER
-          FASTLANE_PASSWORD: $FASTLANE_PASSWORD
-        command: |
-          echo $FASTLANE_USER
-          echo $FASTLANE_PASSWORD
+    # - run:
+    #     name: Print Fastlane credentials
+    #     environment:
+    #       FASTLANE_USER: $FASTLANE_USER
+    #       FASTLANE_PASSWORD: $FASTLANE_PASSWORD
+    #     command: |
+    #       echo $FASTLANE_USER
+    #       echo $FASTLANE_PASSWORD
 
     - run:
         name: Deploy to TestFlight
