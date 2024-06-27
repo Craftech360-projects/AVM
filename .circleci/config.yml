@@ -106,6 +106,7 @@
 
 
 # .circleci/config.yml
+# .circleci/config.yml
 version: 2.1
 
 jobs:
@@ -145,35 +146,32 @@ jobs:
         name: Install Ruby and CocoaPods
         command: |
           brew install ruby
+          gem install bundler -v 2.4.22
           gem install cocoapods
           pod setup
+          ruby -v
 
-    - run:
-        name: Build iOS
-        command: |
-          cd apps/AppWithWearable
-          flutter build ios --release --no-codesign
+          pod --version
 
-    - run:
-        name: Install Bundler
-        command: |
-          cd apps/AppWithWearable/ios
-          gem install bundler -v 2.4.22
+    #     name: Build iOS
+    #     command: |
+    #       cd apps/AppWithWearable
+    #       flutter build ios --release --no-codesign
 
-    - run:
-        name: Bundle install
-        command: |
-          cd apps/AppWithWearable/ios
-          bundle install
+    # - run:
+    #     name: Bundle install
+    #     command: |
+    #       cd apps/AppWithWearable/ios
+    #       bundle install
 
-    - run:
-        name: Print Fastlane credentials
-        environment:
-          FASTLANE_USER: ${{ FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ FASTLANE_PASSWORD }}
-        command: |
-          echo $FASTLANE_USER
-          echo $FASTLANE_PASSWORD
+    # - run:
+    #     name: Print Fastlane credentials
+    #     environment:
+    #       FASTLANE_USER: ${{ FASTLANE_USER }}
+    #       FASTLANE_PASSWORD: ${{ FASTLANE_PASSWORD }}
+    #     command: |
+    #       echo $FASTLANE_USER
+    #       echo $FASTLANE_PASSWORD
 
     - run:
         name: Deploy to TestFlight
@@ -181,6 +179,7 @@ jobs:
           cd apps/AppWithWearable/ios
           bundle exec fastlane custom_lane
 
+      # - run:
 workflows:
   version: 2
   build_and_deploy:
