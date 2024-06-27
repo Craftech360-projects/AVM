@@ -19,8 +19,12 @@ jobs:
         name: Run1
         command: |
           echo "method 1 Path: ${FASTLANE_USER}"
+          echo "Running ${FASTLANE_USER} --version"
           ${FASTLANE_USER} --version
 
+    - run:
+        name: Debug Environment Variables
+        command: printenv
 
     - run:
         name: Install Flutter
