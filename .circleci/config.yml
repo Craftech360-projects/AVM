@@ -7,7 +7,7 @@ jobs:
       xcode: 14.0.1
     working_directory: ~/repo
     environment:
-      FASTLANE_USER: 111111
+      FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
 
     steps:
     - checkout
