@@ -164,7 +164,10 @@ jobs:
         name: Bundle Install and Gem Pristine
         command: |
           bundle install
-          gem pristine --all
+          gem pristine digest-crc --version 0.6.5
+          gem pristine json --version 2.7.2
+          gem pristine nkf --version 0.2.0
+          gem pristine strscan --version 3.1.0
 
     - run:
         name: Bundle install and Pod install
