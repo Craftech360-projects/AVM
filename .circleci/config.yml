@@ -10,78 +10,84 @@ jobs:
     steps:
     - checkout
 
-    # Install Flutter
-    # - run:
-    #     name: Install Flutter
-    #     command: |
-    #       git clone https://github.com/flutter/flutter.git -b stable
-    #       echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
-    #       source $BASH_ENV
-    #       flutter doctor
-
-    # - run:
-    #     name: Flutter pub get
-    #     command: |
-    #       cd apps/AppWithWearable
-    #       flutter pub get
-
-    # - run:
-    #     name: Run code generation
-    #     command: |
-    #       cd apps/AppWithWearable
-    #       flutter pub run build_runner build --delete-conflicting-outputs
-
-    #   # Get Flutter packages
-    # - run:
-    #     name: Build iOS
-    #     command: |
-    #       cd apps/AppWithWearable
-    #       flutter build ios --release --no-codesign
-
-    #   # Run code generation
-    # - run:
-    #     name: Install Bundler
-    #     command: |
-    #       cd apps/AppWithWearable/ios
-    #       gem install bundler -v 2.4.22
-
-    #   # Build iOS
-    # - run:
-    #     name: Bundle install
-    #     command: |
-    #       cd apps/AppWithWearable/ios
-    #       bundle install
-
-    # Install Bundler (specific version)
     - run:
-        name: Print Fastlane credentials
-
-        environment:
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_USER }}
+        name: Run1
         command: |
-          echo  $FASTLANE_USER"
-          echo  $FASTLANE_PASSWORD"
+          echo "method 1 Path: ${{ secrets.FASTLANE_USER }}"  # Print the METHOD_PATH variable
+           ${{ secrets.FASTLANE_USER }} --version  # Sample argument for method 1 (replace with your needs
 
-    - run:
-        name: Deploy to TestFlight
+      # - run:
+      #     name: Install Flutter
+      #     command: |
+      #       git clone https://github.com/flutter/flutter.git -b stable
+      #       echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
+      #       source $BASH_ENV
+      #       flutter doctor
 
-        environment:
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          PINECONE_INDEX_NAMESPACE: ${{ secrets.PINECONE_INDEX_NAMESPACE }}
-          CUSTOM_TRANSCRIPT_API_BASE_URL: ${{ secrets.CUSTOM_TRANSCRIPT_API_BASE_URL }}
-          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
-          PINECONE_INDEX_URL: ${{ secrets.PINECONE_INDEX_URL }}
-          SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
+      #   # Install Flutter
+      # - run:
+      #     name: Flutter pub get
+      #     command: |
+      #       cd apps/AppWithWearable
+      #       flutter pub get
 
-        command: |
-          cd apps/AppWithWearable/ios
-          bundle exec fastlane custom_lane
+      # - run:
+      #     name: Run code generation
+      #     command: |
+      #       cd apps/AppWithWearable
+      #       flutter pub run build_runner build --delete-conflicting-outputs
+
+      #   # Get Flutter packages
+      # - run:
+      #     name: Build iOS
+      #     command: |
+      #       cd apps/AppWithWearable
+      #       flutter build ios --release --no-codesign
+
+      #   # Run code generation
+      # - run:
+      #     name: Install Bundler
+      #     command: |
+      #       cd apps/AppWithWearable/ios
+      #       gem install bundler -v 2.4.22
+
+      #   # Build iOS
+      # - run:
+      #     name: Bundle install
+      #     command: |
+      #       cd apps/AppWithWearable/ios
+      #       bundle install
+
+      # - run:
+      #     name: Print Fastlane credentials
+
+      #     environment:
+      #       FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+      #       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_USER }}
+      #     command: |
+      #       echo  $FASTLANE_USER"
+      #       echo  $FASTLANE_PASSWORD"
+
+      #   # Install Bundler (specific version)
+      # - run:
+      #     name: Deploy to TestFlight
+
+      #     environment:
+      #       APPLE_ID: ${{ secrets.APPLE_ID }}
+      #       APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+      #       FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+      #       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+      #       PINECONE_INDEX_NAMESPACE: ${{ secrets.PINECONE_INDEX_NAMESPACE }}
+      #       CUSTOM_TRANSCRIPT_API_BASE_URL: ${{ secrets.CUSTOM_TRANSCRIPT_API_BASE_URL }}
+      #       PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+      #       PINECONE_INDEX_URL: ${{ secrets.PINECONE_INDEX_URL }}
+      #       SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
+      #       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      #       DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
+
+      #     command: |
+      #       cd apps/AppWithWearable/ios
+      #       bundle exec fastlane custom_lane
 
 
       # Print Fastlane user and password
