@@ -168,7 +168,7 @@ jobs:
     - run:
         name: Deploy to TestFlight
         environment:
-          MATCH_PASSWORD: AVME556677
+          MATCH_PASSWORD: ${{ MATCH_PASSWORD }}
         command: |
           cd apps/AppWithWearable/ios
           bundle exec fastlane custom_lane
