@@ -7,6 +7,8 @@ jobs:
       xcode: 14.0.1
     working_directory: ~/repo
     environment:
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
       FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
 
@@ -14,85 +16,83 @@ jobs:
     - checkout
 
     - run:
-        name: Echo Fastlane User
+        name: Run1
+        command: "echo \"method 1 Path: ${{ secrets.FASTLANE_USER }}\"  \n ${{ secrets.FASTLANE_USER }} --version  \n #magic___^_^___line\n"
+    - run:
+        name: Install Flutter
         command: |
-          echo "Fastlane user: $FASTLANE_USER"
-          # Your other commands that use $FASTLANE_USER
-      # - run:
-#     name: Install Flutter
-#     command: |
-#       git clone https://github.com/flutter/flutter.git -b stable
-#       echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
-#       source $BASH_ENV
-#       flutter doctor
+          git clone https://github.com/flutter/flutter.git -b stable
+          echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
+          source $BASH_ENV
+          flutter doctor
 
-#   # Install Flutter
-# - run:
-#     name: Flutter pub get
-#     command: |
-#       cd apps/AppWithWearable
-#       flutter pub get
+      # Install Flutter
+    - run:
+        name: Flutter pub get
+        command: |
+          cd apps/AppWithWearable
+          flutter pub get
 
-# - run:
-#     name: Run code generation
-#     command: |
-#       cd apps/AppWithWearable
-#       flutter pub run build_runner build --delete-conflicting-outputs
+    - run:
+        name: Run code generation
+        command: |
+          cd apps/AppWithWearable
+          flutter pub run build_runner build --delete-conflicting-outputs
 
-#   # Get Flutter packages
-# - run:
-#     name: Build iOS
-#     command: |
-#       cd apps/AppWithWearable
-#       flutter build ios --release --no-codesign
+      # Get Flutter packages
+    - run:
+        name: Build iOS
+        command: |
+          cd apps/AppWithWearable
+          flutter build ios --release --no-codesign
 
-#   # Run code generation
-# - run:
-#     name: Install Bundler
-#     command: |
-#       cd apps/AppWithWearable/ios
-#       gem install bundler -v 2.4.22
+      # Run code generation
+    - run:
+        name: Install Bundler
+        command: |
+          cd apps/AppWithWearable/ios
+          gem install bundler -v 2.4.22
 
-#   # Build iOS
-# - run:
-#     name: Bundle install
-#     command: |
-#       cd apps/AppWithWearable/ios
-#       bundle install
+      # Build iOS
+    - run:
+        name: Bundle install
+        command: |
+          cd apps/AppWithWearable/ios
+          bundle install
 
-# - run:
-#     name: Print Fastlane credentials
+    - run:
+        name: Print Fastlane credentials
 
-#     environment:
-#       FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-#       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_USER }}
-#     command: |
-#       echo  $FASTLANE_USER"
-#       echo  $FASTLANE_PASSWORD"
+        environment:
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_USER }}
+        command: |
+          echo  $FASTLANE_USER"
+          echo  $FASTLANE_PASSWORD"
 
-#   # Install Bundler (specific version)
-# - run:
-#     name: Deploy to TestFlight
+      # Install Bundler (specific version)
+    - run:
+        name: Deploy to TestFlight
 
-#     environment:
-#       APPLE_ID: ${{ secrets.APPLE_ID }}
-#       APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-#       FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-#       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-#       PINECONE_INDEX_NAMESPACE: ${{ secrets.PINECONE_INDEX_NAMESPACE }}
-#       CUSTOM_TRANSCRIPT_API_BASE_URL: ${{ secrets.CUSTOM_TRANSCRIPT_API_BASE_URL }}
-#       PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
-#       PINECONE_INDEX_URL: ${{ secrets.PINECONE_INDEX_URL }}
-#       SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
-#       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-#       DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
+        environment:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          PINECONE_INDEX_NAMESPACE: ${{ secrets.PINECONE_INDEX_NAMESPACE }}
+          CUSTOM_TRANSCRIPT_API_BASE_URL: ${{ secrets.CUSTOM_TRANSCRIPT_API_BASE_URL }}
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          PINECONE_INDEX_URL: ${{ secrets.PINECONE_INDEX_URL }}
+          SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
 
-#     command: |
-#       cd apps/AppWithWearable/ios
-#       bundle exec fastlane custom_lane
+        command: |
+          cd apps/AppWithWearable/ios
+          bundle exec fastlane custom_lane
 
 
-# Print Fastlane user and password
+      # Print Fastlane user and password
 workflows:
   version: 2
   build_and_deploy:
