@@ -57,8 +57,8 @@ jobs:
         name: Print Fastlane credentials
 
         environment:
-          FASTLANE_USER: FASTLANE_USER
-          FASTLANE_PASSWORD: FASTLANE_PASSWORD
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_USER }}
         command: |
           echo "Fastlane user: $FASTLANE_USER"
           echo "Fastlane password: $FASTLANE_PASSWORD"
@@ -69,8 +69,8 @@ jobs:
         environment:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          FASTLANE_USER: FASTLANE_USER
-          FASTLANE_PASSWORD: FASTLANE_PASSWORD
+          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           PINECONE_INDEX_NAMESPACE: ${{ secrets.PINECONE_INDEX_NAMESPACE }}
           CUSTOM_TRANSCRIPT_API_BASE_URL: ${{ secrets.CUSTOM_TRANSCRIPT_API_BASE_URL }}
           PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
