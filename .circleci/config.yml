@@ -6,11 +6,7 @@ jobs:
     macos:
       xcode: 14.0.1
     working_directory: ~/repo
-    environment:
-      APPLE_ID: ${{ secrets.APPLE_ID }}
-      APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-      FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+
 
     steps:
     - checkout
