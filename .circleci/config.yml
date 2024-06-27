@@ -153,25 +153,26 @@ jobs:
 
           pod --version
 
-    #     name: Build iOS
-    #     command: |
-    #       cd apps/AppWithWearable
-    #       flutter build ios --release --no-codesign
+    - run:
+        name: Build iOS
+        command: |
+          cd apps/AppWithWearable
+          flutter build ios --release --no-codesign
 
-    # - run:
-    #     name: Bundle install
-    #     command: |
-    #       cd apps/AppWithWearable/ios
-    #       bundle install
+    - run:
+        name: Bundle install
+        command: |
+          cd apps/AppWithWearable/ios
+          bundle install
 
-    # - run:
-    #     name: Print Fastlane credentials
-    #     environment:
-    #       FASTLANE_USER: ${{ FASTLANE_USER }}
-    #       FASTLANE_PASSWORD: ${{ FASTLANE_PASSWORD }}
-    #     command: |
-    #       echo $FASTLANE_USER
-    #       echo $FASTLANE_PASSWORD
+    - run:
+        name: Print Fastlane credentials
+        environment:
+          FASTLANE_USER: $FASTLANE_USER
+          FASTLANE_PASSWORD: $FASTLANE_PASSWORD
+        command: |
+          echo $FASTLANE_USER
+          echo $FASTLANE_PASSWORD
 
     - run:
         name: Deploy to TestFlight
