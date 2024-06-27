@@ -153,8 +153,6 @@ jobs:
 
           pod --version
 
-    #     command: |
-    #       cd apps/AppWithWearable
     #       flutter build ios --release --no-codesign
 
     # - run:
@@ -177,6 +175,7 @@ jobs:
         command: |
           cd apps/AppWithWearable/ios
           bundle exec fastlane custom_lane
+
 
       # - run:
 workflows:
