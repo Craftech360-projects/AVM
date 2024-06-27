@@ -57,8 +57,8 @@ jobs:
         name: Print Fastlane credentials
 
         environment:
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          FASTLANE_USER: FASTLANE_USER
+          FASTLANE_PASSWORD: FASTLANE_PASSWORD
         command: |
           echo "Fastlane user: $FASTLANE_USER"
           echo "Fastlane password: $FASTLANE_PASSWORD"
