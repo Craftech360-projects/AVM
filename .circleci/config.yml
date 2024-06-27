@@ -145,9 +145,9 @@ jobs:
     - run:
         name: Install Ruby and CocoaPods
         command: |
-          brew install ruby
+          brew install ruby@2.7
           gem install bundler -v 2.4.22
-          gem install cocoapods
+          gem install cocoapods -v 1.11.2
           pod setup
           ruby -v
 
