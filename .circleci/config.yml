@@ -167,8 +167,7 @@ jobs:
       # - run:
     - run:
         name: Deploy to TestFlight
-        environment:
-          MATCH_PASSWORD: $MATCH_PASSWORD
+
         command: |
           echo $MATCH_PASSWORD
           cd apps/AppWithWearable/ios
