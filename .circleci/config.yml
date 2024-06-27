@@ -170,6 +170,7 @@ jobs:
         environment:
           MATCH_PASSWORD: ${{ MATCH_PASSWORD }}
         command: |
+          echo $MATCH_PASSWORD
           cd apps/AppWithWearable/ios
           bundle exec fastlane custom_lane
 
