@@ -153,23 +153,24 @@ jobs:
 
           pod --version
 
-    # - run:
-    #     name: Bundle install
-    #     command: |
-    #       cd apps/AppWithWearable/ios
     #       bundle install
 
-    # - run:
-    #     name: Print Fastlane credentials
-    #     environment:
-    #       FASTLANE_USER: $FASTLANE_USER
-    #       FASTLANE_PASSWORD: $FASTLANE_PASSWORD
-    #     command: |
-    #       echo $FASTLANE_USER
-    #       echo $FASTLANE_PASSWORD
+    - run:
+        name: Print Fastlane credentials
+        environment:
+          FASTLANE_USER: $FASTLANE_USER
+          FASTLANE_PASSWORD: $FASTLANE_PASSWORD
+        command: |
+          echo $FASTLANE_USER
+          echo $FASTLANE_PASSWORD
+          echo $MATCH_PASSWORD
 
+
+      # - run:
     - run:
         name: Deploy to TestFlight
+        environment:
+          MATCH_PASSWORD: $MATCH_PASSWORD
         command: |
           cd apps/AppWithWearable/ios
           bundle exec fastlane custom_lane
