@@ -116,35 +116,35 @@ jobs:
     steps:
     - checkout
 
-    - run:
-        name: Run1
-        command: |
-          echo "method 1 Path: ${FASTLANE_USER}"
-          echo "Running ${FASTLANE_USER} --version"
+    # - run:
+    #     name: Run1
+    #     command: |
+    #       echo "method 1 Path: ${FASTLANE_USER}"
+    #       echo "Running ${FASTLANE_USER} --version"
 
-    - run:
-        name: Debug Environment Variables
-        command: printenv
+    # - run:
+    #     name: Debug Environment Variables
+    #     command: printenv
 
-    - run:
-        name: Install Flutter
-        command: |
-          git clone https://github.com/flutter/flutter.git -b stable
-          echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
-          source $BASH_ENV
-          flutter doctor
+    # - run:
+    #     name: Install Flutter
+    #     command: |
+    #       git clone https://github.com/flutter/flutter.git -b stable
+    #       echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
+    #       source $BASH_ENV
+    #       flutter doctor
 
-    - run:
-        name: Flutter pub get
-        command: |
-          cd apps/AppWithWearable
-          flutter pub get
+    # - run:
+    #     name: Flutter pub get
+    #     command: |
+    #       cd apps/AppWithWearable
+    #       flutter pub get
 
-    - run:
-        name: Run code generation
-        command: |
-          cd apps/AppWithWearable
-          flutter pub run build_runner build --delete-conflicting-outputs
+    # - run:
+    #     name: Run code generation
+    #     command: |
+    #       cd apps/AppWithWearable
+    #       flutter pub run build_runner build --delete-conflicting-outputs
 
     - run:
         name: Install Ruby and CocoaPods
@@ -163,6 +163,7 @@ jobs:
     - run:
         name: Bundle Install and Gem Pristine
         command: |
+          cd apps/AppWithWearable/ios
           bundle install
           gem pristine digest-crc --version 0.6.5
           gem pristine json --version 2.7.2
