@@ -153,8 +153,6 @@ jobs:
 
           pod --version
 
-    #       bundle install
-
     - run:
         name: Print Fastlane credentials
         environment:
@@ -170,7 +168,7 @@ jobs:
     - run:
         name: Deploy to TestFlight
         environment:
-          MATCH_PASSWORD: $MATCH_PASSWORD
+          MATCH_PASSWORD: AVME556677
         command: |
           cd apps/AppWithWearable/ios
           bundle exec fastlane custom_lane
