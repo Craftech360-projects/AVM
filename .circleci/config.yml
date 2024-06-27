@@ -153,8 +153,6 @@ jobs:
 
           pod --version
 
-    #       flutter build ios --release --no-codesign
-
     # - run:
     #     name: Bundle install
     #     command: |
@@ -186,3 +184,6 @@ workflows:
         filters:
           branches:
             only: development
+
+
+##added match password to env
