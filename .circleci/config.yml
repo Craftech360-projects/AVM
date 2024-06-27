@@ -1,110 +1,4 @@
-# # # .circleci/config.yml
-# version: 2.1
-
-# jobs:
-#   build_ios:
-#     macos:
-#       xcode: 14.0.1
-#     working_directory: ~/repo
-
-
-#     steps:
-#     - checkout
-
-#     - run:
-#         name: Run1
-#         command: |
-#           echo "method 1 Path: ${FASTLANE_USER}"
-#           echo "Running ${FASTLANE_USER} --version"
-
-
-#     - run:
-#         name: Debug Environment Variables
-#         command: printenv
-
-#     - run:
-#         name: Install Flutter
-#         command: |
-#           git clone https://github.com/flutter/flutter.git -b stable
-#           echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
-#           source $BASH_ENV
-#           flutter doctor
-
-#       # Install Flutter
-#     - run:
-#         name: Flutter pub get
-#         command: |
-#           cd apps/AppWithWearable
-#           flutter pub get
-
-#     - run:
-#         name: Run code generation
-#         command: |
-#           cd apps/AppWithWearable
-#           flutter pub run build_runner build --delete-conflicting-outputs
-
-#       # Get Flutter packages
-#     - run:
-#         name: Build iOS
-#         command: |
-#           cd apps/AppWithWearable
-#           flutter build ios --release --no-codesign
-
-#       # Run code generation
-#     - run:
-#         name: Install Bundler
-#         command: |
-#           cd apps/AppWithWearable/ios
-#           gem install bundler -v 2.4.22
-
-#       # Build iOS
-#     - run:
-#         name: Bundle install
-#         command: |
-#           cd apps/AppWithWearable/ios
-#           bundle install
-
-#     - run:
-#         name: Print Fastlane credentials
-
-#         environment:
-#           FASTLANE_USER: ${{ FASTLANE_USER }}
-#           FASTLANE_PASSWORD: ${{ FASTLANE_USER }}
-#         command: |
-#           echo  $FASTLANE_USER"
-#           echo  $FASTLANE_PASSWORD"
-
-#       # Install Bundler (specific version)
-#     - run:
-#         name: Deploy to TestFlight
-
-
-
-#         command: |
-#           cd apps/AppWithWearable/ios
-#           bundle exec fastlane custom_lane
-
-
-#       # Print Fastlane user and password
-# workflows:
-#   version: 2
-#   build_and_deploy:
-#     jobs:
-#     - build_ios:
-#         filters:
-#           branches:
-#             only: development
-
-
-# ## update
-
-
 # # .circleci/config.yml
-# # .circleci/config.yml
-
-
-
-
 version: 2.1
 
 jobs:
@@ -113,93 +7,85 @@ jobs:
       xcode: 14.0.1
     working_directory: ~/repo
 
+
     steps:
     - checkout
 
-    # - run:
-    #     name: Run1
-    #     command: |
-    #       echo "method 1 Path: ${FASTLANE_USER}"
-    #       echo "Running ${FASTLANE_USER} --version"
+    - run:
+        name: Run1
+        command: |
+          echo "method 1 Path: ${FASTLANE_USER}"
+          echo "Running ${FASTLANE_USER} --version"
 
-    # - run:
-    #     name: Debug Environment Variables
-    #     command: printenv
-
-    # - run:
-    #     name: Install Flutter
-    #     command: |
-    #       git clone https://github.com/flutter/flutter.git -b stable
-    #       echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
-    #       source $BASH_ENV
-    #       flutter doctor
-
-    # - run:
-    #     name: Flutter pub get
-    #     command: |
-    #       cd apps/AppWithWearable
-    #       flutter pub get
-
-    # - run:
-    #     name: Run code generation
-    #     command: |
-    #       cd apps/AppWithWearable
-    #       flutter pub run build_runner build --delete-conflicting-outputs
 
     - run:
-        name: Install Ruby and CocoaPods
+        name: Debug Environment Variables
+        command: printenv
+
+    - run:
+        name: Install Flutter
         command: |
-          brew install ruby
-          echo 'export PATH="/usr/local/opt/ruby/bin:$PATH"' >> $BASH_ENV
+          git clone https://github.com/flutter/flutter.git -b stable
+          echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
           source $BASH_ENV
-          sudo gem install cocoapods
-          pod setup
+          flutter doctor
+
+      # Install Flutter
+    - run:
+        name: Flutter pub get
+        command: |
+          cd apps/AppWithWearable
+          flutter pub get
 
     - run:
-        name: Install Bundler
+        name: Run code generation
         command: |
-          gem install bundler -v 2.5.11
+          cd apps/AppWithWearable
+          flutter pub run build_runner build --delete-conflicting-outputs
 
-    - run:
-        name: Bundle Install and Gem Pristine
-        command: |
-          cd apps/AppWithWearable/ios
-          bundle install
-          gem pristine digest-crc --version 0.6.5
-          gem pristine json --version 2.7.2
-          gem pristine nkf --version 0.2.0
-          gem pristine strscan --version 3.1.0
-
-    - run:
-        name: Bundle install and Pod install
-        command: |
-          cd apps/AppWithWearable/ios
-
-          bundle install
-
-          bundle exec pod install
-
+      # Get Flutter packages
     - run:
         name: Build iOS
         command: |
           cd apps/AppWithWearable
           flutter build ios --release --no-codesign
 
+      # Run code generation
     - run:
-        name: Print Fastlane credentials
-        environment:
-          FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        name: Install Bundler
         command: |
-          echo $FASTLANE_USER
-          echo $FASTLANE_PASSWORD
+          cd apps/AppWithWearable/ios
+          gem install bundler -v 2.4.22
+
+      # Build iOS
+    - run:
+        name: Bundle install
+        command: |
+          cd apps/AppWithWearable/ios
+          bundle install
 
     - run:
+        name: Print Fastlane credentials
+
+        environment:
+          FASTLANE_USER: ${{ FASTLANE_USER }}
+          FASTLANE_PASSWORD: ${{ FASTLANE_USER }}
+        command: |
+          echo  $FASTLANE_USER"
+          echo  $FASTLANE_PASSWORD"
+
+      # Install Bundler (specific version)
+    - run:
         name: Deploy to TestFlight
+
+
+
         command: |
           cd apps/AppWithWearable/ios
           bundle exec fastlane custom_lane
 
+
+      # Print Fastlane user and password
 workflows:
   version: 2
   build_and_deploy:
@@ -208,3 +94,12 @@ workflows:
         filters:
           branches:
             only: development
+
+
+## update
+
+
+# .circleci/config.yml
+# .circleci/config.yml
+
+
