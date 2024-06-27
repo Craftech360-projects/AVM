@@ -65,9 +65,7 @@ jobs:
 
     - run:
         name: Deploy to TestFlight
-        command: |
-          cd apps/AppWithWearable/ios
-          bundle exec fastlane custom_lane
+
         environment:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
@@ -80,6 +78,11 @@ jobs:
           SENTRY_DSN_KEY: ${{ secrets.SENTRY_DSN_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           DEEPGRAM_API_KEY: ${{ secrets.DEEPGRAM_API_KEY }}
+
+        command: |
+          cd apps/AppWithWearable/ios
+          bundle exec fastlane custom_lane
+
 
       # Print Fastlane user and password
 workflows:
