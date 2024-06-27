@@ -60,8 +60,8 @@ jobs:
           FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_USER }}
         command: |
-          echo "Fastlane user: $FASTLANE_USER"
-          echo "Fastlane password: $FASTLANE_PASSWORD"
+          echo  $FASTLANE_USER"
+          echo  $FASTLANE_PASSWORD"
 
     - run:
         name: Deploy to TestFlight
