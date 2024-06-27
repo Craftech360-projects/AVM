@@ -51,7 +51,7 @@ platform :ios do
   lane :custom_lane do
     increment_build_number(xcodeproj: "Runner.xcodeproj")
     match(
-            type: "appstore",
+            type: "adhoc",
             readonly: true,
             git_url: "git@github.com:Craftech360-projects/fastlane.git",
             app_identifier: "com.craftech360.avm"
@@ -60,3 +60,6 @@ platform :ios do
   upload_to_testflight(skip_waiting_for_build_processing: true)
 end
 end
+
+
+##CREATED MATCH FILE FOR ADHOC , NEED TO CREATE FILE FOR  APPSTORE
