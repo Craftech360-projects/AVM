@@ -164,6 +164,11 @@ jobs:
         name: Bundle install and Pod install
         command: |
           cd apps/AppWithWearable/ios
+          gem pristine digest-crc --version 0.6.5
+          gem pristine json --version 2.7.2
+          gem pristine nkf --version 0.2.0
+          gem pristine strscan --version 3.1.0
+
           bundle install
           bundle exec pod install
 
