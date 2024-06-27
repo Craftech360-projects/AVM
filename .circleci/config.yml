@@ -8,6 +8,7 @@ jobs:
     working_directory: ~/repo
     environment:
       FASTLANE_USER: ${{ secrets.FASTLANE_USER }}
+      FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
 
     steps:
     - checkout
