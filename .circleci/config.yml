@@ -200,7 +200,6 @@
 # .circleci/config.yml
 # .circleci/config.yml
 
-# .circleci/config.yml
 version: 2.1
 
 jobs:
@@ -209,7 +208,7 @@ jobs:
       xcode: 14.2.0
     environment:
       FL_OUTPUT_DIR: output
-      FASTLANE_LANE: test
+      FASTLANE_LANE: upload_testflight
     steps:
       - checkout
       - run:
@@ -280,4 +279,3 @@ workflows:
               only: development
           requires:
             - build-and-test
-
