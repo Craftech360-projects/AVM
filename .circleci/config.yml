@@ -82,7 +82,7 @@ jobs:
 
         command: |
           cd apps/AppWithWearable/ios
-          bundle exec fastlane custom_lane
+          bundle exec fastlane upload_testflight
 
 
       # Print Fastlane user and password
