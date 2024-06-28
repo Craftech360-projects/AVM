@@ -285,7 +285,6 @@
 
 
 
-
 version: 2.1
 
 jobs:
@@ -306,6 +305,18 @@ jobs:
       - run:
           name: Install Bundler
           command: gem install bundler
+      - run:
+          name: Install Flutter
+          command: |
+            git clone https://github.com/flutter/flutter.git -b stable
+            echo 'export PATH="$PATH:pwd/flutter/bin"' >> $BASH_ENV
+            source $BASH_ENV
+            flutter doctor
+      - run:
+          name: Flutter pub get
+          command: |
+            cd apps/AppWithWearable
+            flutter pub get
       - run:
           command: |
             cd apps/AppWithWearable/ios
@@ -342,15 +353,6 @@ jobs:
           name: Install Bundler
           command: gem install bundler
       - run:
-          name: Bundle Install
-          command: |
-            cd apps/AppWithWearable/ios
-            bundle install
-      - run:
-          name: Install CocoaPods
-          command: pod install
-          working_directory: apps/AppWithWearable/ios
-      - run:
           name: Install Flutter
           command: |
             git clone https://github.com/flutter/flutter.git -b stable
@@ -362,6 +364,15 @@ jobs:
           command: |
             cd apps/AppWithWearable
             flutter pub get
+      - run:
+          name: Bundle Install
+          command: |
+            cd apps/AppWithWearable/ios
+            bundle install
+      - run:
+          name: Install CocoaPods
+          command: pod install
+          working_directory: apps/AppWithWearable/ios
       - run:
           name: Build and Deploy with Fastlane
           command: |
