@@ -7,5 +7,7 @@
 # For more information about the Appfile, see:
 #     https://docs.fastlane.tools/advanced/#appfile
 app_specific_password = "gmxo-nlvw-wldv-ldky"
+apple_id "apps.cft360@gmail.com"
+app_identifier "com.craftech360.avm"
 
 #testing new
