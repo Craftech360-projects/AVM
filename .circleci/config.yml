@@ -299,7 +299,7 @@ jobs:
           name: Install Flutter
           command: |
             git clone https://github.com/flutter/flutter.git -b stable
-            echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
+            echo 'export PATH="$PATH:pwd/flutter/bin"' >> $BASH_ENV
             source $BASH_ENV
             flutter doctor
       - run:
@@ -339,7 +339,7 @@ jobs:
           name: Install Flutter
           command: |
             git clone https://github.com/flutter/flutter.git -b stable
-            echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
+            echo 'export PATH="$PATH:pwd/flutter/bin"' >> $BASH_ENV
             source $BASH_ENV
             flutter doctor
       - run:
@@ -376,7 +376,5 @@ workflows:
               only: development
           requires:
             - build-and-test
-
-
 
 
