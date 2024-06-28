@@ -51,15 +51,20 @@ platform :ios do
   lane :custom_lane do
     increment_build_number(xcodeproj: "Runner.xcodeproj")
     match(
-            type: "adhoc",
-            readonly: true,
-            git_url: "git@github.com:Craftech360-projects/fastlane.git",
-            app_identifier: "com.craftech360.avm"
-          )
-  sh("flutter build ios --release --no-codesign")
-  upload_to_testflight(skip_waiting_for_build_processing: true)
+      type: "adhoc",
+      readonly: true,
+      git_url: "git@github.com:Craftech360-projects/fastlane.git",
+      app_identifier: "com.craftech360.avm",
+      username: ENV['FASTLANE_USER'],
+      keychain_name: "login.keychain",
+      keychain_password: ENV['MATCH_PASSWORD']
+    )
+    sh("flutter build ios --release --no-codesign")
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+  end
 end
-end
+
+##updated code
 
 
 ##CREATED MATCH FILE FOR ADHOC , NEED TO CREATE FILE FOR  APPSTORE
