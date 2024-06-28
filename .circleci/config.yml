@@ -205,7 +205,7 @@ version: 2.1
 jobs:
   build-and-test:
     macos:
-      xcode: 15.4.0
+      xcode: 14.3.1
     environment:
       FL_OUTPUT_DIR: output
       FASTLANE_LANE: upload_testflight
@@ -233,7 +233,7 @@ jobs:
 
   adhoc:
     macos:
-      xcode: 15.4.0
+      xcode: 14.3.1
     environment:
       FL_OUTPUT_DIR: output
       FASTLANE_LANE: upload_testflight
