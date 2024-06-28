@@ -284,7 +284,6 @@
 #             - build-and-test
 
 
-
 version: 2.1
 
 jobs:
@@ -303,6 +302,11 @@ jobs:
             echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
             source $BASH_ENV
             flutter doctor
+      - run:
+          name: Flutter precache
+          command: |
+            cd apps/AppWithWearable
+            flutter precache --ios
       - run:
           name: Flutter pub get
           command: |
@@ -339,6 +343,11 @@ jobs:
             source $BASH_ENV
             flutter doctor
       - run:
+          name: Flutter precache
+          command: |
+            cd apps/AppWithWearable
+            flutter precache --ios
+      - run:
           name: Flutter pub get
           command: |
             cd apps/AppWithWearable
@@ -367,6 +376,7 @@ workflows:
               only: development
           requires:
             - build-and-test
+
 
 
 
