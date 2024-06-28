@@ -288,7 +288,7 @@ version: 2.1
 jobs:
   build-and-test:
     macos:
-      xcode: 14.2.0
+      xcode: 14.3.1
     environment:
       FL_OUTPUT_DIR: output
       FASTLANE_LANE: upload_testflight
@@ -322,14 +322,18 @@ jobs:
             cd apps/AppWithWearable
             flutter pub get
       - run:
-          name: Bundle Install
+          name: Install CocoaPods
           command: |
             cd apps/AppWithWearable/ios
-            bundle install
+            pod install
       - run:
-          name: Install CocoaPods
-          command: pod install
-          working_directory: apps/AppWithWearable/ios
+          name: Create Log Directory
+          command: mkdir -p apps/AppWithWearable/ios/output/buildlogs/gym
+      - run:
+          name: Build iOS Project
+          command: |
+            cd apps/AppWithWearable/ios
+            set -o pipefail && xcodebuild -workspace ./Runner.xcworkspace -scheme Runner -destination 'generic/platform=iOS' -archivePath /Users/distiller/Library/Developer/Xcode/Archives/$(date +%Y-%m-%d)/Runner.xcarchive archive | tee output/buildlogs/gym/Runner-Runner.log | xcpretty
       - run:
           name: Fastlane
           command: |
@@ -376,14 +380,13 @@ jobs:
             cd apps/AppWithWearable
             flutter pub get
       - run:
-          name: Bundle Install
+          name: Install CocoaPods
           command: |
             cd apps/AppWithWearable/ios
-            bundle install
+            pod install
       - run:
-          name: Install CocoaPods
-          command: pod install
-          working_directory: apps/AppWithWearable/ios
+          name: Create Log Directory
+          command: mkdir -p apps/AppWithWearable/ios/output/buildlogs/gym
       - run:
           name: Build and Deploy with Fastlane
           command: |
