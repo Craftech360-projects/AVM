@@ -297,28 +297,24 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Check Ruby Version
-          command: ruby -v
+          name: Install Flutter
+          command: |
+            git clone https://github.com/flutter/flutter.git -b stable
+            echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
+            source $BASH_ENV
+            flutter doctor
       - run:
-          name: Check Bundler Version
-          command: bundle -v
-      - run:
-          name: Install Bundler
-          command: gem install bundler
+          name: Flutter pub get
+          command: |
+            cd apps/AppWithWearable
+            flutter pub get
       - run:
           name: Install CocoaPods
-          command: sudo gem install cocoapods
-      - run:
-          command: |
-            cd apps/AppWithWearable/ios
-            bundle install
-      - run:
-          name: Install Pods
           command: |
             cd apps/AppWithWearable/ios
             pod install
       - run:
-          name: Fastlane
+          name: Build and Deploy with Fastlane
           command: |
             cd apps/AppWithWearable/ios
             bundle exec fastlane $FASTLANE_LANE
@@ -336,23 +332,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Check Ruby Version
-          command: ruby -v
-      - run:
-          name: Check Bundler Version
-          command: bundle -v
-      - run:
-          name: Install Bundler
-          command: gem install bundler
-      - run:
-          name: Install CocoaPods
-          command: sudo gem install cocoapods
-      - run:
-          name: Bundle Install
-          command: |
-            cd apps/AppWithWearable/ios
-            bundle install
-      - run:
           name: Install Flutter
           command: |
             git clone https://github.com/flutter/flutter.git -b stable
@@ -365,7 +344,7 @@ jobs:
             cd apps/AppWithWearable
             flutter pub get
       - run:
-          name: Install Pods
+          name: Install CocoaPods
           command: |
             cd apps/AppWithWearable/ios
             pod install
