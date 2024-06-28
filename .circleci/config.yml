@@ -111,84 +111,84 @@
 
 
 
-version: 2.1
+# version: 2.1
 
-jobs:
-  build_ios:
-    macos:
-      xcode: 14.0.1
-    working_directory: ~/repo
+# jobs:
+#   build_ios:
+#     macos:
+#       xcode: 14.0.1
+#     working_directory: ~/repo
 
-    steps:
-    - checkout
+#     steps:
+#     - checkout
 
-    - run:
-        name: Debug Environment Variables
-        command: printenv
+#     - run:
+#         name: Debug Environment Variables
+#         command: printenv
 
-    - run:
-        name: Install Flutter
-        command: |
-          git clone https://github.com/flutter/flutter.git -b stable
-          echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
-          source $BASH_ENV
-          flutter doctor
+#     - run:
+#         name: Install Flutter
+#         command: |
+#           git clone https://github.com/flutter/flutter.git -b stable
+#           echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
+#           source $BASH_ENV
+#           flutter doctor
 
-    - run:
-        name: Flutter pub get
-        command: |
-          cd apps/AppWithWearable
-          flutter pub get
+#     - run:
+#         name: Flutter pub get
+#         command: |
+#           cd apps/AppWithWearable
+#           flutter pub get
 
-    - run:
-        name: Run code generation
-        command: |
-          cd apps/AppWithWearable
-          flutter pub run build_runner build --delete-conflicting-outputs
+#     - run:
+#         name: Run code generation
+#         command: |
+#           cd apps/AppWithWearable
+#           flutter pub run build_runner build --delete-conflicting-outputs
 
-    - run:
-        name: Install Ruby and CocoaPods
-        command: |
-          brew install ruby
-          gem install bundler -v 2.4.22
-          gem install cocoapods
-          pod setup
-          ruby -v
+#     - run:
+#         name: Install Ruby and CocoaPods
+#         command: |
+#           brew install ruby
+#           gem install bundler -v 2.4.22
+#           gem install cocoapods
+#           pod setup
+#           ruby -v
 
-          pod --version
+#           pod --version
 
-    - run:
-        name: Print Fastlane credentials
-        environment:
-          FASTLANE_USER: $FASTLANE_USER
-          FASTLANE_PASSWORD: $FASTLANE_PASSWORD
-        command: |
-          echo $FASTLANE_USER
-          echo $FASTLANE_PASSWORD
-          echo $MATCH_PASSWORD
+#     - run:
+#         name: Print Fastlane credentials
+#         environment:
+#           FASTLANE_USER: $FASTLANE_USER
+#           FASTLANE_PASSWORD: $FASTLANE_PASSWORD
+#         command: |
+#           echo $FASTLANE_USER
+#           echo $FASTLANE_PASSWORD
+#           echo $MATCH_PASSWORD
 
 
-      # - run:
-    - run:
-        name: Deploy to TestFlight
+#       # - run:
+#     - run:
+#         name: Deploy to TestFlight
       
 
 
-        command: |
+#         command: |
           
-          cd apps/AppWithWearable/ios
-          bundle exec fastlane upload_testflight
+#           cd apps/AppWithWearable/ios
+#           bundle exec fastlane upload_testflight
 
 
-      # - run:
-workflows:
-  version: 2
-  build_and_deploy:
-    jobs:
-    - build_ios:
-        filters:
-          branches:
-            only: development
+#       # - run:
+# workflows:
+#   version: 2
+#   build_and_deploy:
+#     jobs:
+#     - build_ios:
+#         filters:
+#           branches:
+#             only: development
 
 
 ##added match password to env
@@ -199,82 +199,82 @@ workflows:
 # .circleci/config.yml
 # .circleci/config.yml
 
-# version: 2.1
+version: 2.1
 
-# jobs:
-#   build-and-test:
-#     macos:
-#       xcode: 14.2.0
-#     environment:
-#       FL_OUTPUT_DIR: output
-#       FASTLANE_LANE: upload_testflight
-#     steps:
-#       - checkout
-#       - run:
-#           name: Check Ruby Version
-#           command: ruby -v
-#       - run:
-#           name: Check Bundler Version
-#           command: bundle -v
-#       - run:
-#           command: |
-#             cd apps/AppWithWearable/ios
-#             bundle install
-#       - run:
-#           name: Fastlane
-#           command: |
-#             cd apps/AppWithWearable/ios
-#             bundle exec fastlane $FASTLANE_LANE
-#       - store_artifacts:
-#           path: output
-#       - store_test_results:
-#           path: output/scan
+jobs:
+  build-and-test:
+    macos:
+      xcode: 14.2.0
+    environment:
+      FL_OUTPUT_DIR: output
+      FASTLANE_LANE: upload_testflight
+    steps:
+      - checkout
+      - run:
+          name: Check Ruby Version
+          command: ruby -v
+      - run:
+          name: Check Bundler Version
+          command: bundle -v
+      - run:
+          command: |
+            cd apps/AppWithWearable/ios
+            bundle install
+      - run:
+          name: Fastlane
+          command: |
+            cd apps/AppWithWearable/ios
+            bundle exec fastlane $FASTLANE_LANE
+      - store_artifacts:
+          path: output
+      - store_test_results:
+          path: output/scan
 
-#   adhoc:
-#     macos:
-#       xcode: 14.2.0
-#     environment:
-#       FL_OUTPUT_DIR: output
-#       FASTLANE_LANE: upload_testflight
-#     steps:
-#       - checkout
-#       - run:
-#           name: Check Ruby Version
-#           command: ruby -v
-#       - run:
-#           name: Check Bundler Version
-#           command: bundle -v
-#       - run:
-#           name: Bundle Install
-#           command: bundle install
-#       - run:
-#           name: Install Flutter
-#           command: |
-#             git clone https://github.com/flutter/flutter.git -b stable
-#             echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
-#             source $BASH_ENV
-#             flutter doctor
-#       - run:
-#           name: Flutter pub get
-#           command: |
-#             cd apps/AppWithWearable
-#             flutter pub get
-#       - run:
-#           name: Build and Deploy with Fastlane
-#           command: |
-#             cd apps/AppWithWearable/ios
-#             bundle exec fastlane $FASTLANE_LANE
-#       - store_artifacts:
-#           path: output
+  adhoc:
+    macos:
+      xcode: 14.2.0
+    environment:
+      FL_OUTPUT_DIR: output
+      FASTLANE_LANE: upload_testflight
+    steps:
+      - checkout
+      - run:
+          name: Check Ruby Version
+          command: ruby -v
+      - run:
+          name: Check Bundler Version
+          command: bundle -v
+      - run:
+          name: Bundle Install
+          command: bundle install
+      - run:
+          name: Install Flutter
+          command: |
+            git clone https://github.com/flutter/flutter.git -b stable
+            echo 'export PATH="$PATH:`pwd`/flutter/bin"' >> $BASH_ENV
+            source $BASH_ENV
+            flutter doctor
+      - run:
+          name: Flutter pub get
+          command: |
+            cd apps/AppWithWearable
+            flutter pub get
+      - run:
+          name: Build and Deploy with Fastlane
+          command: |
+            cd apps/AppWithWearable/ios
+            bundle exec fastlane $FASTLANE_LANE
+      - store_artifacts:
+          path: output
 
-# workflows:
-#   version: 2
-#   build-test-adhoc:
-#     jobs:
-#       - build-and-test
-#       - adhoc:
-#           filters:
-#             branches:
-#               only: development
-#           requires:
-#             - build-and-test
+workflows:
+  version: 2
+  build-test-adhoc:
+    jobs:
+      - build-and-test
+      - adhoc:
+          filters:
+            branches:
+              only: development
+          requires:
+            - build-and-test
