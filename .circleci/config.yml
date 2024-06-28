@@ -288,7 +288,9 @@ version: 2.1
 jobs:
   build-and-test:
     macos:
-      xcode: 14.3.1
+      xcode: 15.0.0
+
+
     environment:
       FL_OUTPUT_DIR: output
       FASTLANE_LANE: upload_testflight
@@ -330,6 +332,9 @@ jobs:
           name: Install CocoaPods
           command: pod install
           working_directory: apps/AppWithWearable/ios
+      - run:
+          name: Create Log Directory
+          command: mkdir -p apps/AppWithWearable/ios/output/buildlogs/gym
       - run:
           name: Build iOS Project
           command: |
@@ -347,7 +352,7 @@ jobs:
 
   adhoc:
     macos:
-      xcode: 14.3.1
+      xcode: 15.0.0
     environment:
       FL_OUTPUT_DIR: output
       FASTLANE_LANE: upload_testflight
@@ -389,6 +394,9 @@ jobs:
           name: Install CocoaPods
           command: pod install
           working_directory: apps/AppWithWearable/ios
+      - run:
+          name: Create Log Directory
+          command: mkdir -p apps/AppWithWearable/ios/output/buildlogs/gym
       - run:
           name: Build and Deploy with Fastlane
           command: |
