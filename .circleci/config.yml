@@ -200,6 +200,7 @@
 # .circleci/config.yml
 # .circleci/config.yml
 
+# .circleci/config.yml
 version: 2.1
 
 jobs:
@@ -211,7 +212,15 @@ jobs:
       FASTLANE_LANE: test
     steps:
       - checkout
-      - run: bundle install
+      - run:
+          name: Check Ruby Version
+          command: ruby -v
+      - run:
+          name: Check Bundler Version
+          command: bundle -v
+      - run:
+          name: Bundle Install
+          command: bundle install
       - run:
           name: Fastlane
           command: bundle exec fastlane $FASTLANE_LANE
@@ -228,7 +237,15 @@ jobs:
       FASTLANE_LANE: upload_testflight
     steps:
       - checkout
-      - run: bundle install
+      - run:
+          name: Check Ruby Version
+          command: ruby -v
+      - run:
+          name: Check Bundler Version
+          command: bundle -v
+      - run:
+          name: Bundle Install
+          command: bundle install
       - run:
           name: Install Flutter
           command: |
@@ -260,3 +277,4 @@ workflows:
               only: development
           requires:
             - build-and-test
+
