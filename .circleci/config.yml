@@ -200,6 +200,92 @@
 # .circleci/config.yml
 # .circleci/config.yml
 
+## match worlking
+
+
+# version: 2.1
+
+# jobs:
+#   build-and-test:
+#     macos:
+#       xcode: 14.3.1
+#     environment:
+#       FL_OUTPUT_DIR: output
+#       FASTLANE_LANE: upload_testflight
+#     steps:
+#       - checkout
+#       - run:
+#           name: Check Ruby Version
+#           command: ruby -v
+#       - run:
+#           name: Check Bundler Version
+#           command: bundle -v
+#       - run:
+#           command: |
+#             cd apps/AppWithWearable/ios
+#             bundle install
+#       - run:
+#           name: Fastlane
+#           command: |
+#             cd apps/AppWithWearable/ios
+#             bundle exec fastlane $FASTLANE_LANE
+#       - store_artifacts:
+#           path: output
+#       - store_test_results:
+#           path: output/scan
+
+#   adhoc:
+#     macos:
+#       xcode: 14.3.1
+#     environment:
+#       FL_OUTPUT_DIR: output
+#       FASTLANE_LANE: upload_testflight
+#     steps:
+#       - checkout
+#       - run:
+#           name: Check Ruby Version
+#           command: ruby -v
+#       - run:
+#           name: Check Bundler Version
+#           command: bundle -v
+#       - run:
+#           name: Bundle Install
+#           command: bundle install
+#       - run:
+#           name: Install Flutter
+#           command: |
+#             git clone https://github.com/flutter/flutter.git -b stable
+#             echo 'export PATH="$PATH:pwd/flutter/bin"' >> $BASH_ENV
+#             source $BASH_ENV
+#             flutter doctor
+#       - run:
+#           name: Flutter pub get
+#           command: |
+#             cd apps/AppWithWearable
+#             flutter pub get
+#       - run:
+#           name: Build and Deploy with Fastlane
+#           command: |
+#             cd apps/AppWithWearable/ios
+#             bundle exec fastlane $FASTLANE_LANE
+#       - store_artifacts:
+#           path: output
+
+# workflows:
+#   version: 2
+#   build-test-adhoc:
+#     jobs:
+#       - build-and-test
+#       - adhoc:
+#           filters:
+#             branches:
+#               only: development
+#           requires:
+#             - build-and-test
+
+
+
+
 version: 2.1
 
 jobs:
@@ -218,9 +304,16 @@ jobs:
           name: Check Bundler Version
           command: bundle -v
       - run:
+          name: Install Bundler
+          command: gem install bundler
+      - run:
           command: |
             cd apps/AppWithWearable/ios
             bundle install
+      - run:
+          name: Install CocoaPods
+          command: pod install
+          working_directory: apps/AppWithWearable/ios
       - run:
           name: Fastlane
           command: |
@@ -246,8 +339,17 @@ jobs:
           name: Check Bundler Version
           command: bundle -v
       - run:
+          name: Install Bundler
+          command: gem install bundler
+      - run:
           name: Bundle Install
-          command: bundle install
+          command: |
+            cd apps/AppWithWearable/ios
+            bundle install
+      - run:
+          name: Install CocoaPods
+          command: pod install
+          working_directory: apps/AppWithWearable/ios
       - run:
           name: Install Flutter
           command: |
