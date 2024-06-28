@@ -312,8 +312,14 @@ jobs:
             source $BASH_ENV
             flutter doctor
       - run:
+          name: Flutter Precache
+          command: |
+            source $BASH_ENV
+            flutter precache --ios
+      - run:
           name: Flutter pub get
           command: |
+            source $BASH_ENV
             cd apps/AppWithWearable
             flutter pub get
       - run:
@@ -360,8 +366,14 @@ jobs:
             source $BASH_ENV
             flutter doctor
       - run:
+          name: Flutter Precache
+          command: |
+            source $BASH_ENV
+            flutter precache --ios
+      - run:
           name: Flutter pub get
           command: |
+            source $BASH_ENV
             cd apps/AppWithWearable
             flutter pub get
       - run:
