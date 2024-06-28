@@ -219,8 +219,9 @@ jobs:
           name: Check Bundler Version
           command: bundle -v
       - run:
-          name: Bundle Install
-          command: bundle install
+          command: |
+            cd apps/AppWithWearable/ios
+            bundle install
       - run:
           name: Fastlane
           command: bundle exec fastlane $FASTLANE_LANE
