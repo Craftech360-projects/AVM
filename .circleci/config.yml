@@ -331,11 +331,6 @@ jobs:
           command: pod install
           working_directory: apps/AppWithWearable/ios
       - run:
-          name: Build iOS Project
-          command: |
-            cd apps/AppWithWearable/ios
-            set -o pipefail && xcodebuild -workspace ./Runner.xcworkspace -scheme Runner -destination 'generic/platform=iOS' -archivePath /Users/distiller/Library/Developer/Xcode/Archives/$(date +%Y-%m-%d)/Runner.xcarchive archive | tee output/buildlogs/gym/Runner-Runner.log | xcpretty
-      - run:
           name: Fastlane
           command: |
             cd apps/AppWithWearable/ios
