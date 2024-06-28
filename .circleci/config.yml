@@ -284,7 +284,6 @@
 #             - build-and-test
 
 
-
 version: 2.1
 
 jobs:
@@ -309,7 +308,7 @@ jobs:
           name: Install Flutter
           command: |
             git clone https://github.com/flutter/flutter.git -b stable
-            echo 'export PATH="$PATH:pwd/flutter/bin"' >> $BASH_ENV
+            echo 'export PATH="$PATH:$(pwd)/flutter/bin"' >> $BASH_ENV
             source $BASH_ENV
             flutter doctor
       - run:
@@ -318,6 +317,7 @@ jobs:
             cd apps/AppWithWearable
             flutter pub get
       - run:
+          name: Bundle Install
           command: |
             cd apps/AppWithWearable/ios
             bundle install
@@ -356,7 +356,7 @@ jobs:
           name: Install Flutter
           command: |
             git clone https://github.com/flutter/flutter.git -b stable
-            echo 'export PATH="$PATH:pwd/flutter/bin"' >> $BASH_ENV
+            echo 'export PATH="$PATH:$(pwd)/flutter/bin"' >> $BASH_ENV
             source $BASH_ENV
             flutter doctor
       - run:
