@@ -112,11 +112,41 @@
 ##for bitrate
 
 
+# default_platform :ios
+
+# platform :ios do
+#   before_all do
+#     # No need for setup_circle_ci, adjust any necessary setup here
+#   end
+
+#   desc "Upload to TestFlight"
+#   lane :upload_testflight do
+#     increment_build_number(
+#       build_number: ENV["BITRISE_BUILD_NUMBER"]
+#     )
+#     match(type: "adhoc")
+#     gym(scheme: "Runner")
+#     app_store_connect_api_key(
+#       key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
+#       issuer_id: ENV["APP_STORE_CONNECT_API_KEY_ISSUER_ID"],
+#       key: ENV["APP_STORE_CONNECT_API_KEY_KEY"]
+#     )
+#     pilot(
+#       distribute_external: true,
+#       notify_external_testers: true,
+#       changelog: "This is another new build from Bitrise!"
+#     )
+#   end
+# end
+
+
+
+
 default_platform :ios
 
 platform :ios do
   before_all do
-    # No need for setup_circle_ci, adjust any necessary setup here
+    setup_bitrise # Custom setup for Bitrise
   end
 
   desc "Upload to TestFlight"
@@ -124,7 +154,12 @@ platform :ios do
     increment_build_number(
       build_number: ENV["BITRISE_BUILD_NUMBER"]
     )
-    match(type: "adhoc")
+    match(
+      type: "adhoc",
+      git_url: "https://github.com/Craftech360-projects/fastlane.git",
+      readonly: false,
+      git_basic_authorization: ENV["GH_TOKEN"]
+    )
     gym(scheme: "Runner")
     app_store_connect_api_key(
       key_id: ENV["APP_STORE_CONNECT_API_KEY_KEY_ID"],
