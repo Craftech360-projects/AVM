@@ -174,7 +174,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       navigatorObservers: [InstabugNavigatorObserver()],
       debugShowCheckedModeBanner: false,
-      title: 'AVMe',
+      title: 'CFT-AVM',
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
