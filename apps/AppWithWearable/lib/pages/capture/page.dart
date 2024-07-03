@@ -110,10 +110,9 @@ class _CapturePageState extends State<CapturePage>
           sizeMultiplier: 0.7,
         ),
         const ScanningUI(
-          string1: 'Looking for AVMe wearable',
-          string2:
-              'Locating your AVMe device. Keep it near your phone for pairing',
-        ),
+            string1: 'Looking for AVMe wearable',
+            string2: 'Locating your AVMe device.',
+            string3: 'Keep it near your phone for pairing'),
       ];
     }
     // return [const DeviceAnimationWidget()];
