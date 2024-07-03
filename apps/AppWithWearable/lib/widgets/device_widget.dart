@@ -9,7 +9,8 @@ class DeviceAnimationWidget extends StatefulWidget {
   State<DeviceAnimationWidget> createState() => _DeviceAnimationWidgetState();
 }
 
-class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget> with TickerProviderStateMixin {
+class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget>
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -37,25 +38,25 @@ class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget> with Tick
         child: Stack(
           alignment: Alignment.center,
           children: [
-            Image.asset(
-              "assets/images/stars.png",
-            ),
+            // Image.asset(
+            //   "assets/images/stars.png",
+            // ),
             AnimatedBuilder(
               animation: _animation,
               builder: (context, child) {
                 return Image.asset(
-                  "assets/images/blob.png",
-                  height: 390 * widget.sizeMultiplier * _animation.value,
-                  width: 390 * widget.sizeMultiplier * _animation.value,
+                  "assets/images/wave.gif",
+                  height: 490 * widget.sizeMultiplier * _animation.value,
+                  width: 490 * widget.sizeMultiplier * _animation.value,
                 );
               },
             ),
             // Image.asset("assets/images/blob.png"),
-            Image.asset(
-              "assets/images/herologo.png",
-              height: 160 * widget.sizeMultiplier,
-              width: 160 * widget.sizeMultiplier,
-            )
+            // Image.asset(
+            //   "assets/images/herologo.png",
+            //   height: 160 * widget.sizeMultiplier,
+            //   width: 160 * widget.sizeMultiplier,
+            // )
           ],
         ),
       ),
