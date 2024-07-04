@@ -123,13 +123,8 @@ class _FoundDevicesState extends State<FoundDevices>
                         padding: EdgeInsets.symmetric(
                             horizontal: screenSize.width * 0, vertical: 0),
                         decoration: BoxDecoration(
-                          border: const GradientBoxBorder(
-                            gradient: LinearGradient(colors: [
-                              Color.fromARGB(127, 208, 208, 208),
-                              Color.fromARGB(127, 188, 99, 121),
-                              Color.fromARGB(127, 86, 101, 182),
-                              Color.fromARGB(127, 126, 190, 236)
-                            ]),
+                          border: Border.all(
+                            color: const Color.fromARGB(127, 208, 208, 208),
                             width: 1,
                           ),
                           borderRadius: BorderRadius.circular(12),

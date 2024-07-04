@@ -386,7 +386,6 @@
 //     super.dispose();
 //   }
 // }
-
 import 'dart:async';
 import 'dart:io';
 
@@ -563,6 +562,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   @override
   Widget build(BuildContext context) {
+    final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom > 0;
+
     return WithForegroundTask(
         child: Scaffold(
       extendBodyBehindAppBar: true,
@@ -610,80 +611,85 @@ class _HomePageWrapperState extends State<HomePageWrapper>
             else
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
-                  margin: const EdgeInsets.fromLTRB(16, 16, 16, 40),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromARGB(236, 37, 30, 57),
-                        Color.fromARGB(255, 47, 39, 63),
-                        Color.fromARGB(236, 37, 30, 57),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(16)),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 52, 52, 52),
-                      width: 1,
-                    ),
-                    shape: BoxShape.rectangle,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: MaterialButton(
-                          onPressed: () => _tabChange(0),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20, bottom: 20),
-                            child: Text('Memories',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: _controller!.index == 0
-                                        ? Colors.white
-                                        : Colors.grey,
-                                    fontSize: 16)),
-                          ),
-                        ),
+                child: Visibility(
+                  visible: !isKeyboardVisible,
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(16, 16, 16, 40),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color.fromARGB(236, 37, 30, 57),
+                          Color.fromARGB(255, 47, 39, 63),
+                          Color.fromARGB(236, 37, 30, 57),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
-                      Expanded(
-                        child: MaterialButton(
-                          onPressed: () => _tabChange(1),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 20,
-                              bottom: 20,
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                      border: Border.all(
+                        color: const Color.fromARGB(255, 52, 52, 52),
+                        width: 1,
+                      ),
+                      shape: BoxShape.rectangle,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: MaterialButton(
+                            onPressed: () => _tabChange(0),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20, bottom: 20),
+                              child: Text('Memories',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: _controller!.index == 0
+                                          ? Colors.white
+                                          : Colors.grey,
+                                      fontSize: 16)),
                             ),
-                            child: Text('Capture',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: _controller!.index == 1
-                                        ? Colors.white
-                                        : Colors.grey,
-                                    fontSize: 16)),
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: MaterialButton(
-                          onPressed: () => _tabChange(2),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20, bottom: 20),
-                            child: Text('Chat',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: _controller!.index == 2
-                                        ? Colors.white
-                                        : Colors.grey,
-                                    fontSize: 16)),
+                        Expanded(
+                          child: MaterialButton(
+                            onPressed: () => _tabChange(1),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 20,
+                                bottom: 20,
+                              ),
+                              child: Text('Capture',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: _controller!.index == 1
+                                          ? Colors.white
+                                          : Colors.grey,
+                                      fontSize: 16)),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: MaterialButton(
+                            onPressed: () => _tabChange(2),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20, bottom: 20),
+                              child: Text('Chat',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: _controller!.index == 2
+                                          ? Colors.white
+                                          : Colors.grey,
+                                      fontSize: 16)),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               )

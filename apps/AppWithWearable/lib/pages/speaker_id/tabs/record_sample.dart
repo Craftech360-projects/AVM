@@ -158,7 +158,10 @@ class _RecordSampleTabState extends State<RecordSampleTab>
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
-                            colors: [Colors.white, Colors.grey.shade900],
+                            colors: [
+                              Color.fromARGB(255, 99, 99, 100),
+                              Color.fromARGB(255, 49, 3, 92)
+                            ],
                             stops: const [0.6, 1],
                           ),
                         ),
@@ -169,7 +172,7 @@ class _RecordSampleTabState extends State<RecordSampleTab>
                   height: 88,
                   width: 88,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade900,
+                    color: Color.fromARGB(255, 49, 3, 92),
                     shape: BoxShape.circle,
                   ),
                   child: !speechRecorded
