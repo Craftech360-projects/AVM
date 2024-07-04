@@ -218,17 +218,29 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   margin: const EdgeInsets.fromLTRB(16, 16, 16, 40),
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 33, 9, 81), // Start color
+                        Color.fromARGB(255, 53, 53, 53), // End color
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                     borderRadius: BorderRadius.all(Radius.circular(16)),
-                    border: GradientBoxBorder(
-                      gradient: LinearGradient(colors: [
-                        Color.fromARGB(127, 208, 208, 208),
-                        Color.fromARGB(127, 188, 99, 121),
-                        Color.fromARGB(127, 86, 101, 182),
-                        Color.fromARGB(127, 126, 190, 236)
-                      ]),
-                      width: 2,
+                    // border: GradientBoxBorder(
+                    //   gradient: LinearGradient(colors: [
+                    //     Color.fromARGB(127, 208, 208, 208),
+                    //     Color.fromARGB(127, 188, 99, 121),
+                    //     Color.fromARGB(127, 86, 101, 182),
+                    //     Color.fromARGB(127, 126, 190, 236)
+                    //   ]),
+                    //   width: 2,
+                    // ),
+                    border: Border.all(
+                      color:
+                          Color.fromARGB(255, 52, 52, 52), // Solid white color
+                      width: 1, // Border width
                     ),
                     shape: BoxShape.rectangle,
                   ),
@@ -348,8 +360,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                 MixpanelManager().settingsOpened();
                 var language = SharedPreferencesUtil().recordingsLanguage;
                 var useFriendApiKeys = SharedPreferencesUtil().useFriendApiKeys;
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (c) => const SettingsPage()));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (c) => SettingsPage()));
                 if (language != SharedPreferencesUtil().recordingsLanguage ||
                     useFriendApiKeys !=
                         SharedPreferencesUtil().useFriendApiKeys) {
