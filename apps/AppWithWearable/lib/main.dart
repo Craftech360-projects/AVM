@@ -97,13 +97,11 @@
 //     );
 //   }
 // }
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:AVMe/backend/database/box.dart';
 import 'package:AVMe/backend/mixpanel.dart';
 import 'package:AVMe/pages/home/page.dart';
@@ -111,7 +109,6 @@ import 'package:AVMe/pages/onboarding/welcome/page.dart';
 import 'package:AVMe/pages/login/login_page.dart';
 import 'package:AVMe/utils/notifications.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
-
 import 'backend/preferences.dart';
 import 'env/env.dart';
 
@@ -182,29 +179,43 @@ class _MyAppState extends State<MyApp> {
       ],
       supportedLocales: const [Locale('en')],
       theme: ThemeData(
-          useMaterial3: false,
-          colorScheme: const ColorScheme.dark(
-            primary: Colors.black,
-            secondary: Colors.deepPurple,
-            surface: Colors.black38,
+        useMaterial3: false,
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.black,
+          secondary: Colors.deepPurple,
+          surface: Colors.black38,
+        ),
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.grey.shade900,
+          contentTextStyle: const TextStyle(
+            fontSize: 16,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
           ),
-          snackBarTheme: SnackBarThemeData(
-            backgroundColor: Colors.grey.shade900,
-            contentTextStyle: const TextStyle(
-                fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
-          ),
-          textTheme: TextTheme(
-            titleLarge: const TextStyle(fontSize: 18, color: Colors.white),
-            titleMedium: const TextStyle(fontSize: 16, color: Colors.white),
-            bodyMedium: const TextStyle(fontSize: 14, color: Colors.white),
-            labelMedium: TextStyle(fontSize: 12, color: Colors.grey.shade200),
-          ),
-          textSelectionTheme: const TextSelectionThemeData(
-            cursorColor: Colors.white,
-            selectionColor: Colors.deepPurple,
-          )),
+        ),
+        textTheme: TextTheme(
+          titleLarge: const TextStyle(fontSize: 18, color: Colors.white),
+          titleMedium: const TextStyle(fontSize: 16, color: Colors.white),
+          bodyMedium: const TextStyle(fontSize: 14, color: Colors.white),
+          labelMedium: TextStyle(fontSize: 12, color: Colors.grey.shade200),
+        ),
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Colors.white,
+          selectionColor: Colors.deepPurple,
+        ),
+      ),
       themeMode: ThemeMode.dark,
-      home: homeScreen,
+      home: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/splash.png',
+              fit: BoxFit.cover, // Ensure the image covers the entire screen
+            ),
+          ),
+          homeScreen,
+        ],
+      ),
     );
   }
 }

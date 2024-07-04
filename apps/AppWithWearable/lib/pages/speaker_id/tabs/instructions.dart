@@ -18,7 +18,7 @@ class _InstructionsTabState extends State<InstructionsTab> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.grey.shade900,
+            color: Color.fromARGB(95, 132, 113, 159),
             borderRadius: BorderRadius.circular(24),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
@@ -96,7 +96,7 @@ class _InstructionsTabState extends State<InstructionsTab> {
                     borderRadius: BorderRadius.circular(12),
                     side: const BorderSide(color: Colors.white, width: 1),
                   ),
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Color.fromARGB(95, 132, 113, 159),
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Text(

@@ -28,9 +28,17 @@ class AIMessage extends StatelessWidget {
       children: [
         Container(
           decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/background.png"),
-              fit: BoxFit.cover,
+            // image: DecorationImage(
+            //   image: AssetImage("assets/images/background.png"),
+            //   fit: BoxFit.cover,
+            // ),
+            gradient: LinearGradient(
+              colors: [
+                Color.fromARGB(239, 153, 0, 255),
+                Color.fromARGB(255, 0, 252, 248),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.all(Radius.circular(16.0)),
           ),

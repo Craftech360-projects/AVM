@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:AVMe/pages/onboarding/find_device/page.dart';
@@ -41,24 +40,29 @@ class _WelcomePageState extends State<WelcomePage>
   Widget build(BuildContext context) {
     // Get the size of the screen for responsiveness
     var screenSize = MediaQuery.of(context).size;
+    final bool isSmallScreen = MediaQuery.of(context).size.width < 600;
     // Calculate the padding from the bottom based on the screen height for responsiveness
     double bottomPadding = screenSize.height * 0.2;
 
     return Scaffold(
       key: scaffoldKey,
       body: Container(
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 11, 11, 11),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/splash.png'),
+            fit: BoxFit.cover,
+          ),
         ),
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.only(
-                bottom: 100,
-              ),
+              padding: const EdgeInsets.only(bottom: 100),
               child: Center(
-                // Tradeoff: SVG Export doesn't support drop shadows, and png isn't very sharp
-                child: Image.asset("assets/images/herologo.png"),
+                child: Image.asset(
+                  "assets/images/herologo.png",
+                  width: isSmallScreen ? 120 : 220,
+                  height: isSmallScreen ? 120 : 220, // Adjust height as needed
+                ),
               ),
             ),
             Column(
@@ -73,14 +77,9 @@ class _WelcomePageState extends State<WelcomePage>
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                      border: const GradientBoxBorder(
-                        gradient: LinearGradient(colors: [
-                          Color.fromARGB(127, 208, 208, 208),
-                          Color.fromARGB(127, 188, 99, 121),
-                          Color.fromARGB(127, 86, 101, 182),
-                          Color.fromARGB(127, 126, 190, 236)
-                        ]),
-                        width: 2,
+                      border: Border.all(
+                        color: Color.fromARGB(78, 121, 121, 121),
+                        width: 1,
                       ),
                       borderRadius: BorderRadius.circular(12),
                     ),

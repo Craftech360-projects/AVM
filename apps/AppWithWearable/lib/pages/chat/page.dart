@@ -121,14 +121,19 @@ class _ChatPageState extends State<ChatPage>
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
               margin: const EdgeInsets.fromLTRB(18, 0, 18, 0),
               decoration: const BoxDecoration(
-                color: Colors.black,
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromARGB(120, 130, 129, 129),
+                    Color.fromARGB(121, 57, 56, 57),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.all(Radius.circular(16)),
                 border: GradientBoxBorder(
                   gradient: LinearGradient(colors: [
-                    Color.fromARGB(127, 208, 208, 208),
-                    Color.fromARGB(127, 188, 99, 121),
-                    Color.fromARGB(127, 86, 101, 182),
-                    Color.fromARGB(127, 126, 190, 236)
+                    Color.fromARGB(126, 93, 92, 92),
+                    Color.fromARGB(200, 76, 76, 76),
                   ]),
                   width: 1,
                 ),
@@ -160,7 +165,7 @@ class _ChatPageState extends State<ChatPage>
                           : const Icon(
                               Icons.send_rounded,
                               color: Color(0xFFF7F4F4),
-                              size: 30.0,
+                              size: 22.0,
                             ),
                       onPressed: loading
                           ? null

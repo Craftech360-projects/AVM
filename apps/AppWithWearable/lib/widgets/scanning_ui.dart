@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ScanningUI extends StatefulWidget {
-  const ScanningUI({super.key, required this.string1, required this.string2});
+  const ScanningUI(
+      {super.key,
+      required this.string1,
+      required this.string2,
+      required this.string3});
 
   final String string1;
   final String string2;
+  final String string3;
 
   @override
   State<ScanningUI> createState() => _ScanningUIState();
@@ -34,6 +39,17 @@ class _ScanningUIState extends State<ScanningUI> {
           const SizedBox(height: 8.0),
           Text(
             widget.string2,
+            style: const TextStyle(
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+              height: 1.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8.0),
+          Text(
+            widget.string3,
             style: const TextStyle(
               color: Color.fromARGB(255, 255, 255, 255),
               fontSize: 16.0,
