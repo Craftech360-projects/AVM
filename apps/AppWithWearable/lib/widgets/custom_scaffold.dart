@@ -17,7 +17,7 @@ class CustomScaffold extends StatelessWidget {
     return Scaffold(
       appBar: appBar,
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image:
                 AssetImage('assets/images/splash.png'), // Your background image

@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
       // ),
       resizeToAvoidBottomInset: true,
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/splash.png'),
             fit: BoxFit.cover,

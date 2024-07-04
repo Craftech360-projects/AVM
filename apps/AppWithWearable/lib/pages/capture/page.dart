@@ -221,10 +221,17 @@ class _CapturePageState extends State<CapturePage>
                         MixpanelManager().speechProfileCapturePageClicked();
                       },
                       child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(12)),
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromARGB(120, 130, 129, 131),
+                              Color.fromARGB(120, 71, 71, 72),
+                              Color.fromARGB(122, 49, 11, 125),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
                         ),
                         margin: const EdgeInsets.symmetric(
                             vertical: 16, horizontal: 24),

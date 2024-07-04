@@ -38,7 +38,7 @@ class _MemoryListItemState extends State<MemoryListItem> {
         margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
         width: double.maxFinite,
         decoration: BoxDecoration(
-          color: Colors.grey.shade900,
+          color: Color.fromARGB(95, 132, 113, 159),
           borderRadius: BorderRadius.circular(16.0),
         ),
         child: Padding(

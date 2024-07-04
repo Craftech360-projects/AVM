@@ -157,316 +157,316 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   )),
                   const SizedBox(height: 28.0),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'NOTIFICATIONS',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        if (coachIsChecked) {
-                          coachIsChecked = false;
-                          SharedPreferencesUtil().coachIsChecked = false;
-                        } else {
-                          coachIsChecked = true;
-                          SharedPreferencesUtil().coachIsChecked = true;
-                        }
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 16, 8.0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Conversation coach',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 150, 150, 150),
-                                fontSize: 16),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: coachIsChecked
-                                  ? const Color.fromARGB(255, 150, 150, 150)
-                                  : Colors
-                                      .transparent, // Fill color when checked
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 150, 150, 150),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            width: 22,
-                            height: 22,
-                            child:
-                                coachIsChecked // Show the icon only when checked
-                                    ? const Icon(
-                                        Icons.check,
-                                        color: Colors.white, // Tick color
-                                        size: 18,
-                                      )
-                                    : null, // No icon when unchecked
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        if (reconnectNotificationIsChecked) {
-                          reconnectNotificationIsChecked = false;
-                          SharedPreferencesUtil()
-                              .reconnectNotificationIsChecked = false;
-                        } else {
-                          reconnectNotificationIsChecked = true;
-                          SharedPreferencesUtil()
-                              .reconnectNotificationIsChecked = true;
-                        }
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 12, 8.0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Reminder to reconnect',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 150, 150, 150),
-                                fontSize: 16),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: reconnectNotificationIsChecked
-                                  ? const Color.fromARGB(255, 150, 150, 150)
-                                  : Colors
-                                      .transparent, // Fill color when checked
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 150, 150, 150),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            width: 22,
-                            height: 22,
-                            child:
-                                reconnectNotificationIsChecked // Show the icon only when checked
-                                    ? const Icon(
-                                        Icons.check,
-                                        color: Colors.white, // Tick color
-                                        size: 18,
-                                      )
-                                    : null, // No icon when unchecked
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // const Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: Text(
+                  //     'NOTIFICATIONS',
+                  //     style: TextStyle(color: Colors.white, fontSize: 16),
+                  //     textAlign: TextAlign.start,
+                  //   ),
+                  // ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     setState(() {
+                  //       if (coachIsChecked) {
+                  //         coachIsChecked = false;
+                  //         SharedPreferencesUtil().coachIsChecked = false;
+                  //       } else {
+                  //         coachIsChecked = true;
+                  //         SharedPreferencesUtil().coachIsChecked = true;
+                  //       }
+                  //     });
+                  //   },
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.fromLTRB(0, 16, 8.0, 0),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         const Text(
+                  //           'Conversation coach',
+                  //           style: TextStyle(
+                  //               color: Color.fromARGB(255, 150, 150, 150),
+                  //               fontSize: 16),
+                  //         ),
+                  //         Container(
+                  //           decoration: BoxDecoration(
+                  //             color: coachIsChecked
+                  //                 ? const Color.fromARGB(255, 150, 150, 150)
+                  //                 : Colors
+                  //                     .transparent, // Fill color when checked
+                  //             border: Border.all(
+                  //               color: const Color.fromARGB(255, 150, 150, 150),
+                  //               width: 2,
+                  //             ),
+                  //             borderRadius: BorderRadius.circular(12),
+                  //           ),
+                  //           width: 22,
+                  //           height: 22,
+                  //           child:
+                  //               coachIsChecked // Show the icon only when checked
+                  //                   ? const Icon(
+                  //                       Icons.check,
+                  //                       color: Colors.white, // Tick color
+                  //                       size: 18,
+                  //                     )
+                  //                   : null, // No icon when unchecked
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     setState(() {
+                  //       if (reconnectNotificationIsChecked) {
+                  //         reconnectNotificationIsChecked = false;
+                  //         SharedPreferencesUtil()
+                  //             .reconnectNotificationIsChecked = false;
+                  //       } else {
+                  //         reconnectNotificationIsChecked = true;
+                  //         SharedPreferencesUtil()
+                  //             .reconnectNotificationIsChecked = true;
+                  //       }
+                  //     });
+                  //   },
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.fromLTRB(0, 12, 8.0, 0),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         const Text(
+                  //           'Reminder to reconnect',
+                  //           style: TextStyle(
+                  //               color: Color.fromARGB(255, 150, 150, 150),
+                  //               fontSize: 16),
+                  //         ),
+                  //         Container(
+                  //           decoration: BoxDecoration(
+                  //             color: reconnectNotificationIsChecked
+                  //                 ? const Color.fromARGB(255, 150, 150, 150)
+                  //                 : Colors
+                  //                     .transparent, // Fill color when checked
+                  //             border: Border.all(
+                  //               color: const Color.fromARGB(255, 150, 150, 150),
+                  //               width: 2,
+                  //             ),
+                  //             borderRadius: BorderRadius.circular(12),
+                  //           ),
+                  //           width: 22,
+                  //           height: 22,
+                  //           child:
+                  //               reconnectNotificationIsChecked // Show the icon only when checked
+                  //                   ? const Icon(
+                  //                       Icons.check,
+                  //                       color: Colors.white, // Tick color
+                  //                       size: 18,
+                  //                     )
+                  //                   : null, // No icon when unchecked
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   const SizedBox(height: 28),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'PREFERENCES',
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        if (optInAnalytics) {
-                          optInAnalytics = false;
-                          SharedPreferencesUtil().optInAnalytics = false;
-                        } else {
-                          optInAnalytics = true;
-                          SharedPreferencesUtil().optInAnalytics = true;
-                        }
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 12, 8.0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              child: const Text(
-                                'Help improve AVMe by sharing anonymized analytics data',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 150, 150, 150),
-                                    fontSize: 16,
-                                    decoration: TextDecoration.underline),
-                              ),
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (c) => const PrivacyInfoPage()));
-                              },
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: optInAnalytics
-                                  ? const Color.fromARGB(255, 150, 150, 150)
-                                  : Colors
-                                      .transparent, // Fill color when checked
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 150, 150, 150),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            width: 22,
-                            height: 22,
-                            child:
-                                optInAnalytics // Show the icon only when checked
-                                    ? const Icon(
-                                        Icons.check,
-                                        color: Colors.white, // Tick color
-                                        size: 18,
-                                      )
-                                    : null, // No icon when unchecked
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        if (devModeEnabled) {
-                          devModeEnabled = false;
-                          SharedPreferencesUtil().devModeEnabled = false;
-                        } else {
-                          devModeEnabled = true;
-                          SharedPreferencesUtil().devModeEnabled = true;
-                        }
-                      });
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 16, 8.0, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Developer Mode',
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 150, 150, 150),
-                                fontSize: 16),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: devModeEnabled
-                                  ? const Color.fromARGB(255, 150, 150, 150)
-                                  : Colors
-                                      .transparent, // Fill color when checked
-                              border: Border.all(
-                                color: const Color.fromARGB(255, 150, 150, 150),
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            width: 22,
-                            height: 22,
-                            child:
-                                devModeEnabled // Show the icon only when checked
-                                    ? const Icon(
-                                        Icons.check,
-                                        color: Colors.white, // Tick color
-                                        size: 18,
-                                      )
-                                    : null, // No icon when unchecked
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 36.0),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'ADD ONS',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      MixpanelManager().pluginsOpened();
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (c) => const PluginsPage()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 16, 8.0, 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 29, 29, 29),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Plugins',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 150, 150, 150),
-                                    fontSize: 16),
-                              ),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (c) => const SpeakerIdPage()));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 12, 8, 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 29, 29,
-                              29), // Replace with your desired color
-                          borderRadius: BorderRadius.circular(
-                              10.0), // Adjust for desired rounded corners
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Speech Profile Set Up',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 150, 150, 150),
-                                    fontSize: 16),
-                              ),
-                              Icon(Icons.arrow_forward_ios,
-                                  color: Colors.white, size: 16),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
+                  // const Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: Text(
+                  //     'PREFERENCES',
+                  //     style: TextStyle(color: Colors.white, fontSize: 16),
+                  //     textAlign: TextAlign.start,
+                  //   ),
+                  // ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     setState(() {
+                  //       if (optInAnalytics) {
+                  //         optInAnalytics = false;
+                  //         SharedPreferencesUtil().optInAnalytics = false;
+                  //       } else {
+                  //         optInAnalytics = true;
+                  //         SharedPreferencesUtil().optInAnalytics = true;
+                  //       }
+                  //     });
+                  //   },
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.fromLTRB(0, 12, 8.0, 0),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         Expanded(
+                  //           child: GestureDetector(
+                  //             child: const Text(
+                  //               'Help improve AVMe by sharing anonymized analytics data',
+                  //               style: TextStyle(
+                  //                   color: Color.fromARGB(255, 150, 150, 150),
+                  //                   fontSize: 16,
+                  //                   decoration: TextDecoration.underline),
+                  //             ),
+                  //             onTap: () {
+                  //               Navigator.of(context).push(MaterialPageRoute(
+                  //                   builder: (c) => const PrivacyInfoPage()));
+                  //             },
+                  //           ),
+                  //         ),
+                  //         Container(
+                  //           decoration: BoxDecoration(
+                  //             color: optInAnalytics
+                  //                 ? const Color.fromARGB(255, 150, 150, 150)
+                  //                 : Colors
+                  //                     .transparent, // Fill color when checked
+                  //             border: Border.all(
+                  //               color: const Color.fromARGB(255, 150, 150, 150),
+                  //               width: 2,
+                  //             ),
+                  //             borderRadius: BorderRadius.circular(12),
+                  //           ),
+                  //           width: 22,
+                  //           height: 22,
+                  //           child:
+                  //               optInAnalytics // Show the icon only when checked
+                  //                   ? const Icon(
+                  //                       Icons.check,
+                  //                       color: Colors.white, // Tick color
+                  //                       size: 18,
+                  //                     )
+                  //                   : null, // No icon when unchecked
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     setState(() {
+                  //       if (devModeEnabled) {
+                  //         devModeEnabled = false;
+                  //         SharedPreferencesUtil().devModeEnabled = false;
+                  //       } else {
+                  //         devModeEnabled = true;
+                  //         SharedPreferencesUtil().devModeEnabled = true;
+                  //       }
+                  //     });
+                  //   },
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.fromLTRB(0, 16, 8.0, 0),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         const Text(
+                  //           'Developer Mode',
+                  //           style: TextStyle(
+                  //               color: Color.fromARGB(255, 150, 150, 150),
+                  //               fontSize: 16),
+                  //         ),
+                  //         Container(
+                  //           decoration: BoxDecoration(
+                  //             color: devModeEnabled
+                  //                 ? const Color.fromARGB(255, 150, 150, 150)
+                  //                 : Colors
+                  //                     .transparent, // Fill color when checked
+                  //             border: Border.all(
+                  //               color: const Color.fromARGB(255, 150, 150, 150),
+                  //               width: 2,
+                  //             ),
+                  //             borderRadius: BorderRadius.circular(12),
+                  //           ),
+                  //           width: 22,
+                  //           height: 22,
+                  //           child:
+                  //               devModeEnabled // Show the icon only when checked
+                  //                   ? const Icon(
+                  //                       Icons.check,
+                  //                       color: Colors.white, // Tick color
+                  //                       size: 18,
+                  //                     )
+                  //                   : null, // No icon when unchecked
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 36.0),
+                  // const Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: Text(
+                  //     'ADD ONS',
+                  //     style: TextStyle(
+                  //       color: Colors.white,
+                  //     ),
+                  //     textAlign: TextAlign.start,
+                  //   ),
+                  // ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     MixpanelManager().pluginsOpened();
+                  //     Navigator.of(context).push(MaterialPageRoute(
+                  //         builder: (c) => const PluginsPage()));
+                  //   },
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.fromLTRB(0, 16, 8.0, 0),
+                  //     child: Container(
+                  //       decoration: BoxDecoration(
+                  //         color: const Color.fromARGB(255, 29, 29, 29),
+                  //         borderRadius: BorderRadius.circular(10.0),
+                  //       ),
+                  //       child: const Padding(
+                  //         padding: EdgeInsets.symmetric(
+                  //             horizontal: 16, vertical: 12),
+                  //         child: Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: [
+                  //             Text(
+                  //               'Plugins',
+                  //               style: TextStyle(
+                  //                   color: Color.fromARGB(255, 150, 150, 150),
+                  //                   fontSize: 16),
+                  //             ),
+                  //             Icon(
+                  //               Icons.arrow_forward_ios,
+                  //               color: Color.fromARGB(255, 255, 255, 255),
+                  //               size: 16,
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     Navigator.of(context).push(MaterialPageRoute(
+                  //         builder: (c) => const SpeakerIdPage()));
+                  //   },
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.fromLTRB(0, 12, 8, 0),
+                  //     child: Container(
+                  //       decoration: BoxDecoration(
+                  //         color: const Color.fromARGB(255, 29, 29,
+                  //             29), // Replace with your desired color
+                  //         borderRadius: BorderRadius.circular(
+                  //             10.0), // Adjust for desired rounded corners
+                  //       ),
+                  //       child: const Padding(
+                  //         padding: EdgeInsets.symmetric(
+                  //             horizontal: 16, vertical: 12),
+                  //         child: Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: [
+                  //             Text(
+                  //               'Speech Profile Set Up',
+                  //               style: TextStyle(
+                  //                   color: Color.fromARGB(255, 150, 150, 150),
+                  //                   fontSize: 16),
+                  //             ),
+                  //             Icon(Icons.arrow_forward_ios,
+                  //                 color: Colors.white, size: 16),
+                  //           ],
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 12),
                   // IconButton(
                   //   icon: Icon(Icons.logout),
                   //   onPressed: _logout,
@@ -589,9 +589,10 @@ class _SettingsPageState extends State<SettingsPage> {
                       alignment: Alignment
                           .centerLeft, // Align icon and text to the left
                     ),
-                    icon: Icon(Icons.logout, color: Colors.deepPurple), // Icon
-                    label: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    icon: const Icon(Icons.logout,
+                        color: Colors.deepPurple), // Icon
+                    label: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4.0),
                       child: Text(
                         'Logout',
                         style: TextStyle(
