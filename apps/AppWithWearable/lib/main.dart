@@ -159,14 +159,21 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     SharedPreferencesUtil prefs = SharedPreferencesUtil();
 
-    Widget homeScreen;
-    if (prefs.isLoggedIn) {
-      homeScreen = (prefs.onboardingCompleted && prefs.deviceId != '')
-          ? const HomePageWrapper()
-          : const WelcomePage();
-    } else {
-      homeScreen = LoginPage();
-    }
+//login screen option
+    // Widget homeScreen;
+    // if (prefs.isLoggedIn) {
+    //   homeScreen = (prefs.onboardingCompleted && prefs.deviceId != '')
+    //       ? const HomePageWrapper()
+    //       : const WelcomePage();
+    // } else {
+    //   homeScreen = LoginPage();
+    // }
+
+//direct login
+
+    Widget homeScreen = (prefs.onboardingCompleted && prefs.deviceId != '')
+        ? const HomePageWrapper()
+        : const WelcomePage();
 
     return MaterialApp(
       navigatorObservers: [InstabugNavigatorObserver()],
