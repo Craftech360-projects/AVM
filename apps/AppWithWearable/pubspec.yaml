@@ -15,7 +15,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.7+4
+
+version: 1.0.7+3
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -70,7 +71,6 @@ dependencies:
   flutter_svg: ^2.0.10+1
   gradient_borders: ^1.0.1
   package_info_plus: ^8.0.0
-
   path_provider: any
   ml_linalg: any
   objectbox: ^4.0.1
@@ -95,7 +95,6 @@ dev_dependencies:
   build_runner: ^2.4.11
   objectbox_generator: any
 
-
 flutter_launcher_icons:
   android: true
   ios: true
@@ -104,24 +103,20 @@ flutter_launcher_icons:
     generate: true
   image_path: 'assets/images/app_launcher_icon.png'
 
+flutter_native_splash:
+  color: "#ffffff" # Background color for the splash screen
+  image: assets/images/splashWithLogo.png # Path to your splash screen image
+  android: true
+  ios: true
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
-
   - assets/images/blob.png
   - assets/images/stars.png
   - assets/images/herologo.png
+  - assets/images/splashWithLogo.png
   - assets/images/backbutton.svg
   - assets/fonts/
   - assets/images/
@@ -131,6 +126,7 @@ flutter:
   - assets/rive_animations/
   - assets/pdfs/
   - assets/silero_vad.onnx
+
   fonts:
   - family: 'SF Pro Display'
     fonts:

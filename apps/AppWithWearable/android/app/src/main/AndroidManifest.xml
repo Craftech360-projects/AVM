@@ -58,7 +58,9 @@
     <!-- Add android:stopWithTask option only when necessary. -->
     <application
         android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="AVMe"
+        android:theme="@style/LaunchTheme"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         tools:replace="android:label">
