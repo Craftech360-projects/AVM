@@ -175,6 +175,11 @@ class _MyAppState extends State<MyApp> {
         ? const HomePageWrapper()
         : const WelcomePage();
 
+//bypass connecting device
+    // Widget homeScreen = (!prefs.onboardingCompleted || prefs.deviceId == '')
+    //     ? const HomePageWrapper()
+    //     : const WelcomePage();
+
     return MaterialApp(
       navigatorObservers: [InstabugNavigatorObserver()],
       debugShowCheckedModeBanner: false,

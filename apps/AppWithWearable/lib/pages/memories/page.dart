@@ -285,6 +285,8 @@ class _MemoriesPageState extends State<MemoriesPage>
       slivers: [
         SliverToBoxAdapter(child: SizedBox(height: appBarHeight + 45)),
         SliverToBoxAdapter(
+            child: const SizedBox(height: 16)), // Add SizedBox here for spacing
+        SliverToBoxAdapter(
           child: Container(
             width: double.maxFinite,
             padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
