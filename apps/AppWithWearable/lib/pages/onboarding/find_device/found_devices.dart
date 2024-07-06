@@ -281,7 +281,7 @@ class _FoundDevicesState extends State<FoundDevices>
                         : '${widget.deviceList.length} ${widget.deviceList.length == 1 ? "DEVICE" : "DEVICES"} FOUND NEARBY',
                     style: const TextStyle(
                       fontWeight: FontWeight.w400,
-                      fontSize: 12,
+                      fontSize: 18,
                       color: Color.fromARGB(220, 255, 255, 255),
                     ),
                   ),
@@ -292,7 +292,7 @@ class _FoundDevicesState extends State<FoundDevices>
                     'PAIRING SUCCESSFUL',
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
-                      fontSize: 12,
+                      fontSize: 16,
                       color: Color.fromARGB(189, 255, 255, 255),
                     ),
                   ),

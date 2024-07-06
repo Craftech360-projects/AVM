@@ -175,45 +175,45 @@ class _WelcomePageState extends State<WelcomePage>
                     ),
                   ),
                 ),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: Colors.white, // Text color
-                      fontSize:
-                          screenSize.width * 0.025, // Responsive font size
-                    ),
-                    children: [
-                      const TextSpan(
-                          text: 'By tapping on "Connect", you agree to our\n'),
-                      TextSpan(
-                        text: 'Terms of service',
-                        style: const TextStyle(
-                          decoration: TextDecoration.underline,
-                        ),
-                        //To be changed later with basedhardware.com/Termsofservice
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            _launchUrl(
-                                'https://samaprivacypolicy.notion.site/samaprivacypolicy/Sama-AI-Privacy-Policy-bfbbee90f18d4b8b9a0111d2d62cca54');
-                          },
-                      ),
-                      const TextSpan(text: ' and '),
-                      TextSpan(
-                        text: 'Privacy Policy',
-                        style: const TextStyle(
-                          decoration: TextDecoration.underline,
-                        ),
-                        //To be changed later with basedhardware.com/PrivacyPolicy
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            _launchUrl(
-                                'https://samaprivacypolicy.notion.site/samaprivacypolicy/Sama-AI-Privacy-Policy-bfbbee90f18d4b8b9a0111d2d62cca54');
-                          },
-                      ),
-                    ],
-                  ),
-                ),
+                // RichText(
+                //   textAlign: TextAlign.center,
+                //   text: TextSpan(
+                //     style: TextStyle(
+                //       color: Colors.white, // Text color
+                //       fontSize:
+                //           screenSize.width * 0.025, // Responsive font size
+                //     ),
+                //     children: [
+                //       const TextSpan(
+                //           text: 'By tapping on "Connect", you agree to our\n'),
+                //       TextSpan(
+                //         text: 'Terms of service',
+                //         style: const TextStyle(
+                //           decoration: TextDecoration.underline,
+                //         ),
+                //         //To be changed later with basedhardware.com/Termsofservice
+                //         recognizer: TapGestureRecognizer()
+                //           ..onTap = () {
+                //             _launchUrl(
+                //                 'https://samaprivacypolicy.notion.site/samaprivacypolicy/Sama-AI-Privacy-Policy-bfbbee90f18d4b8b9a0111d2d62cca54');
+                //           },
+                //       ),
+                //       const TextSpan(text: ' and '),
+                //       TextSpan(
+                //         text: 'Privacy Policy',
+                //         style: const TextStyle(
+                //           decoration: TextDecoration.underline,
+                //         ),
+                //         //To be changed later with basedhardware.com/PrivacyPolicy
+                //         recognizer: TapGestureRecognizer()
+                //           ..onTap = () {
+                //             _launchUrl(
+                //                 'https://samaprivacypolicy.notion.site/samaprivacypolicy/Sama-AI-Privacy-Policy-bfbbee90f18d4b8b9a0111d2d62cca54');
+                //           },
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 SizedBox(
                     height: bottomPadding *
                         0.5), // Padding from bottom for the text

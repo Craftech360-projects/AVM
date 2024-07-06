@@ -7,7 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'found_devices.dart';
 
 class FindDevicesPage extends StatefulWidget {
-  const FindDevicesPage({super.key});
+  const FindDevicesPage({Key? key}) : super(key: key);
 
   @override
   _FindDevicesPageState createState() => _FindDevicesPageState();
@@ -23,7 +23,7 @@ class _FindDevicesPageState extends State<FindDevicesPage>
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
       _scanDevices();
     });
   }
@@ -55,11 +55,8 @@ class _FindDevicesPageState extends State<FindDevicesPage>
         }
       }
 
-      foundDevicesMap.keys
-          .where((id) => !updatedDevicesMap.containsKey(id))
-          .toList()
-          .forEach(foundDevicesMap.remove);
-
+      foundDevicesMap
+          .removeWhere((id, _) => !updatedDevicesMap.containsKey(id));
       foundDevicesMap.addAll(updatedDevicesMap);
 
       List<BTDeviceStruct?> orderedDevices = foundDevicesMap.values.toList();
@@ -76,7 +73,10 @@ class _FindDevicesPageState extends State<FindDevicesPage>
   void _launchURL() async {
     const url =
         'https://discord.com/servers/based-hardware-1192313062041067520';
-    if (!await launch(url)) throw 'Could not launch $url';
+    if (!await canLaunch(url)) {
+      throw 'Could not launch $url';
+    }
+    await launch(url);
   }
 
   @override
@@ -100,59 +100,68 @@ class _FindDevicesPageState extends State<FindDevicesPage>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 FoundDevices(deviceList: deviceList),
-                deviceList.isEmpty
-                    ? enableInstructions
-                        ? Padding(
-                            padding: EdgeInsets.only(
-                              bottom: 20,
-                              left: screenSize.width * 0.0,
-                              right: screenSize.width * 0.0,
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.only(
-                                bottom: 10,
-                                left: screenSize.width * 0.0,
-                                right: screenSize.width * 0.0,
-                              ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color:
-                                          const Color.fromARGB(255, 55, 55, 55),
-                                      width: 2.0),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    _launchURL();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.transparent,
-                                    shadowColor:
-                                        const Color.fromARGB(255, 17, 17, 17),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                              //     child: Container(
-                              //       width: double.infinity,
-                              //       height: 45,
-                              //       alignment: Alignment.center,
-                              //       child: Text(
-                              //         'Contact Support',
-                              //         style: TextStyle(
-                              //             fontWeight: FontWeight.w400,
-                              //             fontSize: screenSize.width * 0.045,
-                              //             color: Color.fromARGB(
-                              //                 255, 181, 180, 180)),
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-                            ),
-                          )
-                        : const SizedBox.shrink()
-                    : const SizedBox.shrink()
+                if (deviceList.isEmpty && enableInstructions)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: const Color.fromARGB(255, 55, 55, 55),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+
+//skip
+                      // child: ElevatedButton(
+                      //   onPressed: _launchURL,
+                      //   style: ElevatedButton.styleFrom(
+                      //     backgroundColor: Colors.transparent,
+                      //     shadowColor: const Color.fromARGB(255, 17, 17, 17),
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //     ),
+                      //   ),
+                      //   child: Container(
+                      //     width: double.infinity,
+                      //     height: 45,
+                      //     alignment: Alignment.center,
+                      //     child: Text(
+                      //       'Skip ',
+                      //       style: TextStyle(
+                      //         fontWeight: FontWeight.w400,
+                      //         fontSize: screenSize.width * 0.045,
+                      //         color: Color.fromARGB(255, 181, 180, 180),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+
+                      // child: ElevatedButton(
+                      //   onPressed: _launchURL,
+                      //   style: ElevatedButton.styleFrom(
+                      //     backgroundColor: Colors.transparent,
+                      //     shadowColor: const Color.fromARGB(255, 17, 17, 17),
+                      //     shape: RoundedRectangleBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //     ),
+                      //   ),
+                      //   child: Container(
+                      //     width: double.infinity,
+                      //     height: 45,
+                      //     alignment: Alignment.center,
+                      //     child: Text(
+                      //       'Contact Support',
+                      //       style: TextStyle(
+                      //         fontWeight: FontWeight.w400,
+                      //         fontSize: screenSize.width * 0.045,
+                      //         color: Color.fromARGB(255, 181, 180, 180),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -166,9 +175,9 @@ class SearchingSection extends StatelessWidget {
   final bool enableInstructions;
 
   const SearchingSection({
-    super.key,
+    Key? key,
     required this.enableInstructions,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
