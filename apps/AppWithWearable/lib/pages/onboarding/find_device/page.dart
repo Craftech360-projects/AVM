@@ -134,21 +134,21 @@ class _FindDevicesPageState extends State<FindDevicesPage>
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
-                                  child: Container(
-                                    width: double.infinity,
-                                    height: 45,
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      'Contact Support',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: screenSize.width * 0.045,
-                                          color: Color.fromARGB(
-                                              255, 181, 180, 180)),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              //     child: Container(
+                              //       width: double.infinity,
+                              //       height: 45,
+                              //       alignment: Alignment.center,
+                              //       child: Text(
+                              //         'Contact Support',
+                              //         style: TextStyle(
+                              //             fontWeight: FontWeight.w400,
+                              //             fontSize: screenSize.width * 0.045,
+                              //             color: Color.fromARGB(
+                              //                 255, 181, 180, 180)),
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
                             ),
                           )
                         : const SizedBox.shrink()
