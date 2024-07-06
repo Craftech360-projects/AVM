@@ -170,13 +170,21 @@ class AIMessage extends StatelessWidget {
     );
   }
 
-  _getInitialOption(BuildContext context, String optionText) {
+  Widget _getInitialOption(BuildContext context, String optionText) {
     return GestureDetector(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
         width: double.maxFinite,
         decoration: BoxDecoration(
-          color: Colors.grey.shade900,
+          gradient: const LinearGradient(
+            colors: [
+              Color.fromARGB(92, 144, 134, 172),
+              Color.fromARGB(87, 89, 75, 117),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            transform: GradientRotation(160 * 3.1415927 / 180),
+          ),
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Text(optionText, style: Theme.of(context).textTheme.bodyMedium),

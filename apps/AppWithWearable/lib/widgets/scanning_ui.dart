@@ -36,7 +36,7 @@ class _ScanningUIState extends State<ScanningUI> {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8.0),
+          const SizedBox(height: 6.0),
           Text(
             widget.string2,
             style: const TextStyle(
@@ -47,7 +47,7 @@ class _ScanningUIState extends State<ScanningUI> {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8.0),
+          const SizedBox(height: 6.0),
           Text(
             widget.string3,
             style: const TextStyle(
@@ -58,7 +58,7 @@ class _ScanningUIState extends State<ScanningUI> {
             ),
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 16.0),
+          const SizedBox(height: 10.0),
         ],
       ),
     );

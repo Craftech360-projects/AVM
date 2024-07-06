@@ -1,11 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:AVMe/backend/schema/bt_device.dart';
 import 'package:AVMe/utils/ble/scan.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'found_devices.dart';
 
 class FindDevicesPage extends StatefulWidget {
@@ -38,37 +36,32 @@ class _FindDevicesPageState extends State<FindDevicesPage>
   }
 
   Future<void> _scanDevices() async {
-    // TODO: validate bluetooth turned on
     _didNotMakeItTimer = Timer(const Duration(seconds: 10), () {
       setState(() {
         enableInstructions = true;
       });
     });
-    // Update foundDevicesMap with new devices and remove the ones not found anymore
+
     Map<String, BTDeviceStruct?> foundDevicesMap = {};
 
     _findDevicesTimer =
         Timer.periodic(const Duration(seconds: 2), (timer) async {
       List<BTDeviceStruct?> foundDevices = await scanDevices();
 
-      // Update foundDevicesMap with new devices and remove the ones not found anymore
       Map<String, BTDeviceStruct?> updatedDevicesMap = {};
       for (final device in foundDevices) {
         if (device != null) {
-          // If it's a new device, add it to the map. If it already exists, this will just update the entry.
           updatedDevicesMap[device.id] = device;
         }
       }
-      // Remove devices that are no longer found
+
       foundDevicesMap.keys
           .where((id) => !updatedDevicesMap.containsKey(id))
           .toList()
           .forEach(foundDevicesMap.remove);
 
-      // Merge the new devices into the current map to maintain order
       foundDevicesMap.addAll(updatedDevicesMap);
 
-      // Convert the values of the map back to a list
       List<BTDeviceStruct?> orderedDevices = foundDevicesMap.values.toList();
 
       if (orderedDevices.isNotEmpty) {
@@ -89,76 +82,79 @@ class _FindDevicesPageState extends State<FindDevicesPage>
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
-    var size = MediaQuery.of(context).size; // obtain MediaQuery data
+    var size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(
         child: Container(
-          height: size.height, // Make the container take up the full height
-          padding: const EdgeInsets.symmetric(
-              horizontal: 32, vertical: 0), // Responsive padding
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FoundDevices(deviceList: deviceList),
-              deviceList.isEmpty
-                  ? enableInstructions
-                      ? Padding(
-                          padding: EdgeInsets.only(
-                            bottom:
-                                20, // Padding from the bottom for the button
-                            left: screenSize.width *
-                                0.0, // Horizontal padding for button
-                            right: screenSize.width * 0.0,
-                          ),
-                          child: Padding(
+          height: size.height,
+          width: size.width,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/splash.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                FoundDevices(deviceList: deviceList),
+                deviceList.isEmpty
+                    ? enableInstructions
+                        ? Padding(
                             padding: EdgeInsets.only(
-                              bottom:
-                                  10, // Padding from the bottom for the button
-                              left: screenSize.width *
-                                  0.0, // Horizontal padding for button
+                              bottom: 20,
+                              left: screenSize.width * 0.0,
                               right: screenSize.width * 0.0,
                             ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color:
-                                        const Color.fromARGB(255, 55, 55, 55),
-                                    width: 2.0),
-                                borderRadius: BorderRadius.circular(12),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                bottom: 10,
+                                left: screenSize.width * 0.0,
+                                right: screenSize.width * 0.0,
                               ),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _launchURL();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor:
-                                      const Color.fromARGB(255, 17, 17, 17),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color:
+                                          const Color.fromARGB(255, 55, 55, 55),
+                                      width: 2.0),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                child: Container(
-                                  width: double
-                                      .infinity, // Button takes full width of the padding
-                                  height: 45, // Fixed height for the button
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    'Contact Support',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: screenSize.width * 0.045,
-                                        color: const Color.fromARGB(
-                                            255, 55, 55, 55)),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    _launchURL();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.transparent,
+                                    shadowColor:
+                                        const Color.fromARGB(255, 17, 17, 17),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 45,
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      'Contact Support',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: screenSize.width * 0.045,
+                                          color: Color.fromARGB(
+                                              255, 181, 180, 180)),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ))
-                      : const SizedBox.shrink()
-                  : const SizedBox.shrink()
-            ],
+                          )
+                        : const SizedBox.shrink()
+                    : const SizedBox.shrink()
+              ],
+            ),
           ),
         ),
       ),

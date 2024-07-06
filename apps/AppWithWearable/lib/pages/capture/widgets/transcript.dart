@@ -275,7 +275,7 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
           ? const Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 60),
+                SizedBox(height: 10),
                 Align(
                   alignment: Alignment.center,
                   child: Padding(

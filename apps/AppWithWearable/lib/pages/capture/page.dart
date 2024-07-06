@@ -179,6 +179,7 @@ import 'package:AVMe/backend/preferences.dart';
 import 'package:AVMe/backend/schema/bt_device.dart';
 import 'package:AVMe/pages/speaker_id/page.dart';
 import 'package:AVMe/widgets/device_widget.dart';
+import 'package:AVMe/widgets/scanning_widget.dart';
 import 'package:AVMe/widgets/scanning_ui.dart';
 import 'widgets/transcript.dart';
 
@@ -290,7 +291,7 @@ class _CapturePageState extends State<CapturePage>
     if (_hasTranscripts) return [];
     if (widget.device == null) {
       return [
-        const DeviceAnimationWidget(
+        const ScanningAnimationWidget(
           sizeMultiplier: 0.7,
         ),
         const ScanningUI(

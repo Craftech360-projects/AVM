@@ -9,7 +9,8 @@ class ScanningAnimation extends StatefulWidget {
   State<ScanningAnimation> createState() => _ScanningAnimationState();
 }
 
-class _ScanningAnimationState extends State<ScanningAnimation> with SingleTickerProviderStateMixin {
+class _ScanningAnimationState extends State<ScanningAnimation>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
 
@@ -72,7 +73,7 @@ class _ScanningAnimationState extends State<ScanningAnimation> with SingleTicker
               ),
               child: ClipOval(
                 child: Image.asset(
-                  'assets/images/sphere.gif',
+                  'assets/images/wave.gif',
                   fit: BoxFit.cover,
                 ),
               ),

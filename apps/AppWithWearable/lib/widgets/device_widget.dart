@@ -45,7 +45,7 @@ class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget>
               animation: _animation,
               builder: (context, child) {
                 return Image.asset(
-                  "assets/images/wave.gif",
+                  "assets/images/sphere.gif",
                   height: 490 * widget.sizeMultiplier * _animation.value,
                   width: 490 * widget.sizeMultiplier * _animation.value,
                 );
