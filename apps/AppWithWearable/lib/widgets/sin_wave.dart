@@ -21,9 +21,9 @@ class _SineWaveWidgetState extends State<SineWaveWidget>
 
     _sineAnimController =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
-    _sineAnimation = Tween<double>(begin: 1.0, end: 0.8).animate(
-        CurvedAnimation(parent: _sineAnimController, curve: Curves.easeInOut));
-    _sineAnimController.repeat(reverse: true);
+    _sineAnimation = Tween<double>(begin: 0, end: 4 * pi).animate(
+        CurvedAnimation(parent: _sineAnimController, curve: Curves.linear));
+    _sineAnimController.repeat();
   }
 
   @override
