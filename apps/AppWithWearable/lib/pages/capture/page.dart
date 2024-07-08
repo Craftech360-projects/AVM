@@ -173,6 +173,7 @@
 // }
 
 import 'package:AVMe/widgets/custom_scaffold.dart';
+import 'package:AVMe/widgets/sin_wave.dart';
 import 'package:flutter/material.dart';
 import 'package:AVMe/backend/mixpanel.dart';
 import 'package:AVMe/backend/preferences.dart';
@@ -301,51 +302,67 @@ class _CapturePageState extends State<CapturePage>
       ];
     }
     return [
-      const Center(child: DeviceAnimationWidget(sizeMultiplier: 0.7)),
-      Center(
-          child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+      Stack(
         children: [
-          const SizedBox(width: 24),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Text(
-                'Listening',
-                style: TextStyle(
-                    fontFamily: 'SF Pro Display',
-                    color: Colors.white,
-                    fontSize: 29.0,
-                    letterSpacing: 0.0,
-                    fontWeight: FontWeight.w700,
-                    height: 1.2),
-                textAlign: TextAlign.center,
+          Center(
+            child: SizedBox(
+              height: 280, // Fixed height container
+              child: Center(
+                child: SineWaveWidget(sizeMultiplier: 0.7),
               ),
-              Text(
-                'DEVICE-${widget.device?.id.split('-').last.substring(0, 6)}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              )
-            ],
+            ),
           ),
-          const SizedBox(width: 24),
-          Container(
-            width: 10,
-            height: 10,
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 0, 255, 8),
-              shape: BoxShape.circle,
+          Positioned.fill(
+            top: 160, // Position the content below the sine wave
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 24),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Listening',
+                        style: TextStyle(
+                            fontFamily: 'SF Pro Display',
+                            color: Colors.white,
+                            fontSize: 29.0,
+                            letterSpacing: 0.0,
+                            fontWeight: FontWeight.w700,
+                            height: 1.2),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        'DEVICE-${widget.device?.id.split('-').last.substring(0, 6)}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 0, 255, 8),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
-      )),
+      ),
       const SizedBox(height: 8),
       const Row(
         crossAxisAlignment: CrossAxisAlignment.center,
