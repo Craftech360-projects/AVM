@@ -1,3 +1,6 @@
+import 'package:AVMe/pages/settings/calendar.dart';
+import 'package:AVMe/pages/settings/widgets.dart';
+import 'package:AVMe/utils/other/temp.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:AVMe/backend/api_requests/cloud_storage.dart';
@@ -180,6 +183,10 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             const SizedBox(height: 28.0),
                             ..._getDeveloperOnlyFields(),
+                            const SizedBox(height: 28.0),
+                            getItemAddOn('Calendar Integration', () {
+                              routeToPage(context, const CalendarPage());
+                            }, icon: Icons.calendar_month),
                           ],
                         ),
                       ),

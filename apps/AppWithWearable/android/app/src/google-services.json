@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "729805354350",
+    "project_id": "avme-2c4d0",
+    "storage_bucket": "avme-2c4d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:729805354350:android:754c03024705e0e212fd7f",
+        "android_client_info": {
+          "package_name": "com.craftech360.avm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdin4urfjAI0ty8Eg-5rf2gIiWERmTTI8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

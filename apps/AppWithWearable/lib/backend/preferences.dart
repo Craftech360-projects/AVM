@@ -234,6 +234,19 @@ class SharedPreferencesUtil {
 
   bool get scriptMemoriesToObjectBoxExecuted =>
       getBool('scriptMemoriesToObjectBoxExecuted') ?? false;
+
+  set calendarEnabled(bool value) => saveBool('calendarEnabled', value);
+
+  bool get calendarEnabled => getBool('calendarEnabled') ?? false;
+
+  set calendarId(String value) => saveString('calendarId', value);
+
+  String get calendarId => getString('calendarId') ?? '';
+
+  set calendarType(String value) =>
+      saveString('calendarType', value); // auto, manual
+
+  String get calendarType => getString('calendarType') ?? 'auto';
 }
 
 String getOpenAIApiKeyForUsage() => SharedPreferencesUtil().openAIApiKey.isEmpty
