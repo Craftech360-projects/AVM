@@ -1,5 +1,6 @@
 import 'package:AVMe/backend/preferences.dart';
 import 'package:AVMe/utils/features/calendar.dart';
+import 'package:AVMe/utils/memory_structured.dart';
 import 'package:flutter/material.dart';
 import 'package:AVMe/backend/database/memory.dart';
 import 'package:AVMe/backend/database/memory_provider.dart';
@@ -87,7 +88,6 @@ Future<Memory?> processTranscriptContent(
 // }
 
 //now adding data from action item, need to create events and add events later
-
 Future<Memory?> memoryCreationBlock(
   BuildContext context,
   String transcript,
@@ -96,12 +96,19 @@ Future<Memory?> memoryCreationBlock(
   DateTime? startedAt,
   DateTime? finishedAt,
 ) async {
+  print("adding to calendar>>>>>start");
   List<Memory> recentMemories =
       await MemoryProvider().retrieveRecentMemoriesWithinMinutes(minutes: 10);
   MemoryStructured structuredMemory;
   try {
-    structuredMemory =
-        await generateTitleAndSummaryForMemory(transcript, recentMemories);
+    print("recentMemories");
+
+    print(recentMemories);
+    print(transcript);
+    structuredMemory = dummyStructuredMemory;
+    // structuredMemory =
+    //     await generateTitleAndSummaryForMemory(transcript, recentMemories);
+    print("structuredMemory>>>>>>>>>>>>>:$structuredMemory");
   } catch (e) {
     debugPrint('Error: $e');
     InstabugLog.logError(e.toString());
@@ -110,6 +117,8 @@ Future<Memory?> memoryCreationBlock(
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text(
               'There was an error creating your memory, please check your open AI API keys.')));
+    } else {
+      print(retrievedFromCache);
     }
     return null;
   }
@@ -129,41 +138,46 @@ Future<Memory?> memoryCreationBlock(
       ));
     }
   } else {
+    print("adding to calendar");
     // Process action items and add to calendar if enabled
     if (SharedPreferencesUtil().calendarEnabled &&
         SharedPreferencesUtil().deviceId.isNotEmpty &&
         SharedPreferencesUtil().calendarType == 'auto') {
-      for (var i = 0; i < structuredMemory.actionItems.length; i++) {
-        String actionItemDescription = structuredMemory.actionItems[i];
-        DateTime dueDate =
-            DateTime.now().add(Duration(days: 1)); // Default to tomorrow
-        Duration duration = Duration(hours: 1); // Default duration
+      print("here>>>11");
+      CalendarUtil calendarUtil = CalendarUtil();
+      for (var i = 0; i < structuredMemory.events.length; i++) {
+        var event = structuredMemory.events[i];
+        String title = event['title'];
+        String startsAtStr = event['startsAt'];
+        DateTime startsAt =
+            DateTime.parse(startsAtStr); // Convert the string to DateTime
+        int durationInMinutes = event['duration'];
+        String description = event['description'] ?? 'Event from memory';
 
-        if (SharedPreferencesUtil().calendarEnabled &&
-            SharedPreferencesUtil().deviceId.isNotEmpty &&
-            SharedPreferencesUtil().calendarType == 'auto') {
-          for (var i = 0; i < structuredMemory.actionItems.length; i++) {
-            String actionItemDescription = structuredMemory.actionItems[i];
-            DateTime dueDate =
-                DateTime.now().add(Duration(days: 1)); // Default to tomorrow
-            int durationInMinutes = 60; // Default duration of 1 hour in minutes
+        print('Processing event: $title');
 
-            try {
-              bool eventCreated = await CalendarUtil().createEvent(
-                actionItemDescription,
-                dueDate,
-                durationInMinutes,
-                description: 'Action item from memory',
-              );
-              // Update the action item with calendar event creation status
-              structuredMemory.actionItems[i] =
-                  '$actionItemDescription (Calendar event: ${eventCreated ? 'Created' : 'Failed'})';
-            } catch (e) {
-              debugPrint('Failed to create calendar event: $e');
-              structuredMemory.actionItems[i] =
-                  '$actionItemDescription (Calendar event: Failed)';
-            }
-          }
+        try {
+          print("Calling createEvent method");
+          print("Title: $title");
+          print("StartsAt: $startsAt");
+          print("Duration: $durationInMinutes minutes");
+          print("Description: $description");
+
+          bool eventCreated = await calendarUtil.createEvent(
+            title,
+            startsAt,
+            durationInMinutes,
+            description: description,
+          );
+
+          print("Event creation result: $eventCreated");
+
+          // Update the event with calendar event creation status
+          structuredMemory.events[i]['calendarStatus'] =
+              eventCreated ? 'Created' : 'Failed';
+        } catch (e) {
+          print("Failed to create calendar event: $e");
+          structuredMemory.events[i]['calendarStatus'] = 'Failed - $e';
         }
       }
     }

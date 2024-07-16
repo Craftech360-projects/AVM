@@ -138,7 +138,7 @@ _getPrevMemoriesStr(List<Memory> previousMemories) {
 
 Future<MemoryStructured> generateTitleAndSummaryForMemory(
     String transcript, List<Memory> previousMemories) async {
-  if (transcript.isEmpty || transcript.split(' ').length < 7) {
+  if (transcript.isEmpty || transcript.split(' ').length < 1) {
     return MemoryStructured(actionItems: [], pluginsResponse: [], category: '');
   }
 
@@ -181,6 +181,7 @@ Future<MemoryStructured> generateTitleAndSummaryForMemory(
   List<Future<String>> pluginPrompts = enabledPlugins.map((plugin) async {
     String response = await executeGptPrompt(
         '''Your are ${plugin.name}, ${plugin.prompt}, Conversation: ```${transcript.trim()} ${_getPrevMemoriesStr(previousMemories)}, you must start your output with heading as ${plugin.name}, you must only use valid english alphabets and words for your response, use pain text without markdown```. ''');
+    print("transcript.split,$response");
     return response;
   }).toList();
 

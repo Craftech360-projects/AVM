@@ -190,7 +190,7 @@ getPreferencesWidgets({
                 child: GestureDetector(
                   onTap: viewPrivacyDetails,
                   child: const Text(
-                    'Help improve Friend by sharing anonymized analytics data',
+                    'Help improve AVMe by sharing anonymized analytics data',
                     style: TextStyle(
                         color: Color.fromARGB(255, 150, 150, 150),
                         fontSize: 16,

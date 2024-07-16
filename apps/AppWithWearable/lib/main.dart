@@ -111,13 +111,16 @@ import 'package:AVMe/utils/notifications.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'backend/preferences.dart';
 import 'env/env.dart';
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
   await Firebase.initializeApp();
   ble.FlutterBluePlus.setLogLevel(ble.LogLevel.info, color: true);
   await initializeNotifications();
   await SharedPreferencesUtil.init();
+
   await MixpanelManager.init();
   await ObjectBoxUtil.init();
   if (Env.instabugApiKey != null) {

@@ -1,0 +1,20 @@
+[
+    {
+      "title": "Go to 5th",
+     "description": "",
+      "startsAt": "2024-07-17T09:00:00",
+      "duration": 60
+   },
+   {
+     "title": "Watch a movie",
+     "description": "",
+     "startsAt": "2024-07-17T16:00:00",
+     "duration": 120
+   },
+   {
+      "title": "Shopping",
+    "description": "",
+      "startsAt": "2024-07-17T21:00:00",
+     "duration": 60
+  }
+   ]

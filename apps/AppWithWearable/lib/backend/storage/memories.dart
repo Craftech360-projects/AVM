@@ -10,6 +10,7 @@ class MemoryStructured {
   List<String> pluginsResponse;
   String emoji;
   String category;
+  List<Map<String, dynamic>> events; // Add this line
 
   MemoryStructured({
     this.title = "",
@@ -18,15 +19,20 @@ class MemoryStructured {
     required this.pluginsResponse,
     this.emoji = '',
     this.category = '',
+    this.events = const [], // Add this line
   });
 
-  factory MemoryStructured.fromJson(Map<String, dynamic> json) => MemoryStructured(
-      title: json['title'] ?? '',
-      overview: json['overview'] ?? '',
-      actionItems: List<String>.from(json['action_items'] ?? []),
-      pluginsResponse: List<String>.from(json['pluginsResponse'] ?? []),
-      category: json['category'] ?? '',
-      emoji: json['emoji'] ?? '');
+  factory MemoryStructured.fromJson(Map<String, dynamic> json) =>
+      MemoryStructured(
+        title: json['title'] ?? '',
+        overview: json['overview'] ?? '',
+        actionItems: List<String>.from(json['action_items'] ?? []),
+        pluginsResponse: List<String>.from(json['pluginsResponse'] ?? []),
+        category: json['category'] ?? '',
+        emoji: json['emoji'] ?? '',
+        events: List<Map<String, dynamic>>.from(
+            json['events'] ?? []), // Add this line
+      );
 
   Map<String, dynamic> toJson() => {
         'title': title,
@@ -35,6 +41,7 @@ class MemoryStructured {
         'pluginsResponse': List<dynamic>.from(pluginsResponse),
         'emoji': emoji,
         'category': category,
+        'events': events, // Add this line
       };
 
   getEmoji() {
@@ -113,16 +120,22 @@ class MemoryRecord {
 class MemoryStorage {
   static const String _storageKey = '_memories';
 
-  static Future<List<MemoryRecord>> getAllMemories({includeDiscarded = false}) async {
+  static Future<List<MemoryRecord>> getAllMemories(
+      {includeDiscarded = false}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> allMemories = prefs.getStringList(_storageKey) ?? [];
-    List<MemoryRecord> memories =
-        allMemories.reversed.map((memory) => MemoryRecord.fromJson(jsonDecode(memory))).toList();
-    if (includeDiscarded) return memories.where((memory) => memory.transcript.split(' ').length > 10).toList();
+    List<MemoryRecord> memories = allMemories.reversed
+        .map((memory) => MemoryRecord.fromJson(jsonDecode(memory)))
+        .toList();
+    if (includeDiscarded)
+      return memories
+          .where((memory) => memory.transcript.split(' ').length > 10)
+          .toList();
     return memories.where((memory) => !memory.discarded).toList();
   }
 
-  static Future<List<MemoryRecord>> getAllMemoriesByIds(List<String> memoriesId) async {
+  static Future<List<MemoryRecord>> getAllMemoriesByIds(
+      List<String> memoriesId) async {
     List<MemoryRecord> memories = await getAllMemories();
     List<MemoryRecord> filtered = [];
     for (MemoryRecord memory in memories) {
@@ -136,7 +149,8 @@ class MemoryStorage {
   static Future<void> updateWholeMemory(MemoryRecord newMemory) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> allMemories = prefs.getStringList(_storageKey) ?? [];
-    int index = allMemories.indexWhere((memory) => MemoryRecord.fromJson(jsonDecode(memory)).id == newMemory.id);
+    int index = allMemories.indexWhere((memory) =>
+        MemoryRecord.fromJson(jsonDecode(memory)).id == newMemory.id);
     if (index >= 0 && index < allMemories.length) {
       allMemories[index] = jsonEncode(newMemory.toJson());
       await prefs.setStringList(_storageKey, allMemories);
