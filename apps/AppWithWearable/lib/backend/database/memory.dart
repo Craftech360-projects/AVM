@@ -72,7 +72,8 @@ class Structured {
   @Backlink('structured')
   final actionItems = ToMany<ActionItem>();
 
-  Structured(this.title, this.overview, {this.emoji = '', this.category = 'other'});
+  Structured(this.title, this.overview,
+      {this.emoji = '', this.category = 'other'});
 
   getEmoji() {
     try {
@@ -118,4 +119,32 @@ class PluginResponse {
   final memory = ToOne<Memory>();
 
   PluginResponse(this.content);
+}
+
+@Entity()
+class Event {
+  @Id()
+  int id = 0;
+
+  String title;
+  DateTime startsAt;
+  int duration;
+
+  String description;
+  bool created = false;
+
+  final structured = ToOne<Structured>();
+
+  Event(this.title, this.startsAt, this.duration,
+      {this.description = '', this.created = false, this.id = 0});
+
+  toJson() {
+    return {
+      'title': title,
+      'startsAt': startsAt.toIso8601String(),
+      'duration': duration,
+      'description': description,
+      'created': created,
+    };
+  }
 }
