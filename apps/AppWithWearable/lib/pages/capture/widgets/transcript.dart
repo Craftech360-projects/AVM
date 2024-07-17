@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:AVMe/backend/api_requests/api_calls.dart';
@@ -240,7 +241,14 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
     setState(() => memoryCreating = true);
     String transcript = _buildDiarizedTranscriptMessage(segments);
     debugPrint('_createMemory transcript: \n$transcript');
-    File file = await WavBytesUtil.createWavFile(audioStorage!.audioBytes);
+    // Generate a filename
+    final timestamp = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+    final filename = 'recording-$timestamp.wav';
+
+    File file = await WavBytesUtil.createWavFile(audioStorage!.audioBytes,
+        filename: filename // Add this line
+        );
+    // File file = await WavBytesUtil.createWavFile(audioStorage!.audioBytes);
     await uploadFile(file);
     await processTranscriptContent(
       context,

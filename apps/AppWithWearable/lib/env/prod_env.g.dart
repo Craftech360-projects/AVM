@@ -1,0 +1,408 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'prod_env.dart';
+
+// **************************************************************************
+// EnviedGenerator
+// **************************************************************************
+
+// coverage:ignore-file
+// ignore_for_file: type=lint
+final class _ProdEnv {
+  static const List<int> _enviedkeysentryDSNKey = <int>[
+    3324107869,
+    1454631006,
+    4169372484,
+    3230591384,
+    1120247206,
+    836487255,
+    2220448349,
+    3482214253,
+    2532571213,
+    3968582486,
+    1510826407,
+    48311459,
+    1166725532,
+    1743220255,
+    4041228351,
+    1643534624,
+    478126427,
+    1539502557,
+    3969140949,
+    2331346894,
+    2078883235,
+    86173248,
+    2980177697,
+    1019280485,
+    2989841481,
+    3910442985,
+    2739798491,
+    1761001674,
+    984746201,
+    3581443568,
+    1081728353,
+    3809151313,
+  ];
+
+  static const List<int> _envieddatasentryDSNKey = <int>[
+    3324107839,
+    1454631017,
+    4169372529,
+    3230591401,
+    1120247239,
+    836487221,
+    2220448367,
+    3482214233,
+    2532571260,
+    3968582511,
+    1510826391,
+    48311447,
+    1166725549,
+    1743220270,
+    4041228378,
+    1643534662,
+    478126393,
+    1539502574,
+    3969140960,
+    2331346935,
+    2078883216,
+    86173217,
+    2980177689,
+    1019280464,
+    2989841528,
+    3910442973,
+    2739798458,
+    1761001644,
+    984746220,
+    3581443529,
+    1081728339,
+    3809151287,
+  ];
+
+  static final String? sentryDSNKey = String.fromCharCodes(List<int>.generate(
+    _envieddatasentryDSNKey.length,
+    (int i) => i,
+    growable: false,
+  ).map((int i) => _envieddatasentryDSNKey[i] ^ _enviedkeysentryDSNKey[i]));
+
+  static const List<int> _enviedkeyopenAIAPIKey = <int>[
+    671322612,
+    1525564221,
+    937318349,
+    3712648333,
+    1892609311,
+    3983904152,
+    1911859582,
+    3217433352,
+    1640651723,
+    632579883,
+    3786746246,
+    3605785525,
+    1504346109,
+    1558975804,
+    3223695684,
+    913087965,
+    630821973,
+    2633121277,
+    2637771667,
+    772423384,
+    3955145049,
+    1694994736,
+    3075000063,
+    3435000262,
+    588230165,
+    4129252101,
+    2517087011,
+    3172558426,
+    2804761844,
+    3336613215,
+    2331410964,
+    276258617,
+    1878703524,
+    817745224,
+    2428079100,
+    2665846726,
+    4256067984,
+    2555342587,
+    3706609626,
+    3466407035,
+    4240505906,
+    2600870458,
+    1577335794,
+    2270447157,
+    512083325,
+    1076716344,
+    371761692,
+    1075693753,
+    2118582028,
+    360497506,
+    3734948905,
+    2771137366,
+    1493131281,
+    2014262936,
+    4005254528,
+    824477893,
+  ];
+
+  static const List<int> _envieddataopenAIAPIKey = <int>[
+    671322503,
+    1525564246,
+    937318368,
+    3712648445,
+    1892609389,
+    3983904247,
+    1911859476,
+    3217433381,
+    1640651699,
+    632579963,
+    3786746340,
+    3605785599,
+    1504346015,
+    1558975853,
+    3223695671,
+    913087898,
+    630821900,
+    2633121164,
+    2637771728,
+    772423339,
+    3955145020,
+    1694994697,
+    3074999981,
+    3435000246,
+    588230220,
+    4129252191,
+    2517087088,
+    3172558381,
+    2804761760,
+    3336613228,
+    2331411030,
+    276258645,
+    1878703558,
+    817745187,
+    2428079034,
+    2665846668,
+    4256068058,
+    2555342510,
+    3706609587,
+    3466406972,
+    4240505942,
+    2600870409,
+    1577335718,
+    2270447197,
+    512083226,
+    1076716372,
+    371761746,
+    1075693815,
+    2118582127,
+    360497446,
+    3734948960,
+    2771137310,
+    1493131359,
+    2014263007,
+    4005254614,
+    824477856,
+  ];
+
+  static final String? openAIAPIKey = String.fromCharCodes(List<int>.generate(
+    _envieddataopenAIAPIKey.length,
+    (int i) => i,
+    growable: false,
+  ).map((int i) => _envieddataopenAIAPIKey[i] ^ _enviedkeyopenAIAPIKey[i]));
+
+  static const List<int> _enviedkeydeepgramApiKey = <int>[
+    710765539,
+    2782384785,
+    3002662556,
+    876876290,
+    2844637934,
+    3720115794,
+    796368410,
+    2552965984,
+    4279239646,
+    1829695080,
+    2033683124,
+    3468000615,
+    4123122405,
+    1214254517,
+    3658991188,
+    2381784170,
+    534889865,
+    156782073,
+    332044247,
+    883273484,
+    3539908250,
+    3432370125,
+    2551504629,
+    1905253323,
+    4061014599,
+    3536090210,
+    4142695914,
+    2635177887,
+    1603347545,
+    1637514946,
+    1949510507,
+    3921871080,
+    2197662042,
+    717886394,
+    3168878012,
+    913399268,
+    353384133,
+    2288270897,
+    853270590,
+    2841721461,
+  ];
+
+  static const List<int> _envieddatadeepgramApiKey = <int>[
+    710765527,
+    2782384887,
+    3002662568,
+    876876384,
+    2844637913,
+    3720115818,
+    796368425,
+    2552965973,
+    4279239615,
+    1829694986,
+    2033683073,
+    3468000607,
+    4123122384,
+    1214254547,
+    3658991205,
+    2381784153,
+    534889960,
+    156782026,
+    332044260,
+    883273578,
+    3539908351,
+    3432370089,
+    2551504589,
+    1905253294,
+    4061014563,
+    3536090115,
+    4142695817,
+    2635177903,
+    1603347563,
+    1637514916,
+    1949510489,
+    3921870986,
+    2197662050,
+    717886348,
+    3168878040,
+    913399249,
+    353384180,
+    2288270928,
+    853270620,
+    2841721415,
+  ];
+
+  static final String? deepgramApiKey = String.fromCharCodes(List<int>.generate(
+    _envieddatadeepgramApiKey.length,
+    (int i) => i,
+    growable: false,
+  ).map((int i) => _envieddatadeepgramApiKey[i] ^ _enviedkeydeepgramApiKey[i]));
+
+  static final String? instabugApiKey = null;
+
+  static const List<int> _enviedkeypineconeApiKey = <int>[
+    941594387,
+    1148126399,
+    619326130,
+    26977371,
+    4193650753,
+    176542689,
+    1829713794,
+    2240670017,
+    2622182530,
+  ];
+
+  static const List<int> _envieddatapineconeApiKey = <int>[
+    941594487,
+    1148126412,
+    619326154,
+    26977325,
+    4193650720,
+    176542615,
+    1829713889,
+    2240669984,
+    2622182644,
+  ];
+
+  static final String pineconeApiKey = String.fromCharCodes(List<int>.generate(
+    _envieddatapineconeApiKey.length,
+    (int i) => i,
+    growable: false,
+  ).map((int i) => _envieddatapineconeApiKey[i] ^ _enviedkeypineconeApiKey[i]));
+
+  static const List<int> _enviedkeypineconeIndexUrl = <int>[
+    2986487693,
+    773344266,
+    2233405307,
+    3003472010,
+    2245971726,
+    1767987039,
+    2051631924,
+    3362198514,
+    3787232466,
+    107834930,
+    3056316099,
+    3889594477,
+    1378831413,
+    4248343310,
+    3625937868,
+  ];
+
+  static const List<int> _envieddatapineconeIndexUrl = <int>[
+    2986487806,
+    773344360,
+    2233405192,
+    3003472104,
+    2245971823,
+    1767987004,
+    2051631965,
+    3362198419,
+    3787232432,
+    107834945,
+    3056316064,
+    3889594369,
+    1378831430,
+    4248343404,
+    3625937849,
+  ];
+
+  static final String pineconeIndexUrl = String.fromCharCodes(
+      List<int>.generate(
+    _envieddatapineconeIndexUrl.length,
+    (int i) => i,
+    growable: false,
+  ).map((int i) =>
+          _envieddatapineconeIndexUrl[i] ^ _enviedkeypineconeIndexUrl[i]));
+
+  static const List<int> _enviedkeypineconeIndexNamespace = <int>[
+    2639751211,
+    4185048161,
+    1993411401,
+  ];
+
+  static const List<int> _envieddatapineconeIndexNamespace = <int>[
+    2639751237,
+    4185048082,
+    1993411448,
+  ];
+
+  static final String pineconeIndexNamespace = String.fromCharCodes(
+      List<int>.generate(
+    _envieddatapineconeIndexNamespace.length,
+    (int i) => i,
+    growable: false,
+  ).map((int i) =>
+          _envieddatapineconeIndexNamespace[i] ^
+          _enviedkeypineconeIndexNamespace[i]));
+
+  static final String? mixpanelProjectToken = null;
+
+  static final String? oneSignalAppId = null;
+
+  static final String? apiBaseUrl = null;
+
+  static final String? growthbookApiKey = null;
+}
