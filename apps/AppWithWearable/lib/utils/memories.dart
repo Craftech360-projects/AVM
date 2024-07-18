@@ -105,9 +105,9 @@ Future<Memory?> memoryCreationBlock(
 
     print(recentMemories);
     print(transcript);
-    structuredMemory = dummyStructuredMemory;
-    // structuredMemory =
-    //     await generateTitleAndSummaryForMemory(transcript, recentMemories);
+    // structuredMemory = dummyStructuredMemory;
+    structuredMemory =
+        await generateTitleAndSummaryForMemory(transcript, recentMemories);
     print("structuredMemory>>>>>>>>>>>>>:$structuredMemory");
   } catch (e) {
     debugPrint('Error: $e');
@@ -147,12 +147,10 @@ Future<Memory?> memoryCreationBlock(
       CalendarUtil calendarUtil = CalendarUtil();
       for (var i = 0; i < structuredMemory.events.length; i++) {
         var event = structuredMemory.events[i];
-        String title = event['title'];
-        String startsAtStr = event['startsAt'];
-        DateTime startsAt =
-            DateTime.parse(startsAtStr); // Convert the string to DateTime
-        int durationInMinutes = event['duration'];
-        String description = event['description'] ?? 'Event from memory';
+        String title = event.title;
+        DateTime startsAt = event.startsAt;
+        int durationInMinutes = event.duration;
+        String description = event.description ?? 'Event from memory';
 
         print('Processing event: $title');
 
@@ -173,11 +171,10 @@ Future<Memory?> memoryCreationBlock(
           print("Event creation result: $eventCreated");
 
           // Update the event with calendar event creation status
-          structuredMemory.events[i]['calendarStatus'] =
-              eventCreated ? 'Created' : 'Failed';
+          structuredMemory.events[i].created = eventCreated;
         } catch (e) {
           print("Failed to create calendar event: $e");
-          structuredMemory.events[i]['calendarStatus'] = 'Failed - $e';
+          structuredMemory.events[i].created = false;
         }
       }
     }
