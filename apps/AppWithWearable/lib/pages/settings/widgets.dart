@@ -286,7 +286,7 @@ getItemAddOn(String title, VoidCallback onTap,
                 10.0), // Adjust for desired rounded corners
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -296,10 +296,10 @@ getItemAddOn(String title, VoidCallback onTap,
                       title,
                       style: const TextStyle(
                           color: Color.fromARGB(255, 150, 150, 150),
-                          fontSize: 16),
+                          fontSize: 20),
                     ),
                     const SizedBox(width: 16),
-                    Icon(icon, color: Colors.white, size: 16),
+                    Icon(icon, color: Colors.white, size: 20),
                   ],
                 ),
                 const Icon(Icons.arrow_forward_ios,

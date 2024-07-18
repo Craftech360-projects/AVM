@@ -1,3 +1,4 @@
+import 'package:AVMe/pages/onboarding/welcome/page.dart';
 import 'package:AVMe/pages/settings/calendar.dart';
 import 'package:AVMe/pages/settings/widgets.dart';
 import 'package:AVMe/utils/other/temp.dart';
@@ -7,6 +8,8 @@ import 'package:AVMe/backend/api_requests/cloud_storage.dart';
 import 'package:AVMe/backend/mixpanel.dart';
 import 'package:AVMe/backend/preferences.dart';
 import 'package:AVMe/backend/utils.dart';
+import 'package:AVMe/backend/schema/bt_device.dart';
+import 'package:AVMe/utils/ble/connect.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -51,6 +54,183 @@ class _SettingsPageState extends State<SettingsPage> {
       setState(() {});
     });
     super.initState();
+  }
+
+  // void _showRemoveDeviceDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(12),
+  //         ),
+  //         backgroundColor:
+  //             Color.fromARGB(54, 0, 0, 0), // Make the dialog transparent
+  //         title: const Text(
+  //           "Warning",
+  //           style: TextStyle(
+  //               color: Colors.white,
+  //               fontWeight: FontWeight.w500,
+  //               fontSize: 24), // Style the text color
+  //         ),
+  //         content: const Text(
+  //           "This will remove the saved AVM device. Do you want to proceed?",
+  //           style: TextStyle(color: Colors.white), // Style the text color
+  //         ),
+  //         actions: [
+  //           TextButton(
+  //             style: TextButton.styleFrom(
+  //               backgroundColor: Colors.red,
+  //               padding:
+  //                   const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(12),
+  //               ),
+  //             ),
+  //             child: const Text(
+  //               "Cancel",
+  //               style: TextStyle(color: Colors.white),
+  //             ),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //           TextButton(
+  //             style: TextButton.styleFrom(
+  //               backgroundColor: Colors.green,
+  //               padding:
+  //                   const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(8),
+  //               ),
+  //             ),
+  //             child: const Text(
+  //               "Confirm",
+  //               style: TextStyle(color: Colors.white),
+  //             ),
+  //             onPressed: () {
+  //               _removeDevice();
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+  void _showRemoveDeviceDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          backgroundColor:
+              Colors.transparent, // Make the dialog background transparent
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromARGB(120, 130, 129, 131),
+                  Color.fromARGB(120, 71, 71, 72),
+                  Color.fromARGB(122, 49, 11, 125),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Warning",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 24,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "This will remove the saved AVM device. Do you want to proceed?",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          "Confirm",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          _removeDevice();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _removeDevice() async {
+    // Replace 'your_device_id' with the actual device ID
+    String deviceId = SharedPreferencesUtil().deviceId;
+    String deviceName = 'Your Device Name'; // You need to retrieve this
+
+    BTDeviceStruct btDevice = BTDeviceStruct(id: deviceId, name: deviceName);
+    await bleDisconnectDevice(btDevice);
+
+    // Clear device data from shared preferences
+    await SharedPreferencesUtil().remove('deviceId');
+    setState(() {
+      // Update UI if necessary
+    });
+
+    // Navigate to FoundDevices page
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => WelcomePage()),
+    );
   }
 
   @override
@@ -187,12 +367,45 @@ class _SettingsPageState extends State<SettingsPage> {
                             getItemAddOn('Calendar Integration', () {
                               routeToPage(context, const CalendarPage());
                             }, icon: Icons.calendar_month),
+                            const SizedBox(height: 28.0),
                           ],
                         ),
                       ),
                     ),
                     Column(
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: SizedBox(
+                            width:
+                                double.infinity, // Make the button full-width
+                            child: TextButton(
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                side: const BorderSide(
+                                    color: Colors.red), // White border
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                              ),
+
+                              onPressed: () {
+                                _showRemoveDeviceDialog(context);
+                              },
+                              // onPressed: _removeDevice,
+                              child: const Text(
+                                "Remove Device",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(
