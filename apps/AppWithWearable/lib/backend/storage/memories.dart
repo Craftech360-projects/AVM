@@ -167,7 +167,115 @@ import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+// class MemoryStructured {
+//   bool forceProcess = false;
+//   String title;
+//   String overview;
+//   List<String> actionItems;
+//   List<String> pluginsResponse;
+//   String emoji;
+//   String category;
+//   List<Event> events;
+
+//   MemoryStructured({
+//     this.title = "",
+//     this.overview = "",
+//     required this.actionItems,
+//     required this.pluginsResponse,
+//     this.emoji = '',
+//     this.category = '',
+//     this.events = const [],
+//   });
+
+//   factory MemoryStructured.fromJson(Map<String, dynamic> json) {
+//     var structured = MemoryStructured(
+//       title: json['title'] ?? '',
+//       overview: json['overview'] ?? '',
+//       actionItems: List<String>.from(json['action_items'] ?? []),
+//       pluginsResponse: List<String>.from(json['pluginsResponse'] ?? []),
+//       category: json['category'] ?? '',
+//       emoji: json['emoji'] ?? '',
+//     );
+
+//     if (json['events'] != null) {
+//       for (var event in json['events']) {
+//         if (event.isEmpty) continue;
+//         structured.events.add(Event.fromJson(event));
+//       }
+//     }
+
+//     return structured;
+//   }
+
+//   Map<String, dynamic> toJson() => {
+//         'title': title,
+//         'overview': overview,
+//         'action_items': List<dynamic>.from(actionItems),
+//         'pluginsResponse': List<dynamic>.from(pluginsResponse),
+//         'emoji': emoji,
+//         'category': category,
+//         'events': events.map((event) => event.toJson()).toList(),
+//       };
+
+//   getEmoji() {
+//     try {
+//       return utf8.decode(emoji.toString().codeUnits);
+//     } catch (e) {
+//       return ['🧠', '😎', '🧑‍💻', '🎂'][Random().nextInt(4)];
+//     }
+//   }
+
+//   @override
+//   String toString() {
+//     var str = '';
+//     str += '${getEmoji()} $title ($category)\n\nSummary: $overview\n\n';
+//     if (actionItems.isNotEmpty) {
+//       str += 'Action Items:\n';
+//       for (var item in actionItems) {
+//         str += '- $item\n';
+//       }
+//     }
+//     if (events.isNotEmpty) {
+//       str += 'Events:\n';
+//       for (var event in events) {
+//         str += '- ${event.title} at ${event.startsAt}\n';
+//       }
+//     }
+//     return str;
+//   }
+// }
+
+// class Event {
+//   String title;
+//   DateTime startsAt;
+//   int duration;
+//   String description;
+//   bool created;
+
+//   Event(this.title, this.startsAt, this.duration,
+//       {this.description = '', this.created = false});
+
+//   factory Event.fromJson(Map<String, dynamic> json) {
+//     return Event(
+//       json['title'],
+//       DateTime.parse(json['startsAt']),
+//       json['duration'],
+//       description: json['description'] ?? '',
+//       created: json['created'] ?? false,
+//     );
+//   }
+
+//   Map<String, dynamic> toJson() => {
+//         'title': title,
+//         'startsAt': startsAt.toIso8601String(),
+//         'duration': duration,
+//         'description': description,
+//         'created': created,
+//       };
+// }
+
 class MemoryStructured {
+  bool forceProcess = false;
   String title;
   String overview;
   List<String> actionItems;
@@ -179,12 +287,14 @@ class MemoryStructured {
   MemoryStructured({
     this.title = "",
     this.overview = "",
-    required this.actionItems,
-    required this.pluginsResponse,
+    required List<String> actionItems,
+    required List<String> pluginsResponse,
     this.emoji = '',
     this.category = '',
-    this.events = const [],
-  });
+    List<Event> events = const [],
+  })  : actionItems = List<String>.from(actionItems),
+        pluginsResponse = List<String>.from(pluginsResponse),
+        events = List<Event>.from(events);
 
   factory MemoryStructured.fromJson(Map<String, dynamic> json) {
     var structured = MemoryStructured(
@@ -197,10 +307,8 @@ class MemoryStructured {
     );
 
     if (json['events'] != null) {
-      for (var event in json['events']) {
-        if (event.isEmpty) continue;
-        structured.events.add(Event.fromJson(event));
-      }
+      structured.events = List<Event>.from(
+          json['events'].map((event) => Event.fromJson(event)).toList());
     }
 
     return structured;

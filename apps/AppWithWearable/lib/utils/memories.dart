@@ -106,6 +106,8 @@ Future<Memory?> memoryCreationBlock(
     print(recentMemories);
     print(transcript);
     // structuredMemory = dummyStructuredMemory;
+    // print("dummny added");
+
     structuredMemory =
         await generateTitleAndSummaryForMemory(transcript, recentMemories);
     print("structuredMemory>>>>>>>>>>>>>:$structuredMemory");
