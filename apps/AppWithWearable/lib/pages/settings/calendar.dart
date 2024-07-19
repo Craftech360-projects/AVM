@@ -185,7 +185,6 @@
 // }
 
 //MY CODE
-
 import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:AVMe/backend/preferences.dart';
@@ -199,7 +198,8 @@ class CalendarPage extends StatefulWidget {
   State<CalendarPage> createState() => _CalendarPageState();
 }
 
-class _CalendarPageState extends State<CalendarPage> {
+class _CalendarPageState extends State<CalendarPage>
+    with WidgetsBindingObserver {
   final DeviceCalendarPlugin _deviceCalendarPlugin = DeviceCalendarPlugin();
   List<Calendar> calendars = [];
   bool calendarEnabled = false;
@@ -239,52 +239,96 @@ class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
-        title: const Text('Calendar'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: const Text('Calendar', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
-      body: ListView(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(8),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/splash.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            ListView(
               children: [
-                const Row(
-                  children: [
-                    Icon(Icons.edit_calendar),
-                    SizedBox(width: 16),
-                    Text(
-                      'Enable integration',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                Container(
+                  margin: const EdgeInsets.all(8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromARGB(236, 37, 30, 57),
+                        Color.fromARGB(255, 47, 39, 63),
+                        Color.fromARGB(236, 37, 30, 57),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
-                  ],
+                    borderRadius: const BorderRadius.all(Radius.circular(16)),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 52, 52, 52),
+                      width: 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.edit_calendar, color: Colors.white),
+                          SizedBox(width: 16),
+                          Text(
+                            'Enable integration',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Switch(
+                        value: calendarEnabled,
+                        onChanged: _onSwitchChanged,
+                      ),
+                    ],
+                  ),
                 ),
-                Switch(
-                  value: calendarEnabled,
-                  onChanged: _onSwitchChanged,
+                const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    'Friend can automatically schedule events from your conversations, or ask for your confirmation first.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
                 ),
+                if (calendarEnabled) ..._calendarType(),
+                if (calendarEnabled) ..._displayCalendars(),
               ],
             ),
-          ),
-          const Text(
-            'Friend can automatically schedule events from your conversations, or ask for your confirmation first.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 24),
-          if (calendarEnabled) ..._calendarType(),
-          const SizedBox(height: 24),
-          if (calendarEnabled) ..._displayCalendars(),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -323,22 +367,23 @@ class _CalendarPageState extends State<CalendarPage> {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(8)),
-          border: GradientBoxBorder(
-            gradient: LinearGradient(colors: [
-              Color.fromARGB(127, 208, 208, 208),
-              Color.fromARGB(127, 188, 99, 121),
-              Color.fromARGB(127, 86, 101, 182),
-              Color.fromARGB(127, 126, 190, 236)
-            ]),
-            width: 2,
+          gradient: LinearGradient(
+            colors: [
+              Color.fromARGB(236, 37, 30, 57),
+              Color.fromARGB(255, 47, 39, 63),
+              Color.fromARGB(236, 37, 30, 57),
+            ],
           ),
-          shape: BoxShape.rectangle,
+          border: Border.fromBorderSide(
+            BorderSide(color: Color.fromARGB(255, 52, 52, 52), width: 1),
+          ),
         ),
         child: const Center(
-            child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 4),
-          child: Text('Calendars'),
-        )),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 6),
+            child: Text('Calendars', style: TextStyle(color: Colors.white)),
+          ),
+        ),
       ),
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -354,8 +399,9 @@ class _CalendarPageState extends State<CalendarPage> {
       for (var calendar in calendars)
         RadioListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-          title: Text(calendar.name!),
-          subtitle: Text(calendar.accountName!),
+          title: Text(calendar.name!, style: TextStyle(color: Colors.white)),
+          subtitle:
+              Text(calendar.accountName!, style: TextStyle(color: Colors.grey)),
           value: calendar.id!,
           groupValue: SharedPreferencesUtil().calendarId,
           onChanged: (String? value) {
@@ -373,7 +419,6 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   void _onSwitchChanged(bool s) async {
-    // Ensure permissions are handled
     if (s) {
       await _getCalendars();
     } else {
