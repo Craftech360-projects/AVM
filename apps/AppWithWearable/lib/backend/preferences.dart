@@ -66,7 +66,9 @@ class SharedPreferencesUtil {
   String get gcpBucketName => getString('gcpBucketName') ?? '';
 
   set gcpBucketName(String value) => saveString('gcpBucketName', value);
+  String get givenName => getString('givenName') ?? '';
 
+  set givenName(String value) => saveString('givenName', value);
   String get recordingsLanguage => getString('recordingsLanguage') ?? 'en';
 
   set recordingsLanguage(String value) =>

@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:AVMe/backend/preferences.dart';
+
 class TranscriptSegment {
   String text;
   String? speaker;
@@ -46,5 +50,48 @@ class TranscriptSegment {
 
   static List<TranscriptSegment> fromJsonList(List<dynamic> jsonList) {
     return jsonList.map((e) => TranscriptSegment.fromJson(e)).toList();
+  }
+
+  String getTimestampString() {
+    var start = Duration(seconds: this.start.toInt());
+    var end = Duration(seconds: this.end.toInt());
+    return '${start.inHours.toString().padLeft(2, '0')}:${(start.inMinutes % 60).toString().padLeft(2, '0')}:${(start.inSeconds % 60).toString().padLeft(2, '0')} - ${end.inHours.toString().padLeft(2, '0')}:${(end.inMinutes % 60).toString().padLeft(2, '0')}:${(end.inSeconds % 60).toString().padLeft(2, '0')}';
+  }
+
+  static String segmentsAsString(
+    List<TranscriptSegment> segments, {
+    bool includeTimestamps = false,
+  }) {
+    String transcript = '';
+    var userName = SharedPreferencesUtil().givenName;
+    includeTimestamps =
+        includeTimestamps && TranscriptSegment.canDisplaySeconds(segments);
+    for (var segment in segments) {
+      // TODO: maybe store TranscriptSegment directly as utf8 decoded
+      var segmentText = utf8.decode(segment.text.trim().codeUnits);
+      var timestampStr =
+          includeTimestamps ? '[${segment.getTimestampString()}]' : '';
+      if (segment.isUser) {
+        transcript +=
+            '$timestampStr ${userName.isEmpty ? 'User' : userName}: $segmentText ';
+      } else {
+        transcript +=
+            '$timestampStr Speaker ${segment.speakerId}: $segmentText ';
+      }
+      transcript += '\n\n';
+    }
+    return transcript.trim();
+  }
+
+  static bool canDisplaySeconds(List<TranscriptSegment> segments) {
+    for (var i = 0; i < segments.length; i++) {
+      for (var j = i + 1; j < segments.length; j++) {
+        if (segments[i].start > segments[j].end ||
+            segments[i].end > segments[j].start) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }

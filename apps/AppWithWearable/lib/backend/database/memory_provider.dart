@@ -5,6 +5,7 @@ import 'package:AVMe/objectbox.g.dart';
 class MemoryProvider {
   static final MemoryProvider _instance = MemoryProvider._internal();
   static final Box<Memory> _box = ObjectBoxUtil().box!.store.box<Memory>();
+  static final Box<Event> _boxEvent = ObjectBoxUtil().box!.store.box<Event>();
 
   factory MemoryProvider() {
     return _instance;
@@ -52,6 +53,11 @@ class MemoryProvider {
   Future<List<Memory>> getMemoriesById(List<int> ids) async {
     List<Memory?> memories = _box.getMany(ids);
     return memories.whereType<Memory>().toList();
+  }
+
+  setEventCreated(Event event) {
+    event.created = true;
+    _boxEvent.put(event);
   }
 
   Future<List<Memory>> retrieveRecentMemoriesWithinMinutes(
