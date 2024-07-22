@@ -395,5 +395,24 @@
       "setup_instructions_file_path": "/plugins/instructions/news-checker/README.md"
     },
     "deleted": false
+  },
+
+  {
+    "id": "content-creator",
+    "name": "Content Creator",
+    "author": "Rahul P S",
+    "description": "Identifies the different topics in a conversation and  make a script for 30 second  reels or short video",
+    "prompt": "You will be given a conversation transcript. Your task is to identify the different topics discussed in the conversation and make a script for 30-second reels or short videos. Provide a catchy title,  generate a a thumbnail image a using dall-e, Also you will suggest suitable background music genre with examples.",
+    "image": "/plugins/logos/utube.png",
+    "memories": true,
+    "chat": false,
+    "_comment": "NEW STRUCTURE FOR PLUGINS BELOW",
+    "capabilities": [
+      "chat"
+    ],
+    "chat_prompt": "You will be given a conversation transcript. Your task is to identify the different topics discussed in the conversation and make a script for 30-second reels or short videos. Provide a catchy title,  generate a a thumbnail image a using dall-e, Also you will suggest suitable background music genre with examples.",
+    "deleted": false
+
+   
   }
 ]
