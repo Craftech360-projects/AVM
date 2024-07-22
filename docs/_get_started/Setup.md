@@ -61,12 +61,12 @@ Before starting, make sure you have the following installed:
    - Run the following command to register the prod flavor of the app. The command will prompt you to select `configuration type`; under it, select `Target` and then `Runner`
 
       ```
-      flutterfire config --out=lib/firebase_options_prod.dart --ios-bundle-id=com.friend-app-with-wearable.ios12 --android-app-id=com.friend.ios --android-out=android/app/src/prod/  --ios-out=ios/Config/Prod/
+      flutterfire config --out=lib/firebase_options_prod.dart --ios-bundle-id=com.friend-app-with-wearable.ios12 --android-app-id=com.craftech360.avm --android-out=android/app/src/prod/  --ios-out=ios/Config/Prod/
       ```
    - Similarly for dev environment
 
       ```
-      flutterfire config --out=lib/firebase_options_dev.dart --ios-bundle-id=com.friend-app-with-wearable.ios12.develop --android-app-id=com.friend.ios.dev --android-out=android/app/src/dev/  --ios-out=ios/Config/Dev/
+      flutterfire config --out=lib/firebase_options_dev.dart --ios-bundle-id=com.friend-app-with-wearable.ios12.develop --android-app-id=com.craftech360.avm --android-out=android/app/src/dev/  --ios-out=ios/Config/Dev/
       ```
    - Generate SHA1/SHA256 Keys for your Keystore and add them to Firebase. Follow the steps mentioned in this [StackOverflow answer](https://stackoverflow.com/a/56091158) or the [Official Docs](https://support.google.com/firebase/answer/9137403?hl=en). This is required for Firebase Auth through Google OAuth to work.
 

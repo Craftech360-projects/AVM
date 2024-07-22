@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 class NotifyOnKill {
-  static const platform = MethodChannel('com.friend.ios/notifyOnKill');
+  static const platform = MethodChannel('com.craftech360.avm/notifyOnKill');
 
   static Future<void> register() async {
     try {
@@ -10,7 +10,8 @@ class NotifyOnKill {
         'setNotificationOnKillService',
         {
           'title': "Friend Device Disconnected",
-          'description': "Please keep your app opened to continue using your Friend.",
+          'description':
+              "Please keep your app opened to continue using your Friend.",
         },
       );
     } catch (e) {

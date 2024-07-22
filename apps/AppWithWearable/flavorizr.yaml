@@ -4,7 +4,7 @@ flavors:
       name: "Friend"
       icon: "assets/images/app_launcher_icon.png"
     android:
-      applicationId: "com.friend.ios"
+      applicationId: "com.craftech360.avm"
       icon: "assets/images/app_launcher_icon.png"
       firebase:
         config: "apps/AppWithWearable/android/app/src/prod/google-services.json"
@@ -19,7 +19,7 @@ flavors:
       icon: "assets/images/app_launcher_icon.png"
     android:
       icon: "assets/images/app_launcher_icon.png"
-      applicationId: "com.friend.ios.dev"
+      applicationId: "com.craftech360.avm"
       firebase:
         config: "apps/AppWithWearable/android/app/src/dev/google-services.json"
     ios:
