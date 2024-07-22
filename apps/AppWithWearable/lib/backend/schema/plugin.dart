@@ -137,18 +137,23 @@ class Plugin {
       image: json['image'],
       chatPrompt: json['chat_prompt'],
       memoryPrompt: json['memory_prompt'],
-      externalIntegration:
-          json['external_integration'] != null ? ExternalIntegration.fromJson(json['external_integration']) : null,
+      externalIntegration: json['external_integration'] != null
+          ? ExternalIntegration.fromJson(json['external_integration'])
+          : null,
       reviews: PluginReview.fromJsonList(json['reviews'] ?? []),
-      userReview: json['user_review'] != null ? PluginReview.fromJson(json['user_review']) : null,
+      userReview: json['user_review'] != null
+          ? PluginReview.fromJson(json['user_review'])
+          : null,
       ratingAvg: json['rating_avg'],
       ratingCount: json['rating_count'] ?? 0,
-      capabilities: ((json['capabilities'] ?? []) as List).cast<String>().toSet(),
+      capabilities:
+          ((json['capabilities'] ?? []) as List).cast<String>().toSet(),
       deleted: json['deleted'] ?? false,
     );
   }
 
-  String getImageUrl() => 'https://raw.githubusercontent.com/BasedHardware/Friend/main$image';
+  String getImageUrl() =>
+      'https://raw.githubusercontent.com/BasedHardware/Friend/test-plugin$image';
 
   Map<String, dynamic> toJson() {
     return {
