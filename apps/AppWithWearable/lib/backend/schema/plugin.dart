@@ -153,7 +153,7 @@ class Plugin {
   }
 
   String getImageUrl() =>
-      'https://raw.githubusercontent.com/BasedHardware/Friend/test-plugin$image';
+      'https://raw.githubusercontent.com/Craftech360-projects/AVM/test-plugin$image';
 
   Map<String, dynamic> toJson() {
     return {
