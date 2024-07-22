@@ -285,8 +285,12 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _initiatePlugins() async {
     plugins = SharedPreferencesUtil().pluginsList;
+
+    print("pluggnnn>>>>>>>>>>>>>>>>>>>");
     plugins = await retrievePlugins();
+    print(plugins);
     _edgeCasePluginNotAvailable();
+    print("here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     setState(() {});
   }
 

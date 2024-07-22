@@ -133,29 +133,74 @@ Future<bool> deleteBackupApi() async {
   return response.statusCode == 200;
 }
 
-Future<List<Plugin>> retrievePlugins() async {
-  var response = await makeApiCall(
-    url: '${Env.apiBaseUrl}v1/plugins?uid=${SharedPreferencesUtil().uid}',
-    headers: {},
-    body: '',
-    method: 'GET',
-  );
-  if (response?.statusCode == 200) {
-    try {
-      var plugins = Plugin.fromJsonList(jsonDecode(response!.body));
+// Future<List<Plugin>> retrievePlugins() async {
+//   var response = await makeApiCall(
+//     // url: '${Env.apiBaseUrl}v1/plugins?uid=${SharedPreferencesUtil().uid}',
+//     url:
+//         'https://raw.githubusercontent.com/BasedHardware/Friend/main/community-plugins.json',
+//     headers: {},
+//     body: '',
+//     method: 'GET',
+//   );
+//   if (response?.statusCode == 200) {
+//     try {
+//       var plugins = Plugin.fromJsonList(jsonDecode(response!.body));
 
-      print(
-        "plugins got>>>>>",
-      );
-      print(plugins);
-      SharedPreferencesUtil().pluginsList = plugins;
-      return plugins;
-    } catch (e, stackTrace) {
-      debugPrint(e.toString());
-      CrashReporting.reportHandledCrash(e, stackTrace);
+//       print(
+//         "plugins got>>>>>",
+//       );
+//       print(plugins);
+//       SharedPreferencesUtil().pluginsList = plugins;
+//       return plugins;
+//     } catch (e, stackTrace) {
+//       debugPrint(e.toString());
+//       CrashReporting.reportHandledCrash(e, stackTrace);
+//       return SharedPreferencesUtil().pluginsList;
+//     }
+//   } else {
+//     print("not sucess,$response");
+//   }
+//   return SharedPreferencesUtil().pluginsList;
+// }
+
+Future<List<Plugin>> retrievePlugins() async {
+  print('${Env.apiBaseUrl}');
+  try {
+    var response = await makeApiCall(
+      url: '${Env.apiBaseUrl}v1/plugins?uid=${SharedPreferencesUtil().uid}',
+      headers: {},
+      body: '',
+      method: 'GET',
+    );
+
+    if (response == null) {
+      debugPrint("Response is null");
       return SharedPreferencesUtil().pluginsList;
     }
+
+    if (response.statusCode == 200) {
+      try {
+        var plugins = Plugin.fromJsonList(jsonDecode(response.body));
+
+        debugPrint("Plugins retrieved successfully:");
+        debugPrint(plugins.toString());
+
+        SharedPreferencesUtil().pluginsList = plugins;
+        return plugins;
+      } catch (e, stackTrace) {
+        debugPrint("Error decoding response body: ${e.toString()}");
+        CrashReporting.reportHandledCrash(e, stackTrace);
+        return SharedPreferencesUtil().pluginsList;
+      }
+    } else {
+      debugPrint("API call failed with status code: ${response.statusCode}");
+      debugPrint("Response body: ${response.body}");
+    }
+  } catch (e, stackTrace) {
+    debugPrint("API call failed: ${e.toString()}");
+    CrashReporting.reportHandledCrash(e, stackTrace);
   }
+
   return SharedPreferencesUtil().pluginsList;
 }
 

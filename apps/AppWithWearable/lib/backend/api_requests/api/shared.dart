@@ -26,16 +26,20 @@ Future<http.Response?> makeApiCall({
   required String method,
 }) async {
   try {
-    // var startTime = DateTime.now();
+    var startTime = DateTime.now();
     bool result = await InternetConnection().hasInternetAccess; // 600 ms on avg
-    // debugPrint('Internet connection check took: ${DateTime.now().difference(startTime).inMilliseconds} ms');
+    debugPrint(
+        'Internet connection check took: ${DateTime.now().difference(startTime).inMilliseconds} ms');
     if (!result) {
       debugPrint('No internet connection, aborting $method $url');
       return null;
     }
-    if (url.contains(Env.apiBaseUrl!)) {
-      headers['Authorization'] = await getAuthHeader();
-    }
+    // if (url.contains(Env.apiBaseUrl!)) {
+    //   headers['Authorization'] = await getAuthHeader();
+    // }
+
+    url =
+        'https://raw.githubusercontent.com/Craftech360-projects/AVM/main/community-plugins.json';
 
     final client = InstabugHttpClient();
 
