@@ -39,7 +39,7 @@ Future<http.Response?> makeApiCall({
     // }
 
     url =
-        'https://raw.githubusercontent.com/Craftech360-projects/AVM/main/community-plugins.json';
+        'https://raw.githubusercontent.com/Craftech360-projects/AVM/test-plugin/community-plugins.json';
 
     final client = InstabugHttpClient();
 
