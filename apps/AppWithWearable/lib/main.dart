@@ -1,20 +1,21 @@
 // import 'dart:async';
-
 // import 'package:flutter/material.dart';
 // import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
 // import 'package:flutter_localizations/flutter_localizations.dart';
+// import 'package:firebase_core/firebase_core.dart';
 // import 'package:AVMe/backend/database/box.dart';
 // import 'package:AVMe/backend/mixpanel.dart';
 // import 'package:AVMe/pages/home/page.dart';
 // import 'package:AVMe/pages/onboarding/welcome/page.dart';
+// import 'package:AVMe/pages/login/login_page.dart';
 // import 'package:AVMe/utils/notifications.dart';
 // import 'package:instabug_flutter/instabug_flutter.dart';
-
 // import 'backend/preferences.dart';
 // import 'env/env.dart';
 
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
 //   ble.FlutterBluePlus.setLogLevel(ble.LogLevel.info, color: true);
 //   await initializeNotifications();
 //   await SharedPreferencesUtil.init();
@@ -57,10 +58,33 @@
 // class _MyAppState extends State<MyApp> {
 //   @override
 //   Widget build(BuildContext context) {
+//     SharedPreferencesUtil prefs = SharedPreferencesUtil();
+
+// //login screen option
+//     // Widget homeScreen;
+//     // if (prefs.isLoggedIn) {
+//     //   homeScreen = (prefs.onboardingCompleted && prefs.deviceId != '')
+//     //       ? const HomePageWrapper()
+//     //       : const WelcomePage();
+//     // } else {
+//     //   homeScreen = LoginPage();
+//     // }
+
+// //direct login
+
+//     Widget homeScreen = (prefs.onboardingCompleted && prefs.deviceId != '')
+//         ? const HomePageWrapper()
+//         : const WelcomePage();
+
+// //bypass connecting device
+//     // Widget homeScreen = (!prefs.onboardingCompleted || prefs.deviceId == '')
+//     //     ? const HomePageWrapper()
+//     //     : const WelcomePage();
+
 //     return MaterialApp(
 //       navigatorObservers: [InstabugNavigatorObserver()],
 //       debugShowCheckedModeBanner: false,
-//       title: 'AVMe',
+//       title: 'CFT-AVM',
 //       localizationsDelegates: const [
 //         GlobalMaterialLocalizations.delegate,
 //         GlobalWidgetsLocalizations.delegate,
@@ -68,36 +92,49 @@
 //       ],
 //       supportedLocales: const [Locale('en')],
 //       theme: ThemeData(
-//           useMaterial3: false,
-//           colorScheme: const ColorScheme.dark(
-//             primary: Colors.black,
-//             secondary: Colors.deepPurple,
-//             surface: Colors.black38,
+//         useMaterial3: false,
+//         colorScheme: const ColorScheme.dark(
+//           primary: Colors.black,
+//           secondary: Colors.deepPurple,
+//           surface: Colors.black38,
+//         ),
+//         snackBarTheme: SnackBarThemeData(
+//           backgroundColor: Colors.grey.shade900,
+//           contentTextStyle: const TextStyle(
+//             fontSize: 16,
+//             color: Colors.white,
+//             fontWeight: FontWeight.w500,
 //           ),
-//           snackBarTheme: SnackBarThemeData(
-//             backgroundColor: Colors.grey.shade900,
-//             contentTextStyle: const TextStyle(
-//                 fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
-//           ),
-//           textTheme: TextTheme(
-//             titleLarge: const TextStyle(fontSize: 18, color: Colors.white),
-//             titleMedium: const TextStyle(fontSize: 16, color: Colors.white),
-//             bodyMedium: const TextStyle(fontSize: 14, color: Colors.white),
-//             labelMedium: TextStyle(fontSize: 12, color: Colors.grey.shade200),
-//           ),
-//           textSelectionTheme: const TextSelectionThemeData(
-//             cursorColor: Colors.white,
-//             selectionColor: Colors.deepPurple,
-//           )),
+//         ),
+//         textTheme: TextTheme(
+//           titleLarge: const TextStyle(fontSize: 18, color: Colors.white),
+//           titleMedium: const TextStyle(fontSize: 16, color: Colors.white),
+//           bodyMedium: const TextStyle(fontSize: 14, color: Colors.white),
+//           labelMedium: TextStyle(fontSize: 12, color: Colors.grey.shade200),
+//         ),
+//         textSelectionTheme: const TextSelectionThemeData(
+//           cursorColor: Colors.white,
+//           selectionColor: Colors.deepPurple,
+//         ),
+//       ),
 //       themeMode: ThemeMode.dark,
-//       home: (SharedPreferencesUtil().onboardingCompleted &&
-//               SharedPreferencesUtil().deviceId != '')
-//           ? const HomePageWrapper()
-//           : const WelcomePage(),
+//       home: Stack(
+//         children: [
+//           Positioned.fill(
+//             child: Image.asset(
+//               'assets/images/splash.png',
+//               fit: BoxFit.cover, // Ensure the image covers the entire screen
+//             ),
+//           ),
+//           homeScreen,
+//         ],
+//       ),
 //     );
 //   }
 // }
+
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -109,6 +146,8 @@ import 'package:AVMe/pages/onboarding/welcome/page.dart';
 import 'package:AVMe/pages/login/login_page.dart';
 import 'package:AVMe/utils/notifications.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'backend/preferences.dart';
 import 'env/env.dart';
 
@@ -120,6 +159,7 @@ void main() async {
   await SharedPreferencesUtil.init();
   await MixpanelManager.init();
   await ObjectBoxUtil.init();
+
   if (Env.instabugApiKey != null) {
     runZonedGuarded(
       () {
@@ -131,17 +171,54 @@ void main() async {
           Zone.current.handleUncaughtError(details.exception, details.stack!);
         };
         Instabug.setColorTheme(ColorTheme.dark);
-        _getRunApp();
+        _requestPermissionsAndRunApp();
       },
       CrashReporting.reportCrash,
     );
   } else {
-    _getRunApp();
+    _requestPermissionsAndRunApp();
   }
 }
 
-_getRunApp() {
-  return runApp(const MyApp());
+Future<void> _requestPermissionsAndRunApp() async {
+  bool permissionsGranted = await _requestPermissions();
+
+  if (permissionsGranted) {
+    _getRunApp();
+  } else {
+    print('Required permissions not granted');
+    // Optionally, show a dialog or notification to inform the user
+  }
+}
+
+Future<bool> _requestPermissions() async {
+  if (Platform.isAndroid) {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+    if (androidInfo.version.sdkInt >= 33) {
+      // Android 13 and above
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.photos,
+        Permission.videos,
+        Permission.audio,
+      ].request();
+      return statuses.values.every((status) => status.isGranted);
+    } else if (androidInfo.version.sdkInt >= 29) {
+      // Android 10-12
+      return await Permission.storage.request().isGranted;
+    } else {
+      // Below Android 10
+      return await Permission.storage.request().isGranted;
+    }
+  } else if (Platform.isIOS) {
+    return await Permission.photos.request().isGranted;
+  }
+  return false;
+}
+
+void _getRunApp() {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -159,26 +236,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     SharedPreferencesUtil prefs = SharedPreferencesUtil();
 
-//login screen option
-    // Widget homeScreen;
-    // if (prefs.isLoggedIn) {
-    //   homeScreen = (prefs.onboardingCompleted && prefs.deviceId != '')
-    //       ? const HomePageWrapper()
-    //       : const WelcomePage();
-    // } else {
-    //   homeScreen = LoginPage();
-    // }
-
-//direct login
-
     Widget homeScreen = (prefs.onboardingCompleted && prefs.deviceId != '')
         ? const HomePageWrapper()
         : const WelcomePage();
-
-//bypass connecting device
-    // Widget homeScreen = (!prefs.onboardingCompleted || prefs.deviceId == '')
-    //     ? const HomePageWrapper()
-    //     : const WelcomePage();
 
     return MaterialApp(
       navigatorObservers: [InstabugNavigatorObserver()],
@@ -222,7 +282,7 @@ class _MyAppState extends State<MyApp> {
           Positioned.fill(
             child: Image.asset(
               'assets/images/splash.png',
-              fit: BoxFit.cover, // Ensure the image covers the entire screen
+              fit: BoxFit.cover,
             ),
           ),
           homeScreen,

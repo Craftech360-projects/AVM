@@ -240,7 +240,8 @@ class TranscriptWidgetState extends State<TranscriptWidget> {
     setState(() => memoryCreating = true);
     String transcript = _buildDiarizedTranscriptMessage(segments);
     debugPrint('_createMemory transcript: \n$transcript');
-    File file = await WavBytesUtil.createWavFile(audioStorage!.audioBytes);
+    File file = await WavBytesUtil.createWavFile(audioStorage!.audioBytes,
+        filename: 'recording');
     await uploadFile(file);
     await processTranscriptContent(
       context,
