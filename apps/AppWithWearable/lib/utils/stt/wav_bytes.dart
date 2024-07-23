@@ -317,10 +317,10 @@ class WavBytesUtil {
         await tempFile.writeAsBytes(wavBytes);
         debugPrint('Temporary WAV file created: ${tempFile.path}');
 
-        final downloadDirectory = await getDownloadDirectory();
-        final permanentFile = File('${downloadDirectory.path}/$permFilename');
-        await permanentFile.writeAsBytes(wavBytes);
-        debugPrint('Permanent WAV file created: ${permanentFile.path}');
+        // final downloadDirectory = await getDownloadDirectory();
+        // final permanentFile = File('${downloadDirectory.path}/$permFilename');
+        // await permanentFile.writeAsBytes(wavBytes);
+        // debugPrint('Permanent WAV file created: ${permanentFile.path}');
 
         return tempFile;
       } catch (e) {
