@@ -26,8 +26,19 @@ class MemoryProvider {
     }
   }
 
+  // Future<void> saveMemory(Memory memory) async {
+  //   _box.put(memory);
+  // }
+
   Future<void> saveMemory(Memory memory) async {
     _box.put(memory);
+    // Fetch the saved memory to print it
+    Memory? savedMemory = _box.get(memory.id);
+    if (savedMemory != null) {
+      print("Saved Memory: $savedMemory");
+    } else {
+      print("Failed to save Memory");
+    }
   }
 
   Future<void> deleteMemory(Memory memory) async {

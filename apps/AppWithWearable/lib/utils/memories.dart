@@ -10,6 +10,9 @@ import 'package:instabug_flutter/instabug_flutter.dart';
 
 import '/backend/api_requests/api_calls.dart';
 
+import 'package:AVMe/backend/database/memory.dart' as db_memory;
+import 'package:AVMe/backend/storage/memories.dart' as storage_memories;
+
 // Perform actions periodically
 Future<Memory?> processTranscriptContent(
     BuildContext context, String content, String? recordingFilePath,
@@ -218,6 +221,39 @@ Future<Memory> saveFailureMemory(
   return memory;
 }
 
+// // Finalize memory record after processing feedback
+// Future<Memory> finalizeMemoryRecord(
+//   String transcript,
+//   MemoryStructured structuredMemory,
+//   String? recordingFilePath,
+//   DateTime? startedAt,
+//   DateTime? finishedAt,
+// ) async {
+//   Structured structured = Structured(
+//     structuredMemory.title,
+//     structuredMemory.overview,
+//     emoji: structuredMemory.emoji,
+//     category: structuredMemory.category,
+//   );
+//   for (var actionItem in structuredMemory.actionItems) {
+//     structured.actionItems.add(ActionItem(actionItem));
+//   }
+//   var memory = Memory(DateTime.now(), transcript, false,
+//       recordingFilePath: recordingFilePath,
+//       startedAt: startedAt,
+//       finishedAt: finishedAt);
+//   memory.structured.target = structured;
+
+//   await MemoryProvider().saveMemory(memory);
+
+//   getEmbeddingsFromInput(structuredMemory.toString()).then((vector) {
+//     createPineconeVector(memory.id.toString(), vector);
+//   });
+//   print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+//   print(memory);
+//   return memory;
+// }
+
 // Finalize memory record after processing feedback
 Future<Memory> finalizeMemoryRecord(
   String transcript,
@@ -232,16 +268,36 @@ Future<Memory> finalizeMemoryRecord(
     emoji: structuredMemory.emoji,
     category: structuredMemory.category,
   );
+
+  // Add action items
   for (var actionItem in structuredMemory.actionItems) {
     structured.actionItems.add(ActionItem(actionItem));
   }
+
+  // Add events
+  for (var event in structuredMemory.events) {
+    structured.events.add(db_memory.Event(
+      event.title,
+      event.startsAt,
+      event.duration,
+      description: event.description,
+      created: event.created,
+    ));
+  }
+
   var memory = Memory(DateTime.now(), transcript, false,
       recordingFilePath: recordingFilePath,
       startedAt: startedAt,
       finishedAt: finishedAt);
   memory.structured.target = structured;
 
-  await MemoryProvider().saveMemory(memory);
+  try {
+    await MemoryProvider().saveMemory(memory);
+  } catch (e) {
+    print("Failed to save memory: $e");
+    // Handle the error appropriately, e.g., log it, rethrow it, or return a fallback value
+    rethrow; // Rethrow the exception if you want it to propagate
+  }
 
   getEmbeddingsFromInput(structuredMemory.toString()).then((vector) {
     createPineconeVector(memory.id.toString(), vector);

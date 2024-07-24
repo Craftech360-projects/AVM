@@ -15,6 +15,7 @@ import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'backend/database/memory.dart';
+import 'backend/storage/segment.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -22,7 +23,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(1, 1521024926543535),
       name: 'Memory',
-      lastPropertyId: const obx_int.IdUid(8, 970897693726655020),
+      lastPropertyId: const obx_int.IdUid(9, 750321095880134980),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -70,7 +71,16 @@ final _entities = <obx_int.ModelEntity>[
             type: 10,
             flags: 0)
       ],
-      relations: <obx_int.ModelRelation>[],
+      relations: <obx_int.ModelRelation>[
+        obx_int.ModelRelation(
+            id: const obx_int.IdUid(3, 7136919903563407649),
+            name: 'photos',
+            targetId: const obx_int.IdUid(8, 2420068094328998058)),
+        obx_int.ModelRelation(
+            id: const obx_int.IdUid(4, 3623478427544832782),
+            name: 'transcriptSegments',
+            targetId: const obx_int.IdUid(10, 174483594722659639))
+      ],
       backlinks: <obx_int.ModelBacklink>[
         obx_int.ModelBacklink(
             name: 'pluginsResponse',
@@ -114,7 +124,9 @@ final _entities = <obx_int.ModelEntity>[
         obx_int.ModelBacklink(
             name: 'actionItems',
             srcEntity: 'ActionItem',
-            srcField: 'structured')
+            srcField: 'structured'),
+        obx_int.ModelBacklink(
+            name: 'events', srcEntity: 'Event', srcField: 'structured')
       ]),
   obx_int.ModelEntity(
       id: const obx_int.IdUid(3, 9190753393137293311),
@@ -150,7 +162,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(4, 8944838570398231806),
       name: 'PluginResponse',
-      lastPropertyId: const obx_int.IdUid(5, 2860027525438426963),
+      lastPropertyId: const obx_int.IdUid(6, 4389894679139533208),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -169,6 +181,132 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(5, 2860027525438426963),
             name: 'content',
             type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 4389894679139533208),
+            name: 'pluginId',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(7, 265133176252396324),
+      name: 'Event',
+      lastPropertyId: const obx_int.IdUid(7, 7098116187702997412),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 1288962548328890994),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 4790234918480393406),
+            name: 'title',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 2151476491244407949),
+            name: 'startsAt',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 7841939327187751919),
+            name: 'duration',
+            type: 6,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 6399120598852890710),
+            name: 'description',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 8016636007871233432),
+            name: 'created',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 7098116187702997412),
+            name: 'structuredId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(8, 5225160858485949527),
+            relationTarget: 'Structured')
+      ],
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(8, 2420068094328998058),
+      name: 'MemoryPhoto',
+      lastPropertyId: const obx_int.IdUid(4, 1039156685420731048),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 1608680924662484644),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 6322407607045937555),
+            name: 'base64',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 8935840048941751960),
+            name: 'description',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 1039156685420731048),
+            name: 'memoryId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(9, 7717987872558258803),
+            relationTarget: 'Memory')
+      ],
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(10, 174483594722659639),
+      name: 'TranscriptSegment',
+      lastPropertyId: const obx_int.IdUid(12, 6256913566085138448),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 1492848859489070679),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 3613137121037955605),
+            name: 'text',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(8, 6609907188040212377),
+            name: 'speaker',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(9, 1473674810825160006),
+            name: 'speakerId',
+            type: 6,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(10, 2769848990950950128),
+            name: 'isUser',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(11, 5886960961167089297),
+            name: 'start',
+            type: 8,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(12, 6256913566085138448),
+            name: 'end',
+            type: 8,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -210,17 +348,39 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(4, 8944838570398231806),
-      lastIndexId: const obx_int.IdUid(6, 2436940497868764355),
-      lastRelationId: const obx_int.IdUid(0, 0),
+      lastEntityId: const obx_int.IdUid(10, 174483594722659639),
+      lastIndexId: const obx_int.IdUid(10, 1684776336187677600),
+      lastRelationId: const obx_int.IdUid(4, 3623478427544832782),
       lastSequenceId: const obx_int.IdUid(0, 0),
-      retiredEntityUids: const [],
-      retiredIndexUids: const [2159273736567567467],
+      retiredEntityUids: const [3905873968765933532, 1071480816298889546],
+      retiredIndexUids: const [2159273736567567467, 1684776336187677600],
       retiredPropertyUids: const [
         2626201971202508244,
         1809459319638310611,
         6229900676402028868,
-        8014962203152976278
+        8014962203152976278,
+        750321095880134980,
+        1878881834426487468,
+        9040753066664612555,
+        3367360249871802822,
+        3325943223378277861,
+        5337649766892625543,
+        3615800576746497622,
+        2294662025678668284,
+        5439776793324625302,
+        5029098691628262168,
+        360317290538166924,
+        6460297489623782570,
+        1607165285192119527,
+        1237058507785607166,
+        4474409428020468496,
+        7722465006277032933,
+        3289333230014969644,
+        7912835583615497245,
+        6299997415132360853,
+        5561668932164363654,
+        1526590161992060825,
+        5610909424179648704
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -232,6 +392,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
         model: _entities[0],
         toOneRelations: (Memory object) => [object.structured],
         toManyRelations: (Memory object) => {
+              obx_int.RelInfo<Memory>.toMany(3, object.id): object.photos,
+              obx_int.RelInfo<Memory>.toMany(4, object.id):
+                  object.transcriptSegments,
               obx_int.RelInfo<PluginResponse>.toOneBacklink(4, object.id,
                       (PluginResponse srcObject) => srcObject.memory):
                   object.pluginsResponse
@@ -245,7 +408,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final recordingFilePathOffset = object.recordingFilePath == null
               ? null
               : fbb.writeString(object.recordingFilePath!);
-          fbb.startTable(9);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.createdAt.millisecondsSinceEpoch);
           fbb.addOffset(2, transcriptOffset);
@@ -289,6 +452,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
           object.structured.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.structured.attach(store);
+          obx_int.InternalToManyAccess.setRelInfo<Memory>(object.photos, store,
+              obx_int.RelInfo<Memory>.toMany(3, object.id));
+          obx_int.InternalToManyAccess.setRelInfo<Memory>(
+              object.transcriptSegments,
+              store,
+              obx_int.RelInfo<Memory>.toMany(4, object.id));
           obx_int.InternalToManyAccess.setRelInfo<Memory>(
               object.pluginsResponse,
               store,
@@ -302,7 +471,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
         toManyRelations: (Structured object) => {
               obx_int.RelInfo<ActionItem>.toOneBacklink(4, object.id,
                       (ActionItem srcObject) => srcObject.structured):
-                  object.actionItems
+                  object.actionItems,
+              obx_int.RelInfo<Event>.toOneBacklink(
+                      7, object.id, (Event srcObject) => srcObject.structured):
+                  object.events
             },
         getId: (Structured object) => object.id,
         setId: (Structured object, int id) {
@@ -329,18 +501,24 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .vTableGet(buffer, rootOffset, 6, '');
           final overviewParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 8, '');
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final emojiParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 14, '');
           final categoryParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 16, '');
           final object = Structured(titleParam, overviewParam,
-              emoji: emojiParam, category: categoryParam)
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+              id: idParam, emoji: emojiParam, category: categoryParam);
           obx_int.InternalToManyAccess.setRelInfo<Structured>(
               object.actionItems,
               store,
               obx_int.RelInfo<ActionItem>.toOneBacklink(4, object.id,
                   (ActionItem srcObject) => srcObject.structured));
+          obx_int.InternalToManyAccess.setRelInfo<Structured>(
+              object.events,
+              store,
+              obx_int.RelInfo<Event>.toOneBacklink(
+                  7, object.id, (Event srcObject) => srcObject.structured));
           return object;
         }),
     ActionItem: obx_int.EntityDefinition<ActionItem>(
@@ -388,10 +566,14 @@ obx_int.ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (PluginResponse object, fb.Builder fbb) {
           final contentOffset = fbb.writeString(object.content);
-          fbb.startTable(6);
+          final pluginIdOffset = object.pluginId == null
+              ? null
+              : fbb.writeString(object.pluginId!);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addInt64(3, object.memory.targetId);
           fbb.addOffset(4, contentOffset);
+          fbb.addOffset(5, pluginIdOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -400,11 +582,146 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
           final contentParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 12, '');
-          final object = PluginResponse(contentParam)
-            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final pluginIdParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 14);
+          final object = PluginResponse(contentParam,
+              id: idParam, pluginId: pluginIdParam);
           object.memory.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
           object.memory.attach(store);
+          return object;
+        }),
+    Event: obx_int.EntityDefinition<Event>(
+        model: _entities[4],
+        toOneRelations: (Event object) => [object.structured],
+        toManyRelations: (Event object) => {},
+        getId: (Event object) => object.id,
+        setId: (Event object, int id) {
+          object.id = id;
+        },
+        objectToFB: (Event object, fb.Builder fbb) {
+          final titleOffset = fbb.writeString(object.title);
+          final descriptionOffset = fbb.writeString(object.description);
+          fbb.startTable(8);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, titleOffset);
+          fbb.addInt64(2, object.startsAt.millisecondsSinceEpoch);
+          fbb.addInt64(3, object.duration);
+          fbb.addOffset(4, descriptionOffset);
+          fbb.addBool(5, object.created);
+          fbb.addInt64(6, object.structured.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final titleParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final startsAtParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0));
+          final durationParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          final descriptionParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 12, '');
+          final createdParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 14, false);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final object = Event(titleParam, startsAtParam, durationParam,
+              description: descriptionParam,
+              created: createdParam,
+              id: idParam);
+          object.structured.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
+          object.structured.attach(store);
+          return object;
+        }),
+    MemoryPhoto: obx_int.EntityDefinition<MemoryPhoto>(
+        model: _entities[5],
+        toOneRelations: (MemoryPhoto object) => [object.memory],
+        toManyRelations: (MemoryPhoto object) => {},
+        getId: (MemoryPhoto object) => object.id,
+        setId: (MemoryPhoto object, int id) {
+          object.id = id;
+        },
+        objectToFB: (MemoryPhoto object, fb.Builder fbb) {
+          final base64Offset = fbb.writeString(object.base64);
+          final descriptionOffset = fbb.writeString(object.description);
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, base64Offset);
+          fbb.addOffset(2, descriptionOffset);
+          fbb.addInt64(3, object.memory.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final base64Param = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final descriptionParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, '');
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final object =
+              MemoryPhoto(base64Param, descriptionParam, id: idParam);
+          object.memory.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          object.memory.attach(store);
+          return object;
+        }),
+    TranscriptSegment: obx_int.EntityDefinition<TranscriptSegment>(
+        model: _entities[6],
+        toOneRelations: (TranscriptSegment object) => [],
+        toManyRelations: (TranscriptSegment object) => {},
+        getId: (TranscriptSegment object) => object.id,
+        setId: (TranscriptSegment object, int id) {
+          object.id = id;
+        },
+        objectToFB: (TranscriptSegment object, fb.Builder fbb) {
+          final textOffset = fbb.writeString(object.text);
+          final speakerOffset =
+              object.speaker == null ? null : fbb.writeString(object.speaker!);
+          fbb.startTable(13);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, textOffset);
+          fbb.addOffset(7, speakerOffset);
+          fbb.addInt64(8, object.speakerId);
+          fbb.addBool(9, object.isUser);
+          fbb.addFloat64(10, object.start);
+          fbb.addFloat64(11, object.end);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final textParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final speakerParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 18);
+          final isUserParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 22, false);
+          final startParam =
+              const fb.Float64Reader().vTableGet(buffer, rootOffset, 24, 0);
+          final endParam =
+              const fb.Float64Reader().vTableGet(buffer, rootOffset, 26, 0);
+          final object = TranscriptSegment(
+              text: textParam,
+              speaker: speakerParam,
+              isUser: isUserParam,
+              start: startParam,
+              end: endParam)
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+            ..speakerId =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0);
+
           return object;
         })
   };
@@ -446,6 +763,15 @@ class Memory_ {
   static final finishedAt =
       obx.QueryDateProperty<Memory>(_entities[0].properties[7]);
 
+  /// see [Memory.photos]
+  static final photos =
+      obx.QueryRelationToMany<Memory, MemoryPhoto>(_entities[0].relations[0]);
+
+  /// see [Memory.transcriptSegments]
+  static final transcriptSegments =
+      obx.QueryRelationToMany<Memory, TranscriptSegment>(
+          _entities[0].relations[1]);
+
   /// see [Memory.pluginsResponse]
   static final pluginsResponse =
       obx.QueryBacklinkToMany<PluginResponse, Memory>(PluginResponse_.memory);
@@ -476,6 +802,10 @@ class Structured_ {
   /// see [Structured.actionItems]
   static final actionItems =
       obx.QueryBacklinkToMany<ActionItem, Structured>(ActionItem_.structured);
+
+  /// see [Structured.events]
+  static final events =
+      obx.QueryBacklinkToMany<Event, Structured>(Event_.structured);
 }
 
 /// [ActionItem] entity fields to define ObjectBox queries.
@@ -510,4 +840,88 @@ class PluginResponse_ {
   /// See [PluginResponse.content].
   static final content =
       obx.QueryStringProperty<PluginResponse>(_entities[3].properties[2]);
+
+  /// See [PluginResponse.pluginId].
+  static final pluginId =
+      obx.QueryStringProperty<PluginResponse>(_entities[3].properties[3]);
+}
+
+/// [Event] entity fields to define ObjectBox queries.
+class Event_ {
+  /// See [Event.id].
+  static final id = obx.QueryIntegerProperty<Event>(_entities[4].properties[0]);
+
+  /// See [Event.title].
+  static final title =
+      obx.QueryStringProperty<Event>(_entities[4].properties[1]);
+
+  /// See [Event.startsAt].
+  static final startsAt =
+      obx.QueryDateProperty<Event>(_entities[4].properties[2]);
+
+  /// See [Event.duration].
+  static final duration =
+      obx.QueryIntegerProperty<Event>(_entities[4].properties[3]);
+
+  /// See [Event.description].
+  static final description =
+      obx.QueryStringProperty<Event>(_entities[4].properties[4]);
+
+  /// See [Event.created].
+  static final created =
+      obx.QueryBooleanProperty<Event>(_entities[4].properties[5]);
+
+  /// See [Event.structured].
+  static final structured =
+      obx.QueryRelationToOne<Event, Structured>(_entities[4].properties[6]);
+}
+
+/// [MemoryPhoto] entity fields to define ObjectBox queries.
+class MemoryPhoto_ {
+  /// See [MemoryPhoto.id].
+  static final id =
+      obx.QueryIntegerProperty<MemoryPhoto>(_entities[5].properties[0]);
+
+  /// See [MemoryPhoto.base64].
+  static final base64 =
+      obx.QueryStringProperty<MemoryPhoto>(_entities[5].properties[1]);
+
+  /// See [MemoryPhoto.description].
+  static final description =
+      obx.QueryStringProperty<MemoryPhoto>(_entities[5].properties[2]);
+
+  /// See [MemoryPhoto.memory].
+  static final memory =
+      obx.QueryRelationToOne<MemoryPhoto, Memory>(_entities[5].properties[3]);
+}
+
+/// [TranscriptSegment] entity fields to define ObjectBox queries.
+class TranscriptSegment_ {
+  /// See [TranscriptSegment.id].
+  static final id =
+      obx.QueryIntegerProperty<TranscriptSegment>(_entities[6].properties[0]);
+
+  /// See [TranscriptSegment.text].
+  static final text =
+      obx.QueryStringProperty<TranscriptSegment>(_entities[6].properties[1]);
+
+  /// See [TranscriptSegment.speaker].
+  static final speaker =
+      obx.QueryStringProperty<TranscriptSegment>(_entities[6].properties[2]);
+
+  /// See [TranscriptSegment.speakerId].
+  static final speakerId =
+      obx.QueryIntegerProperty<TranscriptSegment>(_entities[6].properties[3]);
+
+  /// See [TranscriptSegment.isUser].
+  static final isUser =
+      obx.QueryBooleanProperty<TranscriptSegment>(_entities[6].properties[4]);
+
+  /// See [TranscriptSegment.start].
+  static final start =
+      obx.QueryDoubleProperty<TranscriptSegment>(_entities[6].properties[5]);
+
+  /// See [TranscriptSegment.end].
+  static final end =
+      obx.QueryDoubleProperty<TranscriptSegment>(_entities[6].properties[6]);
 }
