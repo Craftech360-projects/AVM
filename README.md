@@ -1,6 +1,6 @@
 <div align="center">
 
-# **Friend**
+# **AVM V1**
 
 Meet Friend, the world’s leading open-source AI wearable that revolutionizes how you capture and manage conversations. Simply connect Friend to your mobile device and enjoy automatic, high-quality transcriptions of meetings, chats, and voice memos wherever you are.
 
