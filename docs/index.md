@@ -25,7 +25,7 @@ voice memos wherever you are.
 
 ## Get the app
 
-[<img src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' alt='Get it on Google Play' width="230px">](https://play.google.com/store/apps/details?id=com.friend.ios)
+[<img src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' alt='Get it on Google Play' width="230px">](https://play.google.com/store/apps/details?id=com.craftech360.avm)
 [<img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" alt="Download on App Store" style="width: 180px; margin-bottom: 15px;">](https://apps.apple.com/us/app/friend-ai-wearable/id6502156163)
 
 Get the latest firmware: [v1.0.3](https://github.com/BasedHardware/Friend/releases/tag/v1.0.3-firmware)
