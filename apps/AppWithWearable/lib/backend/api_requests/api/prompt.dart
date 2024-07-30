@@ -45,7 +45,8 @@ Future<SummaryResult> summarizeMemory(
   // Test and see if the action items say "name should do x thing" "speaker 0 should do y thing"
 
   // Specify which speaker is responsible for each action item., to comment?
-  var prompt = '''Your task is to provide structure and clarity to the recording transcription of a conversation.
+  var prompt =
+      '''Your task is to provide structure and clarity to the recording transcription of a conversation.
     The conversation language is ${SharedPreferencesUtil().recordingsLanguage}. Use English for your response.
 
     ${forceProcess ? "" : "It is possible that the conversation is not worth storing, there are no interesting topics, facts, or information, in that case, output an empty title, overview, and action items."}  
@@ -68,11 +69,12 @@ Future<SummaryResult> summarizeMemory(
     {"properties": {"title": {"title": "Title", "description": "A title/name for this conversation", "default": "", "type": "string"}, "overview": {"title": "Overview", "description": "A brief summary with the main topics discussed, make sure to capture the key details.", "default": "", "type": "string"}, "action_items": {"title": "Action Items", "description": "A list of action items from the conversation", "default": [], "type": "array", "items": {"type": "string"}}, "category": {"description": "A category for this memory", "default": "other", "allOf": [{"\$ref": "#/definitions/CategoryEnum"}]}, "emoji": {"title": "Emoji", "description": "An emoji to represent the memory", "default": "\ud83e\udde0", "type": "string"}, "events": {"title": "Events", "description": "A list of events extracted from the conversation, that the user must have on his calendar.", "default": [], "type": "array", "items": {"\$ref": "#/definitions/CalendarEvent"}}}, "definitions": {"CategoryEnum": {"title": "CategoryEnum", "description": "An enumeration.", "enum": ["personal", "education", "health", "finance", "legal", "phylosophy", "spiritual", "science", "entrepreneurship", "parenting", "romantic", "travel", "inspiration", "technology", "business", "social", "work", "other"], "type": "string"}, "CalendarEvent": {"title": "CalendarEvent", "type": "object", "properties": {"title": {"title": "Title", "description": "The title of the event", "type": "string"}, "description": {"title": "Description", "description": "A brief description of the event", "default": "", "type": "string"}, "startsAt": {"title": "Starts At", "description": "The start date and time of the event", "type": "string", "format": "date-time"}, "duration": {"title": "Duration", "description": "The duration of the event in minutes", "default": 30, "type": "integer"}}, "required": ["title", "startsAt"]}}}
     ```
     '''
-      .replaceAll('     ', '')
-      .replaceAll('    ', '')
-      .trim();
+          .replaceAll('     ', '')
+          .replaceAll('    ', '')
+          .trim();
   debugPrint(prompt);
-  var structuredResponse = extractJson(await executeGptPrompt(prompt, ignoreCache: ignoreCache));
+  var structuredResponse =
+      extractJson(await executeGptPrompt(prompt, ignoreCache: ignoreCache));
   var structured = Structured.fromJson(jsonDecode(structuredResponse));
   if (structured.title.isEmpty) return SummaryResult(structured, []);
   var pluginsResponse = await executePlugins(transcript);
@@ -82,7 +84,9 @@ Future<SummaryResult> summarizeMemory(
 Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
   final pluginsList = SharedPreferencesUtil().pluginsList;
   final pluginsEnabled = SharedPreferencesUtil().pluginsEnabled;
-  final enabledPlugins = pluginsList.where((e) => pluginsEnabled.contains(e.id) && e.worksWithMemories()).toList();
+  final enabledPlugins = pluginsList
+      .where((e) => pluginsEnabled.contains(e.id) && e.worksWithMemories())
+      .toList();
   // TODO: include memory details parsed already as extra context?
   // TODO: improve plugin result, include result + id to map it to.
   List<Future<Tuple2<Plugin, String>>> pluginPrompts = enabledPlugins.map(
@@ -106,28 +110,34 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
             .replaceAll('     ', '')
             .replaceAll('    ', '')
             .trim());
-        return Tuple2(plugin, response.replaceAll('```', '').replaceAll('""', '').trim());
+        return Tuple2(
+            plugin, response.replaceAll('```', '').replaceAll('""', '').trim());
       } catch (e, stacktrace) {
-        CrashReporting.reportHandledCrash(e, stacktrace, level: NonFatalExceptionLevel.critical, userAttributes: {
-          'plugin': plugin.id,
-          'plugins_count': pluginsEnabled.length.toString(),
-          'transcript_length': transcript.length.toString(),
-        });
+        CrashReporting.reportHandledCrash(e, stacktrace,
+            level: NonFatalExceptionLevel.critical,
+            userAttributes: {
+              'plugin': plugin.id,
+              'plugins_count': pluginsEnabled.length.toString(),
+              'transcript_length': transcript.length.toString(),
+            });
         debugPrint('Error executing plugin ${plugin.id}');
         return Tuple2(plugin, '');
       }
     },
   ).toList();
 
-  Future<List<Tuple2<Plugin, String>>> allPluginResponses = Future.wait(pluginPrompts);
+  Future<List<Tuple2<Plugin, String>>> allPluginResponses =
+      Future.wait(pluginPrompts);
   try {
     var responses = await allPluginResponses;
     return responses.where((e) => e.item2.length > 5).toList();
   } catch (e, stacktrace) {
-    CrashReporting.reportHandledCrash(e, stacktrace, level: NonFatalExceptionLevel.critical, userAttributes: {
-      'plugins_count': pluginsEnabled.length.toString(),
-      'transcript_length': transcript.length.toString(),
-    });
+    CrashReporting.reportHandledCrash(e, stacktrace,
+        level: NonFatalExceptionLevel.critical,
+        userAttributes: {
+          'plugins_count': pluginsEnabled.length.toString(),
+          'transcript_length': transcript.length.toString(),
+        });
     return [];
   }
 }
@@ -187,7 +197,11 @@ Future<List<String>> getSemanticSummariesForEmbedding(String transcript) async {
       .trim();
   // debugPrint(prompt);
   var response = await executeGptPrompt(prompt);
-  return response.split('###').map((e) => e.trim()).where((e) => e.isNotEmpty).toList();
+  return response
+      .split('###')
+      .map((e) => e.trim())
+      .where((e) => e.isNotEmpty)
+      .toList();
 }
 
 Future<String> postMemoryCreationNotification(Memory memory) async {
@@ -195,7 +209,9 @@ Future<String> postMemoryCreationNotification(Memory memory) async {
   if (memory.structured.target!.actionItems.isEmpty) return '';
 
   var userName = SharedPreferencesUtil().givenName;
-  var str = userName.isEmpty ? 'a busy entrepreneur' : '$userName (a busy entrepreneur)';
+  var str = userName.isEmpty
+      ? 'a busy entrepreneur'
+      : '$userName (a busy entrepreneur)';
   var prompt = '''
   The following is the structuring from a transcript of a conversation that just finished.
   First determine if there's crucial feedback to notify $str about it.
@@ -216,10 +232,13 @@ Future<String> postMemoryCreationNotification(Memory memory) async {
 }
 
 Future<String> dailySummaryNotifications(List<Memory> memories) async {
-  var msg = 'There were no memories today, don\'t forget to wear your Friend tomorrow 😁';
+  var msg =
+      'There were no memories today, don\'t forget to wear your Friend tomorrow 😁';
   if (memories.isEmpty) return msg;
   if (memories.where((m) => !m.discarded).length <= 1) return msg;
-  var str = SharedPreferencesUtil().givenName.isEmpty ? 'the user' : SharedPreferencesUtil().givenName;
+  var str = SharedPreferencesUtil().givenName.isEmpty
+      ? 'the user'
+      : SharedPreferencesUtil().givenName;
   var prompt = '''
   The following are a list of $str\'s memories from today, with the transcripts with its respective structuring, that $str had during his day.
   $str wants to get a summary of the key action items he has to take based on his today's memories.
@@ -240,7 +259,8 @@ Future<String> dailySummaryNotifications(List<Memory> memories) async {
 
 // ------
 
-Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(List<Message> messages) async {
+Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
+    List<Message> messages) async {
   String message = '''
         Based on the current conversation an AI and a User are having, determine if the AI requires context outside the conversation to respond to the user's message.
         More context could mean, user stored old conversations, notes, or information that seems very user-specific.
@@ -267,21 +287,26 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(List<Mess
   debugPrint('determineRequiresContext message: $message');
   var response = await executeGptPrompt(message);
   debugPrint('determineRequiresContext response: $response');
-  var cleanedResponse = response.toString().replaceAll('```', '').replaceAll('json', '').trim();
+  var cleanedResponse =
+      response.toString().replaceAll('```', '').replaceAll('json', '').trim();
   try {
     var data = jsonDecode(cleanedResponse);
     debugPrint(data.toString());
-    List<String> topics = data['topics'].map<String>((e) => e.toString()).toList();
-    List<String> datesRange = data['dates_range'].map<String>((e) => e.toString()).toList();
+    List<String> topics =
+        data['topics'].map<String>((e) => e.toString()).toList();
+    List<String> datesRange =
+        data['dates_range'].map<String>((e) => e.toString()).toList();
     List<DateTime> dates = datesRange.map((e) => DateTime.parse(e)).toList();
     debugPrint('topics: $topics, dates: $dates');
     return Tuple2<List<String>, List<DateTime>>(topics, dates);
   } catch (e) {
-    CrashReporting.reportHandledCrash(e, StackTrace.current, level: NonFatalExceptionLevel.critical, userAttributes: {
-      'response': cleanedResponse,
-      'message_length': message.length.toString(),
-      'message_words': message.split(' ').length.toString(),
-    });
+    CrashReporting.reportHandledCrash(e, StackTrace.current,
+        level: NonFatalExceptionLevel.critical,
+        userAttributes: {
+          'response': cleanedResponse,
+          'message_length': message.length.toString(),
+          'message_words': message.split(' ').length.toString(),
+        });
     debugPrint('Error determining requires context: $e');
     return null;
   }
@@ -354,7 +379,8 @@ Future<String> getPhotoDescription(Uint8List data) async {
 }
 
 // TODO: another thought is to ask gpt for a list of "scenes", so each one could be stored independently in vectors
-Future<List<int>> determineImagesToKeep(List<Tuple2<Uint8List, String>> images) async {
+Future<List<int>> determineImagesToKeep(
+    List<Tuple2<Uint8List, String>> images) async {
   // was thinking here to take all images, and based on description, filter the ones that do not have repeated descriptions.
   String prompt = '''
   You will be provided with a list of descriptions of images that were taken from POV, with 5 seconds difference between each photo.
@@ -374,13 +400,15 @@ Future<List<int>> determineImagesToKeep(List<Tuple2<Uint8List, String>> images) 
   ```
   ''';
   var response = await executeGptPrompt(prompt);
-  var result = jsonDecode(response.replaceAll('json', '').replaceAll('```', ''));
+  var result =
+      jsonDecode(response.replaceAll('json', '').replaceAll('```', ''));
   result['indices'] = result['indices'].map<int>((e) => e as int).toList();
   print(result['indices']);
   return result['indices'];
 }
 
-Future<SummaryResult> summarizePhotos(List<Tuple2<String, String>> images) async {
+Future<SummaryResult> summarizePhotos(
+    List<Tuple2<String, String>> images) async {
   var prompt =
       '''The user took a series of pictures from his POV, and generated a description for each photo, and wants to create a memory from them.
 

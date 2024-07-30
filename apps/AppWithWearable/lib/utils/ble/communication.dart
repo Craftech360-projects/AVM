@@ -15,7 +15,8 @@ Future<int> retrieveBatteryLevel(String deviceId) async {
     return -1;
   }
 
-  var batteryLevelCharacteristic = getCharacteristicByUuid(batteryService, batteryLevelCharacteristicUuid);
+  var batteryLevelCharacteristic =
+      getCharacteristicByUuid(batteryService, batteryLevelCharacteristicUuid);
   if (batteryLevelCharacteristic == null) {
     logCharacteristicNotFoundError('Battery level', deviceId);
     return -1;
@@ -39,7 +40,8 @@ Future<StreamSubscription<List<int>>?> getBleBatteryLevelListener(
     return null;
   }
 
-  var batteryLevelCharacteristic = getCharacteristicByUuid(batteryService, batteryLevelCharacteristicUuid);
+  var batteryLevelCharacteristic =
+      getCharacteristicByUuid(batteryService, batteryLevelCharacteristicUuid);
   if (batteryLevelCharacteristic == null) {
     logCharacteristicNotFoundError('Battery level', deviceId);
     return null;
@@ -81,14 +83,16 @@ Future<StreamSubscription?> getBleAudioBytesListener(
     return null;
   }
 
-  var audioDataStreamCharacteristic = getCharacteristicByUuid(friendService, audioDataStreamCharacteristicUuid);
+  var audioDataStreamCharacteristic =
+      getCharacteristicByUuid(friendService, audioDataStreamCharacteristicUuid);
   if (audioDataStreamCharacteristic == null) {
     logCharacteristicNotFoundError('Audio data stream', deviceId);
     return null;
   }
 
   try {
-    await audioDataStreamCharacteristic.setNotifyValue(true); // device could be disconnected here.
+    await audioDataStreamCharacteristic
+        .setNotifyValue(true); // device could be disconnected here.
   } catch (e, stackTrace) {
     logSubscribeError('Audio data stream', deviceId, e, stackTrace);
     return null;
@@ -119,7 +123,8 @@ Future<BleAudioCodec> getAudioCodec(String deviceId) async {
     return BleAudioCodec.pcm8;
   }
 
-  var audioCodecCharacteristic = getCharacteristicByUuid(friendService, audioCodecCharacteristicUuid);
+  var audioCodecCharacteristic =
+      getCharacteristicByUuid(friendService, audioCodecCharacteristicUuid);
   if (audioCodecCharacteristic == null) {
     logCharacteristicNotFoundError('Audio codec', deviceId);
     return BleAudioCodec.pcm8;
@@ -160,7 +165,8 @@ Future cameraStartPhotoController(String deviceId) async {
     return;
   }
 
-  var imageCaptureControlCharacteristic = getCharacteristicByUuid(friendService, imageCaptureControlCharacteristicUuid);
+  var imageCaptureControlCharacteristic = getCharacteristicByUuid(
+      friendService, imageCaptureControlCharacteristicUuid);
   if (imageCaptureControlCharacteristic == null) {
     logCharacteristicNotFoundError('Image capture control', deviceId);
     return;
@@ -179,7 +185,8 @@ Future cameraStopPhotoController(String deviceId) async {
     return;
   }
 
-  var imageCaptureControlCharacteristic = getCharacteristicByUuid(friendService, imageCaptureControlCharacteristicUuid);
+  var imageCaptureControlCharacteristic = getCharacteristicByUuid(
+      friendService, imageCaptureControlCharacteristicUuid);
   if (imageCaptureControlCharacteristic == null) {
     logCharacteristicNotFoundError('Image capture control', deviceId);
     return;
@@ -196,7 +203,8 @@ Future<bool> hasPhotoStreamingCharacteristic(String deviceId) async {
     logServiceNotFoundError('Friend', deviceId);
     return false;
   }
-  var imageCaptureControlCharacteristic = getCharacteristicByUuid(friendService, imageDataStreamCharacteristicUuid);
+  var imageCaptureControlCharacteristic =
+      getCharacteristicByUuid(friendService, imageDataStreamCharacteristicUuid);
   return imageCaptureControlCharacteristic != null;
 }
 
@@ -210,14 +218,16 @@ Future<StreamSubscription?> getBleImageBytesListener(
     return null;
   }
 
-  var imageStreamCharacteristic = getCharacteristicByUuid(friendService, imageDataStreamCharacteristicUuid);
+  var imageStreamCharacteristic =
+      getCharacteristicByUuid(friendService, imageDataStreamCharacteristicUuid);
   if (imageStreamCharacteristic == null) {
     logCharacteristicNotFoundError('Image data stream', deviceId);
     return null;
   }
 
   try {
-    await imageStreamCharacteristic.setNotifyValue(true); // device could be disconnected here.
+    await imageStreamCharacteristic
+        .setNotifyValue(true); // device could be disconnected here.
   } catch (e, stackTrace) {
     logSubscribeError('Image data stream', deviceId, e, stackTrace);
     return null;

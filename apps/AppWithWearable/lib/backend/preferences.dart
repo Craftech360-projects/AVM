@@ -6,7 +6,8 @@ import 'package:friend_private/env/env.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesUtil {
-  static final SharedPreferencesUtil _instance = SharedPreferencesUtil._internal();
+  static final SharedPreferencesUtil _instance =
+      SharedPreferencesUtil._internal();
   static SharedPreferences? _preferences;
 
   factory SharedPreferencesUtil() {
@@ -39,7 +40,9 @@ class SharedPreferencesUtil {
 
   set deepgramApiKey(String value) => saveString('deepgramApiKey', value);
 
-  bool get useTranscriptServer => Env.growthbookApiKey == null ? false : getBool('useTranscriptServer') ?? true;
+  bool get useTranscriptServer => Env.growthbookApiKey == null
+      ? false
+      : getBool('useTranscriptServer') ?? true;
 
   set useTranscriptServer(bool value) => saveBool('useTranscriptServer', value);
 
@@ -55,13 +58,16 @@ class SharedPreferencesUtil {
 
   set webhookOnMemoryCreated(String value) => saveString('webhookUrl', value);
 
-  String get webhookOnTranscriptReceived => getString('transcriptServerUrl') ?? '';
+  String get webhookOnTranscriptReceived =>
+      getString('transcriptServerUrl') ?? '';
 
-  set webhookOnTranscriptReceived(String value) => saveString('transcriptServerUrl', value);
+  set webhookOnTranscriptReceived(String value) =>
+      saveString('transcriptServerUrl', value);
 
   String get recordingsLanguage => getString('recordingsLanguage') ?? 'en';
 
-  set recordingsLanguage(String value) => saveString('recordingsLanguage', value);
+  set recordingsLanguage(String value) =>
+      saveString('recordingsLanguage', value);
 
   bool get useFriendApiKeys => getBool('useFriendApiKeys') ?? true;
 
@@ -73,11 +79,14 @@ class SharedPreferencesUtil {
 
   String get customWebsocketUrl => getString('customWebsocketUrl') ?? '';
 
-  set customWebsocketUrl(String value) => saveString('customWebsocketUrl', value);
+  set customWebsocketUrl(String value) =>
+      saveString('customWebsocketUrl', value);
 
-  String gptCompletionCache(String key) => getString('gptCompletionCache:$key') ?? '';
+  String gptCompletionCache(String key) =>
+      getString('gptCompletionCache:$key') ?? '';
 
-  setGptCompletionCache(String key, String value) => saveString('gptCompletionCache:$key', value);
+  setGptCompletionCache(String key, String value) =>
+      saveString('gptCompletionCache:$key', value);
 
   bool get optInAnalytics => getBool('optInAnalytics') ?? true;
 
@@ -89,19 +98,25 @@ class SharedPreferencesUtil {
 
   bool get coachNotificationIsChecked => getBool('coachIsChecked') ?? true;
 
-  set coachNotificationIsChecked(bool value) => saveBool('coachIsChecked', value);
+  set coachNotificationIsChecked(bool value) =>
+      saveBool('coachIsChecked', value);
 
-  bool get postMemoryNotificationIsChecked => getBool('postMemoryNotificationIsChecked') ?? true;
+  bool get postMemoryNotificationIsChecked =>
+      getBool('postMemoryNotificationIsChecked') ?? true;
 
-  set postMemoryNotificationIsChecked(bool value) => saveBool('postMemoryNotificationIsChecked', value);
+  set postMemoryNotificationIsChecked(bool value) =>
+      saveBool('postMemoryNotificationIsChecked', value);
 
-  bool get reconnectNotificationIsChecked => getBool('reconnectNotificationIsChecked') ?? true;
+  bool get reconnectNotificationIsChecked =>
+      getBool('reconnectNotificationIsChecked') ?? true;
 
-  set reconnectNotificationIsChecked(bool value) => saveBool('reconnectNotificationIsChecked', value);
+  set reconnectNotificationIsChecked(bool value) =>
+      saveBool('reconnectNotificationIsChecked', value);
 
   List<String> get recordingPaths => getStringList('recordingPaths') ?? [];
 
-  set recordingPaths(List<String> value) => saveStringList('recordingPaths', value);
+  set recordingPaths(List<String> value) =>
+      saveStringList('recordingPaths', value);
 
   bool get hasSpeakerProfile => getBool('hasSpeakerProfile') ?? false;
 
@@ -113,13 +128,15 @@ class SharedPreferencesUtil {
   }
 
   set pluginsList(List<Plugin> value) {
-    final List<String> plugins = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> plugins =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('pluginsList', plugins);
   }
 
   List<String> get pluginsEnabled => getStringList('pluginsEnabled') ?? [];
 
-  set pluginsEnabled(List<String> value) => saveStringList('pluginsEnabled', value);
+  set pluginsEnabled(List<String> value) =>
+      saveStringList('pluginsEnabled', value);
 
   enablePlugin(String value) {
     final List<String> pluginsId = pluginsEnabled;
@@ -144,17 +161,22 @@ class SharedPreferencesUtil {
     pluginsList = plugins;
   }
 
-  String get selectedChatPluginId => getString('selectedChatPluginId2') ?? 'no_selected';
+  String get selectedChatPluginId =>
+      getString('selectedChatPluginId2') ?? 'no_selected';
 
-  set selectedChatPluginId(String value) => saveString('selectedChatPluginId2', value);
+  set selectedChatPluginId(String value) =>
+      saveString('selectedChatPluginId2', value);
 
   List<TranscriptSegment> get transcriptSegments {
     final List<String> segments = getStringList('transcriptSegments') ?? [];
-    return segments.map((e) => TranscriptSegment.fromJson(jsonDecode(e))).toList();
+    return segments
+        .map((e) => TranscriptSegment.fromJson(jsonDecode(e)))
+        .toList();
   }
 
   set transcriptSegments(List<TranscriptSegment> value) {
-    final List<String> segments = value.map((e) => jsonEncode(e.toJson())).toList();
+    final List<String> segments =
+        value.map((e) => jsonEncode(e.toJson())).toList();
     saveStringList('transcriptSegments', segments);
   }
 
@@ -164,7 +186,8 @@ class SharedPreferencesUtil {
 
   String get lastDailySummaryDay => getString('lastDailySummaryDate') ?? '';
 
-  set lastDailySummaryDay(String value) => saveString('lastDailySummaryDate', value);
+  set lastDailySummaryDay(String value) =>
+      saveString('lastDailySummaryDate', value);
 
   Future<bool> saveString(String key, String value) async {
     return await _preferences?.setString(key, value) ?? false;
@@ -214,25 +237,35 @@ class SharedPreferencesUtil {
     return await _preferences?.clear() ?? false;
   }
 
-  set scriptCategoriesAndEmojisExecuted(bool value) => saveBool('scriptCategoriesAndEmojisExecuted', value);
+  set scriptCategoriesAndEmojisExecuted(bool value) =>
+      saveBool('scriptCategoriesAndEmojisExecuted', value);
 
-  bool get scriptCategoriesAndEmojisExecuted => getBool('scriptCategoriesAndEmojisExecuted') ?? false;
+  bool get scriptCategoriesAndEmojisExecuted =>
+      getBool('scriptCategoriesAndEmojisExecuted') ?? false;
 
-  set scriptMemoryVectorsExecuted(bool value) => saveBool('scriptMemoryVectorsExecuted2', value);
+  set scriptMemoryVectorsExecuted(bool value) =>
+      saveBool('scriptMemoryVectorsExecuted2', value);
 
-  bool get scriptMemoryVectorsExecuted => getBool('scriptMemoryVectorsExecuted2') ?? false;
+  bool get scriptMemoryVectorsExecuted =>
+      getBool('scriptMemoryVectorsExecuted2') ?? false;
 
-  set scriptMemoriesToObjectBoxExecuted(bool value) => saveBool('scriptMemoriesToObjectBoxExecuted', value);
+  set scriptMemoriesToObjectBoxExecuted(bool value) =>
+      saveBool('scriptMemoriesToObjectBoxExecuted', value);
 
-  bool get scriptMemoriesToObjectBoxExecuted => getBool('scriptMemoriesToObjectBoxExecuted') ?? false;
+  bool get scriptMemoriesToObjectBoxExecuted =>
+      getBool('scriptMemoriesToObjectBoxExecuted') ?? false;
 
-  set pageToShowFromNotification(int value) => saveInt('pageToShowFromNotification', value);
+  set pageToShowFromNotification(int value) =>
+      saveInt('pageToShowFromNotification', value);
 
-  int get pageToShowFromNotification => getInt('pageToShowFromNotification') ?? 1;
+  int get pageToShowFromNotification =>
+      getInt('pageToShowFromNotification') ?? 1;
 
-  set subPageToShowFromNotification(String value) => saveString('subPageToShowFromNotification', value);
+  set subPageToShowFromNotification(String value) =>
+      saveString('subPageToShowFromNotification', value);
 
-  String get subPageToShowFromNotification => getString('subPageToShowFromNotification') ?? '';
+  String get subPageToShowFromNotification =>
+      getString('subPageToShowFromNotification') ?? '';
 
   set calendarEnabled(bool value) => saveBool('calendarEnabled', value);
 
@@ -242,7 +275,8 @@ class SharedPreferencesUtil {
 
   String get calendarId => getString('calendarId') ?? '';
 
-  set calendarType(String value) => saveString('calendarType', value); // auto, manual
+  set calendarType(String value) =>
+      saveString('calendarType', value); // auto, manual
 
   String get calendarType => getString('calendarType') ?? 'auto';
 
@@ -274,13 +308,18 @@ class SharedPreferencesUtil {
 //
 // set userName(String value) => saveString('userName', value);
 
-  set locationPermissionRequested(bool value) => saveBool('locationPermissionRequested', value);
+  set locationPermissionRequested(bool value) =>
+      saveBool('locationPermissionRequested', value);
 
-  bool get locationPermissionRequested => getBool('locationPermissionRequested') ?? false;
+  bool get locationPermissionRequested =>
+      getBool('locationPermissionRequested') ?? false;
 }
 
-String getOpenAIApiKeyForUsage() =>
-    SharedPreferencesUtil().openAIApiKey.isEmpty ? Env.openAIAPIKey! : SharedPreferencesUtil().openAIApiKey;
+String getOpenAIApiKeyForUsage() => SharedPreferencesUtil().openAIApiKey.isEmpty
+    ? Env.openAIAPIKey!
+    : SharedPreferencesUtil().openAIApiKey;
 
 String getDeepgramApiKeyForUsage() =>
-    SharedPreferencesUtil().deepgramApiKey.isEmpty ? Env.deepgramApiKey! : SharedPreferencesUtil().deepgramApiKey;
+    SharedPreferencesUtil().deepgramApiKey.isEmpty
+        ? Env.deepgramApiKey!
+        : SharedPreferencesUtil().deepgramApiKey;

@@ -47,7 +47,12 @@ class CapturePage extends StatefulWidget {
 }
 
 class CapturePageState extends State<CapturePage>
-    with AutomaticKeepAliveClientMixin, WidgetsBindingObserver, PhoneRecorderMixin, WebSocketMixin, OpenGlassMixin {
+    with
+        AutomaticKeepAliveClientMixin,
+        WidgetsBindingObserver,
+        PhoneRecorderMixin,
+        WebSocketMixin,
+        OpenGlassMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -71,15 +76,20 @@ class CapturePageState extends State<CapturePage>
 
   late StreamSubscription<InternetStatus> _internetListener;
   bool isGlasses = false;
-  String conversationId = const Uuid().v4(); // used only for transcript segment plugins
+  String conversationId =
+      const Uuid().v4(); // used only for transcript segment plugins
 
   double? streamStartedAtSecond;
   DateTime? firstStreamReceivedAt;
   int? secondsMissedOnReconnect;
 
-  Future<void> initiateWebsocket([BleAudioCodec? audioCodec, int? sampleRate]) async {
+  Future<void> initiateWebsocket(
+      [BleAudioCodec? audioCodec, int? sampleRate]) async {
     // TODO: this will not work with opus for now, more complexity, unneeded rn
-    BleAudioCodec codec = audioCodec ?? (btDevice?.id == null ? BleAudioCodec.pcm8 : await getAudioCodec(btDevice!.id));
+    BleAudioCodec codec = audioCodec ??
+        (btDevice?.id == null
+            ? BleAudioCodec.pcm8
+            : await getAudioCodec(btDevice!.id));
     await initWebSocket(
       codec: codec,
       sampleRate: sampleRate,
@@ -87,7 +97,8 @@ class CapturePageState extends State<CapturePage>
         if (segments.isNotEmpty) {
           // means that it was a reconnection, so we need to reset
           streamStartedAtSecond = null;
-          secondsMissedOnReconnect = (DateTime.now().difference(firstStreamReceivedAt!).inSeconds);
+          secondsMissedOnReconnect =
+              (DateTime.now().difference(firstStreamReceivedAt!).inSeconds);
         }
         setState(() {});
       },
@@ -107,7 +118,8 @@ class CapturePageState extends State<CapturePage>
           debugPrint('newSegments: ${newSegments.last}');
           // TODO: small bug -> when memory A creates, and memory B starts, memory B will clean a lot more seconds than available,
           //  losing from the audio the first part of the recording. All other parts are fine.
-          audioStorage?.removeFramesRange(fromSecond: 0, toSecond: newSegments[0].start.toInt());
+          audioStorage?.removeFramesRange(
+              fromSecond: 0, toSecond: newSegments[0].start.toInt());
           firstStreamReceivedAt = DateTime.now();
         }
         streamStartedAtSecond ??= newSegments[0].start;
@@ -118,12 +130,15 @@ class CapturePageState extends State<CapturePage>
           toRemoveSeconds: streamStartedAtSecond ?? 0,
           toAddSeconds: secondsMissedOnReconnect ?? 0,
         );
-        triggerTranscriptSegmentReceivedEvents(newSegments, conversationId, sendMessageToChat: sendMessageToChat);
+        triggerTranscriptSegmentReceivedEvents(newSegments, conversationId,
+            sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
         debugPrint('Memory creation timer restarted');
         _memoryCreationTimer?.cancel();
-        _memoryCreationTimer = Timer(const Duration(seconds: quietSecondsForMemoryCreation), () => _createMemory());
+        _memoryCreationTimer = Timer(
+            const Duration(seconds: quietSecondsForMemoryCreation),
+            () => _createMemory());
         currentTranscriptStartedAt ??= DateTime.now();
         currentTranscriptFinishedAt = DateTime.now();
         setState(() {});
@@ -142,6 +157,7 @@ class CapturePageState extends State<CapturePage>
         audioStorage!.storeFramePacket(value);
         value.removeRange(0, 3);
         if (wsConnectionState == WebsocketConnectionStatus.connected) {
+          // debugPrint("Adding audio>>>>>>>>>>>>>");
           websocketChannel?.sink.add(value);
         }
       },
@@ -156,15 +172,18 @@ class CapturePageState extends State<CapturePage>
     debugPrint('startOpenGlass isGlasses: $isGlasses');
     if (!isGlasses) return;
 
-    await openGlassProcessing(btDevice!, (p) => setState(() {}), setHasTranscripts);
+    await openGlassProcessing(
+        btDevice!, (p) => setState(() {}), setHasTranscripts);
     closeWebSocket();
   }
 
-  void resetState({bool restartBytesProcessing = true, BTDeviceStruct? btDevice}) {
+  void resetState(
+      {bool restartBytesProcessing = true, BTDeviceStruct? btDevice}) {
     debugPrint('resetState: $restartBytesProcessing');
     _bleBytesStream?.cancel();
     _memoryCreationTimer?.cancel();
-    if (!restartBytesProcessing && (segments.isNotEmpty || photos.isNotEmpty)) _createMemory(forcedCreation: true);
+    if (!restartBytesProcessing && (segments.isNotEmpty || photos.isNotEmpty))
+      _createMemory(forcedCreation: true);
     if (btDevice != null) setState(() => this.btDevice = btDevice);
     if (restartBytesProcessing) {
       startOpenGlass();
@@ -192,7 +211,8 @@ class CapturePageState extends State<CapturePage>
     if (audioStorage?.frames.isNotEmpty == true) {
       try {
         var secs = !forcedCreation ? quietSecondsForMemoryCreation : 0;
-        file = (await audioStorage!.createWavFile(removeLastNSeconds: secs)).item1;
+        file =
+            (await audioStorage!.createWavFile(removeLastNSeconds: secs)).item1;
         uploadFile(file);
       } catch (e) {} // in case was a local recording and not a BLE recording
     }
@@ -211,7 +231,9 @@ class CapturePageState extends State<CapturePage>
     debugPrint(memory.toString());
     // TODO: backup when useful memory created, maybe less later, 2k memories occupy 3MB in the json payload
     if (memory != null && !memory.discarded) executeBackupWithUid();
-    if (memory != null && !memory.discarded && SharedPreferencesUtil().postMemoryNotificationIsChecked) {
+    if (memory != null &&
+        !memory.discarded &&
+        SharedPreferencesUtil().postMemoryNotificationIsChecked) {
       postMemoryCreationNotification(memory).then((r) {
         // TODO: this should be a plugin instead.
         debugPrint('Notification response: $r');
@@ -251,7 +273,8 @@ class CapturePageState extends State<CapturePage>
     debugPrint('_processCachedTranscript');
     var segments = SharedPreferencesUtil().transcriptSegments;
     if (segments.isEmpty) return;
-    String transcript = TranscriptSegment.segmentsAsString(SharedPreferencesUtil().transcriptSegments);
+    String transcript = TranscriptSegment.segmentsAsString(
+        SharedPreferencesUtil().transcriptSegments);
     processTranscriptContent(
       context,
       transcript,
@@ -294,7 +317,8 @@ class CapturePageState extends State<CapturePage>
         );
       }
     });
-    _internetListener = InternetConnection().onStatusChange.listen((InternetStatus status) {
+    _internetListener =
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
       switch (status) {
         case InternetStatus.connected:
           _internetStatus = InternetStatus.connected;
@@ -337,7 +361,8 @@ class CapturePageState extends State<CapturePage>
         );
       }
     } else {
-      PermissionStatus permissionGranted = await locationService.requestPermission();
+      PermissionStatus permissionGranted =
+          await locationService.requestPermission();
       if (permissionGranted == PermissionStatus.denied) {
         debugPrint('Location permission not granted');
       } else if (permissionGranted == PermissionStatus.deniedForever) {
@@ -363,9 +388,11 @@ class CapturePageState extends State<CapturePage>
       children: [
         ListView(children: [
           speechProfileWidget(context, setState, restartWebSocket),
-          ...getConnectionStateWidgets(context, _hasTranscripts, widget.device, wsConnectionState, _internetStatus),
+          ...getConnectionStateWidgets(context, _hasTranscripts, widget.device,
+              wsConnectionState, _internetStatus),
           getTranscriptWidget(memoryCreating, segments, photos, widget.device),
-          ...connectionStatusWidgets(context, segments, wsConnectionState, _internetStatus),
+          ...connectionStatusWidgets(
+              context, segments, wsConnectionState, _internetStatus),
           const SizedBox(height: 16)
         ]),
         getPhoneMicRecordingButton(_recordingToggled, recordingState)

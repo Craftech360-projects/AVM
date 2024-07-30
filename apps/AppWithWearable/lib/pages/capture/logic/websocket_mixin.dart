@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
+import 'package:friend_private/backend/database/transcript_segment.dart ' as db;
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/websockets.dart';
@@ -10,7 +11,8 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:web_socket_channel/io.dart';
 
 mixin WebSocketMixin {
-  WebsocketConnectionStatus wsConnectionState = WebsocketConnectionStatus.notConnected;
+  WebsocketConnectionStatus wsConnectionState =
+      WebsocketConnectionStatus.notConnected;
   bool websocketReconnecting = false;
   IOWebSocketChannel? websocketChannel;
   int _reconnectionAttempts = 0;
@@ -51,7 +53,8 @@ mixin WebSocketMixin {
     }
 
     if (_internetStatus == InternetStatus.disconnected) {
-      debugPrint('No internet connection. Waiting for connection to be restored.');
+      debugPrint(
+          'No internet connection. Waiting for connection to be restored.');
       _isConnecting = false;
       return;
     }
@@ -132,12 +135,15 @@ mixin WebSocketMixin {
     required Function(List<TranscriptSegment>) onMessageReceived,
     required BleAudioCodec codec,
   }) {
-    _internetListener = InternetConnection().onStatusChange.listen((InternetStatus status) {
+    _internetListener =
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
       _internetStatus = status;
       switch (status) {
         case InternetStatus.connected:
-          if (wsConnectionState != WebsocketConnectionStatus.connected && !_isConnecting) {
-            debugPrint('Internet connection restored. Attempting to reconnect WebSocket.');
+          if (wsConnectionState != WebsocketConnectionStatus.connected &&
+              !_isConnecting) {
+            debugPrint(
+                'Internet connection restored. Attempting to reconnect WebSocket.');
             _notifyInternetRestored();
             _reconnectionTimer?.cancel();
             _reconnectionAttempts = 0;
@@ -171,7 +177,9 @@ mixin WebSocketMixin {
     required Function(List<TranscriptSegment>) onMessageReceived,
     required BleAudioCodec codec,
   }) {
-    if (websocketReconnecting || _internetStatus == InternetStatus.disconnected || _isConnecting) return;
+    if (websocketReconnecting ||
+        _internetStatus == InternetStatus.disconnected ||
+        _isConnecting) return;
 
     websocketReconnecting = true;
     _reconnectionAttempts++;
@@ -185,7 +193,8 @@ mixin WebSocketMixin {
     // }
 
     int delaySeconds = _calculateReconnectDelay();
-    debugPrint('Scheduling reconnection attempt $_reconnectionAttempts in $delaySeconds seconds');
+    debugPrint(
+        'Scheduling reconnection attempt $_reconnectionAttempts in $delaySeconds seconds');
 
     _reconnectionTimer?.cancel();
     _reconnectionTimer = Timer(Duration(seconds: delaySeconds), () {
@@ -205,7 +214,8 @@ mixin WebSocketMixin {
   }
 
   int _calculateReconnectDelay() {
-    int delay = _initialReconnectDelay * pow(2, _reconnectionAttempts - 1).toInt();
+    int delay =
+        _initialReconnectDelay * pow(2, _reconnectionAttempts - 1).toInt();
     return min(delay, _maxReconnectDelay);
   }
 
@@ -249,7 +259,8 @@ mixin WebSocketMixin {
     createNotification(
       notificationId: 3,
       title: 'Internet Connection Lost',
-      body: 'Your device is offline. Transcription is paused until connection is restored.',
+      body:
+          'Your device is offline. Transcription is paused until connection is restored.',
     );
   }
 

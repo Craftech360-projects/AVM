@@ -83,7 +83,8 @@ void main() async {
           );
         }
         FlutterError.onError = (FlutterErrorDetails details) {
-          Zone.current.handleUncaughtError(details.exception, details.stack ?? StackTrace.empty);
+          Zone.current.handleUncaughtError(
+              details.exception, details.stack ?? StackTrace.empty);
         };
         Instabug.setColorTheme(ColorTheme.dark);
         _getRunApp(isAuth);
@@ -107,10 +108,12 @@ class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
 
-  static _MyAppState of(BuildContext context) => context.findAncestorStateOfType<_MyAppState>()!;
+  static _MyAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>()!;
 
   // The navigator key is necessary to navigate using static methods
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -148,7 +151,8 @@ class _MyAppState extends State<MyApp> {
           // ),
           snackBarTheme: SnackBarThemeData(
             backgroundColor: Colors.grey.shade900,
-            contentTextStyle: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
+            contentTextStyle: const TextStyle(
+                fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
           ),
           textTheme: TextTheme(
             titleLarge: const TextStyle(fontSize: 18, color: Colors.white),

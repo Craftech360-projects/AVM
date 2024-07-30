@@ -9,7 +9,13 @@ import 'package:friend_private/utils/ble/communication.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:web_socket_channel/io.dart';
 
-enum WebsocketConnectionStatus { notConnected, connected, failed, closed, error }
+enum WebsocketConnectionStatus {
+  notConnected,
+  connected,
+  failed,
+  closed,
+  error
+}
 
 String mapCodecToName(BleAudioCodec codec) {
   switch (codec) {
@@ -35,44 +41,106 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 ) async {
   debugPrint('Websocket Opening');
   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
-  var params = '?language=$recordingsLanguage&uid=${SharedPreferencesUtil().uid}&sample_rate=$sampleRate&codec=$codec';
-  IOWebSocketChannel channel = IOWebSocketChannel.connect(
-    Uri.parse('${Env.apiBaseUrl!.replaceAll('https', 'wss')}listen$params'),
+  final deepgramapikey = await getDeepgramApiKeyForUsage();
+  //final apiKey = "ab763c7874734209d21d838a62804b8119175f0c";
+  print("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
+
+  print("apikey , $deepgramapikey");
+  // 'ab763c7874734209d21d838a62804b8119175f0c'; // Replace with your actual API key
+
+  final uri = Uri.parse(
+    'wss://api.deepgram.com/v1/listen?encoding=linear16&sample_rate=$sampleRate&channels=1',
+    // 'ws://51e8-116-75-121-80.ngrok-free.app',
   );
-  channel.ready.then((_) {
-    channel.stream.listen(
-      (event) {
-        if (event == 'ping') return;
-        final segments = jsonDecode(event);
-        if (segments is List) {
-          if (segments.isEmpty) return;
-          onMessageReceived(segments.map((e) => TranscriptSegment.fromJson(e)).toList());
-        } else {
-          debugPrint(event.toString());
-        }
-      },
-      onError: (err, stackTrace) {
-        onWebsocketConnectionError(err); // error during connection
-        CrashReporting.reportHandledCrash(err!, stackTrace, level: NonFatalExceptionLevel.warning);
-      },
-      onDone: (() {
-        onWebsocketConnectionClosed(channel.closeCode, channel.closeReason);
-      }),
-      cancelOnError: true,
-    );
-  }).onError((err, stackTrace) {
-    // no closing reason or code
-    print(err);
-    CrashReporting.reportHandledCrash(err!, stackTrace, level: NonFatalExceptionLevel.warning);
-    onWebsocketConnectionFailed(err); // initial connection failed
-  });
+
+  debugPrint('Connecting to WebSocket URI: $uri');
 
   try {
+    IOWebSocketChannel channel = IOWebSocketChannel.connect(
+      uri,
+      headers: {
+        'Authorization': 'Token $deepgramapikey',
+        'Content-Type': 'audio/raw',
+      },
+    );
+
+    await channel.ready;
+
+    channel.ready.then((_) {
+      channel.stream.listen(
+        (event) {
+          if (event == 'ping') return;
+          try {
+            final data = jsonDecode(event);
+            if (data['type'] == 'Metadata') {
+              // debugPrint('Metadata received: $data');
+            } else if (data['type'] == 'Results') {
+              final alternatives = data['channel']['alternatives'];
+              if (alternatives is List && alternatives.isNotEmpty) {
+                final transcript = alternatives[0]['transcript'];
+                if (transcript is String && transcript.isNotEmpty) {
+                  // Create a single TranscriptSegment from the transcript
+                  final segment = TranscriptSegment(
+                    text: transcript,
+                    speaker:
+                        'SPEAKER_00', // or provide a default speaker if available
+                    isUser:
+                        false, // assuming this is not user speech, adjust as needed
+                    start: data['start'] ?? 0.0,
+                    end: (data['start'] ?? 0.0) + (data['duration'] ?? 0.0),
+                  );
+                  onMessageReceived([segment]);
+                } else {
+                  debugPrint('Empty or invalid transcript');
+                }
+              } else {
+                debugPrint('No alternatives found in the result');
+              }
+            } else {
+              debugPrint('Unknown event type: ${data['type']}');
+            }
+          } catch (e) {
+            debugPrint('Error processing event: $e');
+            debugPrint('Raw event: $event');
+          }
+        },
+        onError: (err, stackTrace) {
+          onWebsocketConnectionError(err);
+          CrashReporting.reportHandledCrash(
+            err,
+            stackTrace,
+            level: NonFatalExceptionLevel.warning,
+          );
+        },
+        onDone: () {
+          onWebsocketConnectionClosed(channel.closeCode, channel.closeReason);
+        },
+        cancelOnError: true,
+      );
+    }).onError((err, stackTrace) {
+      // no closing reason or code
+      print(err);
+      CrashReporting.reportHandledCrash(
+        err!,
+        stackTrace,
+        level: NonFatalExceptionLevel.warning,
+      );
+      onWebsocketConnectionFailed(err); // initial connection failed
+    });
+
     await channel.ready;
     debugPrint('Websocket Opened');
     onWebsocketConnectionSuccess();
-  } catch (err) {}
-  return channel;
+    return channel;
+  } catch (err, stackTrace) {
+    onWebsocketConnectionFailed(err);
+    CrashReporting.reportHandledCrash(
+      err!,
+      stackTrace,
+      level: NonFatalExceptionLevel.warning,
+    );
+    return null;
+  }
 }
 
 Future<IOWebSocketChannel?> streamingTranscript({

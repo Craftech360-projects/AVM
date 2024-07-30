@@ -12,7 +12,8 @@ class ConnectedDevice extends StatefulWidget {
   final BTDeviceStruct? device;
   final int batteryLevel;
 
-  const ConnectedDevice({super.key, required this.device, required this.batteryLevel});
+  const ConnectedDevice(
+      {super.key, required this.device, required this.batteryLevel});
 
   @override
   State<ConnectedDevice> createState() => _ConnectedDeviceState();
@@ -24,7 +25,8 @@ class _DeviceInfo {
   String hardwareRevision;
   String manufacturerName;
 
-  _DeviceInfo(this.modelNumber, this.firmwareRevision, this.hardwareRevision, this.manufacturerName);
+  _DeviceInfo(this.modelNumber, this.firmwareRevision, this.hardwareRevision,
+      this.manufacturerName);
 
   static Future<_DeviceInfo> getDeviceInfo(BTDeviceStruct? device) async {
     var modelNumber = 'Friend';
@@ -32,7 +34,9 @@ class _DeviceInfo {
     var hardwareRevision = 'Seeed Xiao BLE Sense';
     var manufacturerName = 'Based Hardware';
 
-    if (device == null) return _DeviceInfo(modelNumber, firmwareRevision, hardwareRevision, manufacturerName);
+    if (device == null)
+      return _DeviceInfo(
+          modelNumber, firmwareRevision, hardwareRevision, manufacturerName);
 
     String deviceId = device.id;
 
@@ -175,7 +179,8 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
               ),
               const SizedBox(height: 32),
               Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                   decoration: BoxDecoration(
                     border: const GradientBoxBorder(
                       gradient: LinearGradient(colors: [
@@ -190,18 +195,21 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                   ),
                   child: TextButton(
                       onPressed: () {
-                        if (widget.device != null) bleDisconnectDevice(widget.device!);
+                        if (widget.device != null)
+                          bleDisconnectDevice(widget.device!);
                         Navigator.of(context).pop();
                         SharedPreferencesUtil().deviceId = '';
                         SharedPreferencesUtil().deviceName = '';
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Your Friend is ${widget.device == null ? "unpaired" : "disconnected"}   😔'),
+                          content: Text(
+                              'Your Friend is ${widget.device == null ? "unpaired" : "disconnected"}   😔'),
                         ));
                         MixpanelManager().disconnectFriendClicked();
                       },
                       child: Text(
                         widget.device == null ? "Unpair" : "Disconnect",
-                        style: const TextStyle(color: Colors.white, fontSize: 16),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 16),
                       )))
             ],
           );
