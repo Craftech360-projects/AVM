@@ -56,7 +56,10 @@ List<Widget> getSummaryWidgets(
           ),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           child: Text(
-            structured.category.isEmpty ? ' ' : structured.category[0].toUpperCase() + structured.category.substring(1),
+            structured.category.isEmpty
+                ? ' '
+                : structured.category[0].toUpperCase() +
+                    structured.category.substring(1),
             style: Theme.of(context).textTheme.titleLarge,
           ),
         )
@@ -67,15 +70,19 @@ List<Widget> getSummaryWidgets(
         ? const SizedBox.shrink()
         : Text(
             'Overview',
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 26),
+            style:
+                Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 26),
           ),
     memory.discarded
         ? const SizedBox.shrink()
-        : ((memory.geolocation.target != null) ? const SizedBox(height: 8) : const SizedBox.shrink()),
+        : ((memory.geolocation.target != null)
+            ? const SizedBox(height: 8)
+            : const SizedBox.shrink()),
     memory.discarded ? const SizedBox.shrink() : const SizedBox(height: 8),
     memory.discarded
         ? const SizedBox.shrink()
-        : _getEditTextField(memory, overviewController, editingOverview, focusOverviewField),
+        : _getEditTextField(
+            memory, overviewController, editingOverview, focusOverviewField),
     memory.discarded ? const SizedBox.shrink() : const SizedBox(height: 40),
     structured.actionItems.isNotEmpty
         ? Row(
@@ -84,19 +91,25 @@ List<Widget> getSummaryWidgets(
             children: [
               Text(
                 'Action Items',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 26),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontSize: 26),
               ),
               IconButton(
                   onPressed: () {
-                    Clipboard.setData(
-                        ClipboardData(text: '- ${structured.actionItems.map((e) => e.description).join('\n- ')}'));
+                    Clipboard.setData(ClipboardData(
+                        text:
+                            '- ${structured.actionItems.map((e) => e.description).join('\n- ')}'));
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       content: Text('Action items copied to clipboard'),
                       duration: Duration(seconds: 2),
                     ));
-                    MixpanelManager().copiedMemoryDetails(memory, source: 'Action Items');
+                    MixpanelManager()
+                        .copiedMemoryDetails(memory, source: 'Action Items');
                   },
-                  icon: const Icon(Icons.copy_rounded, color: Colors.white, size: 20))
+                  icon: const Icon(Icons.copy_rounded,
+                      color: Colors.white, size: 20))
             ],
           )
         : const SizedBox.shrink(),
@@ -108,13 +121,15 @@ List<Widget> getSummaryWidgets(
           children: [
             Padding(
                 padding: const EdgeInsets.only(top: 4.0),
-                child: Icon(Icons.task_alt, color: Colors.grey.shade300, size: 20)),
+                child: Icon(Icons.task_alt,
+                    color: Colors.grey.shade300, size: 20)),
             const SizedBox(width: 12),
             Expanded(
               child: SelectionArea(
                 child: Text(
                   item.description,
-                  style: TextStyle(color: Colors.grey.shade300, fontSize: 16, height: 1.3),
+                  style: TextStyle(
+                      color: Colors.grey.shade300, fontSize: 16, height: 1.3),
                 ),
               ),
             ),
@@ -122,7 +137,9 @@ List<Widget> getSummaryWidgets(
         ),
       );
     }),
-    structured.actionItems.isNotEmpty ? const SizedBox(height: 40) : const SizedBox.shrink(),
+    structured.actionItems.isNotEmpty
+        ? const SizedBox(height: 40)
+        : const SizedBox.shrink(),
     structured.events.isNotEmpty
         ? Row(
             children: [
@@ -130,7 +147,10 @@ List<Widget> getSummaryWidgets(
               const SizedBox(width: 8),
               Text(
                 'Events',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 26),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleLarge!
+                    .copyWith(fontSize: 26),
               )
             ],
           )
@@ -140,7 +160,8 @@ List<Widget> getSummaryWidgets(
         contentPadding: EdgeInsets.zero,
         title: Text(
           event.title,
-          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+          style: const TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 4.0),
@@ -154,7 +175,8 @@ List<Widget> getSummaryWidgets(
               ? null
               : () {
                   var calEnabled = SharedPreferencesUtil().calendarEnabled;
-                  var calSelected = SharedPreferencesUtil().calendarId.isNotEmpty;
+                  var calSelected =
+                      SharedPreferencesUtil().calendarId.isNotEmpty;
                   if (!calEnabled || !calSelected) {
                     routeToPage(context, const CalendarPage());
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -176,15 +198,19 @@ List<Widget> getSummaryWidgets(
                     content: Text('Event added to calendar'),
                   ));
                 },
-          icon: Icon(event.created ? Icons.check : Icons.add, color: Colors.white),
+          icon: Icon(event.created ? Icons.check : Icons.add,
+              color: Colors.white),
         ),
       );
     }),
-    structured.events.isNotEmpty ? const SizedBox(height: 40) : const SizedBox.shrink(),
+    structured.events.isNotEmpty
+        ? const SizedBox(height: 40)
+        : const SizedBox.shrink(),
   ];
 }
 
-_getEditTextField(Memory memory, TextEditingController controller, bool enabled, FocusNode focusNode) {
+_getEditTextField(Memory memory, TextEditingController controller, bool enabled,
+    FocusNode focusNode) {
   if (memory.discarded) return const SizedBox.shrink();
   return enabled
       ? TextField(
@@ -197,12 +223,14 @@ _getEditTextField(Memory memory, TextEditingController controller, bool enabled,
             contentPadding: EdgeInsets.all(0),
           ),
           enabled: enabled,
-          style: TextStyle(color: Colors.grey.shade300, fontSize: 15, height: 1.3),
+          style:
+              TextStyle(color: Colors.grey.shade300, fontSize: 15, height: 1.3),
         )
       : SelectionArea(
           child: Text(
             controller.text,
-            style: TextStyle(color: Colors.grey.shade300, fontSize: 15, height: 1.3),
+            style: TextStyle(
+                color: Colors.grey.shade300, fontSize: 15, height: 1.3),
           ),
         );
 }
@@ -241,12 +269,15 @@ List<Widget> getPluginsWidgets(
             ),
             child: MaterialButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (c) => const PluginsPage()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (c) => const PluginsPage()));
               },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
               child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                  child: Text('Enable Plugins', style: TextStyle(color: Colors.white, fontSize: 16))),
+                  child: Text('Enable Plugins',
+                      style: TextStyle(color: Colors.white, fontSize: 16))),
             ),
           ),
         ],
@@ -257,7 +288,9 @@ List<Widget> getPluginsWidgets(
   return [
     // TODO: include a way to trigger specific plugins
     if (memory.pluginsResponse.isNotEmpty && !memory.discarded) ...[
-      memory.structured.target!.actionItems.isEmpty ? const SizedBox(height: 40) : const SizedBox.shrink(),
+      memory.structured.target!.actionItems.isEmpty
+          ? const SizedBox(height: 40)
+          : const SizedBox.shrink(),
       Text(
         'Plugins 🧑‍💻',
         style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 26),
@@ -265,7 +298,8 @@ List<Widget> getPluginsWidgets(
       const SizedBox(height: 24),
       ...memory.pluginsResponse.mapIndexed((i, pluginResponse) {
         if (pluginResponse.content.length < 5) return const SizedBox.shrink();
-        Plugin? plugin = pluginsList.firstWhereOrNull((element) => element.id == pluginResponse.pluginId);
+        Plugin? plugin = pluginsList.firstWhereOrNull(
+            (element) => element.id == pluginResponse.pluginId);
         return Container(
           margin: const EdgeInsets.only(bottom: 40),
           child: Column(
@@ -295,17 +329,24 @@ List<Widget> getPluginsWidgets(
                           plugin.description,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(color: Colors.grey, fontSize: 14),
+                          style:
+                              const TextStyle(color: Colors.grey, fontSize: 14),
                         ),
                       ),
                       trailing: IconButton(
-                        icon: const Icon(Icons.copy_rounded, color: Colors.white, size: 20),
+                        icon: const Icon(Icons.copy_rounded,
+                            color: Colors.white, size: 20),
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: utf8.decode(pluginResponse.content.trim().codeUnits)));
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text('Plugin response copied to clipboard'),
+                          Clipboard.setData(ClipboardData(
+                              text: utf8.decode(
+                                  pluginResponse.content.trim().codeUnits)));
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content:
+                                Text('Plugin response copied to clipboard'),
                           ));
-                          MixpanelManager().copiedMemoryDetails(memory, source: 'Plugin Response');
+                          MixpanelManager().copiedMemoryDetails(memory,
+                              source: 'Plugin Response');
                         },
                       ),
                     )
@@ -315,11 +356,13 @@ List<Widget> getPluginsWidgets(
                 isExpanded: pluginResponseExpanded[i],
                 toggleExpand: () {
                   if (!pluginResponseExpanded[i]) {
-                    MixpanelManager().pluginResultExpanded(memory, pluginResponse.pluginId ?? '');
+                    MixpanelManager().pluginResultExpanded(
+                        memory, pluginResponse.pluginId ?? '');
                   }
                   onItemToggled(i);
                 },
-                style: TextStyle(color: Colors.grey.shade300, fontSize: 15, height: 1.3),
+                style: TextStyle(
+                    color: Colors.grey.shade300, fontSize: 15, height: 1.3),
                 maxLines: 6,
                 // Change this to 6 if you want the initial max lines to be 6
                 linkColor: Colors.white,
@@ -337,50 +380,50 @@ List<Widget> getGeolocationWidgets(Memory memory, BuildContext context) {
   return memory.geolocation.target == null || memory.discarded
       ? []
       : [
-          Text(
-            'Taken at',
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 20),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${memory.geolocation.target!.address}',
-            style: TextStyle(color: Colors.grey.shade300),
-          ),
-          const SizedBox(height: 8),
-          memory.geolocation.target != null
-              ? GestureDetector(
-                  onTap: () async {
-                    // TODO: open google maps URL if available
-                    // if (await canLaunchUrl(
-                    //         Uri.parse(MapsUtil.getGoogleMapsPlaceUrl(memory.geolocation.target!.googlePlaceId!))) ==
-                    //     true) {
-                    //   await launchUrl(
-                    //       Uri.parse(MapsUtil.getGoogleMapsPlaceUrl(memory.geolocation.target!.googlePlaceId!)));
-                    // }
-                    MapsUtil.launchMap(memory.geolocation.target!.latitude!, memory.geolocation.target!.longitude!);
-                  },
-                  child: CachedNetworkImage(
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        margin: const EdgeInsets.only(top: 10, bottom: 8),
-                        height: 200,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
-                    imageUrl: MapsUtil.getMapImageUrl(
-                      memory.geolocation.target!.latitude!,
-                      memory.geolocation.target!.longitude!,
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
-          const SizedBox(height: 8),
+          // Text(
+          //   'Taken at',
+          //   style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 20),
+          // ),
+          // const SizedBox(height: 8),
+          // Text(
+          //   '${memory.geolocation.target!.address}',
+          //   style: TextStyle(color: Colors.grey.shade300),
+          // ),
+          // const SizedBox(height: 8),
+          // memory.geolocation.target != null
+          //     ? GestureDetector(
+          //         onTap: () async {
+          //           // TODO: open google maps URL if available
+          //           // if (await canLaunchUrl(
+          //           //         Uri.parse(MapsUtil.getGoogleMapsPlaceUrl(memory.geolocation.target!.googlePlaceId!))) ==
+          //           //     true) {
+          //           //   await launchUrl(
+          //           //       Uri.parse(MapsUtil.getGoogleMapsPlaceUrl(memory.geolocation.target!.googlePlaceId!)));
+          //           // }
+          //           MapsUtil.launchMap(memory.geolocation.target!.latitude!, memory.geolocation.target!.longitude!);
+          //         },
+          //         child: CachedNetworkImage(
+          //           imageBuilder: (context, imageProvider) {
+          //             return Container(
+          //               margin: const EdgeInsets.only(top: 10, bottom: 8),
+          //               height: 200,
+          //               decoration: BoxDecoration(
+          //                 borderRadius: BorderRadius.circular(16),
+          //                 image: DecorationImage(
+          //                   image: imageProvider,
+          //                   fit: BoxFit.cover,
+          //                 ),
+          //               ),
+          //             );
+          //           },
+          //           imageUrl: MapsUtil.getMapImageUrl(
+          //             memory.geolocation.target!.latitude!,
+          //             memory.geolocation.target!.longitude!,
+          //           ),
+          //         ),
+          //       )
+          //     : const SizedBox.shrink(),
+          // const SizedBox(height: 8),
         ];
 }
 
@@ -419,21 +462,26 @@ showOptionsBottomSheet(
                 children: displayDevTools
                     ? [
                         ListTile(
-                          title: const Text('Trigger Memory Created Integration'),
+                          title:
+                              const Text('Trigger Memory Created Integration'),
                           leading: loadingPluginIntegrationTest
                               ? const SizedBox(
                                   height: 24,
                                   width: 24,
                                   child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   ),
                                 )
                               : const Icon(Icons.send_to_mobile_outlined),
                           onTap: () {
-                            setModalState(() => loadingPluginIntegrationTest = true);
+                            setModalState(
+                                () => loadingPluginIntegrationTest = true);
                             // TODO: if not set, show dialog to set URL or take them to settings.
 
-                            webhookOnMemoryCreatedCall(memory, returnRawBody: true).then((response) {
+                            webhookOnMemoryCreatedCall(memory,
+                                    returnRawBody: true)
+                                .then((response) {
                               showDialog(
                                 context: context,
                                 builder: (c) => getDialog(
@@ -446,16 +494,19 @@ showOptionsBottomSheet(
                                   singleButton: true,
                                 ),
                               );
-                              setModalState(() => loadingPluginIntegrationTest = false);
+                              setModalState(
+                                  () => loadingPluginIntegrationTest = false);
                             });
                           },
                         ),
                         ListTile(
                           title: const Text('Test a Memory Prompt'),
                           leading: const Icon(Icons.chat),
-                          trailing: const Icon(Icons.arrow_forward_ios, size: 20),
+                          trailing:
+                              const Icon(Icons.arrow_forward_ios, size: 20),
                           onTap: () {
-                            routeToPage(context, TestPromptsPage(memory: memory));
+                            routeToPage(
+                                context, TestPromptsPage(memory: memory));
                           },
                         ),
                       ]
@@ -467,8 +518,10 @@ showOptionsBottomSheet(
                               ? null
                               : () {
                                   // share loading
-                                  MixpanelManager().memoryShareButtonClick(memory);
-                                  Share.share(memory.structured.target!.toString());
+                                  MixpanelManager()
+                                      .memoryShareButtonClick(memory);
+                                  Share.share(
+                                      memory.structured.target!.toString());
                                   HapticFeedback.lightImpact();
                                 },
                         ),
@@ -479,14 +532,18 @@ showOptionsBottomSheet(
                                   width: 24,
                                   height: 24,
                                   child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.deepPurple),
                                   ))
-                              : const Icon(Icons.refresh, color: Colors.deepPurple),
+                              : const Icon(Icons.refresh,
+                                  color: Colors.deepPurple),
                           onTap: loadingReprocessMemory
                               ? null
-                              : () => reprocessMemory(context, setModalState, memory, () {
+                              : () => reprocessMemory(
+                                      context, setModalState, memory, () {
                                     setModalState(() {
-                                      loadingReprocessMemory = !loadingReprocessMemory;
+                                      loadingReprocessMemory =
+                                          !loadingReprocessMemory;
                                     });
                                   }),
                         ),
@@ -507,7 +564,9 @@ showOptionsBottomSheet(
                                         insetPadding: EdgeInsets.zero,
                                         backgroundColor: Colors.transparent,
                                         alignment:
-                                            const AlignmentDirectional(0.0, 0.0).resolve(Directionality.of(context)),
+                                            const AlignmentDirectional(0.0, 0.0)
+                                                .resolve(
+                                                    Directionality.of(context)),
                                         child: ConfirmDeletionWidget(
                                             memory: memory,
                                             onDelete: () {
@@ -531,7 +590,8 @@ showOptionsBottomSheet(
                                   Icons.developer_mode,
                                   color: Colors.white,
                                 ),
-                                trailing: const Icon(Icons.arrow_forward_ios, size: 20),
+                                trailing: const Icon(Icons.arrow_forward_ios,
+                                    size: 20),
                               )
                             : const SizedBox.shrink(),
                       ],
@@ -542,7 +602,8 @@ showOptionsBottomSheet(
   debugPrint('showBottomSheet result: $result');
 }
 
-_getMemoryPromptDialogContent(BuildContext context, TextEditingController controller) {
+_getMemoryPromptDialogContent(
+    BuildContext context, TextEditingController controller) {
   return SizedBox(
     height: 200,
     child: Column(

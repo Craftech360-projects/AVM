@@ -226,7 +226,7 @@ class Structured {
           try {
             structured.events.add(Event(
               event['title'] ?? '',
-              DateTime.parse(event['start_time'] ?? ''),
+              DateTime.parse(event['start_time'] ?? '').toUtc(),
               event['duration'] ?? 30,
               description: event['description'] ?? '',
               created: false,

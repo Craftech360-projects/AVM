@@ -21,7 +21,8 @@ class MemoryDetailPage extends StatefulWidget {
   State<MemoryDetailPage> createState() => _MemoryDetailPageState();
 }
 
-class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProviderStateMixin {
+class _MemoryDetailPageState extends State<MemoryDetailPage>
+    with TickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final focusTitleField = FocusNode();
   final focusOverviewField = FocusNode();
@@ -43,7 +44,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProvider
     var segments = widget.memory.transcriptSegments;
     for (var i = 0; i < segments.length; i++) {
       for (var j = i + 1; j < segments.length; j++) {
-        if (segments[i].start > segments[j].end || segments[i].end > segments[j].start) {
+        if (segments[i].start > segments[j].end ||
+            segments[i].end > segments[j].start) {
           canDisplaySeconds = false;
           break;
         }
@@ -55,11 +57,13 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProvider
   void initState() {
     _determineCanDisplaySeconds();
     // triggerMemoryCreatedEvents(widget.memory);
-    canDisplaySeconds = TranscriptSegment.canDisplaySeconds(widget.memory.transcriptSegments);
+    canDisplaySeconds =
+        TranscriptSegment.canDisplaySeconds(widget.memory.transcriptSegments);
     structured = widget.memory.structured.target!;
     titleController.text = structured.title;
     overviewController.text = structured.overview;
-    pluginResponseExpanded = List.filled(widget.memory.pluginsResponse.length, false);
+    pluginResponseExpanded =
+        List.filled(widget.memory.pluginsResponse.length, false);
     _controller = TabController(length: 2, vsync: this, initialIndex: 1);
     _controller!.addListener(() => setState(() {}));
     super.initState();
@@ -103,7 +107,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProvider
               ),
               IconButton(
                 onPressed: () {
-                  showOptionsBottomSheet(context, setState, widget.memory, _reProcessMemory);
+                  showOptionsBottomSheet(
+                      context, setState, widget.memory, _reProcessMemory);
                 },
                 icon: const Icon(Icons.more_horiz),
               ),
@@ -118,14 +123,17 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProvider
                     borderRadius: BorderRadius.all(Radius.circular(32)),
                     side: BorderSide(color: Colors.grey, width: 1)),
                 onPressed: () {
-                  Clipboard.setData(ClipboardData(text: widget.memory.getTranscript(generate: true)));
+                  Clipboard.setData(ClipboardData(
+                      text: widget.memory.getTranscript(generate: true)));
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                     content: Text('Transcript copied to clipboard'),
                     duration: Duration(seconds: 1),
                   ));
-                  MixpanelManager().copiedMemoryDetails(widget.memory, source: 'Transcript');
+                  MixpanelManager()
+                      .copiedMemoryDetails(widget.memory, source: 'Transcript');
                 },
-                child: const Icon(Icons.copy_rounded, color: Colors.white, size: 20),
+                child: const Icon(Icons.copy_rounded,
+                    color: Colors.white, size: 20),
               )
             : null,
         body: Column(
@@ -136,12 +144,20 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProvider
               padding: EdgeInsets.zero,
               indicatorPadding: EdgeInsets.zero,
               controller: _controller,
-              labelStyle: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 18),
+              labelStyle: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(fontSize: 18),
               tabs: [
-                Tab(text: widget.memory.type == MemoryType.image ? 'Photos' : 'Transcript'),
+                Tab(
+                    text: widget.memory.type == MemoryType.image
+                        ? 'Photos'
+                        : 'Transcript'),
                 const Tab(text: 'Summary')
               ],
-              indicator: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(16)),
+              indicator: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(16)),
             ),
             Expanded(
               child: Padding(
@@ -152,7 +168,9 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProvider
                   children: [
                     ListView(
                       shrinkWrap: true,
-                      children: widget.memory.type == MemoryType.image ? _getImagesWidget() : _getTranscriptWidgets(),
+                      children: widget.memory.type == MemoryType.image
+                          ? _getImagesWidget()
+                          : _getTranscriptWidgets(),
                     ),
                     ListView(
                       shrinkWrap: true,
@@ -169,7 +187,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProvider
                             widget.memory,
                             pluginsList,
                             pluginResponseExpanded,
-                            (i) => setState(() => pluginResponseExpanded[i] = !pluginResponseExpanded[i]),
+                            (i) => setState(() => pluginResponseExpanded[i] =
+                                !pluginResponseExpanded[i]),
                           ) +
                           getGeolocationWidgets(widget.memory, context),
                     ),
@@ -191,9 +210,11 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProvider
               text: widget.memory.getTranscript(),
               maxLines: 10000,
               linkColor: Colors.grey.shade300,
-              style: TextStyle(color: Colors.grey.shade300, fontSize: 15, height: 1.3),
+              style: TextStyle(
+                  color: Colors.grey.shade300, fontSize: 15, height: 1.3),
               isExpanded: isTranscriptExpanded,
-              toggleExpand: () => setState(() => isTranscriptExpanded = !isTranscriptExpanded),
+              toggleExpand: () =>
+                  setState(() => isTranscriptExpanded = !isTranscriptExpanded),
             )
           : TranscriptWidget(
               segments: widget.memory.transcriptSegments,
@@ -205,17 +226,21 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProvider
   }
 
   List<Widget> _getImagesWidget() {
-    var photos = widget.memory.photos.map((e) => Tuple2(e.base64, e.description)).toList();
+    var photos = widget.memory.photos
+        .map((e) => Tuple2(e.base64, e.description))
+        .toList();
     print('Images length ${photos.length}');
     return [PhotosGridComponent(photos: photos), const SizedBox(height: 32)];
   }
 
-  _reProcessMemory(BuildContext context, StateSetter setModalState, Memory memory, Function changeLoadingState) async {
+  _reProcessMemory(BuildContext context, StateSetter setModalState,
+      Memory memory, Function changeLoadingState) async {
     Memory? newMemory = await reProcessMemory(
       context,
       memory,
-      () => ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Error while processing memory. Please try again later.'))),
+      () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content:
+              Text('Error while processing memory. Please try again later.'))),
       changeLoadingState,
     );
 
@@ -224,7 +249,9 @@ class _MemoryDetailPageState extends State<MemoryDetailPage> with TickerProvider
     titleController.text = newMemory.structured.target!.title;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Memory processed! 🚀', style: TextStyle(color: Colors.white))),
+      const SnackBar(
+          content: Text('Memory processed! 🚀',
+              style: TextStyle(color: Colors.white))),
     );
     Navigator.pop(context, true);
   }
