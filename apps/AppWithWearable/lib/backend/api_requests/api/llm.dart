@@ -69,7 +69,7 @@ Future<dynamic> llamaApiCall({
   print("Inside LLaMA API call");
 
   // Define the URL for the LLaMA API
-  const url = 'https://9931-116-75-121-80.ngrok-free.app/v1/chat/completions';
+  const url = 'https://9cd8-124-40-247-18.ngrok-free.app/v1/chat/completions';
 
   // Define the headers for the request
   final headers = {
@@ -78,8 +78,7 @@ Future<dynamic> llamaApiCall({
 
   // Construct the body of the request
   final body = jsonEncode({
-    'model':
-        'model-identifier', // Replace with specific model identifier if needed
+    // Replace with specific model identifier if needed
     'messages': [
       {
         'role': 'system',
@@ -103,8 +102,7 @@ Future<dynamic> llamaApiCall({
       },
       {
         'role': 'user',
-        'content':
-            " Speaker 0 to check if Deepgram API recordings can be viewed in their account for security purposes.- Speaker 0 to test OpenAI and Claude for audio-to-text conversion. Speaker 0 to explore the use of a local server for cost-effective operations. Speaker 0 to integrate a to-do list and calendar with notifications. Speaker 0 to work on hardware and software communication, including adding a small speaker for audio notifications. Speaker 0 to implement word-specific triggers for reminders and tasks.Speaker 0 to explore Whisper and 11 Labs models for text-to-speech conversion. Speaker 0 to ensure the application has a unique user interface to avoid criticism.Speaker 0 to test the AVM app before wider distribution.",
+        'content': " {$message}",
       },
     ],
     'temperature': temperature,
@@ -117,8 +115,13 @@ Future<dynamic> llamaApiCall({
     var response =
         await http.post(Uri.parse(url), headers: headers, body: body);
     if (response.statusCode == 200) {
-      print("Success: ${response.statusCode}");
-      return jsonDecode(response.body);
+      print("Success: ${response.statusCode}, ${response.body}");
+      // print(">>>> $jsonDecode(response.body)");
+      // return jsonDecode(response.body);
+      var decodedResponse = jsonDecode(response.body);
+      // Extract and return only the content
+      print(decodedResponse['choices'][0]['message']['content']);
+      return decodedResponse['choices'][0]['message']['content'];
     } else {
       print("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
       return null;
@@ -151,9 +154,9 @@ Future<String> executeGptPrompt(String? prompt,
       temperature: 0.7, // Adjust temperature as needed
       maxTokens: 1000 // Adjust maxTokens as needed or set to -1 for default
       );
-  print(">>>>>>>>>>>>>>>>???");
+  print(">>>>>>>>>>>>>>>>??? $response");
   debugPrint('executeGptPrompt response: $response');
   prefs.setGptCompletionCache(promptBase64, response);
-  debugPrint('executeGptPrompt response: $response');
+  //debugPrint('executeGptPrompt response: $response');
   return response;
 }

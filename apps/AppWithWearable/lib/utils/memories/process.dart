@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/pinecone.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
@@ -59,16 +60,30 @@ Future<SummaryResult?> _retrieveStructure(
       summary = await summarizePhotos(photos);
     } else {
       summary = await summarizeMemory(transcript, [], ignoreCache: ignoreCache);
+      debugPrint("its reached here ${summary.structured}");
+      debugPrint("Structured content:");
+      debugPrint("Title: ${summary.structured.title}");
+      debugPrint("Overview: ${summary.structured.overview}");
+      debugPrint("Action Items: ${summary.structured.actionItems}");
+      debugPrint("Category: ${summary.structured.category}");
+      debugPrint("Emoji: ${summary.structured.emoji}");
+      debugPrint("Events: ${summary.structured.events}");
+
+      debugPrint("Plugins Response:");
     }
   } catch (e, stacktrace) {
     debugPrint('Error: $e');
-    CrashReporting.reportHandledCrash(e, stacktrace, level: NonFatalExceptionLevel.error, userAttributes: {
-      'transcript_length': transcript.length.toString(),
-      'transcript_words': transcript.split(' ').length.toString(),
-      'language': SharedPreferencesUtil().recordingsLanguage,
-      'developer_mode_enabled': SharedPreferencesUtil().devModeEnabled.toString(),
-      'dev_mode_has_api_key': (SharedPreferencesUtil().openAIApiKey != '').toString(),
-    });
+    CrashReporting.reportHandledCrash(e, stacktrace,
+        level: NonFatalExceptionLevel.error,
+        userAttributes: {
+          'transcript_length': transcript.length.toString(),
+          'transcript_words': transcript.split(' ').length.toString(),
+          'language': SharedPreferencesUtil().recordingsLanguage,
+          'developer_mode_enabled':
+              SharedPreferencesUtil().devModeEnabled.toString(),
+          'dev_mode_has_api_key':
+              (SharedPreferencesUtil().openAIApiKey != '').toString(),
+        });
     return null;
   }
   return summary;
@@ -86,13 +101,17 @@ Future<Memory> memoryCreationBlock(
   Geolocation? geolocation,
   List<Tuple2<String, String>> photos,
 ) async {
-  SummaryResult? summarizeResult = await _retrieveStructure(context, transcript, photos, retrievedFromCache);
+  SummaryResult? summarizeResult =
+      await _retrieveStructure(context, transcript, photos, retrievedFromCache);
   bool failed = false;
   if (summarizeResult == null) {
-    summarizeResult = await _retrieveStructure(context, transcript, photos, retrievedFromCache, ignoreCache: true);
+    summarizeResult = await _retrieveStructure(
+        context, transcript, photos, retrievedFromCache,
+        ignoreCache: true);
     if (summarizeResult == null) {
       failed = true;
-      summarizeResult = SummaryResult(Structured('', '', emoji: '😢', category: 'failed'), []);
+      summarizeResult = SummaryResult(
+          Structured('', '', emoji: '😢', category: 'failed'), []);
       if (!retrievedFromCache) {
         InstabugLog.logError('Unable to create memory structure.');
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -112,11 +131,12 @@ Future<Memory> memoryCreationBlock(
       SharedPreferencesUtil().deviceId.isNotEmpty &&
       SharedPreferencesUtil().calendarType == 'auto') {
     for (var event in structured.events) {
-      event.created =
-          await CalendarUtil().createEvent(event.title, event.startsAt, event.duration, description: event.description);
+      event.created = await CalendarUtil().createEvent(
+          event.title, event.startsAt, event.duration,
+          description: event.description);
     }
   }
-
+  debugPrint("going to save ,saving memory");
   Memory memory = await finalizeMemoryRecord(
     transcript,
     transcriptSegments,
@@ -144,7 +164,8 @@ Future<Memory> memoryCreationBlock(
     } else if (structured.title.isNotEmpty) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('New memory created! 🚀', style: TextStyle(color: Colors.white)),
+        content: Text('New memory created! 🚀',
+            style: TextStyle(color: Colors.white)),
         duration: Duration(seconds: 4),
       ));
     }

@@ -57,7 +57,7 @@ Future<SummaryResult> summarizeMemory(
     For the category, classify the conversation into one of the available categories.
     For Calendar Events, include a list of events extracted from the conversation, that the user must have on his calendar. For date context, this conversation happened on ${(conversationDate ?? DateTime.now()).toIso8601String()}.
         
-    Transcript: ```${transcript.trim()}```
+    Transcript: ${transcript.trim()}
     
     The output should be formatted as a JSON instance that conforms to the JSON schema below.
     
@@ -65,20 +65,37 @@ Future<SummaryResult> summarizeMemory(
     the object {"foo": ["bar", "baz"]} is a well-formatted instance of the schema. The object {"properties": {"foo": ["bar", "baz"]}} is not well-formatted.
     
     Here is the output schema:
-    ```
+    
     {"properties": {"title": {"title": "Title", "description": "A title/name for this conversation", "default": "", "type": "string"}, "overview": {"title": "Overview", "description": "A brief summary with the main topics discussed, make sure to capture the key details.", "default": "", "type": "string"}, "action_items": {"title": "Action Items", "description": "A list of action items from the conversation", "default": [], "type": "array", "items": {"type": "string"}}, "category": {"description": "A category for this memory", "default": "other", "allOf": [{"\$ref": "#/definitions/CategoryEnum"}]}, "emoji": {"title": "Emoji", "description": "An emoji to represent the memory", "default": "\ud83e\udde0", "type": "string"}, "events": {"title": "Events", "description": "A list of events extracted from the conversation, that the user must have on his calendar.", "default": [], "type": "array", "items": {"\$ref": "#/definitions/CalendarEvent"}}}, "definitions": {"CategoryEnum": {"title": "CategoryEnum", "description": "An enumeration.", "enum": ["personal", "education", "health", "finance", "legal", "phylosophy", "spiritual", "science", "entrepreneurship", "parenting", "romantic", "travel", "inspiration", "technology", "business", "social", "work", "other"], "type": "string"}, "CalendarEvent": {"title": "CalendarEvent", "type": "object", "properties": {"title": {"title": "Title", "description": "The title of the event", "type": "string"}, "description": {"title": "Description", "description": "A brief description of the event", "default": "", "type": "string"}, "startsAt": {"title": "Starts At", "description": "The start date and time of the event", "type": "string", "format": "date-time"}, "duration": {"title": "Duration", "description": "The duration of the event in minutes", "default": 30, "type": "integer"}}, "required": ["title", "startsAt"]}}}
-    ```
+    
     '''
           .replaceAll('     ', '')
           .replaceAll('    ', '')
           .trim();
-  debugPrint(prompt);
+  //debugPrint(prompt);
   var structuredResponse =
       extractJson(await executeGptPrompt(prompt, ignoreCache: ignoreCache));
-  var structured = Structured.fromJson(jsonDecode(structuredResponse));
-  if (structured.title.isEmpty) return SummaryResult(structured, []);
-  var pluginsResponse = await executePlugins(transcript);
-  return SummaryResult(structured, pluginsResponse);
+
+  debugPrint("got response, $structuredResponse");
+  try {
+    //here need tostructured unt his format
+//Title:
+//  Overview:
+//  Action Items: []
+//  Category: other
+//  Emoji:
+//  Events: []
+//  Plugins Response:
+    var structured = Structured.fromJson(await jsonDecode(structuredResponse));
+    debugPrint("structured, $structured");
+    if (structured.title.isEmpty) return SummaryResult(structured, []);
+    var pluginsResponse = await executePlugins(transcript);
+    //var pluginsResponse = await executePlugins(transcript);
+    return SummaryResult(structured, pluginsResponse);
+  } catch (e) {
+    debugPrint("error, $e");
+    return SummaryResult(Structured('', ''), []);
+  }
 }
 
 Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
@@ -197,6 +214,7 @@ Future<List<String>> getSemanticSummariesForEmbedding(String transcript) async {
       .trim();
   // debugPrint(prompt);
   var response = await executeGptPrompt(prompt);
+
   return response
       .split('###')
       .map((e) => e.trim())

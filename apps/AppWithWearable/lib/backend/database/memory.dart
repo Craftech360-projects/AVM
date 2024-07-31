@@ -48,10 +48,13 @@ class Memory {
     this.finishedAt,
   });
 
-  MemoryType get type => transcript.isNotEmpty ? MemoryType.audio : MemoryType.image;
+  MemoryType get type =>
+      transcript.isNotEmpty ? MemoryType.audio : MemoryType.image;
 
-  static String memoriesToString(List<Memory> memories, {bool includeTranscript = false}) => memories
-      .map((e) => '''
+  static String memoriesToString(List<Memory> memories,
+          {bool includeTranscript = false}) =>
+      memories
+          .map((e) => '''
       ${e.createdAt.toIso8601String().split('.')[0]}
       Title: ${e.structured.target!.title}
       Summary: ${e.structured.target!.overview}
@@ -60,9 +63,9 @@ class Memory {
       Category: ${e.structured.target!.category}
       ${includeTranscript ? 'Transcript:\n${e.transcript}' : ''}
       '''
-          .replaceAll('      ', '')
-          .trim())
-      .join('\n\n');
+              .replaceAll('      ', '')
+              .trim())
+          .join('\n\n');
 
   static Memory fromJson(Map<String, dynamic> json) {
     var memory = Memory(
@@ -70,8 +73,11 @@ class Memory {
       json['transcript'],
       json['discarded'],
       recordingFilePath: json['recordingFilePath'],
-      startedAt: json['startedAt'] != null ? DateTime.parse(json['startedAt']) : null,
-      finishedAt: json['finishedAt'] != null ? DateTime.parse(json['finishedAt']) : null,
+      startedAt:
+          json['startedAt'] != null ? DateTime.parse(json['startedAt']) : null,
+      finishedAt: json['finishedAt'] != null
+          ? DateTime.parse(json['finishedAt'])
+          : null,
     );
     memory.structured.target = Structured.fromJson(json['structured']);
     if (json['pluginsResponse'] != null) {
@@ -105,10 +111,12 @@ class Memory {
   String getTranscript({int? maxCount, bool generate = false}) {
     try {
       var transcript = generate && transcriptSegments.isNotEmpty
-          ? TranscriptSegment.segmentsAsString(transcriptSegments, includeTimestamps: true)
+          ? TranscriptSegment.segmentsAsString(transcriptSegments,
+              includeTimestamps: true)
           : this.transcript;
       var decoded = utf8.decode(transcript.codeUnits);
-      if (maxCount != null) return decoded.substring(0, min(maxCount, decoded.length));
+      if (maxCount != null)
+        return decoded.substring(0, min(maxCount, decoded.length));
       return decoded;
     } catch (e) {
       return transcript;
@@ -124,9 +132,12 @@ class Memory {
       'transcript': transcript,
       'recordingFilePath': recordingFilePath,
       'structured': structured.target!.toJson(),
-      'pluginsResponse': pluginsResponse.map<Map<String, String?>>((response) => response.toJson()).toList(),
+      'pluginsResponse': pluginsResponse
+          .map<Map<String, String?>>((response) => response.toJson())
+          .toList(),
       'discarded': discarded,
-      'transcriptSegments': transcriptSegments.map((segment) => segment.toJson()).toList(),
+      'transcriptSegments':
+          transcriptSegments.map((segment) => segment.toJson()).toList(),
       'photos': photos.map((photo) => photo.toJson()).toList(),
     };
   }
@@ -148,7 +159,8 @@ class Structured {
   @Backlink('structured')
   final events = ToMany<Event>();
 
-  Structured(this.title, this.overview, {this.id = 0, this.emoji = '', this.category = 'other'});
+  Structured(this.title, this.overview,
+      {this.id = 0, this.emoji = '', this.category = 'other'});
 
   getEmoji() {
     try {
@@ -159,31 +171,69 @@ class Structured {
     }
   }
 
+  // static Structured fromJson(Map<String, dynamic> json) {
+  //   var structured = Structured(
+  //     json['title'],
+  //     json['overview'],
+  //     emoji: json['emoji'],
+  //     category: json['category'],
+  //   );
+  //   var aItems = json['actionItems'] ?? json['action_items'];
+  //   if (aItems != null) {
+  //     for (String item in aItems) {
+  //       if (item.isEmpty) continue;
+  //       structured.actionItems.add(ActionItem(item));
+  //     }
+  //   }
+
+  //   if (json['events'] != null) {
+  //     for (dynamic event in json['events']) {
+  //       if (event.isEmpty) continue;
+  //       structured.events.add(Event(
+  //         event['title'],
+  //         DateTime.parse(event['startsAt']),
+  //         event['duration'],
+  //         description: event['description'] ?? '',
+  //         created: false,
+  //       ));
+  //     }
+  //   }
+  //   return structured;
+  // }
+
   static Structured fromJson(Map<String, dynamic> json) {
     var structured = Structured(
-      json['title'],
-      json['overview'],
-      emoji: json['emoji'],
-      category: json['category'],
+      json['title'] ?? '',
+      json['overview'] ?? '',
+      emoji: json['emoji'] ?? '',
+      category: json['category'] ?? 'other',
     );
-    var aItems = json['actionItems'] ?? json['action_items'];
-    if (aItems != null) {
-      for (String item in aItems) {
-        if (item.isEmpty) continue;
-        structured.actionItems.add(ActionItem(item));
+    var aItems = json['actionItems'] ?? json['action_items'] ?? [];
+    if (aItems is List) {
+      for (var item in aItems) {
+        if (item is String && item.isNotEmpty) {
+          structured.actionItems.add(ActionItem(item));
+        }
       }
     }
 
-    if (json['events'] != null) {
-      for (dynamic event in json['events']) {
-        if (event.isEmpty) continue;
-        structured.events.add(Event(
-          event['title'],
-          DateTime.parse(event['startsAt']),
-          event['duration'],
-          description: event['description'] ?? '',
-          created: false,
-        ));
+    var events = json['events'] ?? [];
+    if (events is List) {
+      for (var event in events) {
+        if (event is Map<String, dynamic>) {
+          try {
+            structured.events.add(Event(
+              event['title'] ?? '',
+              DateTime.parse(event['startsAt'] ?? ''),
+              event['duration'] ?? 0,
+              description: event['description'] ?? '',
+              created: false,
+            ));
+          } catch (e) {
+            print('Error parsing event: $e');
+            // Skip this event if there's an error
+          }
+        }
       }
     }
     return structured;
@@ -264,7 +314,8 @@ class Event {
 
   final structured = ToOne<Structured>();
 
-  Event(this.title, this.startsAt, this.duration, {this.description = '', this.created = false, this.id = 0});
+  Event(this.title, this.startsAt, this.duration,
+      {this.description = '', this.created = false, this.id = 0});
 
   toJson() {
     return {
