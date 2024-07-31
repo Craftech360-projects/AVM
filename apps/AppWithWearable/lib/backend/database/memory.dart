@@ -208,10 +208,12 @@ class Structured {
       emoji: json['emoji'] ?? '',
       category: json['category'] ?? 'other',
     );
-    var aItems = json['actionItems'] ?? json['action_items'] ?? [];
+    var aItems = json['action_items'] ?? [];
     if (aItems is List) {
       for (var item in aItems) {
-        if (item is String && item.isNotEmpty) {
+        if (item is Map<String, dynamic>) {
+          structured.actionItems.add(ActionItem(item['task'] ?? ''));
+        } else if (item is String && item.isNotEmpty) {
           structured.actionItems.add(ActionItem(item));
         }
       }
@@ -224,8 +226,8 @@ class Structured {
           try {
             structured.events.add(Event(
               event['title'] ?? '',
-              DateTime.parse(event['startsAt'] ?? ''),
-              event['duration'] ?? 0,
+              DateTime.parse(event['start_time'] ?? ''),
+              event['duration'] ?? 30,
               description: event['description'] ?? '',
               created: false,
             ));

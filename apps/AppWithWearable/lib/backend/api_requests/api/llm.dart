@@ -80,26 +80,7 @@ Future<dynamic> llamaApiCall({
   final body = jsonEncode({
     // Replace with specific model identifier if needed
     'messages': [
-      {
-        'role': 'system',
-        'content':
-            '''Your task is to provide structure and clarity to the recording transcription of a conversation. Use English for your response. Format your response as a JSON object with the following structure:
-        {
-          "title": "Main topic of the conversation",
-          "overview": "Condensed summary with main topics discussed",
-          "action_items": ["List of commitments or tasks"],
-          "category": "Classification of the conversation",
-          "events": [
-            {
-              "title": "Event title",
-              "description": "Brief description",
-              "startsAt": "Start date and time in ISO format",
-              "duration": "Duration in minutes (integer)"
-            }
-          ]
-        }
-        The date context for this conversation is ${DateTime.now().toIso8601String()}.'''
-      },
+      {'role': 'system', 'content': ''' '''},
       {
         'role': 'user',
         'content': " {$message}",
