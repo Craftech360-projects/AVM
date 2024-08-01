@@ -46,7 +46,8 @@ class HomePageWrapper extends StatefulWidget {
   State<HomePageWrapper> createState() => _HomePageWrapperState();
 }
 
-class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingObserver, TickerProviderStateMixin {
+class _HomePageWrapperState extends State<HomePageWrapper>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   ForegroundUtil foregroundUtil = ForegroundUtil();
   TabController? _controller;
   List<Widget> screens = [Container(), const SizedBox(), const SizedBox()];
@@ -69,7 +70,10 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
   final _upgrader = MyUpgrader(debugLogging: false, debugDisplayOnce: false);
 
   _initiateMemories() async {
-    memories = MemoryProvider().getMemoriesOrdered(includeDiscarded: true).reversed.toList();
+    memories = MemoryProvider()
+        .getMemoriesOrdered(includeDiscarded: true)
+        .reversed
+        .toList();
     setState(() {});
   }
 
@@ -79,16 +83,20 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
   }
 
   _setupHasSpeakerProfile() async {
-    SharedPreferencesUtil().hasSpeakerProfile = await userHasSpeakerProfile(SharedPreferencesUtil().uid);
-    print('_setupHasSpeakerProfile: ${SharedPreferencesUtil().hasSpeakerProfile}');
-    MixpanelManager().setUserProperty('Speaker Profile', SharedPreferencesUtil().hasSpeakerProfile);
+    SharedPreferencesUtil().hasSpeakerProfile =
+        await userHasSpeakerProfile(SharedPreferencesUtil().uid);
+    print(
+        '_setupHasSpeakerProfile: ${SharedPreferencesUtil().hasSpeakerProfile}');
+    MixpanelManager().setUserProperty(
+        'Speaker Profile', SharedPreferencesUtil().hasSpeakerProfile);
     setState(() {});
   }
 
   _edgeCasePluginNotAvailable() {
     var selectedChatPlugin = SharedPreferencesUtil().selectedChatPluginId;
     var plugin = plugins.firstWhereOrNull((p) => selectedChatPlugin == p.id);
-    if (selectedChatPlugin != 'no_selected' && (plugin == null || !plugin.worksWithChat())) {
+    if (selectedChatPlugin != 'no_selected' &&
+        (plugin == null || !plugin.worksWithChat())) {
       SharedPreferencesUtil().selectedChatPluginId = 'no_selected';
     }
   }
@@ -169,11 +177,13 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
       payload: {'path': '/chat'},
     );
     if (SharedPreferencesUtil().subPageToShowFromNotification != '') {
-      final subPageRoute = SharedPreferencesUtil().subPageToShowFromNotification;
+      final subPageRoute =
+          SharedPreferencesUtil().subPageToShowFromNotification;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         MyApp.navigatorKey.currentState?.push(
           MaterialPageRoute(
-            builder: (context) => screensWithRespectToPath[subPageRoute] as Widget,
+            builder: (context) =>
+                screensWithRespectToPath[subPageRoute] as Widget,
           ),
         );
       });
@@ -189,7 +199,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
         deviceId: _device!.id,
         onDisconnected: () {
           debugPrint('onDisconnected');
-          capturePageKey.currentState?.resetState(restartBytesProcessing: false);
+          capturePageKey.currentState
+              ?.resetState(restartBytesProcessing: false);
           setState(() => _device = null);
           InstabugLog.logInfo('Friend Device Disconnected');
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
@@ -201,7 +212,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
           MixpanelManager().deviceDisconnected();
           foregroundUtil.stopForegroundTask();
         },
-        onConnected: ((d) => _onConnected(d, initiateConnectionListener: false)));
+        onConnected: ((d) =>
+            _onConnected(d, initiateConnectionListener: false)));
   }
 
   _startForeground() async {
@@ -211,14 +223,16 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
     debugPrint('_startForeground: $result');
   }
 
-  _onConnected(BTDeviceStruct? connectedDevice, {bool initiateConnectionListener = true}) {
+  _onConnected(BTDeviceStruct? connectedDevice,
+      {bool initiateConnectionListener = true}) {
     debugPrint('_onConnected: $connectedDevice');
     if (connectedDevice == null) return;
     clearNotification(1);
     _device = connectedDevice;
     if (initiateConnectionListener) _initiateConnectionListener();
     _initiateBleBatteryListener();
-    capturePageKey.currentState?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
+    capturePageKey.currentState
+        ?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
     MixpanelManager().deviceConnected();
     SharedPreferencesUtil().deviceId = _device!.id;
     SharedPreferencesUtil().deviceName = _device!.name;
@@ -239,7 +253,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
   }
 
   _tabChange(int index) {
-    MixpanelManager().bottomNavigationTabClicked(['Memories', 'Device', 'Chat'][index]);
+    MixpanelManager()
+        .bottomNavigationTabClicked(['Memories', 'Device', 'Chat'][index]);
     FocusScope.of(context).unfocus();
     setState(() {
       _controller!.index = index;
@@ -251,7 +266,9 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
     return WithForegroundTask(
         child: MyUpgradeAlert(
       upgrader: _upgrader,
-      dialogStyle: Platform.isIOS ? UpgradeDialogStyle.cupertino : UpgradeDialogStyle.material,
+      dialogStyle: Platform.isIOS
+          ? UpgradeDialogStyle.cupertino
+          : UpgradeDialogStyle.material,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
         body: GestureDetector(
@@ -287,7 +304,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                   ],
                 ),
               ),
-              if (chatTextFieldFocusNode.hasFocus || memoriesTextFieldFocusNode.hasFocus)
+              if (chatTextFieldFocusNode.hasFocus ||
+                  memoriesTextFieldFocusNode.hasFocus)
                 const SizedBox.shrink()
               else
                 Align(
@@ -315,12 +333,16 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                           child: MaterialButton(
                             onPressed: () => _tabChange(0),
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 20, bottom: 20),
+                              padding:
+                                  const EdgeInsets.only(top: 20, bottom: 20),
                               child: Text('Memories',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      color: _controller!.index == 0 ? Colors.white : Colors.grey, fontSize: 16)),
+                                      color: _controller!.index == 0
+                                          ? Colors.white
+                                          : Colors.grey,
+                                      fontSize: 16)),
                             ),
                           ),
                         ),
@@ -336,7 +358,10 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      color: _controller!.index == 1 ? Colors.white : Colors.grey, fontSize: 16)),
+                                      color: _controller!.index == 1
+                                          ? Colors.white
+                                          : Colors.grey,
+                                      fontSize: 16)),
                             ),
                           ),
                         ),
@@ -344,12 +369,16 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                           child: MaterialButton(
                             onPressed: () => _tabChange(2),
                             child: Padding(
-                              padding: const EdgeInsets.only(top: 20, bottom: 20),
+                              padding:
+                                  const EdgeInsets.only(top: 20, bottom: 20),
                               child: Text('Chat',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      color: _controller!.index == 2 ? Colors.white : Colors.grey, fontSize: 16)),
+                                      color: _controller!.index == 2
+                                          ? Colors.white
+                                          : Colors.grey,
+                                      fontSize: 16)),
                             ),
                           ),
                         ),
@@ -380,7 +409,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                               MixpanelManager().batteryIndicatorClicked();
                             },
                       child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
                           decoration: BoxDecoration(
                             color: Colors.transparent,
                             borderRadius: BorderRadius.circular(10),
@@ -422,7 +452,10 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                           routeToPage(context, const ConnectDevicePage());
                           MixpanelManager().connectFriendClicked();
                         } else {
-                          await routeToPage(context, const ConnectedDevice(device: null, batteryLevel: 0));
+                          await routeToPage(
+                              context,
+                              const ConnectedDevice(
+                                  device: null, batteryLevel: 0));
                         }
                         setState(() {});
                       },
@@ -434,7 +467,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                           side: const BorderSide(color: Colors.white, width: 1),
                         ),
                       ),
-                      child: Image.asset('assets/images/logo_transparent.png', width: 25, height: 25),
+                      child: Image.asset('assets/images/logo_transparent.png',
+                          width: 25, height: 25),
                     ),
               _controller!.index == 2
                   ? Padding(
@@ -449,25 +483,37 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                           menuMaxHeight: 350,
                           value: SharedPreferencesUtil().selectedChatPluginId,
                           onChanged: (s) async {
-                            if ((s == 'no_selected' && SharedPreferencesUtil().pluginsEnabled.isEmpty) ||
+                            if ((s == 'no_selected' &&
+                                    SharedPreferencesUtil()
+                                        .pluginsEnabled
+                                        .isEmpty) ||
                                 s == 'enable') {
-                              await routeToPage(context, const PluginsPage(filterChatOnly: true));
+                              await routeToPage(context,
+                                  const PluginsPage(filterChatOnly: true));
                               setState(() {});
                               return;
                             }
-                            print('Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
-                            if (s == null || s == SharedPreferencesUtil().selectedChatPluginId) return;
+                            print(
+                                'Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
+                            if (s == null ||
+                                s ==
+                                    SharedPreferencesUtil()
+                                        .selectedChatPluginId) return;
 
                             SharedPreferencesUtil().selectedChatPluginId = s;
-                            var plugin = plugins.firstWhereOrNull((p) => p.id == s);
-                            chatPageKey.currentState?.sendInitialPluginMessage(plugin);
+                            var plugin =
+                                plugins.firstWhereOrNull((p) => p.id == s);
+                            chatPageKey.currentState
+                                ?.sendInitialPluginMessage(plugin);
                             setState(() {});
                           },
                           icon: Container(),
                           alignment: Alignment.center,
                           dropdownColor: Colors.black,
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
-                          underline: Container(height: 0, color: Colors.transparent),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
+                          underline:
+                              Container(height: 0, color: Colors.transparent),
                           isExpanded: false,
                           itemHeight: 48,
                           padding: EdgeInsets.zero,
@@ -490,7 +536,8 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                   // TODO: this fails like 10 times, connects reconnects, until it finally works.
                   if (GrowthbookUtil().hasStreamingTranscriptFeatureOn() &&
                       (language != SharedPreferencesUtil().recordingsLanguage ||
-                          hasSpeech != SharedPreferencesUtil().hasSpeakerProfile)) {
+                          hasSpeech !=
+                              SharedPreferencesUtil().hasSpeakerProfile)) {
                     capturePageKey.currentState?.restartWebSocket();
                   }
                   setState(() {});
@@ -515,15 +562,22 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                 const Icon(size: 20, Icons.chat, color: Colors.white),
                 const SizedBox(width: 10),
                 Text(
-                  SharedPreferencesUtil().pluginsEnabled.isEmpty ? 'Enable Plugins   ' : 'Select a plugin',
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16),
+                  SharedPreferencesUtil().pluginsEnabled.isEmpty
+                      ? 'Enable Plugins   '
+                      : 'Select a plugin',
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16),
                 )
               ],
             ),
           )
         ] +
         plugins
-            .where((p) => SharedPreferencesUtil().pluginsEnabled.contains(p.id) && p.worksWithChat())
+            .where((p) =>
+                SharedPreferencesUtil().pluginsEnabled.contains(p.id) &&
+                p.worksWithChat())
             .map<DropdownMenuItem<String>>((Plugin plugin) {
           return DropdownMenuItem<String>(
             value: plugin.id,
@@ -541,7 +595,10 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
                   plugin.name.length > 18
                       ? '${plugin.name.substring(0, 18)}...'
                       : plugin.name + ' ' * (18 - plugin.name.length),
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16),
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16),
                 )
               ],
             ),
@@ -559,7 +616,11 @@ class _HomePageWrapperState extends State<HomePageWrapper> with WidgetsBindingOb
               child: Icon(Icons.star, color: Colors.purpleAccent),
             ),
             SizedBox(width: 8),
-            Text('Enable Plugins   ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16))
+            Text('Enable Plugins   ',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16))
           ],
         ),
       ));

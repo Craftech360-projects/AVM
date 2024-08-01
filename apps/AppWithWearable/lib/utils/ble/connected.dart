@@ -26,7 +26,8 @@ StreamSubscription<OnConnectionStateChangedEvent>? getConnectionStateListener({
   required Function(BTDeviceStruct) onConnected,
 }) {
   return FlutterBluePlus.events.onConnectionStateChanged.listen((event) async {
-    debugPrint('onConnectionStateChanged: ${event.device.remoteId.str} ${event.connectionState}');
+    debugPrint(
+        'onConnectionStateChanged: ${event.device.remoteId.str} ${event.connectionState}');
     if (event.device.remoteId.str == deviceId) {
       if (event.connectionState == BluetoothConnectionState.disconnected) {
         onDisconnected();

@@ -69,7 +69,7 @@ Future<dynamic> llamaApiCall({
   print("Inside LLaMA API call");
 
   // Define the URL for the LLaMA API
-  const url = 'https://9cd8-124-40-247-18.ngrok-free.app/v1/chat/completions';
+  const url = 'https://db1f-124-40-247-18.ngrok-free.app/v1/chat/completions';
 
   // Define the headers for the request
   final headers = {

@@ -152,8 +152,9 @@ class Plugin {
     );
   }
 
+//here getting plugins image
   String getImageUrl() =>
-      'https://raw.githubusercontent.com/Craftech360-projects/AVM/test-plugin$image';
+      'https://raw.githubusercontent.com/Craftech360-projects/AVM/main/$image';
 
   Map<String, dynamic> toJson() {
     return {

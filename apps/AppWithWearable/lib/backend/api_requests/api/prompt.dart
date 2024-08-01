@@ -373,6 +373,8 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
 }
 
 String qaRagPrompt(String context, List<Message> messages, {Plugin? plugin}) {
+  print("Your name is>>>>>>>>>>>>>>>>>>>: ${plugin!.name}");
+
   var prompt = '''
     You are an assistant for question-answering tasks. Use the following pieces of retrieved context and the conversation history to continue the conversation.
     If you don't know the answer, just say that you didn't find any related information or you that don't know. Use three sentences maximum and keep the answer concise.

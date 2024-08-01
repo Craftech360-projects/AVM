@@ -35,14 +35,16 @@ getConnectionStateWidgets(
           ? _getNoFriendConnectedYet(context)
           : const ScanningUI(
               string1: 'Looking for Friend wearable',
-              string2: 'Locating your Friend device. Keep it near your phone for pairing',
+              string2:
+                  'Locating your Friend device. Keep it near your phone for pairing',
             ),
     ];
   }
 
   bool isWifiDisconnected = internetStatus == InternetStatus.disconnected;
   bool isWebsocketError =
-      wsConnectionState == WebsocketConnectionStatus.failed || wsConnectionState == WebsocketConnectionStatus.error;
+      wsConnectionState == WebsocketConnectionStatus.failed ||
+          wsConnectionState == WebsocketConnectionStatus.error;
 
   return [
     const Center(child: DeviceAnimationWidget(sizeMultiplier: 0.7)),
@@ -55,7 +57,9 @@ getConnectionStateWidgets(
                   context,
                   () => Navigator.pop(context),
                   () => Navigator.pop(context),
-                  isWifiDisconnected ? 'Internet Connection Lost' : 'Connection Issue',
+                  isWifiDisconnected
+                      ? 'Internet Connection Lost'
+                      : 'Connection Issue',
                   isWifiDisconnected
                       ? 'Your device is offline. Transcription is paused until connection is restored.'
                       : 'Unable to connect to the transcript service. Please restart the app or contact support if the problem persists.',
@@ -108,10 +112,12 @@ getConnectionStateWidgets(
           ),
           const SizedBox(width: 24),
           isWifiDisconnected
-              ? Lottie.asset('assets/lottie_animations/no_internet.json', height: 56, width: 56)
+              ? Lottie.asset('assets/lottie_animations/no_internet.json',
+                  height: 56, width: 56)
               : isWebsocketError
                   // ? Lottie.network('https://lottie.host/8223dbf8-8a50-4d48-8e37-0b845b1f1094/TQcT5w5Mn4.json', height: 48, width: 48)
-                  ? Lottie.asset('assets/lottie_animations/no_internet.json', height: 56, width: 56)
+                  ? Lottie.asset('assets/lottie_animations/no_internet.json',
+                      height: 56, width: 56)
                   // TODO: find a better animation for server
                   : Container(
                       width: 10,
@@ -164,7 +170,7 @@ _getNoFriendConnectedYet(BuildContext context) {
               ),
               child: TextButton(
                   onPressed: () {
-                    launchUrl(Uri.parse('https://basedhardware.com'));
+                    launchUrl(Uri.parse('https://craftech360.com'));
                     MixpanelManager().getFriendClicked();
                   },
                   child: const Text(
@@ -174,7 +180,8 @@ _getNoFriendConnectedYet(BuildContext context) {
           const SizedBox(height: 4),
           TextButton(
             onPressed: () async {
-              Navigator.of(context).push(MaterialPageRoute(builder: (c) => const ConnectDevicePage()));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (c) => const ConnectDevicePage()));
               MixpanelManager().connectFriendClicked();
             },
             style: ElevatedButton.styleFrom(
@@ -205,17 +212,21 @@ _getNoFriendConnectedYet(BuildContext context) {
   );
 }
 
-speechProfileWidget(BuildContext context, StateSetter setState, Function restartWebSocket) {
-  return !SharedPreferencesUtil().hasSpeakerProfile && SharedPreferencesUtil().useTranscriptServer
+speechProfileWidget(
+    BuildContext context, StateSetter setState, Function restartWebSocket) {
+  return !SharedPreferencesUtil().hasSpeakerProfile &&
+          SharedPreferencesUtil().useTranscriptServer
       ? Stack(
           children: [
             GestureDetector(
               onTap: () async {
                 MixpanelManager().speechProfileCapturePageClicked();
-                bool hasSpeakerProfile = SharedPreferencesUtil().hasSpeakerProfile;
+                bool hasSpeakerProfile =
+                    SharedPreferencesUtil().hasSpeakerProfile;
                 await routeToPage(context, const SpeakerIdPage());
                 setState(() {});
-                if (hasSpeakerProfile != SharedPreferencesUtil().hasSpeakerProfile &&
+                if (hasSpeakerProfile !=
+                        SharedPreferencesUtil().hasSpeakerProfile &&
                     GrowthbookUtil().hasStreamingTranscriptFeatureOn()) {
                   restartWebSocket();
                 }
@@ -225,7 +236,8 @@ speechProfileWidget(BuildContext context, StateSetter setState, Function restart
                   color: Colors.grey.shade900,
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
                 ),
-                margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                margin:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                 padding: const EdgeInsets.all(16),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,7 +265,8 @@ speechProfileWidget(BuildContext context, StateSetter setState, Function restart
               child: Container(
                 width: 12,
                 height: 12,
-                decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                decoration: const BoxDecoration(
+                    color: Colors.red, shape: BoxShape.circle),
               ),
             ),
           ],
@@ -288,7 +301,8 @@ connectionStatusWidgets(
 
   bool isWifiDisconnected = internetStatus == InternetStatus.disconnected;
   bool isWebsocketError =
-      wsConnectionState == WebsocketConnectionStatus.failed || wsConnectionState == WebsocketConnectionStatus.error;
+      wsConnectionState == WebsocketConnectionStatus.failed ||
+          wsConnectionState == WebsocketConnectionStatus.error;
   if (!isWifiDisconnected && !isWebsocketError) return [];
   return [
     GestureDetector(
@@ -299,7 +313,9 @@ connectionStatusWidgets(
             context,
             () => Navigator.pop(context),
             () => Navigator.pop(context),
-            isWifiDisconnected ? 'Internet Connection Lost' : 'Connection Issue',
+            isWifiDisconnected
+                ? 'Internet Connection Lost'
+                : 'Connection Issue',
             isWifiDisconnected
                 ? 'Your device is offline. Transcription is paused until connection is restored.'
                 : 'Unable to connect to the transcript service. Please restart the app or contact support if the problem persists.',
@@ -326,8 +342,10 @@ connectionStatusWidgets(
             Padding(
               padding: const EdgeInsets.only(bottom: 6),
               child: isWifiDisconnected
-                  ? Lottie.asset('assets/lottie_animations/no_internet.json', height: 48, width: 48)
-                  : Lottie.asset('assets/lottie_animations/no_internet.json', height: 48, width: 48),
+                  ? Lottie.asset('assets/lottie_animations/no_internet.json',
+                      height: 48, width: 48)
+                  : Lottie.asset('assets/lottie_animations/no_internet.json',
+                      height: 48, width: 48),
             )
           ],
         ),
@@ -336,8 +354,10 @@ connectionStatusWidgets(
   ];
 }
 
-getPhoneMicRecordingButton(VoidCallback recordingToggled, RecordingState state) {
-  if (SharedPreferencesUtil().deviceId.isNotEmpty) return const SizedBox.shrink();
+getPhoneMicRecordingButton(
+    VoidCallback recordingToggled, RecordingState state) {
+  if (SharedPreferencesUtil().deviceId.isNotEmpty)
+    return const SizedBox.shrink();
   return Visibility(
     visible: true,
     child: Padding(
@@ -349,7 +369,8 @@ getPhoneMicRecordingButton(VoidCallback recordingToggled, RecordingState state) 
             borderRadius: BorderRadius.circular(12),
             // side: BorderSide(color: state == RecordState.record ? Colors.red : Colors.white),
           ),
-          onPressed: state == RecordingState.initialising ? null : recordingToggled,
+          onPressed:
+              state == RecordingState.initialising ? null : recordingToggled,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
             child: Row(
@@ -372,7 +393,9 @@ getPhoneMicRecordingButton(VoidCallback recordingToggled, RecordingState state) 
                 Text(
                   state == RecordingState.initialising
                       ? 'Initialising Recorder'
-                      : (state == RecordingState.record ? 'Stop Recording' : 'Try With Phone Mic'),
+                      : (state == RecordingState.record
+                          ? 'Stop Recording'
+                          : 'Try With Phone Mic'),
                   style: const TextStyle(fontSize: 14),
                 ),
                 const SizedBox(width: 4),

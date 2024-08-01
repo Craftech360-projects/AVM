@@ -32,6 +32,12 @@ class SharedPreferencesUtil {
 
   String get deviceName => getString('deviceName') ?? '';
 
+  // Add these lines near the other boolean getters and setters
+
+  bool get isDeviceConnected => getBool('isDeviceConnected') ?? false;
+
+  set isDeviceConnected(bool value) => saveBool('isDeviceConnected', value);
+
   String get openAIApiKey => getString('openaiApiKey') ?? '';
 
   set openAIApiKey(String value) => saveString('openaiApiKey', value);

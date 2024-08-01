@@ -135,7 +135,8 @@ class _MyAppState extends State<MyApp> {
 
     print("pluggnnn>>>>>>>>>>>>>>>>>>>");
     plugins = await retrievePlugins();
-    print(plugins);
+
+    //print(plugins);
     _edgeCasePluginNotAvailable();
     print("here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     setState(() {});

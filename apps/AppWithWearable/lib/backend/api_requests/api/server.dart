@@ -20,7 +20,8 @@ Future<List<TranscriptSegment>> transcribe(File file) async {
     Uri.parse(
         '${Env.apiBaseUrl}v1/transcribe?language=${SharedPreferencesUtil().recordingsLanguage}&uid=${SharedPreferencesUtil().uid}'),
   );
-  request.files.add(await http.MultipartFile.fromPath('file', file.path, filename: basename(file.path)));
+  request.files.add(await http.MultipartFile.fromPath('file', file.path,
+      filename: basename(file.path)));
   request.headers.addAll({
     'Authorization': await getAuthHeader(),
   });
@@ -29,13 +30,15 @@ Future<List<TranscriptSegment>> transcribe(File file) async {
     var startTime = DateTime.now();
     var streamedResponse = await client.send(request);
     var response = await http.Response.fromStream(streamedResponse);
-    debugPrint('Transcript server took: ${DateTime.now().difference(startTime).inSeconds} seconds');
+    debugPrint(
+        'Transcript server took: ${DateTime.now().difference(startTime).inSeconds} seconds');
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       debugPrint('Response body: ${response.body}');
       return TranscriptSegment.fromJsonList(data);
     } else {
-      throw Exception('Failed to upload file. Status code: ${response.statusCode} Body: ${response.body}');
+      throw Exception(
+          'Failed to upload file. Status code: ${response.statusCode} Body: ${response.body}');
     }
   } catch (e) {
     rethrow;
@@ -74,7 +77,8 @@ Future<bool> uploadSample(File file, String uid) async {
     'POST',
     Uri.parse('${Env.apiBaseUrl}samples/upload?uid=$uid'),
   );
-  request.files.add(await http.MultipartFile.fromPath('file', file.path, filename: basename(file.path)));
+  request.files.add(await http.MultipartFile.fromPath('file', file.path,
+      filename: basename(file.path)));
 
   try {
     var streamedResponse = await request.send();
@@ -84,8 +88,10 @@ Future<bool> uploadSample(File file, String uid) async {
       debugPrint('uploadSample Response body: ${jsonDecode(response.body)}');
       return true;
     } else {
-      debugPrint('Failed to upload sample. Status code: ${response.statusCode}');
-      throw Exception('Failed to upload sample. Status code: ${response.statusCode}');
+      debugPrint(
+          'Failed to upload sample. Status code: ${response.statusCode}');
+      throw Exception(
+          'Failed to upload sample. Status code: ${response.statusCode}');
     }
   } catch (e) {
     debugPrint('An error occurred uploadSample: $e');
@@ -127,16 +133,54 @@ Future<bool> deleteBackupApi() async {
   return response.statusCode == 200;
 }
 
+// Future<List<Plugin>> retrievePlugins() async {
+//   debugPrint("retrive plugins");
+//   var response = await makeApiCall(
+//     // url: '${Env.apiBaseUrl}v1/plugins?uid=${SharedPreferencesUtil().uid}',
+//     url:
+//         'https://raw.githubusercontent.com/Craftech360-projects/AVM/test-plugin/community-plugins.json',
+//     headers: {},
+//     body: '',
+//     method: 'GET',
+//   );
+//   print("response");
+//   debugPrint(response!.body);
+//   if (response?.statusCode == 200) {
+//     try {
+//       var plugins = Plugin.fromJsonList(jsonDecode(response!.body));
+//       SharedPreferencesUtil().pluginsList = plugins;
+//       return plugins;
+//     } catch (e, stackTrace) {
+//       debugPrint(e.toString());
+//       CrashReporting.reportHandledCrash(e, stackTrace);
+//       return SharedPreferencesUtil().pluginsList;
+//     }
+//   }
+//   return SharedPreferencesUtil().pluginsList;
+// }
+
 Future<List<Plugin>> retrievePlugins() async {
+  debugPrint("retrieve plugins");
   var response = await makeApiCall(
-    url: '${Env.apiBaseUrl}v1/plugins?uid=${SharedPreferencesUtil().uid}',
+    url:
+        'https://raw.githubusercontent.com/Craftech360-projects/AVM/main/community-plugins.json',
     headers: {},
     body: '',
     method: 'GET',
   );
-  if (response?.statusCode == 200) {
+
+  if (response == null) {
+    debugPrint("API call failed, returning cached plugins");
+    return SharedPreferencesUtil().pluginsList;
+  }
+
+  // debugPrint("response");
+  // debugPrint(response.body);
+
+  if (response.statusCode == 200) {
+    debugPrint("obtained Plugins successfully>>>>>>>>>>>>>>>>");
     try {
-      var plugins = Plugin.fromJsonList(jsonDecode(response!.body));
+      var plugins = Plugin.fromJsonList(jsonDecode(response.body));
       SharedPreferencesUtil().pluginsList = plugins;
       return plugins;
     } catch (e, stackTrace) {
@@ -145,12 +189,16 @@ Future<List<Plugin>> retrievePlugins() async {
       return SharedPreferencesUtil().pluginsList;
     }
   }
+
+  debugPrint("Unexpected status code: ${response.statusCode}");
   return SharedPreferencesUtil().pluginsList;
 }
 
-Future<void> reviewPlugin(String pluginId, double score, {String review = ''}) async {
+Future<void> reviewPlugin(String pluginId, double score,
+    {String review = ''}) async {
   var response = await makeApiCall(
-    url: '${Env.apiBaseUrl}v1/plugins/review?plugin_id=$pluginId&uid=${SharedPreferencesUtil().uid}',
+    url:
+        '${Env.apiBaseUrl}v1/plugins/review?plugin_id=$pluginId&uid=${SharedPreferencesUtil().uid}',
     headers: {'Content-Type': 'application/json'},
     method: 'POST',
     body: jsonEncode({'score': score, review: review}),

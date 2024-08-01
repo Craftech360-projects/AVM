@@ -33,9 +33,9 @@ Future<http.Response?> makeApiCall({
       debugPrint('No internet connection, aborting $method $url');
       return null;
     }
-    if (url.contains(Env.apiBaseUrl!)) {
-      headers['Authorization'] = await getAuthHeader();
-    }
+    // if (url.contains(Env.apiBaseUrl!)) {
+    //   headers['Authorization'] = await getAuthHeader();
+    // }
 
     final client = InstabugHttpClient();
 
