@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:friend_private/backend/api_requests/api/server.dart';
 import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/database/box.dart';
 import 'package:friend_private/backend/growthbook.dart';
@@ -24,6 +26,7 @@ import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:opus_dart/opus_dart.dart';
 import 'package:opus_flutter/opus_flutter.dart' as opus_flutter;
+import 'package:friend_private/backend/schema/plugin.dart';
 
 void main() async {
   if (F.env == Environment.prod) {
@@ -117,11 +120,34 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  List<Plugin> plugins = [];
+
   @override
   void initState() {
     NotificationUtil.initializeNotificationsEventListeners();
     NotificationUtil.initializeIsolateReceivePort();
+    _initiatePlugins();
     super.initState();
+  }
+
+  Future<void> _initiatePlugins() async {
+    plugins = SharedPreferencesUtil().pluginsList;
+
+    print("pluggnnn>>>>>>>>>>>>>>>>>>>");
+    plugins = await retrievePlugins();
+    print(plugins);
+    _edgeCasePluginNotAvailable();
+    print("here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    setState(() {});
+  }
+
+  _edgeCasePluginNotAvailable() {
+    var selectedChatPlugin = SharedPreferencesUtil().selectedChatPluginId;
+    var plugin = plugins.firstWhereOrNull((p) => selectedChatPlugin == p.id);
+    if (selectedChatPlugin != 'no_selected' &&
+        (plugin == null || !plugin.worksWithChat())) {
+      SharedPreferencesUtil().selectedChatPluginId = 'no_selected';
+    }
   }
 
   @override
