@@ -232,7 +232,7 @@ mixin WebSocketMixin {
       return;
     }
 
-    debugPrint('Attempting reconnection');
+    debugPrint('Attempting reconnection ');
     websocketChannel?.sink.close(1000);
     await initWebSocket(
       onConnectionSuccess: onConnectionSuccess,
