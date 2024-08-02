@@ -2,8 +2,10 @@ import 'package:device_calendar/device_calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+import 'package:friend_private/pages/home/page.dart'; // Update with the actual path to your CustomScaffold file
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -31,7 +33,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffold(
       appBar: AppBar(
         title: const Text('Calendar'),
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -97,7 +99,8 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
       RadioListTile(
         title: const Text('Manual'),
-        subtitle: const Text('Your events will be drafted, but you will have to confirm their creation.'),
+        subtitle: const Text(
+            'Your events will be drafted, but you will have to confirm their creation.'),
         value: 'manual',
         groupValue: SharedPreferencesUtil().calendarType,
         onChanged: (v) {

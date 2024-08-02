@@ -9,6 +9,7 @@ import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,12 +22,15 @@ class DeveloperSettingsPage extends StatefulWidget {
 }
 
 class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
-  final TextEditingController gcpCredentialsController = TextEditingController();
+  final TextEditingController gcpCredentialsController =
+      TextEditingController();
   final TextEditingController gcpBucketNameController = TextEditingController();
-  final TextEditingController deepgramAPIKeyController = TextEditingController();
+  final TextEditingController deepgramAPIKeyController =
+      TextEditingController();
   final TextEditingController openAIKeyController = TextEditingController();
   final TextEditingController webhookOnMemoryCreated = TextEditingController();
-  final TextEditingController webhookOnTranscriptReceived = TextEditingController();
+  final TextEditingController webhookOnTranscriptReceived =
+      TextEditingController();
 
   bool savingSettingsLoading = false;
   bool useTranscriptServer = false;
@@ -41,8 +45,10 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
     deepgramAPIKeyController.text = SharedPreferencesUtil().deepgramApiKey;
     gcpCredentialsController.text = SharedPreferencesUtil().gcpCredentials;
     gcpBucketNameController.text = SharedPreferencesUtil().gcpBucketName;
-    webhookOnMemoryCreated.text = SharedPreferencesUtil().webhookOnMemoryCreated;
-    webhookOnTranscriptReceived.text = SharedPreferencesUtil().webhookOnTranscriptReceived;
+    webhookOnMemoryCreated.text =
+        SharedPreferencesUtil().webhookOnMemoryCreated;
+    webhookOnTranscriptReceived.text =
+        SharedPreferencesUtil().webhookOnTranscriptReceived;
     super.initState();
   }
 
@@ -50,8 +56,8 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+      child: CustomScaffold(
+        // backgroundColor: Theme.of(context).colorScheme.primary,
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
           title: const Text('Developer Settings'),
@@ -64,7 +70,10 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
                 padding: EdgeInsets.symmetric(horizontal: 4.0),
                 child: Text(
                   'Save',
-                  style: TextStyle(color: Colors.deepPurple, fontWeight: FontWeight.w600, fontSize: 16),
+                  style: TextStyle(
+                      color: Colors.deepPurple,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16),
                 ),
               ),
             )
@@ -83,7 +92,8 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
                 autocorrect: false,
                 enabled: true,
                 enableSuggestions: false,
-                decoration: _getTextFieldDecoration('Open AI Key', hintText: 'sk-.......'),
+                decoration: _getTextFieldDecoration('Open AI Key',
+                    hintText: 'sk-.......'),
                 style: const TextStyle(color: Colors.white),
               ),
               const SizedBox(height: 16.0),
@@ -104,7 +114,8 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
                 autocorrect: false,
                 enabled: true,
                 enableSuggestions: false,
-                decoration: _getTextFieldDecoration('Deepgram API Key', hintText: ''),
+                decoration:
+                    _getTextFieldDecoration('Deepgram API Key', hintText: ''),
                 style: const TextStyle(color: Colors.white),
               ),
               const SizedBox(height: 40),
@@ -165,13 +176,15 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
                   }
                 },
                 title: const Text('Transcript Server Enabled'),
-                checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                checkboxShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
               ),
               SharedPreferencesUtil().devModeEnabled
                   ? ListTile(
                       contentPadding: EdgeInsets.zero,
                       title: const Text('Export Memories'),
-                      subtitle: const Text('Export all your memories to a JSON file.'),
+                      subtitle: const Text(
+                          'Export all your memories to a JSON file.'),
                       trailing: loadingExportMemories
                           ? const SizedBox(
                               height: 16,
@@ -187,11 +200,14 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
                           : () async {
                               if (loadingExportMemories) return;
                               setState(() => loadingExportMemories = true);
-                              File file = await MemoryProvider().exportMemoriesToFile();
-                              final result =
-                                  await Share.shareXFiles([XFile(file.path)], text: 'Exported Memories from Friend');
+                              File file =
+                                  await MemoryProvider().exportMemoriesToFile();
+                              final result = await Share.shareXFiles(
+                                  [XFile(file.path)],
+                                  text: 'Exported Memories from Friend');
                               if (result.status == ShareResultStatus.success) {
-                                debugPrint('Thank you for sharing the picture!');
+                                debugPrint(
+                                    'Thank you for sharing the picture!');
                               }
                               MixpanelManager().exportMemories();
                               // 54d2c392-57f1-46dc-b944-02740a651f7b
@@ -202,7 +218,8 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
               SharedPreferencesUtil().devModeEnabled
                   ? ListTile(
                       title: const Text('Import Memories'),
-                      subtitle: const Text('Use with caution. All memories in the JSON file will be imported.'),
+                      subtitle: const Text(
+                          'Use with caution. All memories in the JSON file will be imported.'),
                       contentPadding: EdgeInsets.zero,
                       trailing: loadingImportMemories
                           ? const SizedBox(
@@ -231,13 +248,19 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
                         try {
                           var content = (await xFile.readAsString());
                           var decoded = jsonDecode(content);
-                          List<Memory> memories = decoded.map<Memory>((e) => Memory.fromJson(e)).toList();
+                          List<Memory> memories = decoded
+                              .map<Memory>((e) => Memory.fromJson(e))
+                              .toList();
                           MemoryProvider().storeMemories(memories);
                           for (var i = 0; i < memories.length; i++) {
                             var memory = memories[i];
-                            if (memory.structured.target == null || memory.discarded) continue;
-                            var f = getEmbeddingsFromInput(memory.structured.target.toString()).then((vector) {
-                              upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
+                            if (memory.structured.target == null ||
+                                memory.discarded) continue;
+                            var f = getEmbeddingsFromInput(
+                                    memory.structured.target.toString())
+                                .then((vector) {
+                              upsertPineconeVector(memory.id.toString(), vector,
+                                  memory.createdAt);
                             });
                             if (i % 10 == 0) {
                               await f; // "wait" for previous 10 requests to finish
@@ -245,7 +268,9 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
                               debugPrint('Processing Memory: $i');
                             }
                           }
-                          _snackBar('Memories imported, restart the app to see the changes. 🎉', seconds: 3);
+                          _snackBar(
+                              'Memories imported, restart the app to see the changes. 🎉',
+                              seconds: 3);
                           MixpanelManager().importedMemories();
                         } catch (e) {
                           debugPrint(e.toString());
@@ -270,10 +295,14 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text('Plugin Integrations Testing',
-                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600)),
                   GestureDetector(
                       onTap: () {
-                        launchUrl(Uri.parse('https://docs.basedhardware.com/developer/plugins/Integrations/'));
+                        launchUrl(Uri.parse(
+                            'https://docs.basedhardware.com/developer/plugins/Integrations/'));
                         MixpanelManager().advancedModeDocsOpened();
                       },
                       child: const Padding(
@@ -292,7 +321,10 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
               const SizedBox(height: 16),
               const Text(
                 'On Memory Created:',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16),
               ),
               const SizedBox(height: 4),
               const Text(
@@ -311,7 +343,10 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
               const SizedBox(height: 16),
               const Text(
                 'Real-Time Transcript Processing:',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16),
               ),
               const SizedBox(height: 4),
               const Text(
@@ -322,7 +357,7 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
                 controller: webhookOnTranscriptReceived,
                 obscureText: false,
                 autocorrect: false,
-                 enabled: true,
+                enabled: true,
                 enableSuggestions: false,
                 decoration: _getTextFieldDecoration('Endpoint URL'),
                 style: const TextStyle(color: Colors.white),
@@ -335,7 +370,10 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
     );
   }
 
-  _getTextFieldDecoration(String label, {IconButton? suffixIcon, bool canBeDisabled = false, String hintText = ''}) {
+  _getTextFieldDecoration(String label,
+      {IconButton? suffixIcon,
+      bool canBeDisabled = false,
+      String hintText = ''}) {
     return InputDecoration(
       labelText: label,
       enabled: true && canBeDisabled,
@@ -362,11 +400,14 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
     ));
   }
 
-  _getText(String text, {bool canBeDisabled = false, bool underline = false, bool bold = false}) {
+  _getText(String text,
+      {bool canBeDisabled = false, bool underline = false, bool bold = false}) {
     return Text(
       text,
       style: TextStyle(
-        color: true && canBeDisabled ? Colors.white.withOpacity(0.2) : Colors.white,
+        color: true && canBeDisabled
+            ? Colors.white.withOpacity(0.2)
+            : Colors.white,
         decoration: underline ? TextDecoration.underline : TextDecoration.none,
         fontSize: 16,
         fontWeight: bold ? FontWeight.w600 : FontWeight.normal,
@@ -379,12 +420,14 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
     if (savingSettingsLoading) return;
     setState(() => savingSettingsLoading = true);
     final prefs = SharedPreferencesUtil();
-    if (gcpCredentialsController.text.isNotEmpty && gcpBucketNameController.text.isNotEmpty) {
+    if (gcpCredentialsController.text.isNotEmpty &&
+        gcpBucketNameController.text.isNotEmpty) {
       try {
         await authenticateGCP(base64: gcpCredentialsController.text.trim());
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Invalid GCP credentials or bucket name. Please check and try again.'),
+          content: Text(
+              'Invalid GCP credentials or bucket name. Please check and try again.'),
         ));
         setState(() => savingSettingsLoading = false);
         return;
@@ -403,6 +446,7 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
 
     MixpanelManager().settingsSaved();
     setState(() => savingSettingsLoading = false);
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Settings saved!')));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(const SnackBar(content: Text('Settings saved!')));
   }
 }

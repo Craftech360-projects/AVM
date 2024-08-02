@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/utils/ble/connect.dart';
 import 'package:friend_private/utils/ble/gatt_utils.dart';
 import 'package:friend_private/widgets/device_widget.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+// Update with the actual path to your CustomScaffold file
 
 class ConnectedDevice extends StatefulWidget {
-  // TODO: retrieve this from here instead of params
   final BTDeviceStruct? device;
   final int batteryLevel;
 
@@ -87,7 +89,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
     var deviceName = widget.device?.name ?? SharedPreferencesUtil().deviceName;
     var deviceConnected = widget.device != null;
 
-    return Scaffold(
+    return CustomScaffold(
       appBar: AppBar(
         title: Text(deviceConnected ? 'Connected Device' : 'Paired Device'),
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -202,7 +204,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                         SharedPreferencesUtil().deviceName = '';
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(
-                              'Your Friend is ${widget.device == null ? "unpaired" : "disconnected"}   😔'),
+                              'Your AVM is ${widget.device == null ? "unpaired" : "disconnected"}   😔'),
                         ));
                         MixpanelManager().disconnectFriendClicked();
                       },

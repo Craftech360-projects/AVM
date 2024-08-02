@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
+import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/pages/plugins/plugin_detail.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:url_launcher/url_launcher.dart';
+// Update with the actual path to your CustomScaffold file
 
 class PluginsPage extends StatefulWidget {
   final bool filterChatOnly;
@@ -60,13 +63,16 @@ class _PluginsPageState extends State<PluginsPage> {
 
     return searchQuery.isEmpty
         ? plugins
-        : plugins.where((plugin) => plugin.name.toLowerCase().contains(searchQuery.toLowerCase())).toList();
+        : plugins
+            .where((plugin) =>
+                plugin.name.toLowerCase().contains(searchQuery.toLowerCase()))
+            .toList();
   }
 
   @override
   Widget build(BuildContext context) {
     final filteredPlugins = _filteredPlugins();
-    return Scaffold(
+    return CustomScaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primary,
@@ -127,7 +133,8 @@ class _PluginsPageState extends State<PluginsPage> {
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Find your plugin...',
-                    hintStyle: const TextStyle(fontSize: 14.0, color: Colors.grey),
+                    hintStyle:
+                        const TextStyle(fontSize: 14.0, color: Colors.grey),
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                     suffixIcon: searchQuery.isEmpty
@@ -170,16 +177,23 @@ class _PluginsPageState extends State<PluginsPage> {
                         });
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
-                          color: filterMemories ? Colors.deepPurple : Colors.transparent,
+                          color: filterMemories
+                              ? Colors.deepPurple
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(16),
-                          border:
-                              filterMemories ? Border.all(color: Colors.deepPurple) : Border.all(color: Colors.grey),
+                          border: filterMemories
+                              ? Border.all(color: Colors.deepPurple)
+                              : Border.all(color: Colors.grey),
                         ),
                         child: const Text(
                           'Memories',
-                          style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),
@@ -191,15 +205,23 @@ class _PluginsPageState extends State<PluginsPage> {
                         });
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
-                          color: filterChat ? Colors.deepPurple : Colors.transparent,
+                          color: filterChat
+                              ? Colors.deepPurple
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(16),
-                          border: filterChat ? Border.all(color: Colors.deepPurple) : Border.all(color: Colors.grey),
+                          border: filterChat
+                              ? Border.all(color: Colors.deepPurple)
+                              : Border.all(color: Colors.grey),
                         ),
                         child: const Text(
                           'Chat',
-                          style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),
@@ -211,16 +233,23 @@ class _PluginsPageState extends State<PluginsPage> {
                         });
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
-                          color: filterExternal ? Colors.deepPurple : Colors.transparent,
+                          color: filterExternal
+                              ? Colors.deepPurple
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(16),
-                          border:
-                              filterExternal ? Border.all(color: Colors.deepPurple) : Border.all(color: Colors.grey),
+                          border: filterExternal
+                              ? Border.all(color: Colors.deepPurple)
+                              : Border.all(color: Colors.grey),
                         ),
                         child: const Text(
                           'Integration',
-                          style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),
@@ -240,11 +269,17 @@ class _PluginsPageState extends State<PluginsPage> {
                     borderRadius: const BorderRadius.all(Radius.circular(16.0)),
                     color: Colors.grey.shade900,
                   ),
-                  margin: EdgeInsets.only(bottom: 12, top: index == 0 ? 24 : 0, left: 16, right: 16),
+                  margin: EdgeInsets.only(
+                      bottom: 12,
+                      top: index == 0 ? 24 : 0,
+                      left: 16,
+                      right: 16),
                   child: ListTile(
                     onTap: () async {
-                      await routeToPage(context, PluginDetailPage(plugin: plugin));
-                      setState(() => plugins = SharedPreferencesUtil().pluginsList);
+                      await routeToPage(
+                          context, PluginDetailPage(plugin: plugin));
+                      setState(
+                          () => plugins = SharedPreferencesUtil().pluginsList);
                     },
                     leading: CircleAvatar(
                       backgroundColor: Colors.white,
@@ -254,7 +289,10 @@ class _PluginsPageState extends State<PluginsPage> {
                     title: Text(
                       plugin.name,
                       maxLines: 1,
-                      style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          fontSize: 16),
                     ),
                     subtitle: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -266,7 +304,8 @@ class _PluginsPageState extends State<PluginsPage> {
                                 children: [
                                   Text(plugin.getRatingAvg()!),
                                   const SizedBox(width: 4),
-                                  const Icon(Icons.star, color: Colors.deepPurple, size: 16),
+                                  const Icon(Icons.star,
+                                      color: Colors.deepPurple, size: 16),
                                   const SizedBox(width: 4),
                                   Text('(${plugin.ratingCount})'),
                                 ],
@@ -277,7 +316,8 @@ class _PluginsPageState extends State<PluginsPage> {
                           child: Text(
                             plugin.description,
                             maxLines: 2,
-                            style: const TextStyle(color: Colors.grey, fontSize: 14),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 14),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -285,7 +325,8 @@ class _PluginsPageState extends State<PluginsPage> {
                           children: [
                             plugin.worksWithMemories()
                                 ? Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
                                       color: Colors.grey,
                                       borderRadius: BorderRadius.circular(16),
@@ -293,14 +334,17 @@ class _PluginsPageState extends State<PluginsPage> {
                                     child: const Text(
                                       'Memories',
                                       style: TextStyle(
-                                          color: Colors.deepPurple, fontSize: 12, fontWeight: FontWeight.w500),
+                                          color: Colors.deepPurple,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500),
                                     ),
                                   )
                                 : const SizedBox.shrink(),
                             SizedBox(width: plugin.worksWithChat() ? 8 : 0),
                             plugin.worksWithChat()
                                 ? Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
                                       color: Colors.grey,
                                       borderRadius: BorderRadius.circular(16),
@@ -308,14 +352,17 @@ class _PluginsPageState extends State<PluginsPage> {
                                     child: const Text(
                                       'Chat',
                                       style: TextStyle(
-                                          color: Colors.deepPurple, fontSize: 12, fontWeight: FontWeight.w500),
+                                          color: Colors.deepPurple,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500),
                                     ),
                                   )
                                 : const SizedBox.shrink(),
                             SizedBox(width: plugin.worksExternally() ? 8 : 0),
                             plugin.worksExternally()
                                 ? Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
                                       color: Colors.grey,
                                       borderRadius: BorderRadius.circular(16),
@@ -323,7 +370,9 @@ class _PluginsPageState extends State<PluginsPage> {
                                     child: const Text(
                                       'Integration',
                                       style: TextStyle(
-                                          color: Colors.deepPurple, fontSize: 12, fontWeight: FontWeight.w500),
+                                          color: Colors.deepPurple,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500),
                                     ),
                                   )
                                 : const SizedBox.shrink(),
@@ -333,7 +382,9 @@ class _PluginsPageState extends State<PluginsPage> {
                     ),
                     trailing: IconButton(
                       icon: Icon(
-                        plugin.enabled ? Icons.check : Icons.arrow_downward_rounded,
+                        plugin.enabled
+                            ? Icons.check
+                            : Icons.arrow_downward_rounded,
                         color: plugin.enabled ? Colors.white : Colors.grey,
                       ),
                       onPressed: () {
@@ -345,8 +396,10 @@ class _PluginsPageState extends State<PluginsPage> {
                               () => Navigator.pop(context),
                               () async {
                                 Navigator.pop(context);
-                                await routeToPage(context, PluginDetailPage(plugin: plugin));
-                                setState(() => plugins = SharedPreferencesUtil().pluginsList);
+                                await routeToPage(
+                                    context, PluginDetailPage(plugin: plugin));
+                                setState(() => plugins =
+                                    SharedPreferencesUtil().pluginsList);
                               },
                               'Authorize External Plugin',
                               'Do you allow this plugin to access your memories, transcripts, and recordings? Your data will be sent to the plugin\'s server for processing.',
