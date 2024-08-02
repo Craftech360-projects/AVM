@@ -19,18 +19,24 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:lottie/lottie.dart';
 import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/src/widgets/framework.dart';
 
 getConnectionStateWidgets(
-  BuildContext context,
-  bool hasTranscripts,
-  BTDeviceStruct? device,
-  WebsocketConnectionStatus wsConnectionState,
-  InternetStatus? internetStatus,
-) {
+    BuildContext context,
+    bool hasTranscripts,
+    BTDeviceStruct? device,
+    WebsocketConnectionStatus wsConnectionState,
+    InternetStatus? internetStatus,
+    {double sizeMultiplier = .3}) {
   if (hasTranscripts) return [];
   if (device == null) {
     return [
-      const DeviceAnimationWidget(sizeMultiplier: 0.7),
+      SizedBox(
+        height: MediaQuery.of(context).size.height <= 700
+            ? 280 * sizeMultiplier
+            : 400 * sizeMultiplier,
+      ),
+      // const DeviceAnimationWidget(sizeMultiplier: 0.7),
       SharedPreferencesUtil().deviceId.isEmpty
           ? _getNoFriendConnectedYet(context)
           : const ScanningUI(
@@ -174,7 +180,7 @@ _getNoFriendConnectedYet(BuildContext context) {
                     MixpanelManager().getFriendClicked();
                   },
                   child: const Text(
-                    'Get a Friend',
+                    'Get an AVM',
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ))),
           const SizedBox(height: 4),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:friend_private/pages/capture/widgets/ripple_animation.dart';
+import 'package:friend_private/pages/capture/widgets/sin_wave.dart';
 
 class ScanningUI extends StatefulWidget {
   const ScanningUI({super.key, required this.string1, required this.string2});
@@ -18,6 +20,27 @@ class _ScanningUIState extends State<ScanningUI> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const RippleAnimation(
+            colors: [Color(0xFF9E00FF), Color(0xFF5A00FF), Color(0xFF3400D8)],
+            minRadius: 60,
+            ripplesCount: 6,
+            duration: Duration(milliseconds: 3000),
+            repeat: true,
+            child: Icon(
+              Icons.bluetooth_searching,
+              color: Colors.white,
+              size: 100,
+            ),
+          ),
+          const SizedBox(height: 58),
+          // Center(
+          //   child: SizedBox(
+          //     height: 280, // Fixed height container
+          //     child: Center(
+          //       child: SineWaveWidget(sizeMultiplier: 0.7),
+          //     ),
+          //   ),
+          // ),
           Text(
             widget.string1,
             style: const TextStyle(
