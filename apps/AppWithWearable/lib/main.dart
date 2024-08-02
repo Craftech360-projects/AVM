@@ -133,12 +133,12 @@ class _MyAppState extends State<MyApp> {
   Future<void> _initiatePlugins() async {
     plugins = SharedPreferencesUtil().pluginsList;
 
-    print("pluggnnn>>>>>>>>>>>>>>>>>>>");
+    debugPrint("pluggnnn>>>>>>>>>>>>>>>>>>>");
     plugins = await retrievePlugins();
 
     //print(plugins);
     _edgeCasePluginNotAvailable();
-    print("here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    debugPrint("here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     setState(() {});
   }
 
@@ -193,9 +193,19 @@ class _MyAppState extends State<MyApp> {
           )),
       themeMode: ThemeMode.dark,
       // home: const HasBackupPage(),
-      home: (SharedPreferencesUtil().onboardingCompleted && widget.isAuth)
-          ? const HomePageWrapper()
-          : const OnboardingWrapper(),
+      home: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/splash.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          SharedPreferencesUtil().onboardingCompleted && widget.isAuth
+              ? const HomePageWrapper()
+              : const OnboardingWrapper(),
+        ],
+      ),
     );
   }
 }

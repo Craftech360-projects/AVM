@@ -17,9 +17,9 @@ Future<dynamic> gptApiCall({
   double temperature = 0.3,
   int? maxTokens,
 }) async {
-  print("getOpenAIApiKeyForUsage");
+  debugPrint("getOpenAIApiKeyForUsage");
   final apikey = await getOpenAIApiKeyForUsage();
-  print("$getOpenAIApiKeyForUsage(),$apikey");
+  debugPrint("$getOpenAIApiKeyForUsage(),$apikey");
   final url = 'https://api.openai.com/v1/$urlSuffix';
   final headers = {
     'Content-Type': 'application/json; charset=utf-8',
@@ -66,7 +66,7 @@ Future<dynamic> llamaApiCall({
   double temperature = 0.7,
   int maxTokens = -1,
 }) async {
-  print("Inside LLaMA API call");
+  debugPrint("Inside LLaMA API call");
 
   // Define the URL for the LLaMA API
   const url = 'https://db1f-124-40-247-18.ngrok-free.app/v1/chat/completions';
@@ -96,19 +96,19 @@ Future<dynamic> llamaApiCall({
     var response =
         await http.post(Uri.parse(url), headers: headers, body: body);
     if (response.statusCode == 200) {
-      print("Success: ${response.statusCode}, ${response.body}");
+      debugPrint("Success: ${response.statusCode}, ${response.body}");
       // print(">>>> $jsonDecode(response.body)");
       // return jsonDecode(response.body);
       var decodedResponse = jsonDecode(response.body);
       // Extract and return only the content
-      print(decodedResponse['choices'][0]['message']['content']);
+      debugPrint(decodedResponse['choices'][0]['message']['content']);
       return decodedResponse['choices'][0]['message']['content'];
     } else {
-      print("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
+      debugPrint("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
       return null;
     }
   } catch (e) {
-    print("Error making LLaMA API call: $e");
+    debugPrint("Error making LLaMA API call: $e");
     return null;
   }
 }
@@ -135,7 +135,7 @@ Future<String> executeGptPrompt(String? prompt,
       temperature: 0.7, // Adjust temperature as needed
       maxTokens: 1000 // Adjust maxTokens as needed or set to -1 for default
       );
-  print(">>>>>>>>>>>>>>>>??? $response");
+  debugPrint(">>>>>>>>>>>>>>>>??? $response");
   debugPrint('executeGptPrompt response: $response');
   prefs.setGptCompletionCache(promptBase64, response);
   //debugPrint('executeGptPrompt response: $response');
