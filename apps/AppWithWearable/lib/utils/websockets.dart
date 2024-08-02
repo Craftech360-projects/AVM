@@ -193,7 +193,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
           await channel.ready; // Ensure the channel is ready
           final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
           channel.sink.add(keepAliveMsg);
-          debugPrint('Sent KeepAlive message');
+          // debugPrint('Sent KeepAlive message');
         } catch (e) {
           debugPrint('Error sending KeepAlive message: $e');
         }

@@ -53,13 +53,18 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
 
   _initDailySummary() {
-    Timer.periodic(const Duration(seconds: 1), (timer) async {
+    print("running >>>>>>>>>>>>>>>>>>>>>>>>>>>>????????????222");
+    Timer.periodic(const Duration(hours: 1), (timer) async {
       var now = DateTime.now();
+
+      print("running >>>>>>>>>>>>>>>>>>>>>>>>>>>>????????????");
       if (now.hour < 20) return;
       // TODO: maybe a better way to optimize this. is it better to do on build state?
       debugPrint('now: $now');
       if (SharedPreferencesUtil().lastDailySummaryDay != '') {
-        var secondsFrom8pm = now.difference(DateTime(now.year, now.month, now.day, 20)).inSeconds;
+        var secondsFrom8pm = now
+            .difference(DateTime(now.year, now.month, now.day, 20))
+            .inSeconds;
         var at = DateTime.parse(SharedPreferencesUtil().lastDailySummaryDay);
         var secondsFromLast = now.difference(at).inSeconds;
         debugPrint('secondsFrom8pm: $secondsFrom8pm');
@@ -72,7 +77,8 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
       timer.cancel();
       var memories = MemoryProvider().retrieveDayMemories(now);
       if (memories.isEmpty) {
-        SharedPreferencesUtil().lastDailySummaryDay = DateTime.now().toIso8601String();
+        SharedPreferencesUtil().lastDailySummaryDay =
+            DateTime.now().toIso8601String();
         return;
       }
 
@@ -81,7 +87,8 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
       setState(() => widget.messages.add(message));
 
       var result = await dailySummaryNotifications(memories);
-      SharedPreferencesUtil().lastDailySummaryDay = DateTime.now().toIso8601String();
+      SharedPreferencesUtil().lastDailySummaryDay =
+          DateTime.now().toIso8601String();
       message.text = result;
       message.memories.addAll(memories);
       MessageProvider().updateMessage(message);
@@ -96,8 +103,10 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _moveListToBottom();
     });
+    print("running >>>>>>>>>>>>>>>>>>>>>>>>>>>>????????????11111111");
     _initDailySummary();
-    if (MessageProvider().getMessagesCount() == 0) sendInitialPluginMessage(null);
+    if (MessageProvider().getMessagesCount() == 0)
+      sendInitialPluginMessage(null);
     super.initState();
   }
 
@@ -123,17 +132,24 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
               final message = widget.messages[chatIndex];
               final isLastMessage = chatIndex == widget.messages.length - 1;
               double topPadding = chatIndex == 0 ? 24 : 16;
-              double bottomPadding = isLastMessage ? (widget.textFieldFocusNode.hasFocus ? 120 : 200) : 0;
+              double bottomPadding = isLastMessage
+                  ? (widget.textFieldFocusNode.hasFocus ? 120 : 200)
+                  : 0;
               return Padding(
                 key: ValueKey(message.id),
-                padding: EdgeInsets.only(bottom: bottomPadding, left: 18, right: 18, top: topPadding),
+                padding: EdgeInsets.only(
+                    bottom: bottomPadding,
+                    left: 18,
+                    right: 18,
+                    top: topPadding),
                 child: message.senderEnum == MessageSender.ai
                     ? AIMessage(
                         message: message,
                         sendMessage: _sendMessageUtil,
                         displayOptions: widget.messages.length <= 1,
                         memories: message.memories,
-                        pluginSender: plugins.firstWhereOrNull((e) => e.id == message.pluginId),
+                        pluginSender: plugins
+                            .firstWhereOrNull((e) => e.id == message.pluginId),
                       )
                     : HumanMessage(message: message),
               );
@@ -145,7 +161,10 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
           child: Container(
             width: double.maxFinite,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-            margin: EdgeInsets.only(left: 18, right: 18, bottom: widget.textFieldFocusNode.hasFocus ? 40 : 120),
+            margin: EdgeInsets.only(
+                left: 18,
+                right: 18,
+                bottom: widget.textFieldFocusNode.hasFocus ? 40 : 120),
             decoration: const BoxDecoration(
               color: Colors.black,
               borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -189,7 +208,8 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
                           width: 16,
                           height: 16,
                           child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : const Icon(
@@ -212,12 +232,14 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
 
   _sendMessageUtil(String message) async {
     changeLoadingState();
-    String? pluginId = SharedPreferencesUtil().selectedChatPluginId == 'no_selected'
-        ? null
-        : SharedPreferencesUtil().selectedChatPluginId;
+    String? pluginId =
+        SharedPreferencesUtil().selectedChatPluginId == 'no_selected'
+            ? null
+            : SharedPreferencesUtil().selectedChatPluginId;
 
     Message aiMessage = await _prepareStreaming(message, pluginId: pluginId);
-    dynamic ragInfo = await retrieveRAGContext(message, prevMessagesPluginId: pluginId);
+    dynamic ragInfo =
+        await retrieveRAGContext(message, prevMessagesPluginId: pluginId);
     String ragContext = ragInfo[0];
     List<Memory> memories = ragInfo[1].cast<Memory>();
     debugPrint('RAG Context: $ragContext memories: ${memories.length}');
@@ -225,7 +247,8 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
     MixpanelManager().chatMessageSent(message);
     var prompt = qaRagPrompt(
       ragContext,
-      await MessageProvider().retrieveMostRecentMessages(limit: 10, pluginId: pluginId),
+      await MessageProvider()
+          .retrieveMostRecentMessages(limit: 10, pluginId: pluginId),
       plugin: plugins.firstWhereOrNull((e) => e.id == pluginId),
     );
     await streamApiResponse(
@@ -235,7 +258,8 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
         aiMessage.memories.addAll(memories);
         MessageProvider().updateMessage(aiMessage);
         widget.refreshMessages();
-        if (memories.isNotEmpty) _moveListToBottom(extra: (70 * memories.length).toDouble());
+        if (memories.isNotEmpty)
+          _moveListToBottom(extra: (70 * memories.length).toDouble());
       },
     );
     changeLoadingState();
@@ -283,7 +307,8 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
 
   _moveListToBottom({double extra = 0}) async {
     try {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent + extra);
+      scrollController
+          .jumpTo(scrollController.position.maxScrollExtent + extra);
     } catch (e) {
       debugPrint(e.toString());
     }
