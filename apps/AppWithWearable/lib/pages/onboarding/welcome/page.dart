@@ -10,13 +10,15 @@ class WelcomePage extends StatefulWidget {
   final VoidCallback goNext;
   final VoidCallback skipDevice;
 
-  const WelcomePage({super.key, required this.goNext, required this.skipDevice});
+  const WelcomePage(
+      {super.key, required this.goNext, required this.skipDevice});
 
   @override
   State<WelcomePage> createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> with SingleTickerProviderStateMixin {
+class _WelcomePageState extends State<WelcomePage>
+    with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -25,7 +27,8 @@ class _WelcomePageState extends State<WelcomePage> with SingleTickerProviderStat
 
   @override
   void dispose() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     super.dispose();
   }
 
@@ -39,7 +42,8 @@ class _WelcomePageState extends State<WelcomePage> with SingleTickerProviderStat
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
-          padding: EdgeInsets.only(left: screenSize.width * 0.1, right: screenSize.width * 0.1),
+          padding: EdgeInsets.only(
+              left: screenSize.width * 0.1, right: screenSize.width * 0.1),
           child: Container(
             decoration: BoxDecoration(
               border: const GradientBoxBorder(
@@ -57,18 +61,22 @@ class _WelcomePageState extends State<WelcomePage> with SingleTickerProviderStat
               onPressed: () async {
                 bool permissionsAccepted = false;
                 if (Platform.isIOS) {
-                  PermissionStatus bleStatus = await Permission.bluetooth.request();
+                  PermissionStatus bleStatus =
+                      await Permission.bluetooth.request();
                   debugPrint('bleStatus: $bleStatus');
                   permissionsAccepted = bleStatus.isGranted;
                 } else {
-                  PermissionStatus bleScanStatus = await Permission.bluetoothScan.request();
-                  PermissionStatus bleConnectStatus = await Permission.bluetoothConnect.request();
+                  PermissionStatus bleScanStatus =
+                      await Permission.bluetoothScan.request();
+                  PermissionStatus bleConnectStatus =
+                      await Permission.bluetoothConnect.request();
                   // PermissionStatus locationStatus = await Permission.location.request();
 
-                  permissionsAccepted =
-                      bleConnectStatus.isGranted && bleScanStatus.isGranted; // && locationStatus.isGranted;
+                  permissionsAccepted = bleConnectStatus.isGranted &&
+                      bleScanStatus.isGranted; // && locationStatus.isGranted;
 
-                  debugPrint('bleScanStatus: $bleScanStatus ~ bleConnectStatus: $bleConnectStatus');
+                  debugPrint(
+                      'bleScanStatus: $bleScanStatus ~ bleConnectStatus: $bleConnectStatus');
                 }
                 if (!permissionsAccepted) {
                   showDialog(
@@ -122,11 +130,12 @@ class _WelcomePageState extends State<WelcomePage> with SingleTickerProviderStat
                 ),
               ),
               child: Container(
-                width: double.infinity, // Button takes full width of the padding
+                width:
+                    double.infinity, // Button takes full width of the padding
                 height: 45, // Fixed height for the button
                 alignment: Alignment.center,
                 child: Text(
-                  'Connect My Friend',
+                  'Connect My AVM',
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: screenSize.width * 0.045,

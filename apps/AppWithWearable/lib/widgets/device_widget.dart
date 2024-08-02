@@ -14,7 +14,8 @@ class DeviceAnimationWidget extends StatefulWidget {
   State<DeviceAnimationWidget> createState() => _DeviceAnimationWidgetState();
 }
 
-class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget> with TickerProviderStateMixin {
+class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget>
+    with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -37,7 +38,9 @@ class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget> with Tick
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.sizeOf(context).height <= 700 ? 280 * widget.sizeMultiplier : 400 * widget.sizeMultiplier,
+      height: MediaQuery.sizeOf(context).height <= 700
+          ? 280 * widget.sizeMultiplier
+          : 400 * widget.sizeMultiplier,
       child: Center(
         child: Stack(
           alignment: Alignment.center,
@@ -45,27 +48,14 @@ class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget> with Tick
             Image.asset(
               "assets/images/stars.png",
             ),
-            widget.animatedBackground
-                ? AnimatedBuilder(
-                    animation: _animation,
-                    builder: (context, child) {
-                      return Image.asset(
-                        "assets/images/blob.png",
-                        height: (MediaQuery.sizeOf(context).height <= 700 ? 360 : 390) *
-                            widget.sizeMultiplier *
-                            _animation.value,
-                        width: (MediaQuery.sizeOf(context).height <= 700 ? 360 : 390) *
-                            widget.sizeMultiplier *
-                            _animation.value,
-                      );
-                    },
-                  )
-                : Container(),
+            Container(),
             // Image.asset("assets/images/blob.png"),
             Image.asset(
               "assets/images/herologo.png",
-              height: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160) * widget.sizeMultiplier,
-              width: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160) * widget.sizeMultiplier,
+              height: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160) *
+                  widget.sizeMultiplier,
+              width: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160) *
+                  widget.sizeMultiplier,
             )
           ],
         ),

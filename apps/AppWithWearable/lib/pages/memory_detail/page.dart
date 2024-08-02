@@ -4,6 +4,7 @@ import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/memory_detail/share.dart';
 import 'package:friend_private/pages/memory_detail/widgets.dart';
 import 'package:friend_private/utils/memories/reprocess.dart';
@@ -82,9 +83,9 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
-      child: Scaffold(
-        key: scaffoldKey,
-        backgroundColor: Theme.of(context).colorScheme.primary,
+      child: CustomScaffold(
+        // key: scaffoldKey,
+        // backgroundColor: Theme.of(context).colorScheme.primary,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Theme.of(context).colorScheme.primary,
