@@ -373,7 +373,7 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
 }
 
 String qaRagPrompt(String context, List<Message> messages, {Plugin? plugin}) {
-  debugPrint("Your name is>>>>>>>>>>>>>>>>>>>: ${plugin!.name}");
+  // debugPrint("Your name is>>>>>>>>>>>>>>>>>>>: ${plugin!.name}");
 
   var prompt = '''
     You are an assistant for question-answering tasks. Use the following pieces of retrieved context and the conversation history to continue the conversation.

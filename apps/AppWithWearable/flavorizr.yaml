@@ -1,7 +1,7 @@
 flavors:
   prod:
     app:
-      name: "Friend"
+      name: "AVM"
       icon: "assets/images/app_launcher_icon.png"
     android:
       applicationId: "com.craftech360.avm"
@@ -19,7 +19,7 @@ flavors:
       icon: "assets/images/app_launcher_icon.png"
     android:
       icon: "assets/images/app_launcher_icon.png"
-      applicationId: "com.craftech360.avm.dev"
+      applicationId: "com.craftech360.avm"
       firebase:
         config: "apps/AppWithWearable/android/app/src/dev/google-services.json"
     ios:

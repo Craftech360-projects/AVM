@@ -43,6 +43,9 @@ class SharedPreferencesUtil {
   set openAIApiKey(String value) => saveString('openaiApiKey', value);
 
   String get deepgramApiKey => getString('deepgramApiKey') ?? '';
+  String get groqApiKey => getString('groqApiKey') ?? '';
+
+  set groqApiKey(String value) => saveString('groqApiKey', value);
 
   set deepgramApiKey(String value) => saveString('deepgramApiKey', value);
 

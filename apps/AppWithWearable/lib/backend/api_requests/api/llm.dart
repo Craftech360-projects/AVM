@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/shared.dart';
 import 'package:friend_private/backend/preferences.dart';
 
+const ApiKey = "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";
 Future<dynamic> gptApiCall({
   required String model,
   String urlSuffix = 'chat/completions',
@@ -61,6 +62,58 @@ Future<dynamic> gptApiCall({
 
 // API call using the LLaMA model
 
+// Future<dynamic> llamaApiCall({
+//   required String message,
+//   double temperature = 0.7,
+//   int maxTokens = -1,
+// }) async {
+//   debugPrint("Inside LLaMA API call");
+
+//   // Define the URL for the LLaMA API
+//   const url = 'https://db1f-124-40-247-18.ngrok-free.app/v1/chat/completions';
+
+//   // Define the headers for the request
+//   final headers = {
+//     'Content-Type': 'application/json',
+//   };
+
+//   // Construct the body of the request
+//   final body = jsonEncode({
+//     // Replace with specific model identifier if needed
+//     'messages': [
+//       {'role': 'system', 'content': ''' '''},
+//       {
+//         'role': 'user',
+//         'content': " {$message}",
+//       },
+//     ],
+//     'temperature': temperature,
+//     'max_tokens': maxTokens,
+//     'stream': false,
+//   });
+
+//   // Make the API call
+//   try {
+//     var response =
+//         await http.post(Uri.parse(url), headers: headers, body: body);
+//     if (response.statusCode == 200) {
+//       debugPrint("Success: ${response.statusCode}, ${response.body}");
+//       // print(">>>> $jsonDecode(response.body)");
+//       // return jsonDecode(response.body);
+//       var decodedResponse = jsonDecode(response.body);
+//       // Extract and return only the content
+//       debugPrint(decodedResponse['choices'][0]['message']['content']);
+//       return decodedResponse['choices'][0]['message']['content'];
+//     } else {
+//       debugPrint("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
+//       return null;
+//     }
+//   } catch (e) {
+//     debugPrint("Error making LLaMA API call: $e");
+//     return null;
+//   }
+// }
+
 Future<dynamic> llamaApiCall({
   required String message,
   double temperature = 0.7,
@@ -69,16 +122,19 @@ Future<dynamic> llamaApiCall({
   debugPrint("Inside LLaMA API call");
 
   // Define the URL for the LLaMA API
-  const url = 'https://db1f-124-40-247-18.ngrok-free.app/v1/chat/completions';
+  const url = 'https://api.groq.com/openai/v1/chat/completions';
 
   // Define the headers for the request
   final headers = {
     'Content-Type': 'application/json',
+    'Authorization':
+        'Bearer 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',
   };
 
   // Construct the body of the request
   final body = jsonEncode({
     // Replace with specific model identifier if needed
+    "model": "llama3-8b-8192",
     'messages': [
       {'role': 'system', 'content': ''' '''},
       {

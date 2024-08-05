@@ -207,8 +207,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     void checkSilence() {
       if (lastAudioTime != null &&
           DateTime.now().difference(lastAudioTime!) > silenceTimeout) {
-        debugPrint(
-            'Silence detected for more than 30 seconds. Stopping KeepAlive.');
+        // debugPrint(
+        //     'Silence detected for more than 30 seconds. Stopping KeepAlive.');
         stopKeepAlive();
       }
     }
