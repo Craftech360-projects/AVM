@@ -664,6 +664,7 @@ import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/chat/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
+import 'package:friend_private/pages/memories/memory_uipage.dart';
 import 'package:friend_private/pages/memories/page.dart';
 import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/page.dart';
@@ -927,10 +928,13 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   controller: _controller,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    MemoriesPage(
+                    // MemoriesPage(
+                    //   memories: memories,
+                    //   refreshMemories: _initiateMemories,
+                    //   textFieldFocusNode: memoriesTextFieldFocusNode,
+                    // ),
+                    TestPage(
                       memories: memories,
-                      refreshMemories: _initiateMemories,
-                      textFieldFocusNode: memoriesTextFieldFocusNode,
                     ),
                     CapturePage(
                       key: capturePageKey,
