@@ -48,6 +48,7 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
     setState(() => recordingState = RecordingState.record);
     stream.listen((data) async {
       if (wsConnectionState == WebsocketConnectionStatus.connected) {
+        
         websocketChannel?.sink.add(data);
       }
     });
