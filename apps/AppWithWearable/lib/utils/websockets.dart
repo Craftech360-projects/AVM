@@ -162,15 +162,17 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   print("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
   print("apikey , $deepgramapikey");
+  print("codec>>>>> , $codec");
 
   // Example codec value
-  String encoding;
+  String encoding = "opus";
 
   if (codec == 'pcm8' || codec == 'pcm16') {
     encoding = 'linear16';
   } else {
     encoding = 'opus';
   }
+  print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
   final uri = Uri.parse(
     'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',

@@ -88,7 +88,7 @@ class CapturePageState extends State<CapturePage>
     // TODO: this will not work with opus for now, more complexity, unneeded rn
     BleAudioCodec codec = audioCodec ??
         (btDevice?.id == null
-            ? BleAudioCodec.pcm8
+            ? BleAudioCodec.opus
             : await getAudioCodec(btDevice!.id));
     await initWebSocket(
       codec: codec,
