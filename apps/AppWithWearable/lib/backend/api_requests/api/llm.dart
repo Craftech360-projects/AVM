@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:http/io_client.dart';
+
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/shared.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:http/http.dart' as http;
 
 const ApiKey = "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";
 Future<dynamic> gptApiCall({
@@ -19,7 +19,7 @@ Future<dynamic> gptApiCall({
   int? maxTokens,
 }) async {
   debugPrint("getOpenAIApiKeyForUsage");
-  final apikey = await getOpenAIApiKeyForUsage();
+  final apikey = getOpenAIApiKeyForUsage();
   debugPrint("$getOpenAIApiKeyForUsage(),$apikey");
   final url = 'https://api.openai.com/v1/$urlSuffix';
   final headers = {
@@ -176,8 +176,9 @@ Future<String> executeGptPrompt(String? prompt,
   var prefs = SharedPreferencesUtil();
   var promptBase64 = base64Encode(utf8.encode(prompt));
   var cachedResponse = prefs.gptCompletionCache(promptBase64);
-  if (!ignoreCache && prefs.gptCompletionCache(promptBase64).isNotEmpty)
+  if (!ignoreCache && prefs.gptCompletionCache(promptBase64).isNotEmpty) {
     return cachedResponse;
+  }
   print(">>>>>>>>>>>>>>>start");
   //api call using openai
   // String response = await gptApiCall(model: 'gpt-4o', messages: [

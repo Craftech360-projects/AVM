@@ -3,7 +3,6 @@ import 'package:friend_private/pages/capture/widgets/ripple_animation.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/pages/onboarding/find_device/page.dart';
-import 'package:friend_private/widgets/device_widget.dart';
 
 class ConnectDevicePage extends StatefulWidget {
   const ConnectDevicePage({super.key});

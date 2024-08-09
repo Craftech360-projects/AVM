@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,8 +19,6 @@ import 'package:friend_private/widgets/dialog.dart';
 import 'package:friend_private/widgets/expandable_text.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:share_plus/share_plus.dart';
-
-import 'maps_util.dart';
 
 List<Widget> getSummaryWidgets(
   BuildContext context,
@@ -435,9 +432,9 @@ showOptionsBottomSheet(
 ) async {
   bool loadingReprocessMemory = false;
   bool displayDevTools = false;
-  bool displayMemoryPromptField = false;
+  // bool displayMemoryPromptField = false;
   bool loadingPluginIntegrationTest = false;
-  TextEditingController controller = TextEditingController();
+  // TextEditingController controller = TextEditingController();
 
   var result = await showModalBottomSheet(
       context: context,

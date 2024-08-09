@@ -27,7 +27,8 @@ class GrowthbookUtil {
       enable: true,
       attributes: attr,
       growthBookTrackingCallBack: (gbExperiment, gbExperimentResult) {
-        debugPrint('growthBookTrackingCallBack: $gbExperiment $gbExperimentResult');
+        debugPrint(
+            'growthBookTrackingCallBack: $gbExperiment $gbExperimentResult');
       },
       hostURL: 'https://cdn.growthbook.io/',
       qaMode: true,

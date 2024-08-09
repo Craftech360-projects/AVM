@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:path_provider/path_provider.dart';
@@ -22,7 +24,8 @@ Future<void> initializeBackgroundService({bool isStream = false}) async {
   final service = FlutterBackgroundService();
   createNotification(
     title: 'Friend is listening in the background',
-    body: 'Friend is listening and transcribing your conversations in the background',
+    body:
+        'Friend is listening and transcribing your conversations in the background',
   );
 
   await service.configure(
@@ -54,7 +57,8 @@ void onStart(ServiceInstance service, bool isStream) async {
       if (await service.isForegroundService()) {
         service.setForegroundNotificationInfo(
           title: 'Friend is running in background',
-          content: 'Friend is listening and transcribing your conversations in the background',
+          content:
+              'Friend is listening and transcribing your conversations in the background',
         );
       }
     }
@@ -64,14 +68,16 @@ void onStart(ServiceInstance service, bool isStream) async {
     var path = await getApplicationDocumentsDirectory();
     var files = Directory(path.path).listSync();
     for (var file in files) {
-      if (file.path.contains('recording_') && !file.path.contains('recording_0')) {
+      if (file.path.contains('recording_') &&
+          !file.path.contains('recording_0')) {
         debugPrint('deleting file: ${file.path}');
         file.deleteSync();
       }
     }
     var filePath = '${path.path}/recording_$count.wav';
     service.invoke("stateUpdate", {"state": 'recording'});
-    await record.start(const RecordConfig(encoder: AudioEncoder.wav), path: filePath);
+    await record.start(const RecordConfig(encoder: AudioEncoder.wav),
+        path: filePath);
     // timerUpdate is only invoked on Android
     service.on("timerUpdate").listen((event) async {
       if (event!["time"] == '0') {
@@ -88,7 +94,8 @@ void onStart(ServiceInstance service, bool isStream) async {
         count++;
         filePath = '${path.path}/recording_$count.wav';
         record = AudioRecorder();
-        await record.start(const RecordConfig(encoder: AudioEncoder.wav), path: filePath);
+        await record.start(const RecordConfig(encoder: AudioEncoder.wav),
+            path: filePath);
         debugPrint("recording started again file: $filePath");
       }
     });
@@ -107,7 +114,8 @@ Future streamRecording(ServiceInstance service) async {
   int count = 0;
   var filePath = '${path.path}/recording_$count.m4a';
   service.invoke("stateUpdate", {"state": 'recording'});
-  var stream = await record.startStream(const RecordConfig(encoder: AudioEncoder.pcm16bits));
+  var stream = await record
+      .startStream(const RecordConfig(encoder: AudioEncoder.pcm16bits));
   var audioData = <int>[];
   var file = File(filePath);
   stream.listen((data) async {

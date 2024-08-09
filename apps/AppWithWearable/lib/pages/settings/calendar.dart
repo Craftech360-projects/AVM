@@ -5,7 +5,6 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
-import 'package:friend_private/pages/home/page.dart'; // Update with the actual path to your CustomScaffold file
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});

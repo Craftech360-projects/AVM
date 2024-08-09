@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-
-import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/utils/ble/gatt_utils.dart';
-
 import 'package:friend_private/utils/ble/errors.dart';
+import 'package:friend_private/utils/ble/gatt_utils.dart';
 
 Future<int> retrieveBatteryLevel(String deviceId) async {
   final batteryService = await getServiceByUuid(deviceId, batteryServiceUuid);
@@ -61,7 +59,7 @@ Future<StreamSubscription<List<int>>?> getBleBatteryLevelListener(
   }
 
   var listener = batteryLevelCharacteristic.lastValueStream.listen((value) {
-    // debugPrint('Battery level listener: $value');
+    // debugdebugPrint('Battery level listener: $value');
     if (value.isNotEmpty) {
       onBatteryLevelChange!(value[0]);
     }
@@ -175,7 +173,7 @@ Future cameraStartPhotoController(String deviceId) async {
   // Capture photo once every 10s
   await imageCaptureControlCharacteristic.write([0x0A]);
 
-  print('cameraStartPhotoController');
+  debugPrint('cameraStartPhotoController');
 }
 
 Future cameraStopPhotoController(String deviceId) async {
@@ -194,7 +192,7 @@ Future cameraStopPhotoController(String deviceId) async {
 
   await imageCaptureControlCharacteristic.write([0x00]);
 
-  print('cameraStopPhotoController');
+  debugPrint('cameraStopPhotoController');
 }
 
 Future<bool> hasPhotoStreamingCharacteristic(String deviceId) async {
