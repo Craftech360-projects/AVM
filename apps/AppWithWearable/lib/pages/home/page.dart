@@ -660,6 +660,7 @@ import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/main.dart';
 import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/pages/capture/page.dart';
+import 'package:friend_private/pages/capture/widgets/ripple_animation.dart';
 import 'package:friend_private/pages/chat/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
@@ -924,7 +925,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
               Center(
                 child: TabBarView(
                   controller: _controller,
-                  physics: const NeverScrollableScrollPhysics(),
+                  // physics: const NeverScrollableScrollPhysics(),
                   children: [
                     MemoriesPage(
                       memories: memories,
@@ -936,6 +937,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                     //   textFieldFocusNode: memoriesTextFieldFocusNode,
                     //   memories: memories,
                     // ),
+
                     CapturePage(
                       key: capturePageKey,
                       device: _device,

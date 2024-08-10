@@ -11,6 +11,7 @@ import 'package:friend_private/utils/memories/reprocess.dart';
 import 'package:friend_private/widgets/expandable_text.dart';
 import 'package:friend_private/widgets/photos_grid.dart';
 import 'package:friend_private/widgets/transcript.dart';
+import 'package:swipe/swipe.dart';
 import 'package:tuple/tuple.dart';
 
 class MemoryDetailPage extends StatefulWidget {
@@ -28,12 +29,14 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
   final focusTitleField = FocusNode();
   final focusOverviewField = FocusNode();
   final pluginsList = SharedPreferencesUtil().pluginsList;
-
+  final _scrollController = ScrollController();
   late Structured structured;
   TextEditingController titleController = TextEditingController();
   TextEditingController overviewController = TextEditingController();
   bool editingTitle = false;
   bool editingOverview = false;
+  // ScrollPhysics _currentPhysics = ClampingScrollPhysics();
+  bool _isReachedEnd = false;
 
   List<bool> pluginResponseExpanded = [];
   bool isTranscriptExpanded = false;
@@ -68,6 +71,26 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     _controller = TabController(length: 2, vsync: this, initialIndex: 1);
     _controller!.addListener(() => setState(() {}));
     super.initState();
+    _scrollController.addListener(() {
+      print('scroll Controler ${_scrollController.position.pixels}');
+      print('scroll Controler ${_scrollController.position.maxScrollExtent}');
+      // if (_scrollController.position.atEdge) {
+
+      if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent ||
+          _scrollController.position.pixels ==
+              _scrollController.position.minScrollExtent) {
+        if (_isReachedEnd == false) {
+          setState(() {
+            _isReachedEnd = true;
+          });
+        }
+      } else {
+        setState(() {
+          _isReachedEnd = false;
+        });
+      }
+    });
   }
 
   @override
@@ -81,6 +104,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
 
   @override
   Widget build(BuildContext context) {
+    print('triggered $_isReachedEnd');
+    // print('scroll Controler ${_scrollController.position.isScrollingNotifier}');
     return PopScope(
       canPop: true,
       child: CustomScaffold(
@@ -116,6 +141,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
             ],
           ),
         ),
+
         floatingActionButton: _controller!.index == 0
             ? FloatingActionButton(
                 backgroundColor: Colors.black,
@@ -141,7 +167,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
           children: [
             TabBar(
               indicatorSize: TabBarIndicatorSize.label,
-              isScrollable: false,
+              // isScrollable: false,
               padding: EdgeInsets.zero,
               indicatorPadding: EdgeInsets.zero,
               controller: _controller,
@@ -151,9 +177,10 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                   .copyWith(fontSize: 18),
               tabs: [
                 Tab(
-                    text: widget.memory.type == MemoryType.image
-                        ? 'Photos'
-                        : 'Transcript'),
+                  text: widget.memory.type == MemoryType.image
+                      ? 'Photos'
+                      : 'Transcript',
+                ),
                 const Tab(text: 'Summary')
               ],
               indicator: BoxDecoration(
@@ -162,38 +189,59 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TabBarView(
-                  controller: _controller,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    ListView(
-                      shrinkWrap: true,
-                      children: widget.memory.type == MemoryType.image
-                          ? _getImagesWidget()
-                          : _getTranscriptWidgets(),
-                    ),
-                    ListView(
-                      shrinkWrap: true,
-                      children: getSummaryWidgets(
-                            context,
-                            widget.memory,
-                            overviewController,
-                            editingOverview,
-                            focusOverviewField,
-                            setState,
-                          ) +
-                          getPluginsWidgets(
-                            context,
-                            widget.memory,
-                            pluginsList,
-                            pluginResponseExpanded,
-                            (i) => setState(() => pluginResponseExpanded[i] =
-                                !pluginResponseExpanded[i]),
-                          ) +
-                          getGeolocationWidgets(widget.memory, context),
-                    ),
-                  ],
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Swipe(
+                  onSwipeUp: () {
+                    print('swipe up triggered');
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) =>
+                            MemoryDetailPage(memory: widget.memory)));
+                  },
+                  onSwipeDown: () {
+                    print('swipe down triggered');
+                     Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) =>
+                            MemoryDetailPage(memory: widget.memory)));
+                  },
+                  child: TabBarView(
+                    controller: _controller,
+                    children: [
+                      ListView(
+                        physics: _isReachedEnd
+                            ? const NeverScrollableScrollPhysics()
+                            : const AlwaysScrollableScrollPhysics(),
+                        controller: _scrollController,
+                        shrinkWrap: true,
+                        children: widget.memory.type == MemoryType.image
+                            ? _getImagesWidget()
+                            : _getTranscriptWidgets(),
+                      ),
+                      ListView(
+                        physics: _isReachedEnd
+                            ? const NeverScrollableScrollPhysics()
+                            : const AlwaysScrollableScrollPhysics(),
+                        controller: _scrollController,
+                        shrinkWrap: true,
+                        children: getSummaryWidgets(
+                              context,
+                              widget.memory,
+                              overviewController,
+                              editingOverview,
+                              focusOverviewField,
+                              setState,
+                            ) +
+                            getPluginsWidgets(
+                              context,
+                              widget.memory,
+                              pluginsList,
+                              pluginResponseExpanded,
+                              (i) => setState(() => pluginResponseExpanded[i] =
+                                  !pluginResponseExpanded[i]),
+                            ) +
+                            getGeolocationWidgets(widget.memory, context),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

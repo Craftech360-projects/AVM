@@ -44,22 +44,33 @@ List<Widget> getSummaryWidgets(
       style: const TextStyle(color: Colors.grey, fontSize: 16),
     ),
     const SizedBox(height: 16),
-    Row(
+    Stack(
       children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade800,
-            borderRadius: BorderRadius.circular(16),
+       
+        ClipRRect(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(16),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          child: Text(
-            structured.category.isEmpty
-                ? ' '
-                : structured.category[0].toUpperCase() +
-                    structured.category.substring(1),
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        )
+          child: Image.memory(memory.memoryImg!),
+        ),
+         Positioned(
+          right: 10,
+          top: 10,
+           child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: Text(
+              structured.category.isEmpty
+                  ? ' '
+                  : structured.category[0].toUpperCase() +
+                      structured.category.substring(1),
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+                   ),
+         ),
       ],
     ),
     const SizedBox(height: 40),
