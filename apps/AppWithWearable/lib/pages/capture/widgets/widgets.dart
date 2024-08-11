@@ -5,6 +5,7 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/pages/capture/connect.dart';
+import 'package:friend_private/pages/capture/widgets/sin_wave.dart';
 import 'package:friend_private/pages/speaker_id/page.dart';
 import 'package:friend_private/utils/enums.dart';
 import 'package:friend_private/utils/other/temp.dart';
@@ -19,7 +20,6 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:lottie/lottie.dart';
 import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 getConnectionStateWidgets(
     BuildContext context,
@@ -75,66 +75,14 @@ getConnectionStateWidgets(
               );
             }
           : null,
-      child: Center(
-          child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(width: 24),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                isWifiDisconnected
-                    ? 'No Internet'
-                    : isWebsocketError
-                        ? 'Server Issue'
-                        : 'Listening',
-                style: TextStyle(
-                    fontFamily: 'SF Pro Display',
-                    color: Colors.white,
-                    fontSize: isWifiDisconnected
-                        ? 29
-                        : isWebsocketError
-                            ? 29
-                            : 29,
-                    letterSpacing: 0.0,
-                    fontWeight: FontWeight.w700,
-                    height: 1.2),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                '${device.name} (${device.id.replaceAll(':', '').split('-').last.substring(0, 6)})',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              )
-            ],
-          ),
-          const SizedBox(width: 24),
-          isWifiDisconnected
-              ? Lottie.asset('assets/lottie_animations/no_internet.json',
-                  height: 56, width: 56)
-              : isWebsocketError
-                  // ? Lottie.network('https://lottie.host/8223dbf8-8a50-4d48-8e37-0b845b1f1094/TQcT5w5Mn4.json', height: 48, width: 48)
-                  ? Lottie.asset('assets/lottie_animations/no_internet.json',
-                      height: 56, width: 56)
-                  // TODO: find a better animation for server
-                  : Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 0, 255, 9),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-        ],
-      )),
+      child: SineWaveWidget(
+        internetStatus: internetStatus,
+        isWifiDisconnected: isWifiDisconnected,
+        isWebsocketError: isWebsocketError,
+        device: device,
+        sizeMultiplier: 0.71,
+      ),
+
     ),
     const SizedBox(height: 8),
     // const Row(
@@ -362,8 +310,9 @@ connectionStatusWidgets(
 
 getPhoneMicRecordingButton(
     VoidCallback recordingToggled, RecordingState state) {
-  if (SharedPreferencesUtil().deviceId.isNotEmpty)
+  if (SharedPreferencesUtil().deviceId.isNotEmpty) {
     return const SizedBox.shrink();
+  }
   return Visibility(
     visible: true,
     child: Padding(

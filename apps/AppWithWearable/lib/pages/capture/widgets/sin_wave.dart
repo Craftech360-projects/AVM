@@ -1,10 +1,23 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:lottie/lottie.dart';
 
 class SineWaveWidget extends StatefulWidget {
   final double sizeMultiplier;
-
-  const SineWaveWidget({Key? key, this.sizeMultiplier = 1.0}) : super(key: key);
+  final bool isWifiDisconnected;
+  final bool isWebsocketError;
+  final BTDeviceStruct? device;
+  final InternetStatus? internetStatus;
+  const SineWaveWidget(
+      {super.key,
+      this.sizeMultiplier = 1.0,
+      required this.isWifiDisconnected,
+      required this.isWebsocketError,
+      this.device,
+      required this.internetStatus});
 
   @override
   State<SineWaveWidget> createState() => _SineWaveWidgetState();
@@ -14,14 +27,17 @@ class _SineWaveWidgetState extends State<SineWaveWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _sineAnimController;
   late Animation<double> _sineAnimation;
+  late bool isWifiDisconnected = widget.isWifiDisconnected;
+  late bool isWebsocketError = widget.isWebsocketError;
+  late BTDeviceStruct device = widget.device!;
 
   @override
   void initState() {
     super.initState();
 
     _sineAnimController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
-    _sineAnimation = Tween<double>(begin: 0, end: 4 * pi).animate(
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    _sineAnimation = Tween<double>(begin: 0, end: 2 * pi).animate(
         CurvedAnimation(parent: _sineAnimController, curve: Curves.linear));
     _sineAnimController.repeat();
   }
@@ -34,23 +50,102 @@ class _SineWaveWidgetState extends State<SineWaveWidget>
 
   @override
   Widget build(BuildContext context) {
+    isWifiDisconnected = widget.internetStatus == InternetStatus.disconnected;
+
     return LayoutBuilder(
       builder: (context, constraints) {
-        return Center(
-          child: AnimatedBuilder(
-            animation: _sineAnimation,
-            builder: (context, child) {
-              return SizedBox(
-                height: 400 *
-                    widget.sizeMultiplier *
-                    _sineAnimation.value, // Adjusted height
-                width: constraints.maxWidth, // Ensure width is constrained
-                child: CustomPaint(
-                  painter: SinePainter(_sineAnimation, widget.sizeMultiplier),
+        return AnimatedBuilder(
+          animation: _sineAnimation,
+          builder: (context, child) {
+            return Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 24),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          isWifiDisconnected
+                              ? 'No Internet'
+                              : isWebsocketError
+                                  ? 'Server Issue'
+                                  : 'Listening',
+                          style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              color: Colors.white,
+                              fontSize: isWifiDisconnected
+                                  ? 29
+                                  : isWebsocketError
+                                      ? 29
+                                      : 29,
+                              letterSpacing: 0.0,
+                              fontWeight: FontWeight.w700,
+                              height: 1.2),
+                          textAlign: TextAlign.center,
+                        ),
+                        Text(
+                          '${device.name} (${device.id.replaceAll(':', '').split('-').last.substring(0, 6)})',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                            height: 1.5,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 24),
+                    isWifiDisconnected
+                        ? Lottie.asset(
+                            'assets/lottie_animations/no_internet.json',
+                            height: 56,
+                            width: 56)
+                        : isWebsocketError
+                            // ? Lottie.network('https://lottie.host/8223dbf8-8a50-4d48-8e37-0b845b1f1094/TQcT5w5Mn4.json', height: 48, width: 48)
+                            ? Lottie.asset(
+                                'assets/lottie_animations/no_internet.json',
+                                height: 56,
+                                width: 56)
+                            // TODO: find a better animation for server
+                            : Container(
+                                width: 10,
+                                height: 10,
+                                decoration: const BoxDecoration(
+                                  color: Color.fromARGB(255, 0, 255, 9),
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                  ],
                 ),
-              );
-            },
-          ),
+                // const Text(
+                //   'Listening...',
+                //   style: TextStyle(
+                //       fontFamily: 'SF Pro Display',
+                //       color: Colors.white,
+                //       fontSize: 20,
+                //       letterSpacing: 0.0,
+                //       fontWeight: FontWeight.w500,
+                //       height: 1.2),
+                // ),
+                const SizedBox(height: 40),
+                isWifiDisconnected
+                    ? const SizedBox.shrink()
+                    : SizedBox(
+                        height: 10 * widget.sizeMultiplier,
+                        width: constraints.maxWidth,
+                        child: CustomPaint(
+                          painter: SinePainter(
+                              _sineAnimation, widget.sizeMultiplier),
+                        ),
+                      ),
+              ],
+            );
+          },
         );
       },
     );
@@ -106,7 +201,7 @@ class SinePainter extends CustomPainter {
           currentX,
           size.height / 2 +
               sin(_animation.value + currentX * frequency * pi / size.width) *
-                  amplitude,
+                  amplitude, // Shift phase to move from right to left
         );
         currentX += waveLength;
       }
@@ -136,8 +231,8 @@ class SinePainter extends CustomPainter {
       ],
       [Colors.blue, Colors.lightBlueAccent, Colors.cyan, Colors.tealAccent],
       [
-        Color.fromARGB(219, 239, 179, 88),
-        Color.fromARGB(255, 243, 223, 201),
+        const Color.fromARGB(219, 239, 179, 88),
+        const Color.fromARGB(255, 243, 223, 201),
         Colors.amber,
         Colors.yellow
       ]
