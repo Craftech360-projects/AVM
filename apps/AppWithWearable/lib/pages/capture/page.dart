@@ -182,8 +182,9 @@ class CapturePageState extends State<CapturePage>
     debugPrint('resetState: $restartBytesProcessing');
     _bleBytesStream?.cancel();
     _memoryCreationTimer?.cancel();
-    if (!restartBytesProcessing && (segments.isNotEmpty || photos.isNotEmpty))
+    if (!restartBytesProcessing && (segments.isNotEmpty || photos.isNotEmpty)) {
       _createMemory(forcedCreation: true);
+    }
     if (btDevice != null) setState(() => this.btDevice = btDevice);
     if (restartBytesProcessing) {
       startOpenGlass();
@@ -388,8 +389,13 @@ class CapturePageState extends State<CapturePage>
       children: [
         ListView(children: [
           speechProfileWidget(context, setState, restartWebSocket),
-          ...getConnectionStateWidgets(context, _hasTranscripts, widget.device,
-              wsConnectionState, _internetStatus),
+          ...getConnectionStateWidgets(
+            context,
+            _hasTranscripts,
+            widget.device,
+            wsConnectionState,
+            _internetStatus,
+          ),
           getTranscriptWidget(memoryCreating, segments, photos, widget.device),
           ...connectionStatusWidgets(
               context, segments, wsConnectionState, _internetStatus),

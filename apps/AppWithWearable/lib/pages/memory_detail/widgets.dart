@@ -44,22 +44,32 @@ List<Widget> getSummaryWidgets(
       style: const TextStyle(color: Colors.grey, fontSize: 16),
     ),
     const SizedBox(height: 16),
-    Row(
+    Stack(
       children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade800,
-            borderRadius: BorderRadius.circular(16),
+        ClipRRect(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(16),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          child: Text(
-            structured.category.isEmpty
-                ? ' '
-                : structured.category[0].toUpperCase() +
-                    structured.category.substring(1),
-            style: Theme.of(context).textTheme.titleLarge,
+          child: Image.memory(memory.memoryImg!),
+        ),
+        Positioned(
+          right: 10,
+          top: 10,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            child: Text(
+              structured.category.isEmpty
+                  ? ' '
+                  : structured.category[0].toUpperCase() +
+                      structured.category.substring(1),
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
-        )
+        ),
       ],
     ),
     const SizedBox(height: 40),
@@ -113,24 +123,24 @@ List<Widget> getSummaryWidgets(
     ...structured.actionItems.map<Widget>((item) {
       return Padding(
         padding: const EdgeInsets.only(top: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-                padding: const EdgeInsets.only(top: 4.0),
-                child: Icon(Icons.task_alt,
-                    color: Colors.grey.shade300, size: 20)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: SelectionArea(
-                child: Text(
-                  item.description,
-                  style: TextStyle(
-                      color: Colors.grey.shade300, fontSize: 16, height: 1.3),
-                ),
-              ),
-            ),
-          ],
+        child: ListTile(
+          onTap: () {
+            setState(() {
+              item.completed = !item.completed;
+              MemoryProvider().updateActionItem(item);
+            });
+          },
+          contentPadding: EdgeInsets.zero,
+          leading: Icon(
+            color: item.completed ? Colors.green : Colors.grey,
+            item.completed ? Icons.task_alt : Icons.circle_outlined,
+            size: 20,
+          ),
+          title: Text(
+            item.description,
+            style: TextStyle(
+                color: Colors.grey.shade300, fontSize: 16, height: 1.3),
+          ),
         ),
       );
     }),
@@ -259,7 +269,8 @@ List<Widget> getPluginsWidgets(
                   Color.fromARGB(127, 188, 99, 121),
                   Color.fromARGB(127, 86, 101, 182),
                   Color.fromARGB(127, 126, 190, 236)
-                ]),
+                ],
+                ),
                 width: 2,
               ),
               borderRadius: BorderRadius.circular(12),
