@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
+import 'package:friend_private/core/snackbar_util.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/plugins/plugin_detail.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:gradient_borders/gradient_borders.dart';
-import 'package:url_launcher/url_launcher.dart';
 // Update with the actual path to your CustomScaffold file
 
 class PluginsPage extends StatefulWidget {
@@ -81,20 +81,16 @@ class _PluginsPageState extends State<PluginsPage> {
         elevation: 0,
         actions: [
           TextButton(
-              onPressed: () {
-                launchUrl(Uri.parse('https://basedhardware.com/plugins'));
-              },
-              child: const Row(
-                children: [
-                  Text(
-                    'Create Yours',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                ],
-              ))
+            onPressed: () {
+              showSnackBar(message: 'Coming Soon.!', context: context);
+              //! Temporary Disabled
+              // launchUrl(Uri.parse('https://basedhardware.com/plugins'));
+            },
+            child: Text(
+              'Create Yours',
+              style: TextStyle(color: Colors.white),
+            ),
+          )
         ],
       ),
       body: GestureDetector(
@@ -159,6 +155,7 @@ class _PluginsPageState extends State<PluginsPage> {
               ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 16)),
+            //* Filter Chip
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -266,7 +263,7 @@ class _PluginsPageState extends State<PluginsPage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-                    color: Colors.grey.shade900,
+                    color: Color.fromARGB(35, 255, 255, 255),
                   ),
                   margin: EdgeInsets.only(
                       bottom: 12,
@@ -327,7 +324,7 @@ class _PluginsPageState extends State<PluginsPage> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey,
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: const Text(
@@ -345,7 +342,7 @@ class _PluginsPageState extends State<PluginsPage> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey,
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: const Text(
@@ -363,7 +360,7 @@ class _PluginsPageState extends State<PluginsPage> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey,
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: const Text(

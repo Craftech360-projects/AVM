@@ -675,7 +675,6 @@ import 'package:friend_private/utils/features/backups.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/upgrade_alert.dart';
-import 'package:gradient_borders/gradient_borders.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -806,8 +805,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     }
 
     createNotification(
-      title: 'Don\'t forget to wear Friend today',
-      body: 'Wear your friend and capture your memories today.',
+      title: 'Don\'t forget to wear AVM today',
+      body: 'Wear your AVM and capture your memories today.',
       notificationId: 4,
       isMorningNotification: true,
     );
@@ -844,11 +843,11 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           capturePageKey.currentState
               ?.resetState(restartBytesProcessing: false);
           setState(() => _device = null);
-          InstabugLog.logInfo('Friend Device Disconnected');
+          InstabugLog.logInfo('AVM Device Disconnected');
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
             createNotification(
-              title: 'Friend Device Disconnected',
-              body: 'Please reconnect to continue using your Friend.',
+              title: 'AVM Device Disconnected',
+              body: 'Please reconnect to continue using your AVM.',
             );
           }
           MixpanelManager().deviceDisconnected();
@@ -924,7 +923,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
               Center(
                 child: TabBarView(
                   controller: _controller,
-                  physics: const NeverScrollableScrollPhysics(),
+                  // physics: const NeverScrollableScrollPhysics(),
                   children: [
                     MemoriesPage(
                       memories: memories,
@@ -936,6 +935,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                     //   textFieldFocusNode: memoriesTextFieldFocusNode,
                     //   memories: memories,
                     // ),
+
                     CapturePage(
                       key: capturePageKey,
                       device: _device,
@@ -959,18 +959,19 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   alignment: Alignment.bottomCenter,
                   child: Container(
                     margin: const EdgeInsets.fromLTRB(16, 16, 16, 40),
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: Colors.black,
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                      border: GradientBoxBorder(
-                        gradient: LinearGradient(colors: [
-                          Color.fromARGB(127, 208, 208, 208),
-                          Color.fromARGB(127, 188, 99, 121),
-                          Color.fromARGB(127, 86, 101, 182),
-                          Color.fromARGB(127, 126, 190, 236)
-                        ]),
-                        width: 2,
-                      ),
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
+                      border: Border.all(color: Colors.grey),
+                      // border: GradientBoxBorder(
+                      //   gradient: LinearGradient(colors: [
+                      //     Color.fromARGB(127, 208, 208, 208),
+                      //     Color.fromARGB(127, 188, 99, 121),
+                      //     Color.fromARGB(127, 86, 101, 182),
+                      //     Color.fromARGB(127, 126, 190, 236)
+                      //   ]),
+                      //   width: 2,
+                      // ),
                       shape: BoxShape.rectangle,
                     ),
                     child: Row(
@@ -1046,6 +1047,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              //* AVM page navigating,AVM Battery indecator
               _device != null && batteryLevel != -1
                   ? GestureDetector(
                       onTap: _device == null
@@ -1175,6 +1177,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                       ),
                     )
                   : const SizedBox(width: 16),
+                  //* Navigating to Setting Page
               IconButton(
                 icon: const Icon(
                   Icons.settings,

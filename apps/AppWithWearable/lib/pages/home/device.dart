@@ -29,10 +29,10 @@ class _DeviceInfo {
       this.manufacturerName);
 
   static Future<_DeviceInfo> getDeviceInfo(BTDeviceStruct? device) async {
-    var modelNumber = 'Friend';
+    var modelNumber = 'AVM';
     var firmwareRevision = '1.0.2';
     var hardwareRevision = 'Seeed Xiao BLE Sense';
-    var manufacturerName = 'Based Hardware';
+    var manufacturerName = 'Craftech 360';
 
     if (device == null) {
       return _DeviceInfo(
