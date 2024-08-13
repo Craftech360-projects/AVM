@@ -160,21 +160,17 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   final deepgramapikey = getDeepgramApiKeyForUsage();
   debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
-<<<<<<< HEAD
-  print("apikey , $deepgramapikey");
-  print("codec>>>>> , $codec");
-=======
   debugPrint("apikey , $deepgramapikey");
->>>>>>> f80c87d897918ace9438186e2c0c1ae8c9220af4
 
   // Example codec value
   String encoding = "opus";
 
-  if (codec == 'pcm8' || codec == 'pcm16') {
-    encoding = 'linear16';
-  } else {
-    encoding = 'opus';
-  }
+  // if (codec == 'pcm8' || codec == 'pcm16') {
+  //   // encoding = 'linear16';
+  //   encoding = 'opus';
+  // } else {
+  //   encoding = 'opus';
+  // }
   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
   final uri = Uri.parse(
