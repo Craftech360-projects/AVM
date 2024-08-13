@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:1521024926543535",
-      "lastPropertyId": "9:750321095880134980",
+      "lastPropertyId": "10:6152224387307342739",
       "name": "Memory",
       "properties": [
         {
@@ -63,6 +63,11 @@
           "flags": 520,
           "indexId": "10:1684776336187677600",
           "relationTarget": "Geolocation"
+        },
+        {
+          "id": "10:6152224387307342739",
+          "name": "memoryImg",
+          "type": 23
         }
       ],
       "relations": [

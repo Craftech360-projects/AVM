@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
-//import 'package:friend_private/backend/database/transcript_segment.dart ' as db;
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/websockets.dart';
