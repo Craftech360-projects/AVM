@@ -9,7 +9,8 @@ import 'package:path_provider/path_provider.dart';
 class MemoryProvider {
   static final MemoryProvider _instance = MemoryProvider._internal();
   static final Box<Memory> _box = ObjectBoxUtil().box!.store.box<Memory>();
-  static final Box<Structured> _boxStructured = ObjectBoxUtil().box!.store.box<Structured>();
+  static final Box<Structured> _boxStructured =
+      ObjectBoxUtil().box!.store.box<Structured>();
   static final Box<Event> _boxEvent = ObjectBoxUtil().box!.store.box<Event>();
 
   factory MemoryProvider() {
@@ -19,16 +20,18 @@ class MemoryProvider {
   MemoryProvider._internal();
 
   List<Memory> getMemories() => _box.getAll();
-
   int getMemoriesCount() => _box.count();
 
-  int getNonDiscardedMemoriesCount() => _box.query(Memory_.discarded.equals(false)).build().count();
+  int getNonDiscardedMemoriesCount() =>
+      _box.query(Memory_.discarded.equals(false)).build().count();
 
   List<Memory> getMemoriesOrdered({bool includeDiscarded = false}) {
     if (includeDiscarded) {
       // created at descending
+      // The method retrieves all Memory objects from the store, regardless of whether they are discarded or not.
       return _box.query().order(Memory_.createdAt).build().find();
     } else {
+    
       return _box
           .query(Memory_.discarded.equals(false))
           .order(Memory_.createdAt, flags: Order.descending)
@@ -48,7 +51,8 @@ class MemoryProvider {
 
   int updateMemory(Memory memory) => _box.put(memory);
 
-  int updateMemoryStructured(Structured structured) => _boxStructured.put(structured);
+  int updateMemoryStructured(Structured structured) =>
+      _boxStructured.put(structured);
 
   Memory? getMemoryById(int id) => _box.get(id);
 
@@ -61,9 +65,12 @@ class MemoryProvider {
     return memories.whereType<Memory>().toList();
   }
 
-  List<Memory> retrieveRecentMemoriesWithinMinutes({int minutes = 10, int count = 2}) {
+  List<Memory> retrieveRecentMemoriesWithinMinutes(
+      {int minutes = 10, int count = 2}) {
     DateTime timeLimit = DateTime.now().subtract(Duration(minutes: minutes));
-    var query = _box.query(Memory_.createdAt.greaterThan(timeLimit.millisecondsSinceEpoch)).build();
+    var query = _box
+        .query(Memory_.createdAt.greaterThan(timeLimit.millisecondsSinceEpoch))
+        .build();
     List<Memory> filtered = query.find();
     query.close();
 
@@ -96,7 +103,8 @@ class MemoryProvider {
   }
 
   Future<File> exportMemoriesToFile() async {
-    String json = getPrettyJSONString(getMemories().map((m) => m.toJson()).toList());
+    String json =
+        getPrettyJSONString(getMemories().map((m) => m.toJson()).toList());
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/memories.json');
     await file.writeAsString(json);

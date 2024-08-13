@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/env/env.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:web_socket_channel/io.dart';
@@ -45,9 +44,9 @@ String mapCodecToName(BleAudioCodec codec) {
 //   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
 //   final deepgramapikey = await getDeepgramApiKeyForUsage();
 //   //final apiKey = "ab763c7874734209d21d838a62804b8119175f0c";
-//   print("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
+//   debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
-//   print("apikey , $deepgramapikey");
+//   debugPrint("apikey , $deepgramapikey");
 //   // 'ab763c7874734209d21d838a62804b8119175f0c'; // Replace with your actual API key
 
 //   final uri = Uri.parse(
@@ -121,7 +120,7 @@ String mapCodecToName(BleAudioCodec codec) {
 //       );
 //     }).onError((err, stackTrace) {
 //       // no closing reason or code
-//       print(err);
+//       debugPrint(err);
 //       CrashReporting.reportHandledCrash(
 //         err!,
 //         stackTrace,
@@ -158,10 +157,10 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 ) async {
   debugPrint('Websocket Opening');
   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
-  final deepgramapikey = await getDeepgramApiKeyForUsage();
-  print("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
+  final deepgramapikey = getDeepgramApiKeyForUsage();
+  debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
-  print("apikey , $deepgramapikey");
+  debugPrint("apikey , $deepgramapikey");
 
   // Example codec value
   String encoding;
@@ -283,12 +282,12 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
       );
 
       // Periodically check for silence
-      Timer.periodic(Duration(seconds: 1), (timer) {
+      Timer.periodic(const Duration(seconds: 1), (timer) {
         checkSilence();
       });
     }).onError((err, stackTrace) {
       stopKeepAlive();
-      print(err);
+      debugPrint(err.toString());
       CrashReporting.reportHandledCrash(
         err!,
         stackTrace,
@@ -304,7 +303,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   } catch (err, stackTrace) {
     onWebsocketConnectionFailed(err);
     CrashReporting.reportHandledCrash(
-      err!,
+      err,
       stackTrace,
       level: NonFatalExceptionLevel.warning,
     );

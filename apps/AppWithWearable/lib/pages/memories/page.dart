@@ -23,7 +23,9 @@ class MemoriesPage extends StatefulWidget {
   State<MemoriesPage> createState() => _MemoriesPageState();
 }
 
-class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClientMixin {
+class _MemoriesPageState extends State<MemoriesPage>
+    with AutomaticKeepAliveClientMixin {
+  late List<Image> imageList = [];
   TextEditingController textController = TextEditingController();
   FocusNode textFieldFocusNode = FocusNode();
   bool loading = false;
@@ -42,7 +44,7 @@ class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClie
 
   @override
   bool get wantKeepAlive => true;
-
+//! Disabled As of now
   // void _onAddButtonPressed() {
   //   MixpanelManager().addManualMemoryClicked();
   //   showDialog(
@@ -60,13 +62,18 @@ class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
-    var memories =
-        displayDiscardMemories ? widget.memories : widget.memories.where((memory) => !memory.discarded).toList();
+    //filtered by discarded
+    var memories = displayDiscardMemories
+        ? widget.memories
+        : widget.memories.where((memory) => !memory.discarded).toList();
+    //search the memories
     memories = textController.text.isEmpty
         ? memories
         : memories
             .where(
-              (memory) => (memory.transcript + memory.structured.target!.title + memory.structured.target!.overview)
+              (memory) => (memory.transcript +
+                      memory.structured.target!.title +
+                      memory.structured.target!.overview)
                   .toLowerCase()
                   .contains(textController.text.toLowerCase()),
             )
@@ -147,19 +154,22 @@ class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClie
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // IconButton(
-                //     onPressed: _onAddButtonPressed,
-                //     icon: const Icon(
-                //       Icons.add_circle_outline,
-                //       size: 24,
-                //       color: Colors.white,
-                //     )),
+                //   onPressed: _onAddButtonPressed,
+                //   icon: const Icon(
+                //     Icons.add_circle_outline,
+                //     size: 24,
+                //     color: Colors.white,
+                //   ),
+                // ),
                 const SizedBox(width: 1),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      displayDiscardMemories ? 'Hide Discarded' : 'Show Discarded',
+                      displayDiscardMemories
+                          ? 'Hide Discarded'
+                          : 'Show Discarded',
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     const SizedBox(width: 8),
@@ -168,7 +178,9 @@ class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClie
                         _toggleDiscardMemories();
                       },
                       icon: Icon(
-                        displayDiscardMemories ? Icons.cancel_outlined : Icons.filter_list,
+                        displayDiscardMemories
+                            ? Icons.cancel_outlined
+                            : Icons.filter_list,
                         color: Colors.white,
                       ),
                     ),
@@ -192,7 +204,10 @@ class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClie
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 if (memoriesWithDates[index].runtimeType == DateTime) {
-                  return DateListItem(date: memoriesWithDates[index] as DateTime, isFirst: index == 0);
+                  return DateListItem(
+                    date: memoriesWithDates[index] as DateTime,
+                    isFirst: index == 0,
+                  );
                 }
                 return MemoryListItem(
                   memoryIdx: index,
@@ -204,7 +219,7 @@ class _MemoriesPageState extends State<MemoriesPage> with AutomaticKeepAliveClie
             ),
           ),
         const SliverToBoxAdapter(
-          child: SizedBox(height: 80),
+          child: SizedBox(height: 120),
         ),
       ],
     );

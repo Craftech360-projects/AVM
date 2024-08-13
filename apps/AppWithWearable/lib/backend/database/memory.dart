@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:friend_private/backend/database/geolocation.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
@@ -23,6 +24,9 @@ class Memory {
   DateTime? finishedAt;
 
   String transcript;
+   @Property(type: PropertyType.byteVector)
+  Uint8List? memoryImg;
+
   final transcriptSegments = ToMany<TranscriptSegment>();
   final photos = ToMany<MemoryPhoto>();
 
@@ -41,6 +45,7 @@ class Memory {
   Memory(
     this.createdAt,
     this.transcript,
+    this.memoryImg,
     this.discarded, {
     this.id = 0,
     this.recordingFilePath,
@@ -71,6 +76,7 @@ class Memory {
     var memory = Memory(
       DateTime.parse(json['createdAt']),
       json['transcript'],
+      json['memoryImg'],
       json['discarded'],
       recordingFilePath: json['recordingFilePath'],
       startedAt:
@@ -115,8 +121,9 @@ class Memory {
               includeTimestamps: true)
           : this.transcript;
       var decoded = utf8.decode(transcript.codeUnits);
-      if (maxCount != null)
+      if (maxCount != null) {
         return decoded.substring(0, min(maxCount, decoded.length));
+      }
       return decoded;
     } catch (e) {
       return transcript;
@@ -128,6 +135,7 @@ class Memory {
       'id': id,
       'createdAt': createdAt.toIso8601String(),
       'startedAt': startedAt?.toIso8601String(),
+      'memoryImg':memoryImg,
       'finishedAt': finishedAt?.toIso8601String(),
       'transcript': transcript,
       'recordingFilePath': recordingFilePath,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/pages/capture/widgets/ripple_animation.dart';
-import 'package:friend_private/pages/capture/widgets/sin_wave.dart';
 
 class ScanningUI extends StatefulWidget {
   const ScanningUI({super.key, required this.string1, required this.string2});

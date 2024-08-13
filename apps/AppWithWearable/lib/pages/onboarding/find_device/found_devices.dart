@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/utils/ble/communication.dart';
@@ -23,7 +22,8 @@ class FoundDevices extends StatefulWidget {
   _FoundDevicesState createState() => _FoundDevicesState();
 }
 
-class _FoundDevicesState extends State<FoundDevices> with TickerProviderStateMixin {
+class _FoundDevicesState extends State<FoundDevices>
+    with TickerProviderStateMixin {
   bool _isClicked = false;
   bool _isConnected = false;
   int batteryPercentage = -1;
@@ -58,7 +58,8 @@ class _FoundDevicesState extends State<FoundDevices> with TickerProviderStateMix
     if (_isClicked) return; // if any item is clicked, don't do anything
     setState(() {
       _isClicked = true; // Prevent further clicks
-      _connectingToDeviceId = device.id; // Mark this device as being connected to
+      _connectingToDeviceId =
+          device.id; // Mark this device as being connected to
     });
     await bleConnectDevice(device.id);
     deviceId = device.id;
@@ -170,10 +171,12 @@ class _FoundDevicesState extends State<FoundDevices> with TickerProviderStateMix
                                   width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
                                   ),
                                 )
-                              : const SizedBox.shrink(), // Show loading indicator if connecting
+                              : const SizedBox
+                                  .shrink(), // Show loading indicator if connecting
                         )
                       ],
                     ),

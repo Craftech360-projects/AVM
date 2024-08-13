@@ -644,7 +644,6 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart'; // Correct import for DragStartBehavior
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:friend_private/backend/api_requests/api/server.dart';
@@ -728,7 +727,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   _setupHasSpeakerProfile() async {
     SharedPreferencesUtil().hasSpeakerProfile =
         await userHasSpeakerProfile(SharedPreferencesUtil().uid);
-    print(
+    debugPrint(
         '_setupHasSpeakerProfile: ${SharedPreferencesUtil().hasSpeakerProfile}');
     MixpanelManager().setUserProperty(
         'Speaker Profile', SharedPreferencesUtil().hasSpeakerProfile);
@@ -932,6 +931,11 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                       refreshMemories: _initiateMemories,
                       textFieldFocusNode: memoriesTextFieldFocusNode,
                     ),
+                    // TestPage(
+                    //   refreshMemories: _initiateMemories,
+                    //   textFieldFocusNode: memoriesTextFieldFocusNode,
+                    //   memories: memories,
+                    // ),
                     CapturePage(
                       key: capturePageKey,
                       device: _device,
@@ -997,14 +1001,17 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                                 top: 20,
                                 bottom: 20,
                               ),
-                              child: Text('Capture',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: _controller!.index == 1
-                                          ? Colors.white
-                                          : Colors.grey,
-                                      fontSize: 16)),
+                              child: Text(
+                                'Capture',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: _controller!.index == 1
+                                      ? Colors.white
+                                      : Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -1110,8 +1117,11 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                           side: const BorderSide(color: Colors.white, width: 1),
                         ),
                       ),
-                      child: Image.asset('assets/images/logo_transparent.png',
-                          width: 25, height: 25),
+                      child: Image.asset(
+                        'assets/images/herologo.png',
+                        width: 30,
+                        height: 30,
+                      ),
                     ),
               _controller!.index == 2
                   ? Padding(

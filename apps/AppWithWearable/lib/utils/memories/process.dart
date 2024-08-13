@@ -1,7 +1,9 @@
-import 'package:flutter/foundation.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/pinecone.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
+import 'package:friend_private/backend/api_requests/api/random_memory_img.dart';
 import 'package:friend_private/backend/database/geolocation.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
@@ -95,6 +97,7 @@ Future<Memory> memoryCreationBlock(
   String transcript,
   List<TranscriptSegment> transcriptSegments,
   String? recordingFilePath,
+  // Uint8List memoryImg,
   bool retrievedFromCache,
   DateTime? startedAt,
   DateTime? finishedAt,
@@ -136,13 +139,17 @@ Future<Memory> memoryCreationBlock(
           description: event.description);
     }
   }
+  final memoryImg= await getImage();
+  
   debugPrint("going to save ,saving memory");
+
   Memory memory = await finalizeMemoryRecord(
     transcript,
     transcriptSegments,
     structured,
     summarizeResult.pluginsResponse,
     recordingFilePath,
+    memoryImg,
     startedAt,
     finishedAt,
     structured.title.isEmpty,
@@ -180,6 +187,7 @@ Future<Memory> finalizeMemoryRecord(
   Structured structured,
   List<Tuple2<Plugin, String>> pluginsResponse,
   String? recordingFilePath,
+  Uint8List memoryImg,
   DateTime? startedAt,
   DateTime? finishedAt,
   bool discarded,
@@ -189,6 +197,7 @@ Future<Memory> finalizeMemoryRecord(
   var memory = Memory(
     DateTime.now(),
     transcript,
+    memoryImg,
     discarded,
     recordingFilePath: recordingFilePath,
     startedAt: startedAt,
