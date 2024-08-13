@@ -53,11 +53,14 @@ class _MemoryListItemState extends State<MemoryListItem> {
                 borderRadius: const BorderRadius.all(
                   Radius.circular(16),
                 ),
-                child: Image.memory(
-                  widget.memory.memoryImg!,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                child: widget.memory.memoryImg == null
+                    ? SizedBox
+                        .shrink() // or any other widget to represent an empty state
+                    : Image.memory(
+                        widget.memory.memoryImg!,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
               ),
             ),
             Padding(
