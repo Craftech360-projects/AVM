@@ -35,7 +35,8 @@ getNotificationsWidgets(
           children: [
             const Text(
               'Post memory analysis',
-              style: TextStyle(color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+              style: TextStyle(
+                  color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
             ),
             Container(
               decoration: BoxDecoration(
@@ -50,13 +51,14 @@ getNotificationsWidgets(
               ),
               width: 22,
               height: 22,
-              child: postMemoryNotificationIsChecked // Show the icon only when checked
-                  ? const Icon(
-                      Icons.check,
-                      color: Colors.white, // Tick color
-                      size: 18,
-                    )
-                  : null, // No icon when unchecked
+              child:
+                  postMemoryNotificationIsChecked // Show the icon only when checked
+                      ? const Icon(
+                          Icons.check,
+                          color: Colors.white, // Tick color
+                          size: 18,
+                        )
+                      : null, // No icon when unchecked
             ),
           ],
         ),
@@ -81,7 +83,8 @@ getNotificationsWidgets(
           children: [
             const Text(
               'Reminder to reconnect',
-              style: TextStyle(color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+              style: TextStyle(
+                  color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
             ),
             Container(
               decoration: BoxDecoration(
@@ -96,13 +99,14 @@ getNotificationsWidgets(
               ),
               width: 22,
               height: 22,
-              child: reconnectNotificationIsChecked // Show the icon only when checked
-                  ? const Icon(
-                      Icons.check,
-                      color: Colors.white, // Tick color
-                      size: 18,
-                    )
-                  : null, // No icon when unchecked
+              child:
+                  reconnectNotificationIsChecked // Show the icon only when checked
+                      ? const Icon(
+                          Icons.check,
+                          color: Colors.white, // Tick color
+                          size: 18,
+                        )
+                      : null, // No icon when unchecked
             ),
           ],
         ),
@@ -112,7 +116,8 @@ getNotificationsWidgets(
   ];
 }
 
-getRecordingSettings(Function(String?) onLanguageChanged, String selectedLanguage) {
+getRecordingSettings(
+    Function(String?) onLanguageChanged, String selectedLanguage) {
   return [
     const Padding(
       padding: EdgeInsets.symmetric(horizontal: 4),
@@ -120,7 +125,8 @@ getRecordingSettings(Function(String?) onLanguageChanged, String selectedLanguag
         alignment: Alignment.centerLeft,
         child: Text(
           'RECORDING SETTINGS',
-          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          style: TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
     ),
@@ -145,12 +151,16 @@ getRecordingSettings(Function(String?) onLanguageChanged, String selectedLanguag
         ),
         isExpanded: true,
         itemHeight: 48,
-        items: availableLanguages.keys.map<DropdownMenuItem<String>>((String key) {
+        items:
+            availableLanguages.keys.map<DropdownMenuItem<String>>((String key) {
           return DropdownMenuItem<String>(
             value: availableLanguages[key],
             child: Text(
               '$key (${availableLanguages[key]})',
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 16),
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16),
             ),
           );
         }).toList(),
@@ -191,9 +201,11 @@ getPreferencesWidgets({
                 child: GestureDetector(
                   onTap: viewPrivacyDetails,
                   child: const Text(
-                    'Help improve Friend by sharing anonymized analytics data',
+                    'Help improve AVM by sharing anonymized analytics data',
                     style: TextStyle(
-                        color: Color.fromARGB(255, 150, 150, 150), fontSize: 16, decoration: TextDecoration.underline),
+                        color: Color.fromARGB(255, 150, 150, 150),
+                        fontSize: 16,
+                        decoration: TextDecoration.underline),
                   ),
                 ),
               ),
@@ -237,7 +249,8 @@ getPreferencesWidgets({
             children: [
               const Text(
                 'Automatic Cloud Backups',
-                style: TextStyle(color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+                style: TextStyle(
+                    color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -276,7 +289,8 @@ getPreferencesWidgets({
             children: [
               const Text(
                 'Developer Mode',
-                style: TextStyle(color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+                style: TextStyle(
+                    color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -307,7 +321,8 @@ getPreferencesWidgets({
   ];
 }
 
-getItemAddOn(String title, VoidCallback onTap, {required IconData icon, bool visibility = true}) {
+getItemAddOn(String title, VoidCallback onTap,
+    {required IconData icon, bool visibility = true}) {
   return Visibility(
     visible: visibility,
     child: GestureDetector(
@@ -316,26 +331,32 @@ getItemAddOn(String title, VoidCallback onTap, {required IconData icon, bool vis
         padding: const EdgeInsets.fromLTRB(0, 12, 8, 0),
         child: Container(
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 29, 29, 29), // Replace with your desired color
-            borderRadius: BorderRadius.circular(10.0), // Adjust for desired rounded corners
+            color: const Color.fromARGB(
+                35, 255, 255, 255), // Replace with your desired color
+            borderRadius: BorderRadius.circular(
+                10.0), // Adjust for desired rounded corners
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
-                    ),
-                    const SizedBox(width: 16),
-                    Icon(icon, color: Colors.white, size: 16),
-                  ],
-                ),
-                const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
-              ],
+            child: Expanded(
+              child: Row(
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 150, 150, 150),
+                        fontSize: 16),
+                  ),
+                  const SizedBox(width: 16),
+                  Icon(icon, color: Colors.white, size: 16),
+                  const Spacer(),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

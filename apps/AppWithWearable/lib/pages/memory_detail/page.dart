@@ -17,7 +17,10 @@ import 'package:tuple/tuple.dart';
 class MemoryDetailPage extends StatefulWidget {
   final Memory memory;
 
-  const MemoryDetailPage({super.key, required this.memory});
+  const MemoryDetailPage({
+    super.key,
+    required this.memory,
+  });
 
   @override
   State<MemoryDetailPage> createState() => _MemoryDetailPageState();
@@ -110,7 +113,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
       canPop: true,
       child: CustomScaffold(
         // key: scaffoldKey,
-        // backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Theme.of(context).colorScheme.primary,
@@ -189,7 +192,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Swipe(
                   onSwipeUp: () {
                     print('swipe up triggered');
@@ -199,13 +202,14 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                   },
                   onSwipeDown: () {
                     print('swipe down triggered');
-                     Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (context) =>
                             MemoryDetailPage(memory: widget.memory)));
                   },
                   child: TabBarView(
                     controller: _controller,
                     children: [
+                      //* Transcript Tab
                       ListView(
                         physics: _isReachedEnd
                             ? const NeverScrollableScrollPhysics()
@@ -216,6 +220,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                             ? _getImagesWidget()
                             : _getTranscriptWidgets(),
                       ),
+                      //* Summary Tab
                       ListView(
                         physics: _isReachedEnd
                             ? const NeverScrollableScrollPhysics()

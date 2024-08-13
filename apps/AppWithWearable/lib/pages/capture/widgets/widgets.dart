@@ -28,6 +28,7 @@ getConnectionStateWidgets(
     WebsocketConnectionStatus wsConnectionState,
     InternetStatus? internetStatus,
     {double sizeMultiplier = .3}) {
+
   if (hasTranscripts) return [];
   if (device == null) {
     return [
@@ -40,9 +41,9 @@ getConnectionStateWidgets(
       SharedPreferencesUtil().deviceId.isEmpty
           ? _getNoFriendConnectedYet(context)
           : const ScanningUI(
-              string1: 'Looking for Friend wearable',
+              string1: 'Looking for AVM wearable',
               string2:
-                  'Locating your Friend device. Keep it near your phone for pairing',
+                  'Locating your AVM device. Keep it near your phone for pairing',
             ),
     ];
   }
@@ -82,7 +83,6 @@ getConnectionStateWidgets(
         device: device,
         sizeMultiplier: 0.71,
       ),
-
     ),
     const SizedBox(height: 8),
     // const Row(

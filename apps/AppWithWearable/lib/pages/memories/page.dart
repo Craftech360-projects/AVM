@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/pages/memories/widgets/date_list_item.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 import 'widgets/empty_memories.dart';
 import 'widgets/memory_list_item.dart';
@@ -100,17 +99,11 @@ class _MemoriesPageState extends State<MemoriesPage>
             width: double.maxFinite,
             padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
             margin: const EdgeInsets.fromLTRB(18, 0, 18, 0),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.black,
-              borderRadius: BorderRadius.all(Radius.circular(16)),
-              border: GradientBoxBorder(
-                gradient: LinearGradient(colors: [
-                  Color.fromARGB(127, 208, 208, 208),
-                  Color.fromARGB(127, 188, 99, 121),
-                  Color.fromARGB(127, 86, 101, 182),
-                  Color.fromARGB(127, 126, 190, 236)
-                ]),
-                width: 1,
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
+              border: Border.all(
+                color: Colors.grey,
               ),
               shape: BoxShape.rectangle,
             ),

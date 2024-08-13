@@ -12,6 +12,7 @@ class MemoryProvider {
   static final Box<Structured> _boxStructured =
       ObjectBoxUtil().box!.store.box<Structured>();
   static final Box<Event> _boxEvent = ObjectBoxUtil().box!.store.box<Event>();
+  static final Box<ActionItem> _boxActionItem = ObjectBoxUtil().box!.store.box<ActionItem>();
 
   factory MemoryProvider() {
     return _instance;
@@ -19,6 +20,12 @@ class MemoryProvider {
 
   MemoryProvider._internal();
 
+//* Action Items Method
+// -----------------------
+
+  int updateActionItem(ActionItem item) => _boxActionItem.put(item);
+  
+// -----------------------
   List<Memory> getMemories() => _box.getAll();
   int getMemoriesCount() => _box.count();
 
