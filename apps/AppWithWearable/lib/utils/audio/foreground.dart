@@ -80,7 +80,7 @@ class ForegroundUtil {
         // foregroundServiceType: AndroidForegroundServiceType.CONNECTED_DEVICE,
         channelId: 'foreground_service',
         channelName: 'Foreground Service Notification',
-        channelDescription: 'Your Friend Device is connected',
+        channelDescription: 'Your AVM Device is connected',
         channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.HIGH,
         iconData: const NotificationIconData(
@@ -117,7 +117,7 @@ class ForegroundUtil {
     } else {
       print('starting service');
       return FlutterForegroundTask.startService(
-        notificationTitle: 'Your Friend Device is active',
+        notificationTitle: 'Your AVM Device is active',
         notificationText: 'Tap to open the app',
         callback: startCallback,
       );
