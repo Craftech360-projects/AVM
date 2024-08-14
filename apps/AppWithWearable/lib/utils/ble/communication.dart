@@ -96,7 +96,7 @@ Future<StreamSubscription?> getBleAudioBytesListener(
     return null;
   }
 
-  debugPrint('Subscribed to audioBytes stream from Friend Device');
+  debugPrint('Subscribed to audioBytes stream from AVM Device');
   var listener = audioDataStreamCharacteristic.lastValueStream.listen((value) {
     if (value.isNotEmpty) onAudioBytesReceived(value);
   });

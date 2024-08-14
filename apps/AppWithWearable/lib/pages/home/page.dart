@@ -1177,7 +1177,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                       ),
                     )
                   : const SizedBox(width: 16),
-                  //* Navigating to Setting Page
+              //* Navigating to Setting Page
               IconButton(
                 icon: const Icon(
                   Icons.settings,
