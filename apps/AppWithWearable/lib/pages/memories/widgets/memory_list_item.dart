@@ -30,6 +30,7 @@ class _MemoryListItemState extends State<MemoryListItem> {
             .memoryListItemClicked(widget.memory, widget.memoryIdx);
         await Navigator.of(context).push(MaterialPageRoute(
             builder: (c) => MemoryDetailPage(
+            
                   memory: widget.memory,
                 )));
         widget.loadMemories();

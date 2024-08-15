@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/memory.dart';
+import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
+import 'package:friend_private/core/snackbar_util.dart';
 import 'package:friend_private/pages/memories/widgets/date_list_item.dart';
 
 import 'widgets/empty_memories.dart';
@@ -39,6 +41,22 @@ class _MemoriesPageState extends State<MemoriesPage>
   _toggleDiscardMemories() async {
     MixpanelManager().showDiscardedMemoriesToggled(!displayDiscardMemories);
     setState(() => displayDiscardMemories = !displayDiscardMemories);
+  }
+
+// If user want to deleted memory can be done by this method
+// internally calling restore method
+  void _deleteMemory(Memory memory) async {
+    MemoryProvider().deleteMemory(memory);
+
+    widget.refreshMemories();
+  }
+
+// If user want to restore deleted memory can be done by this method
+  int _restoreMemory(Memory memory) {
+    final restoredMemory = MemoryProvider().updateMemory(memory);
+    widget.refreshMemories();
+    showSnackBar(message: 'Memory Restored', context: context);
+    return restoredMemory;
   }
 
   @override
@@ -202,10 +220,60 @@ class _MemoriesPageState extends State<MemoriesPage>
                     isFirst: index == 0,
                   );
                 }
-                return MemoryListItem(
-                  memoryIdx: index,
-                  memory: memoriesWithDates[index] as Memory,
-                  loadMemories: widget.refreshMemories,
+                // Delete Cards From Memory
+                return Dismissible(
+                  key: Key(memoriesWithDates[index].id.toString()),
+                  background: Container(
+                    color: const Color.fromARGB(123, 255, 103, 103),
+                    margin: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(right: 40),
+                    child: const Icon(
+                      Icons.delete_outline_rounded,
+                      size: 50,
+                      color: Color.fromARGB(255, 255, 166, 160),
+                    ),
+                  ),
+                  direction: DismissDirection.startToEnd,
+                  onDismissed: (direction) async {
+                    _deleteMemory(memoriesWithDates[index] as Memory);
+                    await showDialog<String>(
+                      context: context,
+                      builder: (BuildContext context) => AlertDialog(
+                        title: const Text('Confirm Deletion'),
+                        content: const Text(
+                            'Are you sure you want to delete this memory?'),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => {
+                              _restoreMemory(
+                                  memoriesWithDates[index] as Memory),
+                              Navigator.pop(context, 'Cancel'),
+                            },
+                            child: const Text(
+                              'Restore',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => {
+                              Navigator.pop(context, 'OK'),
+                            },
+                            child: const Text(
+                              'Remove',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    // _deleteMemory(memoriesWithDates[index] as Memory);
+                  },
+                  child: MemoryListItem(
+                    memoryIdx: index,
+                    memory: memoriesWithDates[index] as Memory,
+                    loadMemories: widget.refreshMemories,
+                  ),
                 );
               },
               childCount: memoriesWithDates.length,

@@ -19,7 +19,7 @@ class MemoryDetailPage extends StatefulWidget {
 
   const MemoryDetailPage({
     super.key,
-    required this.memory,
+    required this.memory, 
   });
 
   @override
@@ -234,6 +234,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                               editingOverview,
                               focusOverviewField,
                               setState,
+                           
                             ) +
                             getPluginsWidgets(
                               context,

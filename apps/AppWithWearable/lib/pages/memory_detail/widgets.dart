@@ -10,6 +10,7 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/pages/memories/widgets/confirm_deletion_widget.dart';
+import 'package:friend_private/pages/memory_detail/enable_title.dart';
 import 'package:friend_private/pages/memory_detail/test_prompts.dart';
 import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
@@ -27,6 +28,7 @@ List<Widget> getSummaryWidgets(
   bool editingOverview,
   FocusNode focusOverviewField,
   StateSetter setState,
+
 ) {
   var structured = memory.structured.target!;
   String time = memory.startedAt == null
@@ -34,10 +36,30 @@ List<Widget> getSummaryWidgets(
       : '${dateTimeFormat('h:mm a', memory.startedAt)} to ${dateTimeFormat('h:mm a', memory.finishedAt)}';
   return [
     const SizedBox(height: 24),
-    Text(
-      memory.discarded ? 'Discarded Memory' : structured.title,
+    // GestureDetector(
+    //   onLongPress: () {
+    //     print('Editing title');
+    //   },
+    //   child: Text(
+    //     memory.discarded ? 'Discarded Memory' : structured.title,
+    //     style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32),
+    //   ),
+    // ),
+    EditableTitle(
+      initialTitle: structured.title,
+      onTitleChanged: (newTitle) {
+        setState(() {
+          memory.structured.target!.title = newTitle;
+
+          MemoryProvider().updateMemory(memory);
+
+       
+        });
+      },
+      discarded: memory.discarded,
       style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32),
     ),
+
     const SizedBox(height: 16),
     Text(
       '${dateTimeFormat('MMM d,  yyyy', memory.createdAt)} ${memory.startedAt == null ? 'at' : 'from'} $time',
@@ -88,8 +110,8 @@ List<Widget> getSummaryWidgets(
     memory.discarded ? const SizedBox.shrink() : const SizedBox(height: 8),
     memory.discarded
         ? const SizedBox.shrink()
-        : _getEditTextField(
-            memory, overviewController, editingOverview, focusOverviewField),
+        : _getEditTextField(memory, overviewController, editingOverview,
+            focusOverviewField, setState),
     memory.discarded ? const SizedBox.shrink() : const SizedBox(height: 40),
     structured.actionItems.isNotEmpty
         ? Row(
@@ -216,8 +238,13 @@ List<Widget> getSummaryWidgets(
   ];
 }
 
-_getEditTextField(Memory memory, TextEditingController controller, bool enabled,
-    FocusNode focusNode) {
+_getEditTextField(
+  Memory memory,
+  TextEditingController controller,
+  bool enabled,
+  FocusNode focusNode,
+  StateSetter setState,
+) {
   if (memory.discarded) return const SizedBox.shrink();
   return enabled
       ? TextField(
@@ -234,11 +261,24 @@ _getEditTextField(Memory memory, TextEditingController controller, bool enabled,
               TextStyle(color: Colors.grey.shade300, fontSize: 15, height: 1.3),
         )
       : SelectionArea(
-          child: Text(
-            controller.text,
+          child: EditableTitle(
+            initialTitle: controller.text,
+            onTitleChanged: (changedOverview) {
+              setState(() {
+                memory.structured.target!.overview = changedOverview;
+
+                MemoryProvider().updateMemory(memory);
+              });
+            },
+            discarded: enabled,
             style: TextStyle(
                 color: Colors.grey.shade300, fontSize: 15, height: 1.3),
           ),
+          // child: Text(
+          //   controller.text,
+          //   style: TextStyle(
+          //       color: Colors.grey.shade300, fontSize: 15, height: 1.3),
+          // ),
         );
 }
 
@@ -264,12 +304,13 @@ List<Widget> getPluginsWidgets(
           Container(
             decoration: BoxDecoration(
               border: const GradientBoxBorder(
-                gradient: LinearGradient(colors: [
-                  Color.fromARGB(127, 208, 208, 208),
-                  Color.fromARGB(127, 188, 99, 121),
-                  Color.fromARGB(127, 86, 101, 182),
-                  Color.fromARGB(127, 126, 190, 236)
-                ],
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromARGB(127, 208, 208, 208),
+                    Color.fromARGB(127, 188, 99, 121),
+                    Color.fromARGB(127, 86, 101, 182),
+                    Color.fromARGB(127, 126, 190, 236)
+                  ],
                 ),
                 width: 2,
               ),
