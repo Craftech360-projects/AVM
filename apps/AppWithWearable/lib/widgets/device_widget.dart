@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class DeviceAnimationWidget extends StatefulWidget {
   final bool animatedBackground;
-  final double sizeMultiplier;
+  // final double sizeMultiplier;
 
   const DeviceAnimationWidget({
     super.key,
-    this.sizeMultiplier = 1.0,
+    // this.sizeMultiplier = 1.0,
     this.animatedBackground = true,
   });
 
@@ -17,7 +17,7 @@ class DeviceAnimationWidget extends StatefulWidget {
 class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget>
     with TickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
+  // late Animation<double> _animation;
 
   @override
   void initState() {
@@ -25,7 +25,7 @@ class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget>
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     )..repeat(reverse: true);
-    _animation = Tween<double>(begin: 1, end: 0.8).animate(_controller);
+    // _animation = Tween<double>(begin: 1, end: 0.8).animate(_controller);
     super.initState();
   }
 
@@ -37,28 +37,21 @@ class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget>
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.sizeOf(context).height <= 700
-          ? 280 * widget.sizeMultiplier
-          : 400 * widget.sizeMultiplier,
-      child: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Image.asset(
-              "assets/images/stars.png",
-            ),
-            Container(),
-            // Image.asset("assets/images/blob.png"),
-            Image.asset(
-              "assets/images/herologo.png",
-              height: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160) *
-                  widget.sizeMultiplier,
-              width: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160) *
-                  widget.sizeMultiplier,
-            )
-          ],
-        ),
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Image.asset(
+            "assets/images/stars.png",
+          ),
+    
+          // Image.asset("assets/images/blob.png"),
+          Image.asset(
+            "assets/images/herologo.png",
+            height: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160),
+            width: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160),
+          )
+        ],
       ),
     );
   }

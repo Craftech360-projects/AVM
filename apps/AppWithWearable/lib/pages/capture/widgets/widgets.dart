@@ -54,7 +54,7 @@ getConnectionStateWidgets(
           wsConnectionState == WebsocketConnectionStatus.error;
 
   return [
-    const Center(child: DeviceAnimationWidget(sizeMultiplier: 0.7)),
+    const Center(child: DeviceAnimationWidget()),
     GestureDetector(
       onTap: isWifiDisconnected || isWebsocketError
           ? () {
@@ -83,6 +83,8 @@ getConnectionStateWidgets(
         device: device,
         sizeMultiplier: 0.71,
       ),
+      // child: Lottie.asset('assets/lottie_animations/ani.json'),
+     
     ),
     const SizedBox(height: 8),
     // const Row(

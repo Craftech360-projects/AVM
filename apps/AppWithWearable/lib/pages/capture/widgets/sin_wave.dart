@@ -58,7 +58,11 @@ class _SineWaveWidgetState extends State<SineWaveWidget>
           animation: _sineAnimation,
           builder: (context, child) {
             return Column(
+             
               children: [
+                   isWifiDisconnected
+                    ? const SizedBox.shrink()
+                    :  Lottie.asset('assets/lottie_animations/wave_animation.json'),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -132,17 +136,16 @@ class _SineWaveWidgetState extends State<SineWaveWidget>
                 //       fontWeight: FontWeight.w500,
                 //       height: 1.2),
                 // ),
-                const SizedBox(height: 40),
-                isWifiDisconnected
-                    ? const SizedBox.shrink()
-                    : SizedBox(
-                        height: 10 * widget.sizeMultiplier,
-                        width: constraints.maxWidth,
-                        child: CustomPaint(
-                          painter: SinePainter(
-                              _sineAnimation, widget.sizeMultiplier),
-                        ),
-                      ),
+                // const SizedBox(height: 40),
+             
+                    //  SizedBox(
+                    //     height: 10 * widget.sizeMultiplier,
+                    //     width: constraints.maxWidth,
+                    //     child: CustomPaint(
+                    //       painter: SinePainter(
+                    //           _sineAnimation, widget.sizeMultiplier),
+                    //     ),
+                    //   ),
               ],
             );
           },

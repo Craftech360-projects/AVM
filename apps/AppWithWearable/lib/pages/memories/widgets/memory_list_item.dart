@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/memory.dart';
+import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/pages/memory_detail/page.dart';
 import 'package:intl/intl.dart';
@@ -21,9 +22,30 @@ class MemoryListItem extends StatefulWidget {
 }
 
 class _MemoryListItemState extends State<MemoryListItem> {
+  late Memory memory;
+
+  @override
+  void initState() {
+    super.initState();
+    memory = widget.memory; 
+  }
+
+  Future<void> _refreshMemory() async {
+    Memory? updatedMemory = MemoryProvider().getMemoryById(memory.id);
+
+    if (updatedMemory != null) {
+      setState(() {
+        memory = updatedMemory;
+      });
+    } else {
+      print('Memory not found in database.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Structured structured = widget.memory.structured.target!;
+
     return GestureDetector(
       onTap: () async {
         MixpanelManager()
@@ -32,10 +54,15 @@ class _MemoryListItemState extends State<MemoryListItem> {
             builder: (c) => MemoryDetailPage(
                   memory: widget.memory,
                 )));
+       
+          await _refreshMemory();
+       
+
         widget.loadMemories();
         // FocusScope.of(context).unfocus();
       },
       child: Container(
+        key: UniqueKey(),
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
         margin: const EdgeInsets.only(top: 12, left: 8, right: 8),
         width: double.maxFinite,
@@ -54,7 +81,7 @@ class _MemoryListItemState extends State<MemoryListItem> {
                   Radius.circular(16),
                 ),
                 child: widget.memory.memoryImg == null
-                    ? SizedBox
+                    ? const SizedBox
                         .shrink() // or any other widget to represent an empty state
                     : Image.memory(
                         widget.memory.memoryImg!,
