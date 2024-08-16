@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
 class EditableTitle extends StatefulWidget {
-  final String initialTitle;
-  final Function(String) onTitleChanged;
+  final String initialText;
+  final Function(String) onTextChanged;
   final bool discarded;
   final TextStyle style;
 
   const EditableTitle({
     super.key,
-    required this.initialTitle,
-    required this.onTitleChanged,
+    required this.initialText,
+    required this.onTextChanged,
     required this.discarded,
     required this.style,
   });
 
   @override
-  _EditableTitleState createState() => _EditableTitleState();
+  State<EditableTitle> createState() => _EditableTitleState();
 }
 
 class _EditableTitleState extends State<EditableTitle> {
@@ -26,7 +26,7 @@ class _EditableTitleState extends State<EditableTitle> {
   @override
   void initState() {
     super.initState();
-    _currentTitle = widget.initialTitle;
+    _currentTitle = widget.initialText;
     _controller = TextEditingController(text: _currentTitle);
   }
 
@@ -52,13 +52,13 @@ class _EditableTitleState extends State<EditableTitle> {
                   _isEditing = false;
                   _currentTitle = newTitle;
                 });
-                widget.onTitleChanged(newTitle);
+                widget.onTextChanged(newTitle);
               },
               autofocus: true,
               style: widget.style,
-              maxLines: null, 
+              maxLines: null,
               minLines: 1,
-              expands: false, 
+              expands: false,
               textInputAction: TextInputAction.done,
             )
           : Text(

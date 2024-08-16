@@ -44,9 +44,11 @@ void _exportPDF(Memory memory, bool isTranscript) async {
         build: (pw.Context context) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Text('Transcript Export', style: const pw.TextStyle(fontSize: 20)),
+            pw.Text('Transcript Export',
+                style: const pw.TextStyle(fontSize: 20)),
             pw.SizedBox(height: 12),
-            pw.Text(memory.getTranscript(generate: true), style: const pw.TextStyle(fontSize: 12)),
+            pw.Text(memory.getTranscript(generate: true),
+                style: const pw.TextStyle(fontSize: 12)),
             pw.SizedBox(height: 12),
           ],
         ),
@@ -60,7 +62,8 @@ void _exportPDF(Memory memory, bool isTranscript) async {
           children: [
             pw.Text('Memory Export', style: const pw.TextStyle(fontSize: 24)),
             pw.SizedBox(height: 12),
-            pw.Text('Title: ${structured.title}', style: const pw.TextStyle(fontSize: 18)),
+            pw.Text('Title: ${structured.title}',
+                style: const pw.TextStyle(fontSize: 18)),
             pw.SizedBox(height: 12),
             pw.Text('Overview', style: const pw.TextStyle(fontSize: 18)),
             pw.Text(structured.overview),
@@ -95,7 +98,8 @@ void _exportTranscriptTxt(Memory memory) async {
 void _exportSummaryTxt(Memory memory) async {
   final directory = await getApplicationDocumentsDirectory();
   final summaryFile = File('${directory.path}/summary.txt');
-  await summaryFile.writeAsString("$header${memory.structured.target!.toString()}");
+  await summaryFile
+      .writeAsString("$header${memory.structured.target!.toString()}");
   await Share.shareXFiles([XFile(summaryFile.path)], text: header);
 }
 
@@ -133,7 +137,8 @@ void showShareBottomSheet(
     context: context,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+      borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(16), topRight: Radius.circular(16)),
     ),
     builder: (ctx) {
       return StatefulBuilder(
@@ -157,7 +162,8 @@ void showShareBottomSheet(
           return Container(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(16), topRight: Radius.circular(16)),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Column(
@@ -175,52 +181,78 @@ void showShareBottomSheet(
                       onPressed: () => Navigator.of(ctx).pop(),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Copy',
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  const SizedBox(height: 8),
                   Card(
-                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
-                    child: Column(
-                      children: [
-                        _buildListTile(
-                          context,
-                          title: 'Copy Transcript',
-                          icon: Icons.copy,
-                          onTap: () => {Navigator.pop(ctx), _copyTranscript(context, memory)},
-                        ),
-                        memory.discarded
-                            ? const SizedBox.shrink()
-                            : _buildListTile(
-                                context,
-                                title: 'Copy Summary',
-                                icon: Icons.file_copy,
-                                onTap: () => {Navigator.pop(ctx), _copySummary(context, memory)},
-                              ),
-                      ],
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          _buildListTile(
+                            context,
+                            title: 'Transcript',
+                            icon: Icons.copy,
+                            onTap: () => {
+                              Navigator.pop(ctx),
+                              _copyTranscript(context, memory)
+                            },
+                          ),
+                          memory.discarded
+                              ? const SizedBox.shrink()
+                              : _buildListTile(
+                                  context,
+                                  title: 'Summary',
+                                  icon: Icons.file_copy,
+                                  onTap: () => {
+                                    Navigator.pop(ctx),
+                                    _copySummary(context, memory)
+                                  },
+                                ),
+                        ],
+                      ),
                     ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Export',
+                    style: Theme.of(context).textTheme.labelLarge,
                   ),
                   const SizedBox(height: 8),
                   Card(
                     shape: memory.discarded
                         ? null
-                        : const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-                    child: Column(
-                      children: [
-                        _buildListTile(
-                          context,
-                          title: 'Export Transcript',
-                          icon: Icons.description,
-                          onTap: () {
-                            updateView(BottomSheetView.exportTranscript);
-                          },
-                        ),
-                        memory.discarded
-                            ? const SizedBox.shrink()
-                            : _buildListTile(
-                                context,
-                                title: 'Export Summary',
-                                icon: Icons.summarize,
-                                onTap: () => updateView(BottomSheetView.exportSummary),
-                              ),
-                      ],
+                        : const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(12))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          _buildListTile(
+                            context,
+                            title: 'Transcript',
+                            icon: Icons.description,
+                            onTap: () {
+                              updateView(BottomSheetView.exportTranscript);
+                            },
+                          ),
+                          memory.discarded
+                              ? const SizedBox.shrink()
+                              : _buildListTile(
+                                  context,
+                                  title: 'Summary',
+                                  icon: Icons.summarize,
+                                  onTap: () =>
+                                      updateView(BottomSheetView.exportSummary),
+                                ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 10)
@@ -230,7 +262,8 @@ void showShareBottomSheet(
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: Text('Export Transcript', style: Theme.of(context).textTheme.labelLarge),
+                        child: Text('Export Transcript',
+                            style: Theme.of(context).textTheme.labelLarge),
                       ),
                       IconButton(
                         icon: const Icon(Icons.cancel_outlined),
@@ -252,7 +285,9 @@ void showShareBottomSheet(
                           title: const Text('TXT'),
                           trailing: SizedBox(
                               width: 60,
-                              child: exportType == ExportType.txt ? const Icon(Icons.check_outlined) : Container()),
+                              child: exportType == ExportType.txt
+                                  ? const Icon(Icons.check_outlined)
+                                  : Container()),
                           onTap: () => setExportType(ExportType.txt),
                         ),
                         // FIXME ~ is not working ~ helvetica issue
@@ -285,7 +320,8 @@ void showShareBottomSheet(
                             break;
                         }
                       },
-                      child: Text('Export', style: Theme.of(context).textTheme.bodyLarge),
+                      child: Text('Export',
+                          style: Theme.of(context).textTheme.bodyLarge),
                     ),
                   ),
                 ] else if (currentView == BottomSheetView.exportSummary) ...[
@@ -294,7 +330,8 @@ void showShareBottomSheet(
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
-                        child: Text('Export Summary', style: Theme.of(context).textTheme.labelLarge),
+                        child: Text('Export Summary',
+                            style: Theme.of(context).textTheme.labelLarge),
                       ),
                       IconButton(
                         icon: const Icon(Icons.cancel_outlined),
@@ -319,7 +356,9 @@ void showShareBottomSheet(
                           onTap: () => setExportType(ExportType.txt),
                           trailing: SizedBox(
                             width: 60,
-                            child: exportType == ExportType.txt ? const Icon(Icons.check_outlined) : null,
+                            child: exportType == ExportType.txt
+                                ? const Icon(Icons.check_outlined)
+                                : null,
                           ),
                         ),
                         // FIXME markdown export not working
@@ -338,7 +377,9 @@ void showShareBottomSheet(
                           onTap: () => setExportType(ExportType.pdf),
                           trailing: SizedBox(
                             width: 60,
-                            child: exportType == ExportType.pdf ? const Icon(Icons.check_outlined) : null,
+                            child: exportType == ExportType.pdf
+                                ? const Icon(Icons.check_outlined)
+                                : null,
                           ),
                         ),
                       ],
@@ -364,7 +405,8 @@ void showShareBottomSheet(
                             break;
                         }
                       },
-                      child: Text('Export', style: Theme.of(context).textTheme.bodyLarge),
+                      child: Text('Export',
+                          style: Theme.of(context).textTheme.bodyLarge),
                     ),
                   ),
                 ]

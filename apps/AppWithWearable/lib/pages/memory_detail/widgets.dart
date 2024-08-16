@@ -28,38 +28,34 @@ List<Widget> getSummaryWidgets(
   bool editingOverview,
   FocusNode focusOverviewField,
   StateSetter setState,
-
 ) {
   var structured = memory.structured.target!;
   String time = memory.startedAt == null
       ? dateTimeFormat('h:mm a', memory.createdAt)
       : '${dateTimeFormat('h:mm a', memory.startedAt)} to ${dateTimeFormat('h:mm a', memory.finishedAt)}';
   return [
-    const SizedBox(height: 24),
-    // GestureDetector(
-    //   onLongPress: () {
-    //     print('Editing title');
-    //   },
-    //   child: Text(
-    //     memory.discarded ? 'Discarded Memory' : structured.title,
-    //     style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32),
-    //   ),
-    // ),
+    const SizedBox(height: 16),
+    const Align(
+      alignment: Alignment.centerLeft,
+      child: Icon(
+        Icons.edit,
+        color: Colors.grey,
+        size: 16,
+      ),
+    ),
+    const SizedBox(height: 8),
     EditableTitle(
-      initialTitle: structured.title,
-      onTitleChanged: (newTitle) {
+      initialText: structured.title,
+      onTextChanged: (newTitle) {
         setState(() {
-          memory.structured.target!.title = newTitle;
+          structured.title = newTitle;
 
-          MemoryProvider().updateMemory(memory);
-
-       
+          MemoryProvider().updateMemoryStructured(structured);
         });
       },
       discarded: memory.discarded,
       style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 32),
     ),
-
     const SizedBox(height: 16),
     Text(
       '${dateTimeFormat('MMM d,  yyyy', memory.createdAt)} ${memory.startedAt == null ? 'at' : 'from'} $time',
@@ -107,7 +103,16 @@ List<Widget> getSummaryWidgets(
         : ((memory.geolocation.target != null)
             ? const SizedBox(height: 8)
             : const SizedBox.shrink()),
-    memory.discarded ? const SizedBox.shrink() : const SizedBox(height: 8),
+    memory.discarded
+        ? const SizedBox.shrink()
+        : const Align(
+            alignment: Alignment.centerLeft,
+            child: Icon(
+              Icons.edit,
+              color: Colors.grey,
+              size: 16,
+            ),
+          ),
     memory.discarded
         ? const SizedBox.shrink()
         : _getEditTextField(memory, overviewController, editingOverview,
@@ -245,6 +250,7 @@ _getEditTextField(
   FocusNode focusNode,
   StateSetter setState,
 ) {
+  var structured = memory.structured.target!;
   if (memory.discarded) return const SizedBox.shrink();
   return enabled
       ? TextField(
@@ -262,12 +268,12 @@ _getEditTextField(
         )
       : SelectionArea(
           child: EditableTitle(
-            initialTitle: controller.text,
-            onTitleChanged: (changedOverview) {
+            initialText: controller.text,
+            onTextChanged: (changedOverview) {
               setState(() {
-                memory.structured.target!.overview = changedOverview;
+                structured.overview = changedOverview;
 
-                MemoryProvider().updateMemory(memory);
+                MemoryProvider().updateMemoryStructured(structured);
               });
             },
             discarded: enabled,
