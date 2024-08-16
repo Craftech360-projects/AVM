@@ -24,7 +24,7 @@ import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:location/location.dart';
+// import 'package:location/location.dart';
 import 'package:uuid/uuid.dart';
 
 import 'logic/websocket_mixin.dart';
@@ -224,7 +224,7 @@ class CapturePageState extends State<CapturePage>
       file?.path,
       startedAt: currentTranscriptStartedAt,
       finishedAt: currentTranscriptFinishedAt,
-      geolocation: await LocationService().getGeolocationDetails(),
+      // geolocation: await LocationService().getGeolocationDetails(),
       photos: photos,
       // TODO: determinePhotosToKeep(photos);
       sendMessageToChat: sendMessageToChat,
@@ -301,22 +301,23 @@ class CapturePageState extends State<CapturePage>
 
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (await LocationService().displayPermissionsDialog()) {
-        showDialog(
-          context: context,
-          builder: (c) => getDialog(
-            context,
-            () => Navigator.of(context).pop(),
-            () async {
-              Navigator.of(context).pop();
-              await requestLocationPermission();
-            },
-            'Enable Location Services?  🌍',
-            'We need your location permissions to add a location tag to your memories. This will help you remember where they happened.',
-            singleButton: false,
-          ),
-        );
-      }
+   //!  Location Disabled As Of Now
+      // if (await LocationService().displayPermissionsDialog()) {
+      //   showDialog(
+      //     context: context,
+      //     builder: (c) => getDialog(
+      //       context,
+      //       () => Navigator.of(context).pop(),
+      //       () async {
+      //         Navigator.of(context).pop();
+      //         await requestLocationPermission();
+      //       },
+      //       'Enable Location Services?  🌍',
+      //       'We need your location permissions to add a location tag to your memories. This will help you remember where they happened.',
+      //       singleButton: false,
+      //     ),
+      //   );
+      // }
     });
     _internetListener =
         InternetConnection().onStatusChange.listen((InternetStatus status) {
@@ -347,39 +348,40 @@ class CapturePageState extends State<CapturePage>
   }
 
   Future requestLocationPermission() async {
-    LocationService locationService = LocationService();
-    bool serviceEnabled = await locationService.enableService();
-    if (!serviceEnabled) {
-      debugPrint('Location service not enabled');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Location services are disabled. Enable them for a better experience.',
-              style: TextStyle(color: Colors.white, fontSize: 14),
-            ),
-          ),
-        );
-      }
-    } else {
-      PermissionStatus permissionGranted =
-          await locationService.requestPermission();
-      if (permissionGranted == PermissionStatus.denied) {
-        debugPrint('Location permission not granted');
-      } else if (permissionGranted == PermissionStatus.deniedForever) {
-        debugPrint('Location permission denied forever');
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'If you change your mind, you can enable location services in your device settings.',
-                style: TextStyle(color: Colors.white, fontSize: 14),
-              ),
-            ),
-          );
-        }
-      }
-    }
+    //! Disabled As of Now
+    // LocationService locationService = LocationService();
+    // bool serviceEnabled = await locationService.enableService();
+    // if (!serviceEnabled) {
+    //   debugPrint('Location service not enabled');
+    //   if (mounted) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(
+    //         content: Text(
+    //           'Location services are disabled. Enable them for a better experience.',
+    //           style: TextStyle(color: Colors.white, fontSize: 14),
+    //         ),
+    //       ),
+    //     );
+    //   }
+    // } else {
+    //   PermissionStatus permissionGranted =
+    //       await locationService.requestPermission();
+    //   if (permissionGranted == PermissionStatus.denied) {
+    //     debugPrint('Location permission not granted');
+    //   } else if (permissionGranted == PermissionStatus.deniedForever) {
+    //     debugPrint('Location permission denied forever');
+    //     if (mounted) {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         const SnackBar(
+    //           content: Text(
+    //             'If you change your mind, you can enable location services in your device settings.',
+    //             style: TextStyle(color: Colors.white, fontSize: 14),
+    //           ),
+    //         ),
+    //       );
+    //     }
+    //   }
+    // }
   }
 
   @override

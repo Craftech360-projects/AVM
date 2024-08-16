@@ -62,12 +62,12 @@
 		<string>Access most functions for calendar viewing and editing.</string>
 		<key>NSContactsUsageDescription</key>
 		<string>Access contacts for event attendee editing.</string>
-		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<!-- <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 		<string>Always and when in use!</string>
 		<key>NSLocationUsageDescription</key>
 		<string>Older devices need location.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>Need location when in use</string>
+		<string>Need location when in use</string> -->
 		<key>NSMicrophoneUsageDescription</key>
 		<string>We need access to your microphone so you can share audio explanations of Bugs you find.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
