@@ -657,13 +657,13 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
+import 'package:friend_private/features/memory/presentation/pages/memory_page.dart';
 import 'package:friend_private/main.dart';
 import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/chat/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
-import 'package:friend_private/pages/memories/page.dart';
 import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/page.dart';
 import 'package:friend_private/scripts.dart';
@@ -925,11 +925,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   controller: _controller,
                   // physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    MemoriesPage(
-                      memories: memories,
-                      refreshMemories: _initiateMemories,
-                      textFieldFocusNode: memoriesTextFieldFocusNode,
-                    ),
+                    const MemoriesPage(),
+                    // const MyWidget(),
                     // TestPage(
                     //   refreshMemories: _initiateMemories,
                     //   textFieldFocusNode: memoriesTextFieldFocusNode,
