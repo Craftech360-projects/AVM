@@ -173,8 +173,11 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // }
   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
+  // final uri = Uri.parse(
+  //   'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+  // );
   final uri = Uri.parse(
-    'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+    'ws://living-alien-polite.ngrok-free.app',
   );
 
   debugPrint('Connecting to WebSocket URI: $uri');
@@ -245,8 +248,10 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
                         'SPEAKER_00', // or provide a default speaker if available
                     isUser:
                         false, // assuming this is not user speech, adjust as needed
-                    start: data['start'] ?? 0.0,
-                    end: (data['start'] ?? 0.0) + (data['duration'] ?? 0.0),
+                    start: (data['start'] ?? 0.0)
+                        .toDouble(), // Ensure start is a double
+                    end: ((data['start'] ?? 0.0) + (data['duration'] ?? 0.0))
+                        .toDouble(), // Ensure end is a double
                   );
                   onMessageReceived([segment]);
 

@@ -36,25 +36,61 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
   Timer? timer;
   var record = AudioRecorder();
 
-  startStreamRecording(WebsocketConnectionStatus wsConnectionState, IOWebSocketChannel? websocketChannel) async {
+  // startStreamRecording(WebsocketConnectionStatus wsConnectionState, IOWebSocketChannel? websocketChannel) async {
+  //   await Permission.microphone.request();
+  //   debugPrint("input device: ${await record.listInputDevices()}");
+  //   InputDevice? inputDevice;
+  //   if (Platform.isIOS) {
+  //     inputDevice = const InputDevice(id: "Built-In Microphone", label: "iPhone Microphone");
+  //   } else {}
+  //   var stream = await record.startStream(
+  //       RecordConfig(encoder: AudioEncoder.pcm16bits, sampleRate: 16000, numChannels: 1, device: inputDevice));
+  //   setState(() => recordingState = RecordingState.record);
+  //   stream.listen((data) async {
+  //     if (wsConnectionState == WebsocketConnectionStatus.connected) {
+  //        print("addng data");
+  //       websocketChannel?.sink.add(data);
+  //     }
+  //   });
+  // }
+
+  startStreamRecording(WebsocketConnectionStatus wsConnectionState,
+      IOWebSocketChannel? websocketChannel) async {
     await Permission.microphone.request();
     debugPrint("input device: ${await record.listInputDevices()}");
+
     InputDevice? inputDevice;
     if (Platform.isIOS) {
-      inputDevice = const InputDevice(id: "Built-In Microphone", label: "iPhone Microphone");
-    } else {}
-    var stream = await record.startStream(
-        RecordConfig(encoder: AudioEncoder.pcm16bits, sampleRate: 16000, numChannels: 1, device: inputDevice));
+      inputDevice = const InputDevice(
+          id: "Built-In Microphone", label: "iPhone Microphone");
+    } else {
+      // Handle Android or other platforms if needed
+    }
+
+    var stream = await record.startStream(RecordConfig(
+        encoder: AudioEncoder.pcm16bits,
+        sampleRate: 16000,
+        numChannels: 1,
+        device: inputDevice));
+
     setState(() => recordingState = RecordingState.record);
+
     stream.listen((data) async {
       if (wsConnectionState == WebsocketConnectionStatus.connected) {
-        
-        websocketChannel?.sink.add(data);
+        try {
+          debugPrint("WebSocket is connected. Sending data...");
+          websocketChannel?.sink.add(data);
+        } catch (e) {
+          debugPrint("Error sending data to WebSocket: $e");
+        }
+      } else {
+        debugPrint("WebSocket is not connected. Data not sent.");
       }
     });
   }
 
-  stopStreamRecording(WebsocketConnectionStatus wsConnectionState, IOWebSocketChannel? websocketChannel) async {
+  stopStreamRecording(WebsocketConnectionStatus wsConnectionState,
+      IOWebSocketChannel? websocketChannel) async {
     if (timer != null) {
       timer?.cancel();
     }
@@ -120,7 +156,8 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
     debugPrint('Transcription finished');
   }
 
-  stopRecording(Function processFileToTranscript, List<TranscriptSegment> segments, VoidCallback memoryUpdate) async {
+  stopRecording(Function processFileToTranscript,
+      List<TranscriptSegment> segments, VoidCallback memoryUpdate) async {
     final service = FlutterBackgroundService();
     service.invoke("stop");
     setState(() {
@@ -191,9 +228,11 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
         androidDuration = 10;
       });
       if (Platform.isAndroid) {
-        await androidBgTranscribing(Duration(seconds: androidDuration), AppLifecycleState.resumed, processTranscript);
+        await androidBgTranscribing(Duration(seconds: androidDuration),
+            AppLifecycleState.resumed, processTranscript);
       } else if (Platform.isIOS) {
-        await iosBgTranscribing(Duration(seconds: iosDuration), true, processTranscript);
+        await iosBgTranscribing(
+            Duration(seconds: iosDuration), true, processTranscript);
       }
     }
   }
@@ -207,9 +246,11 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
         androidDuration = 30;
       });
       if (Platform.isAndroid) {
-        await androidBgTranscribing(Duration(seconds: androidDuration), AppLifecycleState.resumed, processTranscript);
+        await androidBgTranscribing(Duration(seconds: androidDuration),
+            AppLifecycleState.resumed, processTranscript);
       } else if (Platform.isIOS) {
-        await iosBgTranscribing(Duration(seconds: iosDuration), true, processTranscript);
+        await iosBgTranscribing(
+            Duration(seconds: iosDuration), true, processTranscript);
       }
 
       // setState(() {
@@ -249,7 +290,8 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
     super.dispose();
   }
 
-  Future iosBgTranscribing(Duration interval, bool shouldTranscribe, Function processFileToTranscript) async {
+  Future iosBgTranscribing(Duration interval, bool shouldTranscribe,
+      Function processFileToTranscript) async {
     backgroundTranscriptTimer?.cancel();
     backgroundTranscriptTimer = Timer.periodic(interval, (timer) async {
       debugPrint('timer triggered at ${DateTime.now()}');
@@ -279,7 +321,8 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
     });
   }
 
-  Future androidBgTranscribing(Duration interval, AppLifecycleState state, Function processFileToTranscript) async {
+  Future androidBgTranscribing(Duration interval, AppLifecycleState state,
+      Function processFileToTranscript) async {
     final backgroundService = FlutterBackgroundService();
     backgroundTranscriptTimer?.cancel();
     backgroundTranscriptTimer = Timer.periodic(interval, (timer) async {
