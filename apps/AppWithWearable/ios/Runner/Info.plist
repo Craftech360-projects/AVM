@@ -57,7 +57,7 @@
 		<key>NSBluetoothPeripheralUsageDescription</key>
 		<string>Bluetooth permission is required to connect with your Friend Wearable.</string>
 		<key>NSCalendarsFullAccessUsageDescription</key>
-		<string>Access most functions for calendar viewing and editing.</string>
+		<string>Access most functions for calendar viewing and editing events.</string>
 		<key>NSCalendarsUsageDescription</key>
 		<string>Access most functions for calendar viewing and editing.</string>
 		<key>NSContactsUsageDescription</key>

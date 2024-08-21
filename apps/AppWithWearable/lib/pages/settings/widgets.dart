@@ -321,6 +321,50 @@ getPreferencesWidgets({
   ];
 }
 
+// getItemAddOn(String title, VoidCallback onTap,
+//     {required IconData icon, bool visibility = true}) {
+//   return Visibility(
+//     visible: visibility,
+//     child: GestureDetector(
+//       onTap: onTap,
+//       child: Padding(
+//         padding: const EdgeInsets.fromLTRB(0, 12, 8, 0),
+//         child: Container(
+//           decoration: BoxDecoration(
+//             color: const Color.fromARGB(
+//                 35, 255, 255, 255), // Replace with your desired color
+//             borderRadius: BorderRadius.circular(
+//                 10.0), // Adjust for desired rounded corners
+//           ),
+//           child: Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+//             child: Expanded(
+//               child: Row(
+//                 children: [
+//                   Text(
+//                     title,
+//                     style: const TextStyle(
+//                         color: Color.fromARGB(255, 150, 150, 150),
+//                         fontSize: 16),
+//                   ),
+//                   const SizedBox(width: 16),
+//                   Icon(icon, color: Colors.white, size: 16),
+//                   const Spacer(),
+//                   const Icon(
+//                     Icons.arrow_forward_ios,
+//                     color: Colors.white,
+//                     size: 16,
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }
+
 getItemAddOn(String title, VoidCallback onTap,
     {required IconData icon, bool visibility = true}) {
   return Visibility(
@@ -338,25 +382,22 @@ getItemAddOn(String title, VoidCallback onTap,
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Expanded(
-              child: Row(
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 150, 150, 150),
-                        fontSize: 16),
-                  ),
-                  const SizedBox(width: 16),
-                  Icon(icon, color: Colors.white, size: 16),
-                  const Spacer(),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                    size: 16,
-                  ),
-                ],
-              ),
+            child: Row(
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+                ),
+                const SizedBox(width: 16),
+                Icon(icon, color: Colors.white, size: 16),
+                const Spacer(),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              ],
             ),
           ),
         ),
