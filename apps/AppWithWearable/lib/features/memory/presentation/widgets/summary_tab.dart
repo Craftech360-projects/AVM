@@ -5,6 +5,7 @@ import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
+import 'package:friend_private/pages/memory_detail/enable_title.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/temp.dart';
@@ -38,7 +39,7 @@ class _SummaryTabState extends State<SummaryTab> {
     super.initState();
     _pageController = PageController(initialPage: widget.memoryAtIndex);
     _scrollController = ScrollController();
-
+    memoryBloc = widget._memoryBloc;
     _currentPage = widget.memoryAtIndex;
     memories = widget._memoryBloc.state.memories;
     selectedMemory = memories![widget.memoryAtIndex];
@@ -96,21 +97,14 @@ class _SummaryTabState extends State<SummaryTab> {
       },
       itemBuilder: (BuildContext context, int index) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SingleChildScrollView(
             controller: _scrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //*--- TITLE ---*//
-                const SizedBox(height: 16),
-                selectedMemory.discarded
-                    ? const SizedBox.shrink()
-                    : const Icon(
-                        Icons.edit,
-                        color: Colors.grey,
-                        size: 16,
-                      ),
+                const SizedBox(height: 12),
                 selectedMemory.discarded
                     ? Text(
                         'Discarded Memory',
@@ -119,13 +113,25 @@ class _SummaryTabState extends State<SummaryTab> {
                             .titleLarge!
                             .copyWith(fontSize: 32),
                       )
-                    : Text(
-                        structured.title,
+                    : EditableTitle(
+                        initialText: structured.title,
+                        onTextChanged: (String newTitle) {
+                          structured.title = newTitle;
+                          memoryBloc.add(UpdatedMemory(structured: structured));
+                        },
+                        discarded: selectedMemory.discarded,
                         style: Theme.of(context)
                             .textTheme
                             .titleLarge!
                             .copyWith(fontSize: 32),
                       ),
+                // Text(
+                //     structured.title,
+                //     style: Theme.of(context)
+                //         .textTheme
+                //         .titleLarge!
+                //         .copyWith(fontSize: 32),
+                //   ),
                 const SizedBox(height: 16),
                 //*--- TIME ---*//
                 Text(
@@ -162,7 +168,7 @@ class _SummaryTabState extends State<SummaryTab> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
                 //*--- OVERVIEW ---*//
                 selectedMemory.discarded
                     ? const SizedBox.shrink()
@@ -178,19 +184,22 @@ class _SummaryTabState extends State<SummaryTab> {
                     : ((selectedMemory.geolocation.target != null)
                         ? const SizedBox(height: 8)
                         : const SizedBox.shrink()),
+            
                 selectedMemory.discarded
                     ? const SizedBox.shrink()
-                    : const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.grey,
-                          size: 16,
-                        ),
+                    : EditableTitle(
+                        initialText: structured.overview,
+                        onTextChanged: (String newOverview) {
+                          structured.overview = newOverview;
+                          memoryBloc.add(UpdatedMemory(structured: structured));
+                        },
+                        discarded: selectedMemory.discarded,
+                        style: TextStyle(
+                            color: Colors.grey.shade300,
+                            fontSize: 15,
+                            height: 1.3),
                       ),
-                selectedMemory.discarded
-                    ? const SizedBox.shrink()
-                    : Text(structured.overview),
+                // Text(structured.overview),
                 selectedMemory.discarded
                     ? const SizedBox.shrink()
                     : const SizedBox(height: 40),

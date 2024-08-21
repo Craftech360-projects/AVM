@@ -16,6 +16,7 @@ class MemoryCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final memories = _memoryBloc.state.memories;
     return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: memories?.length,
@@ -37,13 +38,22 @@ class MemoryCardWidget extends StatelessWidget {
                       onPressed: () {
                         Navigator.of(context).pop(false);
                       },
-                      child: const Text('Cancel'),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
                       onPressed: () {
                         Navigator.of(context).pop(true);
                       },
-                      child: const Text('Delete'),
+                      child: const Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 );
@@ -96,7 +106,7 @@ class MemoryCardWidget extends StatelessWidget {
                       children: [
                         memory.discarded
                             ? const SizedBox.shrink()
-                            : const SizedBox(height: 16),
+                            : const SizedBox(height:8),
                         memory.discarded
                             ? const SizedBox.shrink()
                             : Text(

@@ -31,9 +31,9 @@ class DeletedMemory extends MemoryEvent {
 }
 
 class UpdatedMemory extends MemoryEvent {
-  final Memory memory;
-  const UpdatedMemory({required this.memory});
+  final Structured structured;
+  const UpdatedMemory({required this.structured});
   @override
-  List<Object> get props => [memory];
+  List<Object> get props => [structured];
 }
 

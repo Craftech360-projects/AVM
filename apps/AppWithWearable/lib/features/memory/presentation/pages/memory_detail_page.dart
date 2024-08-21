@@ -28,56 +28,63 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
   List<bool> pluginResponseExpanded = [];
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      initialIndex: 1,
-      child: CustomScaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          actions: [
-            IconButton(
-              onPressed: () {
-                showShareBottomSheet(
-                  context,
-                  widget._memoryBloc.state.memories![widget.memoryAtIndex],
-                  setState,
-                );
-              },
-              icon: const Icon(Icons.ios_share, size: 20),
+    return PopScope(
+      onPopInvoked: (didPop) {
+        widget._memoryBloc.add(
+          const DisplayedMemory(isNonDiscarded: true),
+        );
+      },
+      child: DefaultTabController(
+        length: 2,
+        initialIndex: 1,
+        child: CustomScaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            actions: [
+              IconButton(
+                onPressed: () {
+                  showShareBottomSheet(
+                    context,
+                    widget._memoryBloc.state.memories![widget.memoryAtIndex],
+                    setState,
+                  );
+                },
+                icon: const Icon(Icons.ios_share, size: 20),
+              ),
+              IconButton(
+                onPressed: () {
+                  showOptionsBottomSheet(
+                    context,
+                    setState,
+                    widget._memoryBloc.state.memories![widget.memoryAtIndex],
+                    _reProcessMemory,
+                  );
+                },
+                icon: const Icon(Icons.more_horiz),
+              ),
+            ],
+            elevation: 0,
+            title: Text(
+                "${widget._memoryBloc.state.memories![widget.memoryAtIndex].structured.target!.getEmoji()}"),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: 'Transcript'),
+                Tab(text: 'Summary'),
+              ],
             ),
-            IconButton(
-              onPressed: () {
-                showOptionsBottomSheet(
-                  context,
-                  setState,
-                  widget._memoryBloc.state.memories![widget.memoryAtIndex],
-                  _reProcessMemory,
-                );
-              },
-              icon: const Icon(Icons.more_horiz),
-            ),
-          ],
-          elevation: 0,
-          title: Text(
-              "${widget._memoryBloc.state.memories![widget.memoryAtIndex].structured.target!.getEmoji()}"),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Transcript'),
-              Tab(text: 'Summary'),
+          ),
+          body: TabBarView(
+            children: [
+              TranscriptTab(
+                memoryAtIndex: widget.memoryAtIndex,
+                memoryBloc: widget._memoryBloc,
+              ),
+              SummaryTab(
+                memoryBloc: widget._memoryBloc,
+                memoryAtIndex: widget.memoryAtIndex,
+              ),
             ],
           ),
-        ),
-        body: TabBarView(
-          children: [
-            TranscriptTab(
-              memoryAtIndex: widget.memoryAtIndex,
-              memoryBloc: widget._memoryBloc,
-            ),
-            SummaryTab(
-              memoryBloc: widget._memoryBloc,
-              memoryAtIndex: widget.memoryAtIndex,
-            ),
-          ],
         ),
       ),
     );

@@ -13,6 +13,14 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
     on<DisplayedMemory>(_displayedMemory);
     on<DeletedMemory>(_deletedMemory);
     on<SearchMemory>(_searchMemory);
+    on<UpdatedMemory>(_updatedMemory);
+  }
+  FutureOr<void> _updatedMemory(event, emit) async {
+    MemoryProvider().updateMemoryStructured(event.structured);
+
+    emit(state.copyWith(
+      status: MemoryStatus.success,
+    ));
   }
 
   FutureOr<void> _deletedMemory(event, emit) {
