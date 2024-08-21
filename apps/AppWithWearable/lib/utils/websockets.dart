@@ -163,7 +163,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   debugPrint("apikey , $deepgramapikey");
 
   // Example codec value
-  String encoding = "opus";
+  String encoding = "linear16";
 
   // if (codec == 'pcm8' || codec == 'pcm16') {
   //   // encoding = 'linear16';
@@ -176,8 +176,11 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // final uri = Uri.parse(
   //   'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
   // );
+  // final uri = Uri.parse(
+  //   'ws://living-alien-polite.ngrok-free.app',
+  // );
   final uri = Uri.parse(
-    'ws://living-alien-polite.ngrok-free.app',
+    'ws://clownfish-app-uveug.ondigitalocean.app',
   );
 
   debugPrint('Connecting to WebSocket URI: $uri');
