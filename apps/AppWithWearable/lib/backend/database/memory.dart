@@ -24,7 +24,7 @@ class Memory {
   DateTime? finishedAt;
 
   String transcript;
-   @Property(type: PropertyType.byteVector)
+  @Property(type: PropertyType.byteVector)
   Uint8List? memoryImg;
 
   final transcriptSegments = ToMany<TranscriptSegment>();
@@ -135,7 +135,7 @@ class Memory {
       'id': id,
       'createdAt': createdAt.toIso8601String(),
       'startedAt': startedAt?.toIso8601String(),
-      'memoryImg':memoryImg,
+      'memoryImg': memoryImg!=null?'True':'False',
       'finishedAt': finishedAt?.toIso8601String(),
       'transcript': transcript,
       'recordingFilePath': recordingFilePath,

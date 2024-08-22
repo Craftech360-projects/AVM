@@ -163,7 +163,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   debugPrint("apikey , $deepgramapikey");
 
   // Example codec value
-  String encoding = "opus";
+  String encoding = "linear16";
 
   // if (codec == 'pcm8' || codec == 'pcm16') {
   //   // encoding = 'linear16';
