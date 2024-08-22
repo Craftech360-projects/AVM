@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/widgets/widgets.dart';
 import 'package:friend_private/pages/memories/widgets/empty_memories.dart';
-import 'dart:developer' as developer;
 
 class MemoriesPage extends StatefulWidget {
   const MemoriesPage({
@@ -82,22 +81,22 @@ class _MemoriesPageState extends State<MemoriesPage> {
             ),
           ),
         ),
-        if (_memoryBloc.state.memories!.isEmpty)
-          const SliverToBoxAdapter(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 32.0),
-                child: EmptyMemoriesWidget(),
-              ),
-            ),
-          )
-        else
+        // if (_memoryBloc.state.memories.isEmpty)
+        //   const SliverToBoxAdapter(
+        //     child: Center(
+        //       child: Padding(
+        //         padding: EdgeInsets.only(top: 32.0),
+        //         child: EmptyMemoriesWidget(),
+        //       ),
+        //     ),
+        //   )
+        // else
           //*--- MEMORY LIST ---*//
           SliverToBoxAdapter(
             child: BlocConsumer<MemoryBloc, MemoryState>(
               bloc: _memoryBloc,
               builder: (context, state) {
-                developer.log('>>>-${state.toString()}');
+                print('>>>-${state.toString()}');
                 if (state.status == MemoryStatus.loading) {
                   return const Center(
                     child: CircularProgressIndicator(),
@@ -109,6 +108,7 @@ class _MemoriesPageState extends State<MemoriesPage> {
                     ),
                   );
                 } else if (state.status == MemoryStatus.success) {
+
                   return MemoryCardWidget(memoryBloc: _memoryBloc);
                 }
                 return const SizedBox.shrink();

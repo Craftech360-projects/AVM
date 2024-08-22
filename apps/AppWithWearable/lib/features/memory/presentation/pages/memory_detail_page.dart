@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/widgets/summary_tab.dart';
@@ -11,11 +12,11 @@ import 'package:friend_private/utils/memories/reprocess.dart';
 class CustomMemoryDetailPage extends StatefulWidget {
   const CustomMemoryDetailPage({
     super.key,
-    required MemoryBloc memoryBloc,
+    required this.memoryBloc,
     required this.memoryAtIndex,
-  }) : _memoryBloc = memoryBloc;
+  });
   final int memoryAtIndex;
-  final MemoryBloc _memoryBloc;
+  final MemoryBloc memoryBloc;
 
   @override
   State<CustomMemoryDetailPage> createState() => _CustomMemoryDetailPageState();
@@ -24,13 +25,14 @@ class CustomMemoryDetailPage extends StatefulWidget {
 class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController overviewController = TextEditingController();
+  PageController pageController = PageController();
 
   List<bool> pluginResponseExpanded = [];
   @override
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvoked: (didPop) {
-        widget._memoryBloc.add(
+        widget.memoryBloc.add(
           const DisplayedMemory(isNonDiscarded: true),
         );
       },
@@ -45,7 +47,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
                 onPressed: () {
                   showShareBottomSheet(
                     context,
-                    widget._memoryBloc.state.memories![widget.memoryAtIndex],
+                    widget.memoryBloc.state.memories[widget.memoryAtIndex],
                     setState,
                   );
                 },
@@ -56,7 +58,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
                   showOptionsBottomSheet(
                     context,
                     setState,
-                    widget._memoryBloc.state.memories![widget.memoryAtIndex],
+                    widget.memoryBloc.state.memories[widget.memoryAtIndex],
                     _reProcessMemory,
                   );
                 },
@@ -65,7 +67,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
             ],
             elevation: 0,
             title: Text(
-                "${widget._memoryBloc.state.memories![widget.memoryAtIndex].structured.target!.getEmoji()}"),
+                "${widget.memoryBloc.state.memories[widget.memoryAtIndex].structured.target!.getEmoji()}"),
             bottom: const TabBar(
               tabs: [
                 Tab(text: 'Transcript'),
@@ -73,17 +75,28 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
               ],
             ),
           ),
-          body: TabBarView(
-            children: [
-              TranscriptTab(
-                memoryAtIndex: widget.memoryAtIndex,
-                memoryBloc: widget._memoryBloc,
-              ),
-              SummaryTab(
-                memoryBloc: widget._memoryBloc,
-                memoryAtIndex: widget.memoryAtIndex,
-              ),
-            ],
+          body: BlocBuilder<MemoryBloc, MemoryState>(
+            bloc: widget.memoryBloc,
+            builder: (context, state) {
+              return TabBarView(
+                children: [
+                  TranscriptTab(
+                    pageController: pageController,
+                    memoryAtIndex: state.memoryIndex,
+                    memoryBloc: widget.memoryBloc,
+                  ),
+                  // SummaryTab(
+                  //   memoryBloc: widget.memoryBloc,
+                  //   memoryAtIndex: state.memoryIndex,
+                  // ),
+                  SummaryTab(
+                    pageController: pageController,
+                    memoryAtIndex: state.memoryIndex,
+                    memoryBloc: widget.memoryBloc,
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),

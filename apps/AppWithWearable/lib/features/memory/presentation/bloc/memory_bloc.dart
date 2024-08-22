@@ -14,7 +14,15 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
     on<DeletedMemory>(_deletedMemory);
     on<SearchMemory>(_searchMemory);
     on<UpdatedMemory>(_updatedMemory);
+    on<MemoryIndexChanged>(_memoryChanged);
   }
+  FutureOr<void> _memoryChanged(event, emit) async {
+    final int? newIndex = await event.memoryIndex;
+    emit(
+      state.copyWith(memoryIndex: newIndex, status: MemoryStatus.success),
+    );
+  }
+
   FutureOr<void> _updatedMemory(event, emit) async {
     MemoryProvider().updateMemoryStructured(event.structured);
 
@@ -46,6 +54,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
 
     try {
       final allMemories = MemoryProvider().getMemories();
+      print('>>> bloc all memories$allMemories');
       final nonDiscardedMemories =
           allMemories.where((memory) => !memory.discarded).toList();
       final memoriesToConsider =
@@ -53,7 +62,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
       memoriesToConsider.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       List<Memory> mostRecentMemory =
           memoriesToConsider.isNotEmpty ? memoriesToConsider : [];
-
+      print("mostRecentMemory $mostRecentMemory");
       emit(
         state.copyWith(
           status: MemoryStatus.success,

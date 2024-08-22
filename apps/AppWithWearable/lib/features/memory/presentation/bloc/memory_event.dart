@@ -14,12 +14,11 @@ class DisplayedMemory extends MemoryEvent {
   List<Object> get props => [isNonDiscarded];
 }
 
-
 class SearchMemory extends MemoryEvent {
   final String query;
 
- const SearchMemory({required this.query});
-   @override
+  const SearchMemory({required this.query});
+  @override
   List<Object> get props => [query];
 }
 
@@ -37,3 +36,9 @@ class UpdatedMemory extends MemoryEvent {
   List<Object> get props => [structured];
 }
 
+class MemoryIndexChanged extends MemoryEvent {
+  final int memoryIndex;
+  const MemoryIndexChanged({required this.memoryIndex});
+  @override
+  List<Object> get props => [memoryIndex];
+}
