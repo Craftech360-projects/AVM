@@ -27,14 +27,14 @@ class MemoryState extends Equatable {
   MemoryState copyWith({
     MemoryStatus? status,
     List<Memory>? memories,
-    List<Memory>? originalMemories,
+    List<Memory>? filteredMemories,
     int? memoryIndex,
     String? failure,
   }) {
     return MemoryState(
       status: status ?? this.status,
       memories: memories ?? this.memories,
-      filteredMemories: originalMemories ?? filteredMemories,
+      filteredMemories: filteredMemories ?? this.filteredMemories,
       failure: failure ?? this.failure,
       memoryIndex: memoryIndex ?? this.memoryIndex,
     );

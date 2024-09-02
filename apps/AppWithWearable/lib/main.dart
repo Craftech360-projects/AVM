@@ -6,11 +6,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:friend_private/backend/api_requests/api/server.dart';
 import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/database/box.dart';
+import 'package:friend_private/backend/database/memory_provider.dart';
+import 'package:friend_private/backend/database/message_provider.dart';
 import 'package:friend_private/backend/growthbook.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
@@ -18,12 +19,12 @@ import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/env/dev_env.dart';
 import 'package:friend_private/env/env.dart';
 import 'package:friend_private/env/prod_env.dart';
+import 'package:friend_private/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/firebase_options_dev.dart' as dev;
 import 'package:friend_private/firebase_options_prod.dart' as prod;
 import 'package:friend_private/flavors.dart';
 import 'package:friend_private/pages/home/page.dart';
-import 'package:friend_private/pages/onboarding/wrapper.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/theme/theme.dart';
@@ -158,8 +159,17 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MemoryBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => MemoryBloc()),
+        BlocProvider(
+          create: (context) => ChatBloc(
+            SharedPreferencesUtil(),
+            MessageProvider(),
+            MemoryProvider(),
+          ),
+        ),
+      ],
       child: MaterialApp(
         navigatorObservers: [InstabugNavigatorObserver()],
         debugShowCheckedModeBanner: F.env == Environment.dev,

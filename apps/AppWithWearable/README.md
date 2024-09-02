@@ -77,3 +77,5 @@ If you prefer to set up the project manually, follow these steps:
     ```
 
 This guide should help you get started with running the Friend App on your local machine. Make sure each step is completed to avoid any issues.
+### FOR generating apk
+flutter build apk --flavor prod -t lib/main.dart
