@@ -657,11 +657,14 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
+import 'package:friend_private/features/chat/presentation/pages/chat_page.dart';
 import 'package:friend_private/features/memory/presentation/pages/memory_page.dart';
 import 'package:friend_private/main.dart';
 import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/chat/page.dart';
+// import 'package:friend_private/pages/chat/page.dart';
+// import 'package:friend_private/pages/chat/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
 import 'package:friend_private/pages/plugins/page.dart';
@@ -939,12 +942,13 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                       refreshMemories: _initiateMemories,
                       refreshMessages: _refreshMessages,
                     ),
-                    ChatPage(
-                      key: chatPageKey,
-                      textFieldFocusNode: chatTextFieldFocusNode,
-                      messages: messages,
-                      refreshMessages: _refreshMessages,
-                    ),
+                    // ChatPage(
+                    //   key: chatPageKey,
+                    //   textFieldFocusNode: chatTextFieldFocusNode,
+                    //   messages: messages,
+                    //   refreshMessages: _refreshMessages,
+                    // ),
+                    ChatPageTest(textFieldFocusNode: chatTextFieldFocusNode,),
                   ],
                 ),
               ),
@@ -1155,8 +1159,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                             SharedPreferencesUtil().selectedChatPluginId = s;
                             var plugin =
                                 plugins.firstWhereOrNull((p) => p.id == s);
-                            chatPageKey.currentState
-                                ?.sendInitialPluginMessage(plugin);
+                            // chatPageKey.currentState
+                            //     ?.sendInitialPluginMessage(plugin);
                             setState(() {});
                           },
                           icon: Container(),

@@ -14,6 +14,7 @@ class MemorySearchWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('event ${_searchController.text}');
     return Container(
       width: double.maxFinite,
       padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
@@ -52,7 +53,8 @@ class MemorySearchWidget extends StatelessWidget {
                   onPressed: () {
                     _searchController.clear();
 
-                    _memoryBloc.add(const SearchMemory(query: ''));
+                    _memoryBloc
+                        .add(SearchMemory(query: _searchController.text));
                   },
                 ),
         ),

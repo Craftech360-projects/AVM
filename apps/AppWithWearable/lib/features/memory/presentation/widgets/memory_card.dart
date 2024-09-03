@@ -19,6 +19,7 @@ class MemoryCardWidget extends StatelessWidget {
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: _memoryBloc,
       builder: (context, state) {
+        print('state of memory ${state.memories}');
         if (state.memories.isEmpty) {
           return const Center(
             child: Padding(

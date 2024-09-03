@@ -79,21 +79,15 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
     }
   }
 
-  FutureOr<void> _searchMemory(event, emit) {
+  FutureOr<void> _searchMemory(SearchMemory event, Emitter<MemoryState> emit) {
     try {
-      final originalMemories =
-          state.filteredMemories ?? List<Memory>.from(state.memories ?? []);
+      print('search event triggered ${event.query}');
+      if (event.query.isEmpty) {
+        print('original runs1 ${state.memories}');
 
-      if (event.query.isEmpty || event.query == null) {
-        emit(
-          state.copyWith(
-            status: MemoryStatus.success,
-            memories: originalMemories,
-            originalMemories: state.filteredMemories ?? originalMemories,
-          ),
-        );
+        add(const DisplayedMemory());
       } else {
-        final filteredMemories = originalMemories.where((memory) {
+        final filteredMemories = state.memories.where((memory) {
           final searchContent = '${memory.transcript}'
                   '${memory.structured.target?.title}'
                   '${memory.structured.target?.overview}'
