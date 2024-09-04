@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
@@ -12,6 +14,72 @@ import 'package:friend_private/utils/rag.dart';
 part 'chat_event.dart';
 part 'chat_state.dart';
 
+class ChatBloc extends Bloc<ChatEvent, ChatState> {
+  final SharedPreferencesUtil prefs;
+  final MessageProvider messageProvider;
+  final MemoryProvider memoryProvider;
+
+  ChatBloc(this.prefs, this.messageProvider, this.memoryProvider)
+      : super(ChatState.initial()) {
+    on<LoadInitialChat>(_onLoadedMessages);
+    on<SendMessage>(
+      (event, emit) async {
+        try {
+          print('event bloc ${event.message}');
+          emit(state.copyWith(status: ChatStatus.loading));
+          // Prepare and save the initial messages
+          var aiMessage = _prepareStreaming(event.message);
+
+          // Retrieve the RAG context
+          final ragInfo = await retrieveRAGContext(event.message);
+          print('raginfo $ragInfo');
+
+          String ragContext = ragInfo[0];
+          List<Memory> memories = ragInfo[1].cast<Memory>();
+          print('RAG Context: $ragContext memories: ${memories.length}');
+
+          // Use the RAG context to create a prompt
+          var prompt = qaRagPrompt(
+            ragContext,
+            await MessageProvider().retrieveMostRecentMessages(limit: 10),
+          );
+
+          // Stream the AI response and update the AI message
+          await streamApiResponse(
+            prompt,
+            _callbackFunctionChatStreaming(aiMessage),
+            () {
+              aiMessage.memories.addAll(memories);
+              MessageProvider().updateMessage(aiMessage);
+              add(LoadInitialChat());
+            },
+          );
+        } catch (error) {
+          emit(
+            state.copyWith(
+                status: ChatStatus.failure, errorMesage: error.toString()),
+          );
+        }
+      },
+    );
+
+    // on<SendMessage>(_onSendMessage);
+    // on<RefreshMessages>(_onRefreshMessages);
+  }
+
+  FutureOr<void> _onLoadedMessages(event, emit) {
+    emit(state.copyWith(status: ChatStatus.loading));
+    try {
+      List<Message> messages = messageProvider.getMessages();
+      emit(state.copyWith(status: ChatStatus.loaded, messages: messages));
+    } catch (error) {
+      emit(state.copyWith(
+          status: ChatStatus.failure, errorMesage: error.toString()));
+    }
+  }
+}
+
+/*
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final SharedPreferencesUtil prefs;
   final MessageProvider messageProvider;
@@ -39,11 +107,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       print('bloci ${event.message}');
       var aiMessage = await _prepareStreaming(event.message);
-    // print('bloci ai message ${aiMessage.}');
+     
       dynamic ragInfo = await retrieveRAGContext(event.message);
       String ragContext = ragInfo[0];
       List<Memory> memories = ragInfo[1].cast<Memory>();
-print('RAG Context: $ragContext memories: ${memories.length}');
+      print('RAG Context: $ragContext memories: ${memories.length}');
       var prompt = qaRagPrompt(
         ragContext,
         await messageProvider.retrieveMostRecentMessages(limit: 10),
@@ -67,7 +135,7 @@ print('RAG Context: $ragContext memories: ${memories.length}');
     emit(ChatLoaded(messages));
   }
 }
-
+*/
 _prepareStreaming(String text) {
   // textController.clear(); // setState if isolated
   var human = Message(DateTime.now(), text, 'human');
@@ -83,13 +151,14 @@ _prepareStreaming(String text) {
   // _moveListToBottom(extra: widget.textFieldFocusNode.hasFocus ? 148 : 200);
   return ai;
 }
-  _callbackFunctionChatStreaming(Message aiMessage) {
-    return (String content) async {
-      aiMessage.text = '${aiMessage.text}$content';
-      MessageProvider().updateMessage(aiMessage);
-      // widget.messages.removeLast();
-      // widget.messages.add(aiMessage);
-      // setState(() {});
-      // _moveListToBottom();
-    };
-  }
+
+_callbackFunctionChatStreaming(Message aiMessage) {
+  return (String content) async {
+    aiMessage.text = '${aiMessage.text}$content';
+    MessageProvider().updateMessage(aiMessage);
+    // widget.messages.removeLast();
+    // widget.messages.add(aiMessage);
+    // setState(() {});
+    // _moveListToBottom();
+  };
+}

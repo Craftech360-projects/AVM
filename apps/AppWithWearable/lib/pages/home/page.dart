@@ -703,7 +703,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   FocusNode memoriesTextFieldFocusNode = FocusNode(canRequestFocus: true);
 
   GlobalKey<CapturePageState> capturePageKey = GlobalKey();
-  GlobalKey<ChatPageState> chatPageKey = GlobalKey();
+  // GlobalKey<ChatPageState> chatPageKey = GlobalKey();
   StreamSubscription<OnConnectionStateChangedEvent>? _connectionStateListener;
   StreamSubscription<List<int>>? _bleBatteryLevelListener;
 
