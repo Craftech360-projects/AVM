@@ -20,17 +20,203 @@ class ChatPageTest extends StatefulWidget {
   State<ChatPageTest> createState() => _ChatPageTestState();
 }
 
-class _ChatPageTestState extends State<ChatPageTest> {
+class _ChatPageTestState extends State<ChatPageTest>
+    with SingleTickerProviderStateMixin {
   final TextEditingController _aiChatController = TextEditingController();
-  ScrollController scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   late ChatBloc _chatBloc;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
   @override
   void initState() {
     super.initState();
     _chatBloc = BlocProvider.of<ChatBloc>(context);
     _chatBloc.add(LoadInitialChat());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToEnd();
+    });
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat();
+
+    _animation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
   }
 
+  void _scrollToEnd() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        BlocBuilder<ChatBloc, ChatState>(
+          bloc: _chatBloc,
+          buildWhen: (previous, current) =>
+              previous.messages?.length != current.messages?.length,
+          builder: (context, state) {
+            if (state.status == ChatStatus.loaded) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) {
+                  _scrollToEnd();
+                },
+              );
+              //*-- Messages --*//
+              return ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  bottom: 200,
+                ),
+                itemCount: state.messages?.length ?? 0,
+                itemBuilder: (context, index) {
+                  final message = state.messages?[index];
+                  if (message?.senderEnum == MessageSender.ai) {
+                    return AIMessage(
+                      message: message!,
+                      sendMessage: (msg) {
+                        // context.read<ChatBloc>().add(SendMessage(msg));
+                      },
+                      displayOptions: state.messages!.length <= 1,
+                      memories: message.memories,
+                      pluginSender: SharedPreferencesUtil()
+                          .pluginsList
+                          .firstWhereOrNull((e) => e.id == message.pluginId),
+                    );
+                  } else {
+                    return HumanMessage(message: message!);
+                  }
+                },
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
+        //*-- Ask AVM --*//
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              return Container(
+                width: double.infinity,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                margin: EdgeInsets.only(
+                  left: 18,
+                  right: 18,
+                  bottom: widget.textFieldFocusNode.hasFocus ? 40 : 120,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
+                  border: GradientBoxBorder(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.lerp(
+                          const Color.fromARGB(127, 208, 208, 208),
+                          const Color.fromARGB(127, 188, 99, 121),
+                          _animation.value,
+                        )!,
+                        Color.lerp(
+                          const Color.fromARGB(127, 188, 99, 121),
+                          const Color.fromARGB(127, 86, 101, 182),
+                          _animation.value,
+                        )!,
+                        Color.lerp(
+                          const Color.fromARGB(127, 86, 101, 182),
+                          const Color.fromARGB(127, 126, 190, 236),
+                          _animation.value,
+                        )!,
+                        Color.lerp(
+                          const Color.fromARGB(127, 126, 190, 236),
+                          const Color.fromARGB(127, 208, 208, 208),
+                          _animation.value,
+                        )!,
+                      ],
+                    ),
+                    width: 1,
+                  ),
+                ),
+                child: child,
+              );
+            },
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _aiChatController,
+                    focusNode: widget.textFieldFocusNode,
+                    decoration: const InputDecoration(
+                      hintText: 'Ask your AVM anything',
+                      hintStyle: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.grey.shade200,
+                    ),
+                  ),
+                ),
+                BlocBuilder<ChatBloc, ChatState>(
+                  builder: (context, state) {
+                    return IconButton(
+                      splashColor: Colors.transparent,
+                      onPressed: state.status == ChatStatus.loading
+                          ? null
+                          : () {
+                              final message = _aiChatController.text.trim();
+                              if (message.isNotEmpty) {
+                                BlocProvider.of<ChatBloc>(context)
+                                    .add(SendMessage(message));
+                                _aiChatController.clear();
+                                _scrollToEnd();
+                              }
+                            },
+                      icon: state.status == ChatStatus.loading
+                          ? const SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Icon(Icons.send_rounded),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+/*
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatBloc, ChatState>(
@@ -48,136 +234,126 @@ class _ChatPageTestState extends State<ChatPageTest> {
       },
     );
   }
+*/
+  // Widget _buildChatContent(BuildContext context, List<Message> messages) {
+  //   return Stack(
+  //     children: [
+  //       //* Chats Conversation Displaying
+  //       SingleChildScrollView(
+  //         controller: scrollController,
+  //         child: ListView.builder(
+  //           shrinkWrap: true,
+  //           physics: const NeverScrollableScrollPhysics(),
+  //           itemCount: messages.length,
+  //           itemBuilder: (context, chatIndex) {
+  //             final message = messages[chatIndex];
+  //             final isLastMessage = chatIndex == messages.length - 1;
+  //             double topPadding = chatIndex == 0 ? 24 : 16;
+  //             double bottomPadding = isLastMessage
+  //                 ? (widget.textFieldFocusNode.hasFocus ? 120 : 200)
+  //                 : 0;
+  //             _moveListToBottom(
+  //                 extra: widget.textFieldFocusNode.hasFocus ? 148 : 200);
 
-  Widget _buildChatContent(BuildContext context, List<Message> messages) {
-    return Stack(
-      children: [
-        //* Chats Conversation Displaying
-        SingleChildScrollView(
-          controller: scrollController,
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: messages.length,
-            itemBuilder: (context, chatIndex) {
-              final message = messages[chatIndex];
-              final isLastMessage = chatIndex == messages.length - 1;
-              double topPadding = chatIndex == 0 ? 24 : 16;
-              double bottomPadding = isLastMessage
-                  ? (widget.textFieldFocusNode.hasFocus ? 120 : 200)
-                  : 0;
-              _moveListToBottom(
-                  extra: widget.textFieldFocusNode.hasFocus ? 148 : 200);
+  //             return Padding(
+  //               key: ValueKey(message.id),
+  //               padding: EdgeInsets.only(
+  //                   bottom: bottomPadding,
+  //                   left: 18,
+  //                   right: 18,
+  //                   top: topPadding),
+  //               child: message.senderEnum == MessageSender.ai
+  //                   ? AIMessage(
+  //                       message: message,
+  //                       sendMessage: (msg) =>
+  //                           context.read<ChatBloc>().add(SendMessage(msg)),
+  //                       displayOptions: messages.length <= 1,
+  //                       memories: message.memories,
+  //                       pluginSender: SharedPreferencesUtil()
+  //                           .pluginsList
+  //                           .firstWhereOrNull((e) => e.id == message.pluginId),
+  //                     )
+  //                   : HumanMessage(message: message),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //       //* Ask AVM
+  //       Align(
+  //         alignment: Alignment.bottomCenter,
+  //         child: Container(
+  //           width: double.maxFinite,
+  //           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+  //           margin: EdgeInsets.only(
+  //               left: 18,
+  //               right: 18,
+  //               bottom: widget.textFieldFocusNode.hasFocus ? 40 : 120),
+  //           decoration: const BoxDecoration(
+  //             color: Colors.black,
+  //             borderRadius: BorderRadius.all(Radius.circular(16)),
+  //             border: GradientBoxBorder(
+  //               gradient: LinearGradient(colors: [
+  //                 Color.fromARGB(127, 208, 208, 208),
+  //                 Color.fromARGB(127, 188, 99, 121),
+  //                 Color.fromARGB(127, 86, 101, 182),
+  //                 Color.fromARGB(127, 126, 190, 236)
+  //               ]),
+  //               width: 1,
+  //             ),
+  //             shape: BoxShape.rectangle,
+  //           ),
+  //           child: TextField(
+  //             enabled: true,
+  //             controller: _aiChatController,
+  //             obscureText: false,
+  //             focusNode: widget.textFieldFocusNode,
+  //             textAlign: TextAlign.start,
+  //             textAlignVertical: TextAlignVertical.center,
+  //             decoration: InputDecoration(
+  //               hintText: 'Ask your AVM anything',
+  //               hintStyle: const TextStyle(fontSize: 14.0, color: Colors.grey),
+  //               focusedBorder: InputBorder.none,
+  //               enabledBorder: InputBorder.none,
+  //               suffixIcon: BlocBuilder<ChatBloc, ChatState>(
+  //                 builder: (context, state) {
+  //                   return IconButton(
+  //                     splashColor: Colors.transparent,
+  //                     splashRadius: 1,
+  //                     onPressed: () {
+  //                       if (state is ChatLoading) {
+  //                         return;
+  //                       } else {
+  //                         String message = _aiChatController.text;
 
-              return Padding(
-                key: ValueKey(message.id),
-                padding: EdgeInsets.only(
-                    bottom: bottomPadding,
-                    left: 18,
-                    right: 18,
-                    top: topPadding),
-                child: message.senderEnum == MessageSender.ai
-                    ? AIMessage(
-                        message: message,
-                        sendMessage: (msg) =>
-                            context.read<ChatBloc>().add(SendMessage(msg)),
-                        displayOptions: messages.length <= 1,
-                        memories: message.memories,
-                        pluginSender: SharedPreferencesUtil()
-                            .pluginsList
-                            .firstWhereOrNull((e) => e.id == message.pluginId),
-                      )
-                    : HumanMessage(message: message),
-              );
-            },
-          ),
-        ),
-        //* Ask AVM
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-            width: double.maxFinite,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-            margin: EdgeInsets.only(
-                left: 18,
-                right: 18,
-                bottom: widget.textFieldFocusNode.hasFocus ? 40 : 120),
-            decoration: const BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.all(Radius.circular(16)),
-              border: GradientBoxBorder(
-                gradient: LinearGradient(colors: [
-                  Color.fromARGB(127, 208, 208, 208),
-                  Color.fromARGB(127, 188, 99, 121),
-                  Color.fromARGB(127, 86, 101, 182),
-                  Color.fromARGB(127, 126, 190, 236)
-                ]),
-                width: 1,
-              ),
-              shape: BoxShape.rectangle,
-            ),
-            child: TextField(
-              enabled: true,
-              controller: _aiChatController,
-              obscureText: false,
-              focusNode: widget.textFieldFocusNode,
-              textAlign: TextAlign.start,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                hintText: 'Ask your AVM anything',
-                hintStyle: const TextStyle(fontSize: 14.0, color: Colors.grey),
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                suffixIcon: BlocBuilder<ChatBloc, ChatState>(
-                  builder: (context, state) {
-                    return IconButton(
-                      splashColor: Colors.transparent,
-                      splashRadius: 1,
-                      onPressed: () {
-                        if (state is ChatLoading) {
-                          return;
-                        } else {
-                          String message = _aiChatController.text;
+  //                         if (message.isEmpty) return;
 
-                          if (message.isEmpty) return;
-
-                          BlocProvider.of<ChatBloc>(context)
-                              .add(SendMessage(message));
-                          _aiChatController.clear();
-                        }
-                      },
-                      icon: state is ChatLoading
-                          ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : const Icon(
-                              Icons.send_rounded,
-                              color: Color(0xFFF7F4F4),
-                              size: 24.0,
-                            ),
-                    );
-                  },
-                ),
-              ),
-              style: TextStyle(fontSize: 14.0, color: Colors.grey.shade200),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  _moveListToBottom({double extra = 0}) async {
-    try {
-      scrollController
-          .jumpTo(scrollController.position.maxScrollExtent + extra);
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-}
+  //                         BlocProvider.of<ChatBloc>(context)
+  //                             .add(SendMessage(message));
+  //                         _aiChatController.clear();
+  //                       }
+  //                     },
+  //                     icon: state is ChatLoading
+  //                         ? const SizedBox(
+  //                             width: 16,
+  //                             height: 16,
+  //                             child: CircularProgressIndicator(
+  //                               valueColor:
+  //                                   AlwaysStoppedAnimation<Color>(Colors.white),
+  //                             ),
+  //                           )
+  //                         : const Icon(
+  //                             Icons.send_rounded,
+  //                             color: Color(0xFFF7F4F4),
+  //                             size: 24.0,
+  //                           ),
+  //                   );
+  //                 },
+  //               ),
+  //             ),
+  //             style: TextStyle(fontSize: 14.0, color: Colors.grey.shade200),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
