@@ -11,6 +11,7 @@ import 'package:friend_private/backend/database/message_provider.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:friend_private/features/capture/presentation/pages/capture_memory_page.dart';
 import 'package:friend_private/pages/capture/location_service.dart';
 import 'package:friend_private/pages/capture/logic/openglass_mixin.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
@@ -387,20 +388,34 @@ class CapturePageState extends State<CapturePage>
     super.build(context);
     return Stack(
       children: [
-        ListView(children: [
-          speechProfileWidget(context, setState, restartWebSocket),
-          ...getConnectionStateWidgets(
-            context,
-            _hasTranscripts,
-            widget.device,
-            wsConnectionState,
-            _internetStatus,
-          ),
-          getTranscriptWidget(memoryCreating, segments, photos, widget.device),
-          ...connectionStatusWidgets(
-              context, segments, wsConnectionState, _internetStatus),
-          const SizedBox(height: 16)
-        ]),
+        ListView(
+        
+          // physics: const NeverScrollableScrollPhysics(),
+          children: [
+            speechProfileWidget(context, setState, restartWebSocket),
+            CaptureMemoryPage(
+              context: context,
+              hasTranscripts: _hasTranscripts,
+              wsConnectionState: wsConnectionState,
+              device: widget.device,
+              internetStatus: _internetStatus,
+              segments: segments,
+              memoryCreating: memoryCreating,
+              photos: photos,
+            ),
+            // ...getConnectionStateWidgets(
+            //   context,
+            //   _hasTranscripts,
+            //   widget.device,
+            //   wsConnectionState,
+            //   _internetStatus,
+            // ),
+            // getTranscriptWidget(memoryCreating, segments, photos, widget.device),
+            ...connectionStatusWidgets(
+                context, segments, wsConnectionState, _internetStatus),
+            const SizedBox(height: 16)
+          ],
+        ),
         getPhoneMicRecordingButton(_recordingToggled, recordingState)
       ],
     );

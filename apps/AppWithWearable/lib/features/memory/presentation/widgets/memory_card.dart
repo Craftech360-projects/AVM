@@ -29,13 +29,15 @@ class MemoryCardWidget extends StatelessWidget {
           );
         }
 
-        return ListView.builder(
+        return ListView.separated(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: state.memories.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 8),
           itemBuilder: (context, index) {
             Memory memory = state.memories[index];
+            //*-- Delete Memory Card --*//
             return Dismissible(
               key: Key(memory.id.toString()),
               confirmDismiss: (direction) async {
@@ -79,16 +81,11 @@ class MemoryCardWidget extends StatelessWidget {
                   DeletedMemory(memory: memory),
                 );
               },
+              //*-- GoTo Memory Detail page --*//
               child: GestureDetector(
-                // onTap: () =>
                 onTap: () {
                   _memoryBloc.add(MemoryIndexChanged(memoryIndex: index));
                   Navigator.of(context).push(
-                    // MaterialPageRoute(
-                    //   builder: (context) => MemoryDetailPage(
-                    //     memory: memory,
-                    //   ),
-                    // ),
                     MaterialPageRoute(
                       builder: (context) => CustomMemoryDetailPage(
                         memoryBloc: _memoryBloc,
@@ -97,88 +94,108 @@ class MemoryCardWidget extends StatelessWidget {
                     ),
                   );
                 },
+                //*-- Memory Card --*//
                 child: Card(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 150,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(16),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        //*-- Image --*//
+                        SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(16),
+                            ),
+                            child: memory.memoryImg == null
+                                ? const SizedBox.shrink()
+                                : Image.memory(
+                                    memory.memoryImg!,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
-                          child: memory.memoryImg == null
-                              ? const SizedBox.shrink()
-                              : Image.memory(
-                                  memory.memoryImg!,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            memory.discarded
-                                ? const SizedBox.shrink()
-                                : const SizedBox(height: 8),
-                            memory.discarded
-                                ? const SizedBox.shrink()
-                                : Text(
-                                    memory.structured.target?.title ?? '',
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge,
-                                    maxLines: 1,
-                                  ),
-                            memory.discarded
-                                ? const SizedBox.shrink()
-                                : const SizedBox(height: 8),
-                            memory.discarded
-                                ? const SizedBox.shrink()
-                                : Text(
-                                    memory.structured.target?.overview ?? '',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: Colors.grey.shade300,
-                                            height: 1.3),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                            const SizedBox(height: 8),
-                            const Divider(
-                              height: 0,
-                              thickness: 1,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Created At: ${DateFormat('EE d MMM h:mm a').format(memory.createdAt)}',
-                                  style: Theme.of(context).textTheme.bodySmall,
+                        const SizedBox(width: 8),
+                        //*-- Card Details --*//
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              //*-- Date and Time --*//
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Spacer(),
+                                    Text(
+                                      '${DateFormat('d MMM').format(memory.createdAt)}  '
+                                      '   ${DateFormat('h:mm a').format(memory.createdAt)}',
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                  ],
                                 ),
-                                const Spacer(),
-                                IconButton(
-                                  visualDensity:
-                                      const VisualDensity(vertical: -4),
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () {
-                                    debugPrint('memory_list_item.dart');
-                                  },
-                                  icon: const Icon(
-                                    Icons.more_horiz,
-                                    size: 18,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              memory.discarded
+                                  ? const SizedBox.shrink()
+                                  : const SizedBox(height: 4),
+                              //*-- Title --*//
+                              memory.discarded
+                                  ? Text(
+                                      'Discarded Memory',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
+                                      maxLines: 1,
+                                    )
+                                  : Text(
+                                      memory.structured.target?.title ?? '',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge,
+                                      maxLines: 1,
+                                    ),
+                              memory.discarded
+                                  ? const SizedBox.shrink()
+                                  : const SizedBox(height: 8),
+                              //*-- Overview --*//
+                              memory.discarded
+                                  ? const SizedBox.shrink()
+                                  : Text(
+                                      memory.structured.target?.overview ?? '',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(
+                                              color: Colors.grey.shade300,
+                                              height: 1.3),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                              //*-- Chips --*//
+                              memory.discarded
+                                  ? const SizedBox.shrink()
+                                  : Chip(
+                                      padding: EdgeInsets.zero,
+                                      visualDensity: VisualDensity.compact,
+                                      backgroundColor: Colors.black45,
+                                      label: Text(
+                                          memory.structured.target?.category ??
+                                              ''),
+                                    )
+                            ],
+                          ),
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

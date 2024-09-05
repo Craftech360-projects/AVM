@@ -652,13 +652,11 @@ import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/database/message_provider.dart';
-import 'package:friend_private/backend/growthbook.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/features/chat/presentation/pages/chat_page.dart';
-import 'package:friend_private/features/memory/presentation/pages/memory_page.dart';
 import 'package:friend_private/main.dart';
 import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/pages/capture/page.dart';
@@ -677,6 +675,7 @@ import 'package:friend_private/utils/ble/scan.dart';
 import 'package:friend_private/utils/features/backups.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:friend_private/widgets/scanning_ui.dart';
 import 'package:friend_private/widgets/upgrade_alert.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:upgrader/upgrader.dart';
@@ -787,6 +786,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       vsync: this,
       initialIndex: SharedPreferencesUtil().pageToShowFromNotification,
     );
+
     SharedPreferencesUtil().pageToShowFromNotification = 1;
     SharedPreferencesUtil().onboardingCompleted = true;
     print('Selected: ${SharedPreferencesUtil().selectedChatPluginId}');
@@ -898,7 +898,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   _tabChange(int index) {
     MixpanelManager()
-        .bottomNavigationTabClicked(['Memories', 'Device', 'Chat'][index]);
+        .bottomNavigationTabClicked(['Device', 'Chat', 'Setting'][index]);
     FocusScope.of(context).unfocus();
     setState(() {
       _controller!.index = index;
@@ -928,7 +928,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   controller: _controller,
                   // physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    const MemoriesPage(),
                     // const MyWidget(),
                     // TestPage(
                     //   refreshMemories: _initiateMemories,
@@ -948,7 +947,10 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                     //   messages: messages,
                     //   refreshMessages: _refreshMessages,
                     // ),
-                    ChatPageTest(textFieldFocusNode: chatTextFieldFocusNode,),
+                    ChatPageTest(
+                      textFieldFocusNode: chatTextFieldFocusNode,
+                    ),
+                    const SettingsPage(),
                   ],
                 ),
               ),
@@ -982,23 +984,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                           child: MaterialButton(
                             onPressed: () => _tabChange(0),
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 20, bottom: 20),
-                              child: Text('Memories',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: _controller!.index == 0
-                                          ? Colors.white
-                                          : Colors.grey,
-                                      fontSize: 16)),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: MaterialButton(
-                            onPressed: () => _tabChange(1),
-                            child: Padding(
                               padding: const EdgeInsets.only(
                                 top: 20,
                                 bottom: 20,
@@ -1008,7 +993,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  color: _controller!.index == 1
+                                  color: _controller!.index == 0
                                       ? Colors.white
                                       : Colors.grey,
                                   fontSize: 16,
@@ -1019,7 +1004,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                         ),
                         Expanded(
                           child: MaterialButton(
-                            onPressed: () => _tabChange(2),
+                            onPressed: () => _tabChange(1),
                             child: Padding(
                               padding:
                                   const EdgeInsets.only(top: 20, bottom: 20),
@@ -1027,10 +1012,29 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      color: _controller!.index == 2
+                                      color: _controller!.index == 1
                                           ? Colors.white
                                           : Colors.grey,
                                       fontSize: 16)),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: MaterialButton(
+                            onPressed: () => _tabChange(2),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 20, bottom: 20),
+                              child: Text(
+                                'Setting',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: _controller!.index == 2
+                                        ? Colors.white
+                                        : Colors.grey,
+                                    fontSize: 16),
+                              ),
                             ),
                           ),
                         ),
@@ -1048,84 +1052,83 @@ class _HomePageWrapperState extends State<HomePageWrapper>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //* AVM page navigating,AVM Battery indecator
-              _device != null && batteryLevel != -1
-                  ? GestureDetector(
-                      onTap: _device == null
-                          ? null
-                          : () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (c) => ConnectedDevice(
-                                        device: _device!,
-                                        batteryLevel: batteryLevel,
-                                      )));
-                              MixpanelManager().batteryIndicatorClicked();
-                            },
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 1,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  color: batteryLevel > 75
-                                      ? const Color.fromARGB(255, 0, 255, 8)
-                                      : batteryLevel > 20
-                                          ? Colors.yellow.shade700
-                                          : Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 8.0),
-                              Text(
-                                '${batteryLevel.toString()}%',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          )),
-                    )
-                  : TextButton(
-                      onPressed: () async {
-                        if (SharedPreferencesUtil().deviceId.isEmpty) {
-                          routeToPage(context, const ConnectDevicePage());
-                          MixpanelManager().connectFriendClicked();
-                        } else {
-                          await routeToPage(
-                              context,
-                              const ConnectedDevice(
-                                  device: null, batteryLevel: 0));
-                        }
-                        setState(() {});
-                      },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        backgroundColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          side: const BorderSide(color: Colors.white, width: 1),
-                        ),
-                      ),
-                      child: Image.asset(
-                        'assets/images/herologo.png',
-                        width: 30,
-                        height: 30,
-                      ),
-                    ),
+              //* AVM page navigating
+              // _device != null && batteryLevel != -1
+              //     ? GestureDetector(
+              //         onTap: _device == null
+              //             ? null
+              //             : () {
+              //                 Navigator.of(context).push(MaterialPageRoute(
+              //                     builder: (c) => ConnectedDevice(
+              //                           device: _device!,
+              //                           batteryLevel: batteryLevel,
+              //                         )));
+              //                 MixpanelManager().batteryIndicatorClicked();
+              //               },
+              //         child: Container(
+              //             padding: const EdgeInsets.symmetric(
+              //                 horizontal: 14, vertical: 10),
+              //             decoration: BoxDecoration(
+              //               color: Colors.transparent,
+              //               borderRadius: BorderRadius.circular(10),
+              //               border: Border.all(
+              //                 color: Colors.grey,
+              //                 width: 1,
+              //               ),
+              //             ),
+              //             child: Row(
+              //               mainAxisSize: MainAxisSize.min,
+              //               children: [
+              //                 Container(
+              //                   width: 10,
+              //                   height: 10,
+              //                   decoration: BoxDecoration(
+              //                     color: batteryLevel > 75
+              //                         ? const Color.fromARGB(255, 0, 255, 8)
+              //                         : batteryLevel > 20
+              //                             ? Colors.yellow.shade700
+              //                             : Colors.red,
+              //                     shape: BoxShape.circle,
+              //                   ),
+              //                 ),
+              //                 const SizedBox(width: 8.0),
+              //                 Text(
+              //                   '${batteryLevel.toString()}%',
+              //                   style: const TextStyle(
+              //                     color: Colors.white,
+              //                     fontSize: 12,
+              //                     fontWeight: FontWeight.bold,
+              //                   ),
+              //                 ),
+              //               ],
+              //             )),
+              //       )
+              //     :
+              TextButton(
+                onPressed: () async {
+                  if (SharedPreferencesUtil().deviceId.isEmpty) {
+                    routeToPage(context, const ConnectDevicePage());
+                    MixpanelManager().connectFriendClicked();
+                  } else {
+                    await routeToPage(context,
+                        const ConnectedDevice(device: null, batteryLevel: 0));
+                  }
+                  setState(() {});
+                },
+                // style: TextButton.styleFrom(
+                //   padding: EdgeInsets.zero,
+                //   backgroundColor: Colors.transparent,
+                //   shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(10),
+                //     side: const BorderSide(color: Colors.white, width: 1),
+                //   ),
+                // ),
+                child: Image.asset(
+                  'assets/images/herologo.png',
+                  width: 60,
+                  height: 30,
+                ),
+              ),
               _controller!.index == 2
                   ? Padding(
                       padding: const EdgeInsets.only(left: 0),
@@ -1178,28 +1181,89 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                       ),
                     )
                   : const SizedBox(width: 16),
-              //* Navigating to Setting Page
-              IconButton(
-                icon: const Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                onPressed: () async {
-                  MixpanelManager().settingsOpened();
-                  String language = SharedPreferencesUtil().recordingsLanguage;
-                  bool hasSpeech = SharedPreferencesUtil().hasSpeakerProfile;
-                  await routeToPage(context, const SettingsPage());
-                  // TODO: this fails like 10 times, connects reconnects, until it finally works.
-                  if (GrowthbookUtil().hasStreamingTranscriptFeatureOn() &&
-                      (language != SharedPreferencesUtil().recordingsLanguage ||
-                          hasSpeech !=
-                              SharedPreferencesUtil().hasSpeakerProfile)) {
-                    capturePageKey.currentState?.restartWebSocket();
-                  }
-                  setState(() {});
-                },
-              )
+              //* AVM Battery indecator
+              _device != null && batteryLevel != -1
+                  ? GestureDetector(
+                      onTap: _device == null
+                          ? null
+                          : () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (c) => ConnectedDevice(
+                                        device: _device!,
+                                        batteryLevel: batteryLevel,
+                                      )));
+                              MixpanelManager().batteryIndicatorClicked();
+                            },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.grey,
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.electric_bolt,
+                              color: batteryLevel > 75
+                                  ? const Color.fromARGB(255, 0, 255, 8)
+                                  : batteryLevel > 20
+                                      ? Colors.yellow.shade700
+                                      : Colors.red,
+                              size: 12,
+                            ),
+                            // Container(
+                            //   width: 10,
+                            //   height: 10,
+                            //   decoration: BoxDecoration(
+                            //     color: batteryLevel > 75
+                            //         ? const Color.fromARGB(255, 0, 255, 8)
+                            //         : batteryLevel > 20
+                            //             ? Colors.yellow.shade700
+                            //             : Colors.red,
+                            //     shape: BoxShape.circle,
+                            //   ),
+                            // ),
+                            // const SizedBox(width: 8.0),
+                            Text(
+                              '${batteryLevel.toString()}%',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                // fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : const ScanningUI()
+              // IconButton(
+              //   icon: const Icon(
+              //     Icons.settings,
+              //     color: Colors.white,
+              //     size: 30,
+              //   ),
+              //   onPressed: () async {
+              //     MixpanelManager().settingsOpened();
+              //     String language = SharedPreferencesUtil().recordingsLanguage;
+              //     bool hasSpeech = SharedPreferencesUtil().hasSpeakerProfile;
+              //     await routeToPage(context, const SettingsPage());
+              //     // TODO: this fails like 10 times, connects reconnects, until it finally works.
+              //     if (GrowthbookUtil().hasStreamingTranscriptFeatureOn() &&
+              //         (language != SharedPreferencesUtil().recordingsLanguage ||
+              //             hasSpeech !=
+              //                 SharedPreferencesUtil().hasSpeakerProfile)) {
+              //       capturePageKey.currentState?.restartWebSocket();
+              //     }
+              //     setState(() {});
+              //   },
+              // )
             ],
           ),
           elevation: 0,

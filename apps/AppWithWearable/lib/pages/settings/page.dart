@@ -10,7 +10,6 @@ import 'package:friend_private/pages/speaker_id/page.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-// Update with the actual path to your CustomScaffold file
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -55,19 +54,19 @@ class _SettingsPageState extends State<SettingsPage> {
       canPop: true,
       child: CustomScaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          automaticallyImplyLeading: true,
-          title: const Text('Settings'),
-          centerTitle: false,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          elevation: 0,
-        ),
+        // appBar: AppBar(
+        //   backgroundColor: Theme.of(context).colorScheme.surface,
+        //   automaticallyImplyLeading: true,
+        //   title: const Text('Settings'),
+        //   centerTitle: false,
+        //   // leading: IconButton(
+        //   //   icon: const Icon(Icons.arrow_back_ios_new),
+        //   //   onPressed: () {
+        //   //     Navigator.pop(context);
+        //   //   },
+        //   // ),
+        //   elevation: 0,
+        // ),
         body: Padding(
           padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
