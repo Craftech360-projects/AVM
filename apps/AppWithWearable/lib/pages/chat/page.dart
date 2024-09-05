@@ -199,6 +199,7 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
                   onPressed: loading
                       ? null
                       : () async {
+                          print("Sending<<<<<<<");
                           String message = textController.text;
                           if (message.isEmpty) return;
                           _sendMessageUtil(message);
@@ -231,6 +232,10 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
   }
 
   _sendMessageUtil(String message) async {
+    debugPrint(">>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<");
+    // Debug print to find out which plugin is being used
+    debugPrint(
+        "SharedPreferencesUtil().selectedChatPluginId: ${SharedPreferencesUtil().selectedChatPluginId}");
     changeLoadingState();
     String? pluginId =
         SharedPreferencesUtil().selectedChatPluginId == 'no_selected'

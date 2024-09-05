@@ -319,6 +319,8 @@ Future<String> dailySummaryNotifications(List<Memory> memories) async {
 
 // ------
 
+//this below will work with llama
+
 Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
     List<Message> messages) async {
   String message = '''
@@ -327,16 +329,13 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
         
         - First determine if the conversation requires context, in the field "requires_context".
         - Context could be 2 different things:
-          - A list of topics (each topic being 1 or 2 words, e.g. "Startups" "Funding" "Business Meeting" "Artificial Intelligence") that are going to be used to retrieve more context, in the field "topics". Leave an empty list if not context is needed.
-          - A dates range, if the context is time-based, in the field "dates_range". Leave an empty list if not context is needed. FYI if the user says today, today is ${DateTime.now().toIso8601String()}.
+          - A list of topics (each topic being 1 or 2 words, e.g. "Startups" "Funding" "Business Meeting" "Artificial Intelligence") that are going to be used to retrieve more context, in the field "topics". Leave an empty list if no context is needed.
+          - A dates range, if the context is time-based, in the field "dates_range". Leave an empty list if no context is needed. FYI if the user says today, today is ${DateTime.now().toIso8601String()}.
         
         Conversation:
         ${Message.getMessagesAsString(messages)}
         
         The output should be formatted as a JSON instance that conforms to the JSON schema below.
-        
-        As an example, for the schema {"properties": {"foo": {"title": "Foo", "description": "a list of strings", "type": "array", "items": {"type": "string"}}}, "required": ["foo"]}
-        the object {"foo": ["bar", "baz"]} is a well-formatted instance of the schema. The object {"properties": {"foo": ["bar", "baz"]}} is not well-formatted.
         
         Here is the output schema:
         ```
@@ -347,11 +346,23 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
   debugPrint('determineRequiresContext message: $message');
   var response = await executeGptPrompt(message);
   debugPrint('determineRequiresContext response: $response');
-  var cleanedResponse =
-      response.toString().replaceAll('```', '').replaceAll('json', '').trim();
+
+  // Use a regex to find and extract the JSON part from the response
+  var jsonMatch = RegExp(r'\{.*\}', dotAll: true).firstMatch(response);
+  if (jsonMatch == null) {
+    debugPrint('No JSON found in response');
+    return null;
+  }
+
+  var cleanedResponse = jsonMatch.group(0)!;
+  print("determine>>>>>1 $cleanedResponse");
+
   try {
+    print("determine>>>>>2");
     var data = jsonDecode(cleanedResponse);
-    debugPrint(data.toString());
+    print("determine>>>>>3");
+    debugPrint(">>>>>>>clean data: $data");
+
     List<String> topics =
         data['topics'].map<String>((e) => e.toString()).toList();
     List<String> datesRange =
@@ -371,6 +382,68 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
     return null;
   }
 }
+
+//this below will work with chatgpt
+// Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
+//     List<Message> messages) async {
+//   String message = '''
+//         Based on the current conversation an AI and a User are having, determine if the AI requires context outside the conversation to respond to the user's message.
+//         More context could mean, user stored old conversations, notes, or information that seems very user-specific.
+
+//         - First determine if the conversation requires context, in the field "requires_context".
+//         - Context could be 2 different things:
+//           - A list of topics (each topic being 1 or 2 words, e.g. "Startups" "Funding" "Business Meeting" "Artificial Intelligence") that are going to be used to retrieve more context, in the field "topics". Leave an empty list if not context is needed.
+//           - A dates range, if the context is time-based, in the field "dates_range". Leave an empty list if not context is needed. FYI if the user says today, today is ${DateTime.now().toIso8601String()}.
+
+//         Conversation:
+//         ${Message.getMessagesAsString(messages)}
+
+//         The output should be formatted as a JSON instance that conforms to the JSON schema below.
+
+//         As an example, for the schema {"properties": {"foo": {"title": "Foo", "description": "a list of strings", "type": "array", "items": {"type": "string"}}}, "required": ["foo"]}
+//         the object {"foo": ["bar", "baz"]} is a well-formatted instance of the schema. The object {"properties": {"foo": ["bar", "baz"]}} is not well-formatted.
+
+//         Here is the output schema:
+//         ```
+//         {"properties": {"requires_context": {"title": "Requires Context", "description": "Based on the conversation, this tells if context is needed to respond", "default": false, "type": "string"}, "topics": {"title": "Topics", "description": "If context is required, the topics to retrieve context from", "default": [], "type": "array", "items": {"type": "string"}}, "dates_range": {"title": "Dates Range", "description": "The dates range to retrieve context from", "default": [], "type": "array", "minItems": 2, "maxItems": 2, "items": [{"type": "string", "format": "date-time"}, {"type": "string", "format": "date-time"}]}}}
+//         ```
+//         '''
+//       .replaceAll('        ', '');
+//   debugPrint('determineRequiresContext message: $message');
+
+//   var response = await executeGptPrompt(message);
+
+//   debugPrint('determineRequiresContext response: $response');
+//   var cleanedResponse =
+//       response.toString().replaceAll('```', '').replaceAll('json', '').trim();
+//   print("determine>>>>>1 $cleanedResponse");
+//   try {
+//     print("determine>>>>>2");
+//     var data = jsonDecode(cleanedResponse);
+//     print("determine>>>>>3");
+//     debugPrint(">>>>>>>clean data: $data");
+
+//     debugPrint(data.toString());
+//     print("determine>>>>>4");
+//     List<String> topics =
+//         data['topics'].map<String>((e) => e.toString()).toList();
+//     List<String> datesRange =
+//         data['dates_range'].map<String>((e) => e.toString()).toList();
+//     List<DateTime> dates = datesRange.map((e) => DateTime.parse(e)).toList();
+//     debugPrint('topics: $topics, dates: $dates');
+//     return Tuple2<List<String>, List<DateTime>>(topics, dates);
+//   } catch (e) {
+//     CrashReporting.reportHandledCrash(e, StackTrace.current,
+//         level: NonFatalExceptionLevel.critical,
+//         userAttributes: {
+//           'response': cleanedResponse,
+//           'message_length': message.length.toString(),
+//           'message_words': message.split(' ').length.toString(),
+//         });
+//     debugPrint('Error determining requires context: $e');
+//     return null;
+//   }
+// }
 
 String qaRagPrompt(String context, List<Message> messages, {Plugin? plugin}) {
   // debugPrint("Your name is>>>>>>>>>>>>>>>>>>>: ${plugin!.name}");

@@ -37,13 +37,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void _onSendMessage(SendMessage event, Emitter<ChatState> emit) async {
     try {
-      print('bloci ${event.message}');
+      print('bloci>>>>>>> ${event.message}');
       var aiMessage = await _prepareStreaming(event.message);
-    // print('bloci ai message ${aiMessage.}');
+      // print('bloci ai message ${aiMessage.}');
       dynamic ragInfo = await retrieveRAGContext(event.message);
       String ragContext = ragInfo[0];
       List<Memory> memories = ragInfo[1].cast<Memory>();
-print('RAG Context: $ragContext memories: ${memories.length}');
+      print('RAG Context: $ragContext memories: ${memories.length}');
       var prompt = qaRagPrompt(
         ragContext,
         await messageProvider.retrieveMostRecentMessages(limit: 10),
@@ -83,13 +83,14 @@ _prepareStreaming(String text) {
   // _moveListToBottom(extra: widget.textFieldFocusNode.hasFocus ? 148 : 200);
   return ai;
 }
-  _callbackFunctionChatStreaming(Message aiMessage) {
-    return (String content) async {
-      aiMessage.text = '${aiMessage.text}$content';
-      MessageProvider().updateMessage(aiMessage);
-      // widget.messages.removeLast();
-      // widget.messages.add(aiMessage);
-      // setState(() {});
-      // _moveListToBottom();
-    };
-  }
+
+_callbackFunctionChatStreaming(Message aiMessage) {
+  return (String content) async {
+    aiMessage.text = '${aiMessage.text}$content';
+    MessageProvider().updateMessage(aiMessage);
+    // widget.messages.removeLast();
+    // widget.messages.add(aiMessage);
+    // setState(() {});
+    // _moveListToBottom();
+  };
+}

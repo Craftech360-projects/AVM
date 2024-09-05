@@ -1,0 +1,17 @@
+
+
+## 
+- [ ] chat is not working , properly, rag is failing, llama is responding
+- [ ] plugins not added to the memory section
+- [ ] row transcription editing in not done
+- [ ] for one memory, only one tag is there 
+- [ ] server issue shows when  internet is off, but its not changing when internet is reconnected, it happens only when device disconnected and reconnected
+
+
+
+
+
+
+
+time and date is there, location need to added
+
