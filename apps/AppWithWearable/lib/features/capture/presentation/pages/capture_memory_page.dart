@@ -119,17 +119,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                 ),
               );
             } else if (state.status == MemoryStatus.success) {
-              //     return  ListView.builder(
-              //         shrinkWrap: true,
-              //  physics: NeverScrollableScrollPhysics(),
-              //         itemCount: 10,
-              //         itemBuilder: (context, index) => Card(
-              //           child: Container(
-              //             color: Colors.red,
-              //             height: 50,
-              //           ),
-              //         ),
-              //       );
+            
               return MemoryCardWidget(memoryBloc: _memoryBloc);
             }
             return const SizedBox.shrink();

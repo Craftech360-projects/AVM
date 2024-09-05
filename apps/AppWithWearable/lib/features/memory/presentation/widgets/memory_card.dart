@@ -16,6 +16,7 @@ class MemoryCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: _memoryBloc,
       builder: (context, state) {
@@ -29,178 +30,183 @@ class MemoryCardWidget extends StatelessWidget {
           );
         }
 
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: state.memories.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 8),
-          itemBuilder: (context, index) {
-            Memory memory = state.memories[index];
-            //*-- Delete Memory Card --*//
-            return Dismissible(
-              key: Key(memory.id.toString()),
-              confirmDismiss: (direction) async {
-                return await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Confirm Delete'),
-                      content: const Text(
-                        'Are you sure you want to delete this memory?',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(false);
-                          },
-                          child: const Text(
-                            'Cancel',
-                            style: TextStyle(color: Colors.white),
-                          ),
+        // return Container(height: height*0.3, color: Colors.blue);
+
+        return SizedBox(
+          height: height*0.4,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            // physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: state.memories.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 8),
+            itemBuilder: (context, index) {
+              Memory memory = state.memories[index];
+              //*-- Delete Memory Card --*//
+              return Dismissible(
+                key: Key(memory.id.toString()),
+                confirmDismiss: (direction) async {
+                  return await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Confirm Delete'),
+                        content: const Text(
+                          'Are you sure you want to delete this memory?',
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop(true);
-                          },
-                          child: const Text(
-                            'Delete',
-                            style: TextStyle(color: Colors.white),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                            child: const Text(
+                              'Delete',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              onDismissed: (direction) {
-                _memoryBloc.add(
-                  DeletedMemory(memory: memory),
-                );
-              },
-              //*-- GoTo Memory Detail page --*//
-              child: GestureDetector(
-                onTap: () {
-                  _memoryBloc.add(MemoryIndexChanged(memoryIndex: index));
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CustomMemoryDetailPage(
-                        memoryBloc: _memoryBloc,
-                        memoryAtIndex: index,
-                      ),
-                    ),
+                        ],
+                      );
+                    },
                   );
                 },
-                //*-- Memory Card --*//
-                child: Card(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        //*-- Image --*//
-                        SizedBox(
-                          height: 80,
-                          width: 80,
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(16),
-                            ),
-                            child: memory.memoryImg == null
-                                ? const SizedBox.shrink()
-                                : Image.memory(
-                                    memory.memoryImg!,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                          ),
+                onDismissed: (direction) {
+                  _memoryBloc.add(
+                    DeletedMemory(memory: memory),
+                  );
+                },
+                //*-- GoTo Memory Detail page --*//
+                child: GestureDetector(
+                  onTap: () {
+                    _memoryBloc.add(MemoryIndexChanged(memoryIndex: index));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CustomMemoryDetailPage(
+                          memoryBloc: _memoryBloc,
+                          memoryAtIndex: index,
                         ),
-                        const SizedBox(width: 8),
-                        //*-- Card Details --*//
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              //*-- Date and Time --*//
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Spacer(),
-                                    Text(
-                                      '${DateFormat('d MMM').format(memory.createdAt)}  '
-                                      '   ${DateFormat('h:mm a').format(memory.createdAt)}',
-                                      style:
-                                          Theme.of(context).textTheme.bodySmall,
-                                    ),
-                                  ],
-                                ),
+                      ),
+                    );
+                  },
+                  //*-- Memory Card --*//
+                  child: Card(
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          //*-- Image --*//
+                          SizedBox(
+                            height: 80,
+                            width: 80,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(16),
                               ),
-                              memory.discarded
+                              child: memory.memoryImg == null
                                   ? const SizedBox.shrink()
-                                  : const SizedBox(height: 4),
-                              //*-- Title --*//
-                              memory.discarded
-                                  ? Text(
-                                      'Discarded Memory',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge,
-                                      maxLines: 1,
-                                    )
-                                  : Text(
-                                      memory.structured.target?.title ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge,
-                                      maxLines: 1,
+                                  : Image.memory(
+                                      memory.memoryImg!,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
                                     ),
-                              memory.discarded
-                                  ? const SizedBox.shrink()
-                                  : const SizedBox(height: 8),
-                              //*-- Overview --*//
-                              memory.discarded
-                                  ? const SizedBox.shrink()
-                                  : Text(
-                                      memory.structured.target?.overview ?? '',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                              color: Colors.grey.shade300,
-                                              height: 1.3),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                              //*-- Chips --*//
-                              memory.discarded
-                                  ? const SizedBox.shrink()
-                                  : Chip(
-                                      padding: EdgeInsets.zero,
-                                      visualDensity: VisualDensity.compact,
-                                      backgroundColor: Colors.black45,
-                                      label: Text(
-                                          memory.structured.target?.category ??
-                                              ''),
-                                    )
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 8),
+                          //*-- Card Details --*//
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                //*-- Date and Time --*//
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Spacer(),
+                                      Text(
+                                        '${DateFormat('d MMM').format(memory.createdAt)}  '
+                                        '   ${DateFormat('h:mm a').format(memory.createdAt)}',
+                                        style:
+                                            Theme.of(context).textTheme.bodySmall,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                memory.discarded
+                                    ? const SizedBox.shrink()
+                                    : const SizedBox(height: 4),
+                                //*-- Title --*//
+                                memory.discarded
+                                    ? Text(
+                                        'Discarded Memory',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge,
+                                        maxLines: 1,
+                                      )
+                                    : Text(
+                                        memory.structured.target?.title ?? '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge,
+                                        maxLines: 1,
+                                      ),
+                                memory.discarded
+                                    ? const SizedBox.shrink()
+                                    : const SizedBox(height: 8),
+                                //*-- Overview --*//
+                                memory.discarded
+                                    ? const SizedBox.shrink()
+                                    : Text(
+                                        memory.structured.target?.overview ?? '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Colors.grey.shade300,
+                                                height: 1.3),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                //*-- Chips --*//
+                                memory.discarded
+                                    ? const SizedBox.shrink()
+                                    : Chip(
+                                        padding: EdgeInsets.zero,
+                                        visualDensity: VisualDensity.compact,
+                                        backgroundColor: Colors.black45,
+                                        label: Text(
+                                            memory.structured.target?.category ??
+                                                ''),
+                                      )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       },
     );

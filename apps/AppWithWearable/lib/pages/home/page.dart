@@ -1129,7 +1129,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   height: 30,
                 ),
               ),
-              _controller!.index == 2
+              _controller!.index == 1
                   ? Padding(
                       padding: const EdgeInsets.only(left: 0),
                       child: Container(

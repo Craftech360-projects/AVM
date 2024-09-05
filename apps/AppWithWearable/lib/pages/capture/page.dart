@@ -388,7 +388,7 @@ class CapturePageState extends State<CapturePage>
     super.build(context);
     return Stack(
       children: [
-        ListView(
+        Column(
         
           // physics: const NeverScrollableScrollPhysics(),
           children: [
