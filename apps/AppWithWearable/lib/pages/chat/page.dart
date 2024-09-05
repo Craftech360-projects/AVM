@@ -232,7 +232,7 @@ class ChatPageState extends State<ChatPage> with AutomaticKeepAliveClientMixin {
   }
 
   _sendMessageUtil(String message) async {
-    debugPrint(">>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<");
+    debugPrint(">>PLUGINCHECK");
     // Debug print to find out which plugin is being used
     debugPrint(
         "SharedPreferencesUtil().selectedChatPluginId: ${SharedPreferencesUtil().selectedChatPluginId}");

@@ -37,16 +37,32 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void _onSendMessage(SendMessage event, Emitter<ChatState> emit) async {
     try {
+      print(">>PLUGINCHECK");
+      // Debug print to find out which plugin is being used
+
+      print(
+          "SharedPreferencesUtil().selectedChatPluginId: ${SharedPreferencesUtil().selectedChatPluginId}");
+      // changeLoadingState();
+      String? pluginId =
+          SharedPreferencesUtil().selectedChatPluginId == 'no_selected'
+              ? null
+              : SharedPreferencesUtil().selectedChatPluginId;
       print('bloci>>>>>>> ${event.message}');
-      var aiMessage = await _prepareStreaming(event.message);
+      var aiMessage =
+          await _prepareStreaming(event.message, pluginId: pluginId);
       // print('bloci ai message ${aiMessage.}');
-      dynamic ragInfo = await retrieveRAGContext(event.message);
+      dynamic ragInfo = await retrieveRAGContext(event.message,
+          prevMessagesPluginId: pluginId);
       String ragContext = ragInfo[0];
       List<Memory> memories = ragInfo[1].cast<Memory>();
       print('RAG Context: $ragContext memories: ${memories.length}');
       var prompt = qaRagPrompt(
         ragContext,
-        await messageProvider.retrieveMostRecentMessages(limit: 10),
+        await messageProvider.retrieveMostRecentMessages(
+            limit: 10, pluginId: pluginId),
+      );
+      print(
+        "final prompt $pluginId, $prompt",
       );
       await streamApiResponse(
         prompt,
@@ -68,14 +84,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 }
 
-_prepareStreaming(String text) {
+_prepareStreaming(String text, {String? pluginId}) {
   // textController.clear(); // setState if isolated
   var human = Message(DateTime.now(), text, 'human');
-  var ai = Message(
-    DateTime.now(),
-    '',
-    'ai',
-  );
+  var ai = Message(DateTime.now(), '', 'ai', pluginId: pluginId);
   MessageProvider().saveMessage(human);
   MessageProvider().saveMessage(ai);
   // widget.messages.add(human);

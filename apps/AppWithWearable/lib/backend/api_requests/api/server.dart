@@ -163,7 +163,7 @@ Future<List<Plugin>> retrievePlugins() async {
   debugPrint("retrieve plugins");
   var response = await makeApiCall(
     url:
-        'https://raw.githubusercontent.com/Craftech360-projects/AVM/main/community-plugins.json',
+        'https://raw.githubusercontent.com/Craftech360-projects/AVM/test-plugin/community-plugins.json',
     headers: {},
     body: '',
     method: 'GET',
