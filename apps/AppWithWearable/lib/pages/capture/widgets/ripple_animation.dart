@@ -141,7 +141,7 @@ class RippleAnimation extends StatefulWidget {
     ],
     this.delay = Duration.zero,
     this.repeat = false,
-    this.minRadius = 60,
+    this.minRadius = 30,
     this.ripplesCount = 5,
     this.duration = const Duration(milliseconds: 2300),
     super.key,
@@ -194,7 +194,7 @@ class RippleAnimationState extends State<RippleAnimation>
           _controller,
           colors: widget.colors,
           minRadius: widget.minRadius,
-          wavesCount: widget.ripplesCount + 2,
+          wavesCount: widget.ripplesCount,
         ),
         child: widget.child,
       );

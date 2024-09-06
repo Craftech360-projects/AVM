@@ -145,6 +145,7 @@ Future<dynamic> llamaApiCall({
     'temperature': temperature,
     'max_tokens': maxTokens,
     'stream': false,
+    'response_format': {"type": "json_object"},
   });
 
   // Make the API call
@@ -172,15 +173,15 @@ Future<dynamic> llamaApiCall({
 Future<String> executeGptPrompt(String? prompt,
     {bool ignoreCache = false}) async {
   if (prompt == null) return '';
-  print("executing prompt here>>>>>>>>>>>>>>>");
+  // print("executing prompt here>>>>>>>>>>>>>>>");
   var prefs = SharedPreferencesUtil();
   var promptBase64 = base64Encode(utf8.encode(prompt));
   var cachedResponse = prefs.gptCompletionCache(promptBase64);
   if (!ignoreCache && prefs.gptCompletionCache(promptBase64).isNotEmpty) {
     return cachedResponse;
   }
-  print(">>>>>>>>>>>>>>>start");
-  //api call using openai
+  // print(">>>>>>>>>>>>>>>start");
+  // api call using openai
   // String response = await gptApiCall(model: 'gpt-4o', messages: [
   //   {'role': 'system', 'content': prompt}
   // ]);
@@ -193,7 +194,7 @@ Future<String> executeGptPrompt(String? prompt,
       maxTokens: 1000 // Adjust maxTokens as needed or set to -1 for default
       );
   debugPrint(">>>>>>>>>>>>>>>>??? $response");
-  debugPrint('executeGptPrompt response: $response');
+  // debugPrint('executeGptPrompt response: $response');
   prefs.setGptCompletionCache(promptBase64, response);
   //debugPrint('executeGptPrompt response: $response');
   return response;
