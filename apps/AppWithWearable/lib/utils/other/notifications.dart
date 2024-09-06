@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/notify_on_kill.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/main.dart';
+import 'package:friend_private/pages/home/home_page_wrapper.dart';
 import 'package:friend_private/pages/home/page.dart';
 
 // TODO: could install the latest version due to podfile issues, so installed 0.8.3
@@ -166,6 +167,6 @@ class NotificationUtil {
       SharedPreferencesUtil().subPageToShowFromNotification = payload?['navigateTo'] ?? '';
     }
     SharedPreferencesUtil().pageToShowFromNotification = screensWithRespectToPath[payload?['path']] ?? 1;
-    MyApp.navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const HomePageWrapper()));
+    MyApp.navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const HomePageWrapperTest()));
   }
 }

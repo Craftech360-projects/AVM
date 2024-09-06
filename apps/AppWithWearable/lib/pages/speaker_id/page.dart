@@ -8,6 +8,7 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/backend/schema/sample.dart';
+import 'package:friend_private/pages/home/home_page_wrapper.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/pages/speaker_id/tabs/completed.dart';
 import 'package:friend_private/pages/speaker_id/tabs/instructions.dart';
@@ -102,7 +103,7 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
                 : TextButton(
                     onPressed: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (c) => const HomePageWrapper()));
+                          builder: (c) => const HomePageWrapperTest()));
                     },
                     child: const Text(
                       'Skip',
@@ -187,7 +188,7 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
     if (_currentIdx == _controller!.length - 1) {
       if (widget.onbording) {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (c) => const HomePageWrapper()));
+            MaterialPageRoute(builder: (c) => const HomePageWrapperTest()));
       } else {
         Navigator.pop(context);
       }

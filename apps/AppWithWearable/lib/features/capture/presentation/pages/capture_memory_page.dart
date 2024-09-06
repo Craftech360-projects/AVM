@@ -68,6 +68,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           memoryBloc: _memoryBloc,
         ),
         const SizedBox(height: 8),
+        //*-- Capture --//
         CaptureCard(
           context: context,
           hasTranscripts: widget.hasTranscripts,
