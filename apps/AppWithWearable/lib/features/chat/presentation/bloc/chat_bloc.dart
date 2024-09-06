@@ -22,6 +22,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc(this.prefs, this.messageProvider, this.memoryProvider)
       : super(ChatState.initial()) {
     on<LoadInitialChat>(_onLoadedMessages);
+
     on<SendMessage>(
       (event, emit) async {
         try {

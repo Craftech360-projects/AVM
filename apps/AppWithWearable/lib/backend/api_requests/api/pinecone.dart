@@ -6,13 +6,15 @@ import 'package:friend_private/backend/api_requests/api/shared.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/env/env.dart';
 
-Future<dynamic> pineconeApiCall({required String urlSuffix, required String body}) async {
+Future<dynamic> pineconeApiCall(
+    {required String urlSuffix, required String body}) async {
   var url = '${Env.pineconeIndexUrl}/$urlSuffix';
   final headers = {
     'Api-Key': Env.pineconeApiKey,
     'Content-Type': 'application/json',
   };
-  var response = await makeApiCall(url: url, headers: headers, body: body, method: 'POST');
+  var response =
+      await makeApiCall(url: url, headers: headers, body: body, method: 'POST');
   var responseBody = jsonDecode(response?.body ?? '{}');
   return responseBody;
 }
@@ -27,24 +29,57 @@ Future<void> updatePineconeMemoryId(String memoryId, int newId) {
       }));
 }
 
-Future<bool> upsertPineconeVector(String memoryId, List<double> vectorList, DateTime createdAt) async {
-  var body = jsonEncode({
-    'vectors': [
-      {
-        'id': '${SharedPreferencesUtil().uid}-$memoryId',
-        'values': vectorList,
-        'metadata': {
-          'created_at': createdAt.millisecondsSinceEpoch ~/ 1000,
-          'memory_id': memoryId,
-          'uid': SharedPreferencesUtil().uid,
+// Future<bool> upsertPineconeVector(String memoryId, List<double> vectorList, DateTime createdAt) async {
+//   var body = jsonEncode({
+//     'vectors': [
+//       {
+//         'id': '${SharedPreferencesUtil().uid}-$memoryId',
+//         'values': vectorList,
+//         'metadata': {
+//           'created_at': createdAt.millisecondsSinceEpoch ~/ 1000,
+//           'memory_id': memoryId,
+//           'uid': SharedPreferencesUtil().uid,
+//         }
+//       }
+//     ],
+//     'namespace': Env.pineconeIndexNamespace
+//   });
+//   var responseBody = await pineconeApiCall(urlSuffix: 'vectors/upsert', body: body);
+//   debugPrint('upsertPineconeVector response: $responseBody');
+//   return (responseBody['upserted_count'] ?? 0) > 0;
+// }
+
+Future<bool> upsertPineconeVector(
+    String memoryId, List<double> vectorList, DateTime createdAt) async {
+  try {
+    var body = jsonEncode({
+      'vectors': [
+        {
+          'id': '${SharedPreferencesUtil().uid}-$memoryId',
+          'values': vectorList,
+          'metadata': {
+            'created_at': createdAt.millisecondsSinceEpoch ~/ 1000,
+            'memory_id': memoryId,
+            'uid': SharedPreferencesUtil().uid,
+          }
         }
-      }
-    ],
-    'namespace': Env.pineconeIndexNamespace
-  });
-  var responseBody = await pineconeApiCall(urlSuffix: 'vectors/upsert', body: body);
-  debugPrint('upsertPineconeVector response: $responseBody');
-  return (responseBody['upserted_count'] ?? 0) > 0;
+      ],
+      'namespace': Env.pineconeIndexNamespace
+    });
+    debugPrint(
+        'here in upsertPineconeVector: >>>>>>>>>>>>>>>>>>>>>>>>>>>??<<<<<<<<<<');
+    var responseBody =
+        await pineconeApiCall(urlSuffix: 'vectors/upsert', body: body);
+    debugPrint('upsertPineconeVector response: $responseBody');
+
+    return (responseBody['upserted_count'] ?? 0) > 0;
+  } catch (e, stackTrace) {
+    debugPrint('Error in upsertPineconeVector: $e');
+    debugPrint('Stack trace: $stackTrace');
+    // You might want to log this error to a logging service
+    // or handle it in a way that's appropriate for your app
+    return false;
+  }
 }
 
 /// Queries Pinecone vectors and optionally filters results based on a date range.
@@ -80,7 +115,10 @@ Future<List<String>> queryPineconeVectors(
   });
   var responseBody = await pineconeApiCall(urlSuffix: 'query', body: body);
   debugPrint(responseBody.toString());
-  return (responseBody['matches'])?.map<String>((e) => e['metadata']['memory_id'].toString()).toList() ?? [];
+  return (responseBody['matches'])
+          ?.map<String>((e) => e['metadata']['memory_id'].toString())
+          .toList() ??
+      [];
 }
 
 Future<bool> deleteVector(String memoryId) async {
@@ -100,5 +138,7 @@ Future<List<double>> getEmbeddingsFromInput(String input) async {
     urlSuffix: 'embeddings',
     contentToEmbed: input,
   );
-  return vector.map<double>((item) => double.tryParse(item.toString()) ?? 0.0).toList();
+  return vector
+      .map<double>((item) => double.tryParse(item.toString()) ?? 0.0)
+      .toList();
 }

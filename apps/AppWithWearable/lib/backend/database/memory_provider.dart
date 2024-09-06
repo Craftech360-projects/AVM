@@ -12,7 +12,8 @@ class MemoryProvider {
   static final Box<Structured> _boxStructured =
       ObjectBoxUtil().box!.store.box<Structured>();
   static final Box<Event> _boxEvent = ObjectBoxUtil().box!.store.box<Event>();
-  static final Box<ActionItem> _boxActionItem = ObjectBoxUtil().box!.store.box<ActionItem>();
+  static final Box<ActionItem> _boxActionItem =
+      ObjectBoxUtil().box!.store.box<ActionItem>();
 
   factory MemoryProvider() {
     return _instance;
@@ -24,8 +25,12 @@ class MemoryProvider {
 // -----------------------
 
   int updateActionItem(ActionItem item) => _boxActionItem.put(item);
-  
+
 // -----------------------
+
+  // Method to get the Memory box
+
+//-------------
   List<Memory> getMemories() => _box.getAll();
   int getMemoriesCount() => _box.count();
 
@@ -38,7 +43,6 @@ class MemoryProvider {
       // The method retrieves all Memory objects from the store, regardless of whether they are discarded or not.
       return _box.query().order(Memory_.createdAt).build().find();
     } else {
-    
       return _box
           .query(Memory_.discarded.equals(false))
           .order(Memory_.createdAt, flags: Order.descending)
