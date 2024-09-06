@@ -24,16 +24,18 @@ import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CaptureCard extends StatelessWidget {
-  const CaptureCard(
-      {super.key,
-      required this.context,
-      required this.hasTranscripts,
-      this.device,
-      required this.wsConnectionState,
-      this.internetStatus,
-      this.segments,
-      this.memoryCreating = false,
-      this.photos = const []});
+  const CaptureCard({
+    super.key,
+    required this.context,
+    required this.hasTranscripts,
+    this.device,
+    required this.wsConnectionState,
+    this.internetStatus,
+    this.segments,
+    this.memoryCreating = false,
+    this.photos = const [],
+    this.scrollController,
+  });
 
   final BuildContext context;
   final bool hasTranscripts;
@@ -43,6 +45,7 @@ class CaptureCard extends StatelessWidget {
   final List<TranscriptSegment>? segments;
   final bool memoryCreating;
   final List<Tuple2<String, String>> photos;
+  final ScrollController? scrollController;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -78,6 +81,7 @@ class CaptureCard extends StatelessWidget {
                       : ListView.builder(
                           padding: EdgeInsets.zero,
                           itemCount: segments!.length,
+                          controller: scrollController,
                           itemBuilder: (context, index) {
                             final segment = segments![index];
                             return Column(

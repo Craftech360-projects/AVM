@@ -54,6 +54,7 @@ class CapturePageState extends State<CapturePage>
         PhoneRecorderMixin,
         WebSocketMixin,
         OpenGlassMixin {
+  ScrollController _scrollController = ScrollController();
   @override
   bool get wantKeepAlive => true;
 
@@ -142,6 +143,14 @@ class CapturePageState extends State<CapturePage>
             () => _createMemory());
         currentTranscriptStartedAt ??= DateTime.now();
         currentTranscriptFinishedAt = DateTime.now();
+        if (_scrollController.hasClients) {
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds:100),
+            curve: Curves.easeOut,
+          );
+        }
+
         setState(() {});
       },
     );
@@ -344,6 +353,7 @@ class CapturePageState extends State<CapturePage>
     WidgetsBinding.instance.removeObserver(this);
     closeWebSocket();
     _internetListener.cancel();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -389,7 +399,6 @@ class CapturePageState extends State<CapturePage>
     return Stack(
       children: [
         Column(
-        
           // physics: const NeverScrollableScrollPhysics(),
           children: [
             speechProfileWidget(context, setState, restartWebSocket),
@@ -402,6 +411,7 @@ class CapturePageState extends State<CapturePage>
               segments: segments,
               memoryCreating: memoryCreating,
               photos: photos,
+              scrollController: _scrollController,
             ),
             // ...getConnectionStateWidgets(
             //   context,

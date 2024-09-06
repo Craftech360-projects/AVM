@@ -21,6 +21,7 @@ class CaptureMemoryPage extends StatefulWidget {
     this.segments,
     required this.memoryCreating,
     required this.photos,
+    this.scrollController,
   });
   final BuildContext context;
   final bool hasTranscripts;
@@ -30,6 +31,7 @@ class CaptureMemoryPage extends StatefulWidget {
   final List<TranscriptSegment>? segments;
   final bool memoryCreating;
   final List<Tuple2<String, String>> photos;
+  final ScrollController? scrollController;
 
   @override
   State<CaptureMemoryPage> createState() => _CaptureMemoryPageState();
@@ -44,6 +46,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     super.initState();
     _memoryBloc = BlocProvider.of<MemoryBloc>(context);
     _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
+
     _searchController.addListener(() {
       _memoryBloc.add(SearchMemory(query: _searchController.text));
     });
@@ -74,6 +77,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           segments: widget.segments,
           memoryCreating: widget.memoryCreating,
           photos: widget.photos,
+          scrollController: widget.scrollController,
         ),
         //*--- Filter Button ---*//
         Padding(
@@ -119,7 +123,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                 ),
               );
             } else if (state.status == MemoryStatus.success) {
-            
               return MemoryCardWidget(memoryBloc: _memoryBloc);
             }
             return const SizedBox.shrink();

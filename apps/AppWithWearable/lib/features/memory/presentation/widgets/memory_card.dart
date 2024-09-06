@@ -29,14 +29,11 @@ class MemoryCardWidget extends StatelessWidget {
             ),
           );
         }
-
-        // return Container(height: height*0.3, color: Colors.blue);
-
         return SizedBox(
           height: height*0.4,
           child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            // physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.only(left: 12,right: 12,bottom: 50),
+   
             shrinkWrap: true,
             itemCount: state.memories.length,
             separatorBuilder: (context, index) => const SizedBox(height: 8),
