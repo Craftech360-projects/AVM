@@ -5,7 +5,6 @@ import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/utils/ble/connect.dart';
 import 'package:friend_private/widgets/device_widget.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 // Update with the actual path to your CustomScaffold file
 
 class ConnectedDevice extends StatefulWidget {
@@ -31,7 +30,7 @@ class _DeviceInfo {
   static Future<_DeviceInfo> getDeviceInfo(BTDeviceStruct? device) async {
     var modelNumber = 'AVM';
     var firmwareRevision = '1.0.2';
-    var hardwareRevision = 'Seeed Xiao BLE Sense';
+    var hardwareRevision = 'Seed Xiao BLE Sense';
     var manufacturerName = 'Craftech 360';
 
     if (device == null) {
@@ -183,15 +182,17 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                   decoration: BoxDecoration(
-                    border: const GradientBoxBorder(
-                      gradient: LinearGradient(colors: [
-                        Color.fromARGB(127, 208, 208, 208),
-                        Color.fromARGB(127, 188, 99, 121),
-                        Color.fromARGB(127, 86, 101, 182),
-                        Color.fromARGB(127, 126, 190, 236)
-                      ]),
-                      width: 2,
-                    ),
+                    color: const Color.fromARGB(83, 158, 158, 158),
+                    border: Border.all(color: Colors.grey),
+                    // border: const GradientBoxBorder(
+                    //   gradient: LinearGradient(colors: [
+                    //     Color.fromARGB(127, 208, 208, 208),
+                    //     Color.fromARGB(127, 188, 99, 121),
+                    //     Color.fromARGB(127, 86, 101, 182),
+                    //     Color.fromARGB(127, 126, 190, 236)
+                    //   ]),
+                    //   width: 2,
+                    // ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextButton(

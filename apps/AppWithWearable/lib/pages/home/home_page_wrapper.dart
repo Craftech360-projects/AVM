@@ -20,7 +20,6 @@ import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
-import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/page.dart';
 import 'package:friend_private/scripts.dart';
 import 'package:friend_private/utils/audio/foreground.dart';
@@ -259,14 +258,14 @@ class _HomePageWrapperState extends State<HomePageWrapperTest>
             backgroundColor: Theme.of(context).colorScheme.surface,
             leading: TextButton(
               onPressed: () async {
-                if (SharedPreferencesUtil().deviceId.isEmpty) {
-                  routeToPage(context, const ConnectDevicePage());
-                  MixpanelManager().connectFriendClicked();
-                } else {
-                  await routeToPage(context,
-                      const ConnectedDevice(device: null, batteryLevel: 0));
-                }
-                setState(() {});
+                // if (SharedPreferencesUtil().deviceId.isEmpty) {
+                //   routeToPage(context, const ConnectDevicePage());
+                //   MixpanelManager().connectFriendClicked();
+                // } else {
+                //   await routeToPage(context,
+                //       const ConnectedDevice(device: null, batteryLevel: 0));
+                // }
+                // setState(() {});
               },
               // style: TextButton.styleFrom(
               //   padding: EdgeInsets.zero,
@@ -282,43 +281,44 @@ class _HomePageWrapperState extends State<HomePageWrapperTest>
                 height: 40,
               ),
             ),
-            title: _selectedIndex == 1
-                ? DropdownButton<String>(
-                    menuMaxHeight: 350,
-                    value: SharedPreferencesUtil().selectedChatPluginId,
-                    onChanged: (s) async {
-                      if ((s == 'no_selected' &&
-                              SharedPreferencesUtil().pluginsEnabled.isEmpty) ||
-                          s == 'enable') {
-                        await routeToPage(
-                            context, const PluginsPage(filterChatOnly: true));
-                        setState(() {});
-                        return;
-                      }
-                      print(
-                          'Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
-                      if (s == null ||
-                          s == SharedPreferencesUtil().selectedChatPluginId) {
-                        return;
-                      }
+            //*-- Chat Plugin --*//
+            // title: _selectedIndex == 1
+            //     ? DropdownButton<String>(
+            //         menuMaxHeight: 350,
+            //         value: SharedPreferencesUtil().selectedChatPluginId,
+            //         onChanged: (s) async {
+            //           if ((s == 'no_selected' &&
+            //                   SharedPreferencesUtil().pluginsEnabled.isEmpty) ||
+            //               s == 'enable') {
+            //             await routeToPage(
+            //                 context, const PluginsPage(filterChatOnly: true));
+            //             setState(() {});
+            //             return;
+            //           }
+            //           print(
+            //               'Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
+            //           if (s == null ||
+            //               s == SharedPreferencesUtil().selectedChatPluginId) {
+            //             return;
+            //           }
 
-                      SharedPreferencesUtil().selectedChatPluginId = s;
-                     plugins.firstWhereOrNull((p) => p.id == s);
-                      // chatPageKey.currentState
-                      //     ?.sendInitialPluginMessage(plugin);
-                      setState(() {});
-                    },
-                    icon: Container(),
-                    alignment: Alignment.center,
-                    dropdownColor: Colors.black,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
-                    underline: Container(height: 0, color: Colors.transparent),
-                    isExpanded: false,
-                    itemHeight: 48,
-                    padding: EdgeInsets.zero,
-                    items: _getPluginsDropdownItems(context),
-                  )
-                : const SizedBox.shrink(),
+            //           SharedPreferencesUtil().selectedChatPluginId = s;
+            //          plugins.firstWhereOrNull((p) => p.id == s);
+            //           // chatPageKey.currentState
+            //           //     ?.sendInitialPluginMessage(plugin);
+            //           setState(() {});
+            //         },
+            //         icon: Container(),
+            //         alignment: Alignment.center,
+            //         dropdownColor: Colors.black,
+            //         style: const TextStyle(color: Colors.white, fontSize: 16),
+            //         underline: Container(height: 0, color: Colors.transparent),
+            //         isExpanded: false,
+            //         itemHeight: 48,
+            //         padding: EdgeInsets.zero,
+            //         items: _getPluginsDropdownItems(context),
+            //       )
+            //     : const SizedBox.shrink(),
             actions: [
               //* AVM Battery indecator
               _device != null && batteryLevel != -1
@@ -338,14 +338,14 @@ class _HomePageWrapperState extends State<HomePageWrapperTest>
                             },
                       child: Container(
                         margin: const EdgeInsets.only(
-                            right: 10, top: 10, bottom: 10),
+                            right: 10, top: 15, bottom: 15),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 0),
                         decoration: BoxDecoration(
                           color: Colors.transparent,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: Colors.grey,
+                            color: const Color.fromARGB(106, 158, 158, 158),
                             width: 1,
                           ),
                         ),
@@ -353,7 +353,7 @@ class _HomePageWrapperState extends State<HomePageWrapperTest>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.electric_bolt,
+                              Icons.bolt,
                               color: batteryLevel > 75
                                   ? const Color.fromARGB(255, 0, 255, 8)
                                   : batteryLevel > 20
@@ -379,16 +379,29 @@ class _HomePageWrapperState extends State<HomePageWrapperTest>
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
-                                // fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w300,
                               ),
                             ),
                           ],
                         ),
                       ),
                     )
-                  : const Padding(
-                      padding: EdgeInsets.only(right: 10),
-                      child: ScanningUI(),
+                  : Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: GestureDetector(
+                          onTap: () async {
+                            if (SharedPreferencesUtil().deviceId.isEmpty) {
+                              routeToPage(context, const ConnectDevicePage());
+                              MixpanelManager().connectFriendClicked();
+                            } else {
+                              await routeToPage(
+                                  context,
+                                  const ConnectedDevice(
+                                      device: null, batteryLevel: 0));
+                            }
+                            setState(() {});
+                          },
+                          child: const ScanningUI()),
                     )
             ],
             centerTitle: true,

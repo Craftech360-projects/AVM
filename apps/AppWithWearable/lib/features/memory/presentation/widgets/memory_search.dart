@@ -23,7 +23,7 @@ class MemorySearchWidget extends StatelessWidget {
         color: Colors.black,
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         border: Border.all(
-          color: Colors.grey,
+          color: Color.fromARGB(53, 158, 158, 158),
         ),
         shape: BoxShape.rectangle,
       ),
@@ -39,7 +39,7 @@ class MemorySearchWidget extends StatelessWidget {
         // focusNode: widget.textFieldFocusNode,
         decoration: InputDecoration(
           hintText: 'Search for memories...',
-          hintStyle: const TextStyle(fontSize: 14.0, color: Colors.grey),
+          hintStyle: const TextStyle(fontSize: 14.0, color: Color.fromARGB(255, 124, 124, 124)),
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
           suffixIcon: _searchController.text.isEmpty
