@@ -66,6 +66,9 @@ class MemoryProvider {
       // Ensure geolocation target is set if available
       if (memory.geolocation.target != null) {
         print("Geolocation before save: ${memory.geolocation.target}");
+      } else {
+        print(
+            "Geolocation not there before save: ${memory.geolocation.target}");
       }
 
       // Save the memory
