@@ -20,47 +20,50 @@ class TranscriptTab extends StatefulWidget {
 }
 
 class _TranscriptTabState extends State<TranscriptTab> {
-  late PageController _pageController;
+  // late PageController _pageController;
   @override
   void initState() {
     super.initState();
 
-    _pageController = PageController(initialPage: widget.memoryAtIndex);
-    widget.pageController.addListener(_onPageChanged);
+    // _pageController = PageController(initialPage: widget.memoryAtIndex);
+    // widget.pageController.addListener(_onPageChanged);
   }
 
-  void _onPageChanged() {
-    final currentPage = widget.pageController.page?.round();
-    if (currentPage != null) {
-      widget.memoryBloc.add(MemoryIndexChanged(memoryIndex: currentPage));
-    }
-  }
+  // void _onPageChanged() {
+  //   final currentPage = widget.pageController.page?.round();
+  //   if (currentPage != null) {
+  //     widget.memoryBloc.add(MemoryIndexChanged(memoryIndex: currentPage));
+  //   }
+  // }
 
-  @override
-  void dispose() {
-    widget.pageController.removeListener(_onPageChanged);
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   widget.pageController.removeListener(_onPageChanged);
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: widget.memoryBloc,
       builder: (context, state) {
-        return PageView.builder(
-          scrollDirection: Axis.vertical,
-          controller: _pageController,
-          itemCount: state.memories.length,
-          onPageChanged: (index) {
-            widget.memoryBloc.add(MemoryIndexChanged(memoryIndex: index));
-          },
-          itemBuilder: (BuildContext context, int index) {
-            return TranscriptWidget(
-              segments: state.memories[index].transcriptSegments,
+        // return PageView.builder(
+        //   scrollDirection: Axis.vertical,
+        //   controller: _pageController,
+        //   itemCount: state.memories.length,
+        //   onPageChanged: (index) {
+        //     widget.memoryBloc.add(MemoryIndexChanged(memoryIndex: index));
+        //   },
+        //   itemBuilder: (BuildContext context, int index) {
+            return SingleChildScrollView(
+              child: TranscriptWidget(
+                segments: state.memories[widget.memoryAtIndex].transcriptSegments,
+                // segments: state.memories[index].transcriptSegments,
+              ),
             );
           },
         );
-      },
-    );
+      // },
+    // );
   }
 }

@@ -41,6 +41,8 @@ class MemoryCardWidget extends StatelessWidget {
               Memory memory = state.memories[index];
               //*-- Delete Memory Card --*//
               return Dismissible(
+                direction: DismissDirection.endToStart,
+                background: Container(color: Colors.red.withOpacity(0.5),),
                 key: Key(memory.id.toString()),
                 confirmDismiss: (direction) async {
                   return await showDialog(
