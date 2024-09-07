@@ -37,7 +37,7 @@ Future<Memory?> processTranscriptContent(
     Geolocation? geolocation =
         await locationService.getGeolocationDetails(); // Fetch geolocation
 
-    debugPrint("Geolocation fetched successfully,$Geolocation");
+    debugPrint(">>>>>>>>>Geolocation fetched successfully,$Geolocation");
   } else {
     debugPrint("Geolocation permissions not granted or service disabled.");
   }
@@ -237,14 +237,14 @@ Future<Memory> finalizeMemoryRecord(
   memory.structured.target = structured;
 
   // Add plugin responses
-  for (var r in pluginsResponse) {
-    memory.pluginsResponse.add(PluginResponse(r.item2, pluginId: r.item1.id));
-  }
+  // for (var r in pluginsResponse) {
+  //   memory.pluginsResponse.add(PluginResponse(r.item2, pluginId: r.item1.id));
+  // }
 
-  // Add photos
-  for (var image in photos) {
-    memory.photos.add(MemoryPhoto(image.item1, image.item2));
-  }
+  // // Add photos
+  // for (var image in photos) {
+  //   memory.photos.add(MemoryPhoto(image.item1, image.item2));
+  // }
 
   // Print the memory object before saving for debugging
   print(">>KKKKKK>>>>Final Memory Object: ${memoryToString(memory)}");

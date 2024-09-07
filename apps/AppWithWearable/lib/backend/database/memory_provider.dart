@@ -67,14 +67,35 @@ class MemoryProvider {
       if (memory.geolocation.target != null) {
         print("Geolocation before save: ${memory.geolocation.target}");
       } else {
-        print(
-            "Geolocation not there before save: ${memory.geolocation.target}");
+        print("No Geolocation data to save.");
       }
 
       // Save the memory
       int id = _box.put(memory);
 
       print("Memory saved with ID: $id");
+
+      Memory? fetchedMemory = MemoryProvider().getMemoryById(id);
+
+      if (fetchedMemory == null) {
+        print("Failed to fetch memory with ID: $id");
+        return id;
+      }
+
+      // Step 3: Check if geolocation data is present
+      if (fetchedMemory.geolocation.target != null) {
+        print("Fetched Memory Geolocation:");
+        print("Latitude: ${fetchedMemory.geolocation.target?.latitude}");
+        print("Longitude: ${fetchedMemory.geolocation.target?.longitude}");
+        print("Address: ${fetchedMemory.geolocation.target?.address}");
+        print(
+            "Location Type: ${fetchedMemory.geolocation.target?.locationType}");
+        print(
+            "Google Place ID: ${fetchedMemory.geolocation.target?.googlePlaceId}");
+        print("Place Name: ${fetchedMemory.geolocation.target?.placeName}");
+      } else {
+        print("No Geolocation data in fetched memory.");
+      }
       return id;
     } catch (e) {
       print("Error saving Memory: $e");
@@ -152,7 +173,7 @@ class MemoryProvider {
     Created At: ${memory.createdAt}
     Transcript: ${memory.transcript}
     Discarded: ${memory.discarded}
-    Geolocation: ${memory.geolocation.target != null ? 'Latitude: ${memory.geolocation.target!.latitude}, Longitude: ${memory.geolocation.target!.longitude}' : 'N/A'}
+     Geolocation: ${memory.geolocation.target != null ? memory.geolocation.target.toString() : 'None'}}
     ''';
   }
 }
