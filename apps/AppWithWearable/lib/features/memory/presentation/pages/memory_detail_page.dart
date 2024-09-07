@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
+import 'package:friend_private/features/memory/presentation/widgets/action_tab.dart';
+import 'package:friend_private/features/memory/presentation/widgets/event_tab.dart';
 import 'package:friend_private/features/memory/presentation/widgets/summary_tab.dart';
 import 'package:friend_private/features/memory/presentation/widgets/transcript_tab.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/pages/memory_detail/enable_title.dart';
 import 'package:friend_private/pages/memory_detail/share.dart';
 import 'package:friend_private/pages/memory_detail/widgets.dart';
 import 'package:friend_private/utils/memories/reprocess.dart';
+import 'package:friend_private/utils/other/temp.dart';
 
 class CustomMemoryDetailPage extends StatefulWidget {
   const CustomMemoryDetailPage({
@@ -37,7 +41,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
         );
       },
       child: DefaultTabController(
-        length: 2,
+        length: 4,
         initialIndex: 1,
         child: CustomScaffold(
           backgroundColor: Colors.transparent,
@@ -68,32 +72,117 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
             elevation: 0,
             title: Text(
                 "${widget.memoryBloc.state.memories[widget.memoryAtIndex].structured.target!.getEmoji()}"),
-            bottom: const TabBar(
-              tabs: [
-                Tab(text: 'Transcript'),
-                Tab(text: 'Summary'),
-              ],
-            ),
           ),
           body: BlocBuilder<MemoryBloc, MemoryState>(
             bloc: widget.memoryBloc,
             builder: (context, state) {
-              return TabBarView(
+              print('memory Details Page ${state.toString()}');
+              final selectedMemory = state.memories[state.memoryIndex];
+
+              final structured = selectedMemory.structured.target!;
+              final time = selectedMemory.startedAt == null
+                  ? dateTimeFormat('h:mm a', selectedMemory.createdAt)
+                  : '${dateTimeFormat('h:mm a', selectedMemory.startedAt)} to ${dateTimeFormat('h:mm a', selectedMemory.finishedAt)}';
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TranscriptTab(
-                    pageController: pageController,
-                    memoryAtIndex: state.memoryIndex,
-                    memoryBloc: widget.memoryBloc,
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      '${dateTimeFormat('MMM d,  yyyy', selectedMemory.createdAt)} '
+                      '${selectedMemory.startedAt == null ? 'at' : 'from'} $time',
+                      style: const TextStyle(color: Colors.grey, fontSize: 16),
+                    ),
                   ),
-                  // SummaryTab(
-                  //   memoryBloc: widget.memoryBloc,
-                  //   memoryAtIndex: state.memoryIndex,
-                  // ),
-                  SummaryTab(
-                    pageController: pageController,
-                    memoryAtIndex: state.memoryIndex,
-                    memoryBloc: widget.memoryBloc,
+                  const SizedBox(height: 16),
+                  selectedMemory.discarded
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'Discarded Memory',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: EditableTitle(
+                            initialText: structured.title,
+                            onTextChanged: (String newTitle) {
+                              structured.title = newTitle;
+                              widget.memoryBloc
+                                  .add(UpdatedMemory(structured: structured));
+                            },
+                            discarded: selectedMemory.discarded,
+                            style: Theme.of(context).textTheme.titleLarge!,
+                          ),
+                        ),
+                  const SizedBox(height: 16),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: const Color.fromARGB(255, 29, 29, 29),
+                    ),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                    // color: const Color.fromARGB(75, 242, 242, 242),
+
+                    child: SizedBox(
+                      height: 40,
+                      child: TabBar(
+                        dividerColor: Colors.transparent,
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 4),
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.grey,
+                        indicator: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            6,
+                          ),
+                          color: const Color.fromARGB(125, 158, 158, 158),
+                        ),
+                        indicatorWeight: 0,
+                        labelPadding: EdgeInsets.zero,
+                        tabs: const [
+                          Tab(text: 'Transcript'),
+                          Tab(text: 'Summary'),
+                          Tab(text: 'Action'),
+                          Tab(text: 'Events'),
+                        ],
+                      ),
+                    ),
                   ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        TranscriptTab(
+                          pageController: pageController,
+                          memoryAtIndex: state.memoryIndex,
+                          memoryBloc: widget.memoryBloc,
+                        ),
+                        // SummaryTab(
+                        //   memoryBloc: widget.memoryBloc,
+                        //   memoryAtIndex: state.memoryIndex,
+                        // ),
+                        SummaryTab(
+                          pageController: pageController,
+                          memoryAtIndex: state.memoryIndex,
+                          memoryBloc: widget.memoryBloc,
+                        ),
+                        ActionTab(
+                          pageController: pageController,
+                          memoryAtIndex: state.memoryIndex,
+                          memoryBloc: widget.memoryBloc,
+                        ),
+                        EventTab(
+                          pageController: pageController,
+                          memoryAtIndex: state.memoryIndex,
+                          memoryBloc: widget.memoryBloc,
+                        )
+                      ],
+                    ),
+                  )
                 ],
               );
             },
