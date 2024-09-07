@@ -29,7 +29,8 @@ class LocationService {
     SharedPreferencesUtil().locationPermissionRequested = true;
     var status = await permissionStatus();
     return await isServiceEnabled() == false ||
-        (status != PermissionStatus.granted && status != PermissionStatus.deniedForever);
+        (status != PermissionStatus.granted &&
+            status != PermissionStatus.deniedForever);
   }
 
   Future<bool> isServiceEnabled() => location.serviceEnabled();
@@ -44,7 +45,8 @@ class LocationService {
 
   Future<PermissionStatus> permissionStatus() => location.hasPermission();
 
-  Future hasPermission() async => (await location.hasPermission()) == PermissionStatus.granted;
+  Future hasPermission() async =>
+      (await location.hasPermission()) == PermissionStatus.granted;
 
   Future<Geolocation?> getGeolocationDetails() async {
     if (await hasPermission()) {
@@ -60,6 +62,30 @@ class LocationService {
         );
 
         var data = json.decode(res.body);
+
+        String? placeName;
+        var addressComponents = data['results'][0]['address_components'];
+        for (var component in addressComponents) {
+          var types = component['types'];
+          if (types.contains('locality') || types.contains('sublocality')) {
+            placeName = component['long_name'];
+            break;
+          }
+        }
+
+        // If no locality or sublocality found, try to get a meaningful name
+        if (placeName == null) {
+          for (var component in addressComponents) {
+            var types = component['types'];
+            if (types.contains('neighborhood') ||
+                types.contains('administrative_area_level_2') ||
+                types.contains('administrative_area_level_1')) {
+              placeName = component['long_name'];
+              break;
+            }
+          }
+        }
+
         Geolocation geolocation = Geolocation(
           latitude: locationData.latitude,
           longitude: locationData.longitude,
@@ -69,7 +95,8 @@ class LocationService {
         );
         return geolocation;
       } catch (e) {
-        return Geolocation(latitude: locationData.latitude, longitude: locationData.longitude);
+        return Geolocation(
+            latitude: locationData.latitude, longitude: locationData.longitude);
       }
     } else {
       return null;

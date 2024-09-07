@@ -17,6 +17,7 @@ class Geolocation {
   String? googlePlaceId;
   String? address;
   String? locationType;
+  String? placeName;
 
   // TODO: eventually locations could map to multiple memories
   // @Backlink('memory')
@@ -32,6 +33,7 @@ class Geolocation {
     this.address,
     this.locationType,
     this.id = 0,
+    this.placeName,
   });
 
   static Geolocation fromJson(Map<String, dynamic> json) {
@@ -44,6 +46,7 @@ class Geolocation {
       googlePlaceId: json['googlePlaceId'],
       address: json['address'],
       locationType: json['locationType'],
+      placeName: json['placeName'], // Add this line to parse placeName
     );
     geolocation.id = json['id'];
     return geolocation;
@@ -56,10 +59,11 @@ class Geolocation {
       'longitude': longitude,
       'altitude': altitude,
       'accuracy': accuracy,
-      'time': time!.toIso8601String(),
+      'time': (time ?? DateTime.now()).toIso8601String(),
       'googlePlaceId': googlePlaceId,
       'address': address,
       'locationType': locationType,
+      'placeName': placeName,
     };
   }
 }

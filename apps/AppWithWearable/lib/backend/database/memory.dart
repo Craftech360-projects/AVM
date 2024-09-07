@@ -188,6 +188,7 @@ class Structured {
   @Backlink('structured')
   final events = ToMany<Event>();
   final geolocation = ToOne<Geolocation>(); // Add this line
+  String? get placeName => geolocation.target?.placeName;
 
   Structured(this.title, this.overview,
       {this.id = 0, this.emoji = '', this.category = 'other'});
@@ -302,6 +303,7 @@ class Structured {
       'actionItems': actionItems.map((item) => item.description).toList(),
       'events': events.map((event) => event.toJson()).toList(),
       'geolocation': geolocation.target?.toJson(), // Add this line
+      'placeName': placeName,
     };
   }
 }
