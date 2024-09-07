@@ -53,6 +53,13 @@ class Memory {
     this.finishedAt,
   });
 
+  void setStructured(Structured structured) {
+    this.structured.target = structured;
+    if (this.geolocation.target != null) {
+      structured.setGeolocation(this.geolocation.target);
+    }
+  }
+
   MemoryType get type =>
       transcript.isNotEmpty ? MemoryType.audio : MemoryType.image;
 
@@ -86,6 +93,17 @@ class Memory {
           : null,
     );
     memory.structured.target = Structured.fromJson(json['structured']);
+    memory.structured.target = Structured.fromJson(json['structured']);
+    if (json['structured'] != null) {
+      memory.structured.target = Structured.fromJson(json['structured']);
+    }
+    if (json['geolocation'] != null) {
+      memory.geolocation.target = Geolocation.fromJson(json['geolocation']);
+      if (memory.structured.target != null) {
+        memory.structured.target!.setGeolocation(memory.geolocation.target);
+      }
+    }
+
     if (json['pluginsResponse'] != null) {
       for (dynamic response in json['pluginsResponse']) {
         if (response.isEmpty) continue;
@@ -135,11 +153,14 @@ class Memory {
       'id': id,
       'createdAt': createdAt.toIso8601String(),
       'startedAt': startedAt?.toIso8601String(),
-      'memoryImg': memoryImg!=null?'True':'False',
+      'memoryImg': memoryImg != null ? 'True' : 'False',
       'finishedAt': finishedAt?.toIso8601String(),
       'transcript': transcript,
       'recordingFilePath': recordingFilePath,
       'structured': structured.target!.toJson(),
+      'geolocation': geolocation.target != null
+          ? geolocation.target!.toJson()
+          : null, // Add this line
       'pluginsResponse': pluginsResponse
           .map<Map<String, String?>>((response) => response.toJson())
           .toList(),
@@ -166,6 +187,7 @@ class Structured {
 
   @Backlink('structured')
   final events = ToMany<Event>();
+  final geolocation = ToOne<Geolocation>(); // Add this line
 
   Structured(this.title, this.overview,
       {this.id = 0, this.emoji = '', this.category = 'other'});
@@ -179,6 +201,11 @@ class Structured {
     }
   }
 
+  void setGeolocation(Geolocation? location) {
+    if (location != null) {
+      geolocation.target = location;
+    }
+  }
   // static Structured fromJson(Map<String, dynamic> json) {
   //   var structured = Structured(
   //     json['title'],
@@ -216,6 +243,10 @@ class Structured {
       emoji: json['emoji'] ?? '',
       category: json['category'] ?? 'other',
     );
+    if (json['geolocation'] != null) {
+      structured.geolocation.target = Geolocation.fromJson(json['geolocation']);
+    }
+
     var aItems = json['action_items'] ?? [];
     if (aItems is List) {
       for (var item in aItems) {
@@ -270,6 +301,7 @@ class Structured {
       'category': category,
       'actionItems': actionItems.map((item) => item.description).toList(),
       'events': events.map((event) => event.toJson()).toList(),
+      'geolocation': geolocation.target?.toJson(), // Add this line
     };
   }
 }

@@ -11,7 +11,7 @@ class NotifyOnKill {
         {
           'title': "AVM Device Disconnected",
           'description':
-              "Please keep your app opened to continue using your Friend.",
+              "Please keep your app opened to continue using your AVM.",
         },
       );
     } catch (e) {

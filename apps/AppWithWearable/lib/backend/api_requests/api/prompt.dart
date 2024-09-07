@@ -293,7 +293,7 @@ Future<String> postMemoryCreationNotification(Memory memory) async {
 
 Future<String> dailySummaryNotifications(List<Memory> memories) async {
   var msg =
-      'There were no memories today, don\'t forget to wear your Friend tomorrow 😁';
+      'There were no memories today, don\'t forget to wear your AVM tomorrow 😁';
   if (memories.isEmpty) return msg;
   if (memories.where((m) => !m.discarded).length <= 1) return msg;
   var str = SharedPreferencesUtil().givenName.isEmpty
@@ -484,7 +484,7 @@ Future<String> getInitialPluginPrompt(Plugin? plugin) async {
   if (plugin == null) {
     return '''
         Your are an AI with the following characteristics:
-        Name: AVMe, 
+        Name: AVM, 
         Personality/Description: A friendly and helpful AI assistant that aims to make your life easier and more enjoyable.
         Task: Provide assistance, answer questions, and engage in meaningful conversations.
         

@@ -74,29 +74,44 @@ class AIMessage extends StatelessWidget {
                       ),
                     )
                   : const SizedBox(),
-              message.typeEnum == MessageType.daySummary ? const SizedBox(height: 16) : const SizedBox(),
+              message.typeEnum == MessageType.daySummary
+                  ? const SizedBox(height: 16)
+                  : const SizedBox(),
               SelectionArea(
                   child: AutoSizeText(
-                message.text.isEmpty ? '...' : message.text.replaceAll(r'\n', '\n').replaceAll('**', '').replaceAll('\\"', '\"'),
-                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: Colors.grey.shade300),
+                message.text.isEmpty
+                    ? '...'
+                    : message.text
+                        .replaceAll(r'\n', '\n')
+                        .replaceAll('**', '')
+                        .replaceAll('\\"', '\"'),
+                style: TextStyle(
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade300),
               )),
               if (message.id != 1) _getCopyButton(context),
               if (message.id == 1 && displayOptions) const SizedBox(height: 8),
-              if (message.id == 1 && displayOptions) ..._getInitialOptions(context),
+              if (message.id == 1 && displayOptions)
+                ..._getInitialOptions(context),
               if (memories.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                for (var memory in (memories.length > 3 ? memories.sublist(0, 3) : memories)) ...[
+                for (var memory in (memories.length > 3
+                    ? memories.sublist(0, 3)
+                    : memories)) ...[
                   Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 4.0),
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                        0.0, 0.0, 0.0, 4.0),
                     child: GestureDetector(
                       onTap: () async {
                         MixpanelManager().chatMessageMemoryClicked(memory);
-                        await Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (c) => MemoryDetailPage(memory: memory)));
+                        await Navigator.of(context).push(MaterialPageRoute(
+                            builder: (c) => MemoryDetailPage(memory: memory)));
                         // TODO: maybe refresh memories here too
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 8),
                         width: double.maxFinite,
                         decoration: BoxDecoration(
                           color: Colors.grey.shade900,
@@ -192,11 +207,16 @@ class AIMessage extends StatelessWidget {
   _getInitialOptions(BuildContext context) {
     return [
       const SizedBox(height: 8),
-      _getInitialOption(context, 'What tasks do I have from yesterday?'),
+      _getInitialOption(context, 'Which tasks are due today or tomorrow?'),
       const SizedBox(height: 8),
-      _getInitialOption(context, 'What conversations did I have with John?'),
+      _getInitialOption(
+          context, 'What progress did I make on yesterday tasks?'),
       const SizedBox(height: 8),
-      _getInitialOption(context, 'What advise have I received about entrepreneurship?'),
+      _getInitialOption(context,
+          'Can you summarize the latest tips on growing my business??'),
+      const SizedBox(height: 8),
+      _getInitialOption(context,
+          'What new skills or knowledge did I gain from recent discussions?'),
     ];
   }
 }

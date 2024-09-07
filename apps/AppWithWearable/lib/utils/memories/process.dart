@@ -12,6 +12,7 @@ import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
+import 'package:friend_private/pages/capture/location_service.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/memories/integrations.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
@@ -30,6 +31,16 @@ Future<Memory?> processTranscriptContent(
   List<Tuple2<String, String>> photos = const [],
   Function(Message, Memory?)? sendMessageToChat,
 }) async {
+  LocationService locationService = LocationService();
+  if (await locationService.hasPermission() &&
+      await locationService.enableService()) {
+    Geolocation? geolocation =
+        await locationService.getGeolocationDetails(); // Fetch geolocation
+
+    debugPrint("Geolocation fetched successfully,$Geolocation");
+  } else {
+    debugPrint("Geolocation permissions not granted or service disabled.");
+  }
   if (transcript.isNotEmpty || photos.isNotEmpty) {
     Memory? memory = await memoryCreationBlock(
       context,
@@ -139,8 +150,8 @@ Future<Memory> memoryCreationBlock(
           description: event.description);
     }
   }
-  final memoryImg= await getImage();
-  
+  final memoryImg = await getImage();
+
   debugPrint("going to save ,saving memory");
 
   Memory memory = await finalizeMemoryRecord(
@@ -203,8 +214,17 @@ Future<Memory> finalizeMemoryRecord(
     startedAt: startedAt,
     finishedAt: finishedAt,
   );
+  // Step 2: Add geolocation if available
   if (geolocation != null) {
-    memory.geolocation.target = geolocation;
+    // Print geolocation details for debugging
+    print(
+        "Geolocation Details: Latitude: ${geolocation.latitude}, Longitude: ${geolocation.longitude}, "
+        "Address: ${geolocation.address}, Location Type: ${geolocation.locationType}, "
+        "Google Place ID: ${geolocation.googlePlaceId}");
+
+    memory.geolocation.target = geolocation; // Add geolocation to memory
+  } else {
+    print("Geolocation is null.");
   }
   memory.transcriptSegments.addAll(transcriptSegments);
   memory.structured.target = structured;
@@ -216,7 +236,8 @@ Future<Memory> finalizeMemoryRecord(
   for (var image in photos) {
     memory.photos.add(MemoryPhoto(image.item1, image.item2));
   }
-
+  // Print the memory object before saving for debugging
+  print("Final Memory Object: ${memoryToString(memory)}");
   MemoryProvider().saveMemory(memory);
   if (!discarded) {
     getEmbeddingsFromInput(structured.toString()).then((vector) {
@@ -225,4 +246,18 @@ Future<Memory> finalizeMemoryRecord(
   }
   MixpanelManager().memoryCreated(memory);
   return memory;
+}
+
+// Helper function to print memory details as a string
+String memoryToString(Memory memory) {
+  return '''
+    Memory ID: ${memory.id}
+    Created At: ${memory.createdAt}
+    Transcript: ${memory.transcript}
+    Discarded: ${memory.discarded}
+    Recording File Path: ${memory.recordingFilePath ?? 'None'}
+    Geolocation: ${memory.geolocation.target != null ? 'Lat: ${memory.geolocation.target!.latitude}, Lon: ${memory.geolocation.target!.longitude}, Address: ${memory.geolocation.target!.address}' : 'No geolocation'}
+    Transcript Segments Count: ${memory.transcriptSegments.length}
+    Structured Title: ${memory.structured.target?.title ?? 'No title'}
+    ''';
 }

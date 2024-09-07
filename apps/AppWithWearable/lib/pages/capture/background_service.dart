@@ -23,9 +23,9 @@ void stopBackgroundService() {
 Future<void> initializeBackgroundService({bool isStream = false}) async {
   final service = FlutterBackgroundService();
   createNotification(
-    title: 'Friend is listening in the background',
+    title: 'AVM is listening in the background',
     body:
-        'Friend is listening and transcribing your conversations in the background',
+        'AVM is listening and transcribing your conversations in the background',
   );
 
   await service.configure(
@@ -56,9 +56,9 @@ void onStart(ServiceInstance service, bool isStream) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
         service.setForegroundNotificationInfo(
-          title: 'Friend is running in background',
+          title: 'AVM is running in background',
           content:
-              'Friend is listening and transcribing your conversations in the background',
+              'AVM is listening and transcribing your conversations in the background',
         );
       }
     }
