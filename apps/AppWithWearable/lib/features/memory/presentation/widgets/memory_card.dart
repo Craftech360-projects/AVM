@@ -30,9 +30,9 @@ class MemoryCardWidget extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: height*0.4,
+          height: (height-10)*0.38,
           child: ListView.separated(
-            padding: const EdgeInsets.only(left: 12,right: 12,bottom: 50),
+            padding: const EdgeInsets.only(left: 12,right: 12,bottom:0),
    
             shrinkWrap: true,
             itemCount: state.memories.length,
@@ -41,6 +41,8 @@ class MemoryCardWidget extends StatelessWidget {
               Memory memory = state.memories[index];
               //*-- Delete Memory Card --*//
               return Dismissible(
+                direction: DismissDirection.endToStart,
+                background: Container(color: Colors.red.withOpacity(0.5),),
                 key: Key(memory.id.toString()),
                 confirmDismiss: (direction) async {
                   return await showDialog(

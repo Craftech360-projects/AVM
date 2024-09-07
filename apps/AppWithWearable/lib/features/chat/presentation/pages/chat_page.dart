@@ -83,7 +83,7 @@ class _ChatPageTestState extends State<ChatPageTest>
                 padding: const EdgeInsets.only(
                   left: 20,
                   right: 20,
-                  bottom: 200,
+                  bottom: 100,
                 ),
                 itemCount: state.messages?.length ?? 0,
                 itemBuilder: (context, index) {
@@ -122,7 +122,8 @@ class _ChatPageTestState extends State<ChatPageTest>
                 margin: EdgeInsets.only(
                   left: 18,
                   right: 18,
-                  bottom: widget.textFieldFocusNode.hasFocus ? 40 : 120,
+                  bottom: 18,
+                  // bottom: widget.textFieldFocusNode.hasFocus ? 40 : 120,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.black,

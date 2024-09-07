@@ -27,9 +27,9 @@ class _ScanningUIState extends State<ScanningUI> {
         // Color(0xFF5A00FF),
         // Color(0xFF3400D8),
       ],
-      minRadius: 10,
-      ripplesCount: 2,
-      duration: Duration(milliseconds: 3000),
+      minRadius: 5,
+      ripplesCount: 3,
+      duration: Duration(milliseconds:3000),
       repeat: true,
       child: Icon(
         Icons.bluetooth_searching,

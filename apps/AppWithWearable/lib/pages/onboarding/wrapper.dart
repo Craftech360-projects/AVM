@@ -5,6 +5,7 @@ import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/pages/home/home_page_wrapper.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/pages/onboarding/auth.dart';
 import 'package:friend_private/pages/onboarding/complete/complete.dart';
@@ -99,7 +100,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
                         MixpanelManager().onboardingStepICompleted('Auth');
                         if (SharedPreferencesUtil().onboardingCompleted) {
                           // previous users
-                          routeToPage(context, const HomePageWrapper(),
+                          routeToPage(context, const HomePageWrapperTest(),
                               replace: true);
                         } else {
                           _goNext();
@@ -132,7 +133,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
                     ),
                     CompletePage(
                       goNext: () {
-                        routeToPage(context, const HomePageWrapper(),
+                        routeToPage(context, const HomePageWrapperTest(),
                             replace: true);
                         MixpanelManager().onboardingStepICompleted('Finalize');
                         MixpanelManager().onboardingCompleted();

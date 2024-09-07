@@ -146,7 +146,7 @@ class CapturePageState extends State<CapturePage>
         if (_scrollController.hasClients) {
           _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds:100),
+            duration: const Duration(milliseconds: 100),
             curve: Curves.easeOut,
           );
         }
@@ -412,6 +412,7 @@ class CapturePageState extends State<CapturePage>
               memoryCreating: memoryCreating,
               photos: photos,
               scrollController: _scrollController,
+          
             ),
             // ...getConnectionStateWidgets(
             //   context,
@@ -426,7 +427,7 @@ class CapturePageState extends State<CapturePage>
             const SizedBox(height: 16)
           ],
         ),
-        getPhoneMicRecordingButton(_recordingToggled, recordingState)
+        // getPhoneMicRecordingButton(_recordingToggled, recordingState)
       ],
     );
   }

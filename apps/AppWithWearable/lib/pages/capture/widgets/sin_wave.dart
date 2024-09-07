@@ -59,7 +59,10 @@ class _SineWaveWidgetState extends State<SineWaveWidget>
           builder: (context, child) {
             return isWifiDisconnected
              ? const SizedBox.shrink()
-             :  Lottie.asset('assets/lottie_animations/wave_animation.json');
+             :  Lottie.asset('assets/lottie_animations/wave_animation.json',   controller: _sineAnimController,
+          onLoaded: (composition) {
+            _sineAnimController.duration = composition.duration * 0.5; 
+          },);
           },
         );
       },

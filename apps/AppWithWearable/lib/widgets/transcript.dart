@@ -33,7 +33,7 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
       physics: const NeverScrollableScrollPhysics(),
       separatorBuilder: (_, __) => const SizedBox(height: 16.0),
       itemBuilder: (context, idx) {
-        if (idx == 0) return SizedBox(height: widget.topMargin ? 32 : 0);
+        if (idx == 0) return SizedBox(height: widget.topMargin ? 8 : 0);
         if (idx == widget.segments.length + 1) return const SizedBox(height: 64);
         final data = widget.segments[idx - 1];
 

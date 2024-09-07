@@ -9,7 +9,7 @@ Future<Uint8List> getImage() async {
       Uri.https(apiConstant, 'v1/randomimage', {'category': 'technology'});
   final response = await http.get(
     url,
-    headers: {'X-Api-Key': 'hyycFNEH/Vm8bgpyjZ+eMQ==LUHnunq2o4QrWbr3'},
+    headers: {'X-Api-Key': '+PVSQ6phxAnKHW4J4oz+7A==z4NR1q5X6DZ8RBDa'},
   );
 
   if (response.statusCode == 200) {

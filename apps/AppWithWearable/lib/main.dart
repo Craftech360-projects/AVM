@@ -24,6 +24,7 @@ import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dar
 import 'package:friend_private/firebase_options_dev.dart' as dev;
 import 'package:friend_private/firebase_options_prod.dart' as prod;
 import 'package:friend_private/flavors.dart';
+import 'package:friend_private/pages/home/home_page_wrapper.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/notifications.dart';
@@ -222,7 +223,7 @@ class _MyAppState extends State<MyApp> {
             ),
             // SharedPreferencesUtil().onboardingCompleted && widget.isAuth
             // ?
-            const HomePageWrapper()
+            const HomePageWrapperTest()
             // : const OnboardingWrapper(),
           ],
         ),
