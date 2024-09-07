@@ -46,6 +46,7 @@ class CaptureCard extends StatelessWidget {
   final bool memoryCreating;
   final List<Tuple2<String, String>> photos;
   final ScrollController? scrollController;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -147,6 +148,7 @@ class GetConnectionStateWidgets extends StatelessWidget {
   final InternetStatus? internetStatus;
   final double sizeMultiplier;
 
+  // final RecordingState micRecordState;
   @override
   Widget build(BuildContext context) {
     bool isWifiDisconnected = internetStatus == InternetStatus.disconnected;
@@ -173,7 +175,11 @@ class GetConnectionStateWidgets extends StatelessWidget {
                 builder: (context) {
                   if (isDeviceDisconnected) {
                     if (SharedPreferencesUtil().deviceId.isEmpty) {
-                      return _getNoFriendConnectedYet(context);
+                      return const Icon(
+                        Icons.power_off_outlined,
+                        size: 40,
+                        color: Colors.grey,
+                      );
                     } else {
                       return Image.asset('assets/images/device.png');
                     }
@@ -264,7 +270,12 @@ class GetConnectionStateWidgets extends StatelessWidget {
   }
 
   Widget _getNoFriendConnectedYet(BuildContext context) {
-    return const Text('No friend connected yet');
+    return const Center(
+        child: Icon(
+      Icons.power_off_outlined,
+      size: 50,
+      color: Colors.grey,
+    ));
   }
 }
 
@@ -557,6 +568,8 @@ connectionStatusWidgets(
 
 getPhoneMicRecordingButton(
     VoidCallback recordingToggled, RecordingState state) {
+  print('abcd $recordingToggled');
+  print('abcd $state');
   if (SharedPreferencesUtil().deviceId.isNotEmpty) {
     return const SizedBox.shrink();
   }

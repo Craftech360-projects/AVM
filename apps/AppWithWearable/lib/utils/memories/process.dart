@@ -214,42 +214,66 @@ Future<Memory> finalizeMemoryRecord(
     startedAt: startedAt,
     finishedAt: finishedAt,
   );
+
   // Step 2: Add geolocation if available
   if (geolocation != null) {
     // Print geolocation details for debugging
     print(
         "Geolocation Details: Latitude: ${geolocation.latitude}, Longitude: ${geolocation.longitude}, "
         "Address: ${geolocation.address}, Location Type: ${geolocation.locationType}, "
-        "Google Place ID: ${geolocation.googlePlaceId}");
+        "Google Place ID: ${geolocation.googlePlaceId}, "
+        "Place: ${geolocation.placeName}");
 
-    memory.geolocation.target = geolocation; // Add geolocation to memory
+    // Add geolocation to memory
+    memory.geolocation.target = geolocation;
   } else {
     print("Geolocation is null.");
   }
+
+  // Add transcript segments
   memory.transcriptSegments.addAll(transcriptSegments);
+
+  // Assign structured data
   memory.structured.target = structured;
 
+  // Add plugin responses
   for (var r in pluginsResponse) {
     memory.pluginsResponse.add(PluginResponse(r.item2, pluginId: r.item1.id));
   }
 
+  // Add photos
   for (var image in photos) {
     memory.photos.add(MemoryPhoto(image.item1, image.item2));
   }
+
   // Print the memory object before saving for debugging
-  print("Final Memory Object: ${memoryToString(memory)}");
-  MemoryProvider().saveMemory(memory);
+  print(">>KKKKKK>>>>Final Memory Object: ${memoryToString(memory)}");
+
+  try {
+    // Save the memory object
+    await MemoryProvider().saveMemory(memory);
+    print("Success saving memory.");
+  } catch (e) {
+    print("Error saving memory: $e");
+    // Handle the error as needed
+  }
+
+  // Process embeddings if not discarded
   if (!discarded) {
     getEmbeddingsFromInput(structured.toString()).then((vector) {
       upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
     });
   }
-  MixpanelManager().memoryCreated(memory);
+
+  // Optionally, track the memory creation
+  // MixpanelManager().memoryCreated(memory);
+
   return memory;
 }
 
 // Helper function to print memory details as a string
 String memoryToString(Memory memory) {
+  print(memory);
   return '''
     Memory ID: ${memory.id}
     Created At: ${memory.createdAt}
@@ -259,5 +283,6 @@ String memoryToString(Memory memory) {
     Geolocation: ${memory.geolocation.target != null ? 'Lat: ${memory.geolocation.target!.latitude}, Lon: ${memory.geolocation.target!.longitude}, Address: ${memory.geolocation.target!.address}' : 'No geolocation'}
     Transcript Segments Count: ${memory.transcriptSegments.length}
     Structured Title: ${memory.structured.target?.title ?? 'No title'}
+    
     ''';
 }

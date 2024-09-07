@@ -22,17 +22,12 @@ transcriptions of meetings, chats, and voice memos wherever you are.
 
 </div>
 
-[//]: # (## Features)
-
-[//]: # ()
-
-[//]: # (- **Real-Time AI Audio Processing**: Leverage powerful on-device AI capabilities for real-time audio analysis.)
-
-[//]: # (- **Low-powered Bluetooth**: Capture audio for 24h+ on a small button battery)
-
-[//]: # (- **Open-Source Software**: Access and contribute to the pin's software stack, designed with openness and community collaboration in mind.)
-
-[//]: # (- **Wearable Design**: Experience unparalleled convenience with ergonomic and lightweight design, perfect for everyday wear.)
+[//]: # "## Features"
+[//]: #
+[//]: # "- **Real-Time AI Audio Processing**: Leverage powerful on-device AI capabilities for real-time audio analysis."
+[//]: # "- **Low-powered Bluetooth**: Capture audio for 24h+ on a small button battery"
+[//]: # "- **Open-Source Software**: Access and contribute to the pin's software stack, designed with openness and community collaboration in mind."
+[//]: # "- **Wearable Design**: Experience unparalleled convenience with ergonomic and lightweight design, perfect for everyday wear."
 
 ## Documentation:
 
@@ -45,23 +40,18 @@ transcriptions of meetings, chats, and voice memos wherever you are.
 
 ## Contributions
 
-* Check out our [contributions guide](https://docs.basedhardware.com/developer/Contribution/).
-* Check out the [current tasks](https://github.com/BasedHardware/Friend/issues).
-* Earn from contributing! Check the [paid bounties 🤑](https://github.com/BasedHardware/Friend/issues?q=is:open+is:issue+label:%22Paid+Bounty+%F0%9F%92%B0%22).
-* Join the [Discord](https://discord.gg/ZutWMTJnwA).
-* Build your own [Plugins/Integrations](https://docs.basedhardware.com/developer/plugins/Introduction/).
+- Check out our [contributions guide](https://docs.basedhardware.com/developer/Contribution/).
+- Check out the [current tasks](https://github.com/BasedHardware/Friend/issues).
+- Earn from contributing! Check the [paid bounties 🤑](https://github.com/BasedHardware/Friend/issues?q=is:open+is:issue+label:%22Paid+Bounty+%F0%9F%92%B0%22).
+- Join the [Discord](https://discord.gg/ZutWMTJnwA).
+- Build your own [Plugins/Integrations](https://docs.basedhardware.com/developer/plugins/Introduction/).
 
-[//]: # (## More links:)
-
-[//]: # ()
-
-[//]: # (- [Contributing]&#40;https://docs.basedhardware.com/developer/Contribution/&#41;)
-
-[//]: # (- [Support]&#40;https://docs.basedhardware.com/info/Support/&#41;)
-
-[//]: # (- [BLE Protocol]&#40;https://docs.basedhardware.com/developer/Protocol/&#41;)
-
-[//]: # (- [Plugins]&#40;https://docs.basedhardware.com/developer/Plugins/&#41;)
+[//]: # "## More links:"
+[//]: #
+[//]: # "- [Contributing](https://docs.basedhardware.com/developer/Contribution/)"
+[//]: # "- [Support](https://docs.basedhardware.com/info/Support/)"
+[//]: # "- [BLE Protocol](https://docs.basedhardware.com/developer/Protocol/)"
+[//]: # "- [Plugins](https://docs.basedhardware.com/developer/Plugins/)"
 
 ## Made by the Community, with -❤️-:
 
@@ -72,3 +62,21 @@ transcriptions of meetings, chats, and voice memos wherever you are.
 ## Licensing
 
 Friend is available under MIT License
+
+X capture first
+
+X change first message
+
+> > > friend introduction
+
+> > > memory -rename
+
+X no friend connected, avm ot connected
+
+> > > > > bluethooth clicked chafe to serch ,not avm icon
+
+transcrpt snd m emory plaude ai>>>>>plaude ai ,action item , integraton notion,
+
+add on
+
+border for search input chage to white

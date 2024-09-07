@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/pages/capture/widgets/ripple_animation.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
-import 'package:friend_private/pages/home/page.dart';
+import 'package:friend_private/pages/home/home_page_wrapper.dart';
 import 'package:friend_private/pages/onboarding/find_device/page.dart';
 
 class ConnectDevicePage extends StatefulWidget {
@@ -46,7 +46,7 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
                 goNext: () {
                   debugPrint('onConnected');
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (c) => const HomePageWrapper()),
+                    MaterialPageRoute(builder: (c) => const HomePageWrapperTest()),
                   );
                 },
                 includeSkip: false,

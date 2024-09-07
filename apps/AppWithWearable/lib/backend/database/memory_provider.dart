@@ -56,7 +56,28 @@ class MemoryProvider {
     _boxEvent.put(event);
   }
 
-  int saveMemory(Memory memory) => _box.put(memory);
+  // Save Memory
+  int saveMemory(Memory memory) {
+    try {
+      // Debugging output
+      print("Saving Memory with ID: ${memory.id}");
+      print("Memory Details: ${memoryToString(memory)}");
+
+      // Ensure geolocation target is set if available
+      if (memory.geolocation.target != null) {
+        print("Geolocation before save: ${memory.geolocation.target}");
+      }
+
+      // Save the memory
+      int id = _box.put(memory);
+
+      print("Memory saved with ID: $id");
+      return id;
+    } catch (e) {
+      print("Error saving Memory: $e");
+      return -1; // Return an error indicator
+    }
+  }
 
   bool deleteMemory(Memory memory) => _box.remove(memory.id);
 
@@ -121,9 +142,23 @@ class MemoryProvider {
     await file.writeAsString(json);
     return file;
   }
+
+  static String memoryToString(Memory memory) {
+    return '''
+    Memory ID: ${memory.id}
+    Created At: ${memory.createdAt}
+    Transcript: ${memory.transcript}
+    Discarded: ${memory.discarded}
+    Geolocation: ${memory.geolocation.target != null ? 'Latitude: ${memory.geolocation.target!.latitude}, Longitude: ${memory.geolocation.target!.longitude}' : 'N/A'}
+    ''';
+  }
 }
 
 String getPrettyJSONString(jsonObject) {
   var encoder = const JsonEncoder.withIndent("     ");
   return encoder.convert(jsonObject);
 }
+
+
+// Add your method to convert Memory to string representation for debugging
+  

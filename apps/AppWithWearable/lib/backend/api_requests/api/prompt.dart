@@ -87,6 +87,13 @@ Provide the following:
 4. Category: Classify the conversation into one of these categories: personal, education, health, finance, legal, philosophy, spiritual, science, entrepreneurship, parenting, romantic, travel, inspiration, technology, business, social, work, other.
 5. Emoji: An emoji that represents the conversation.
 6. Calendar Events: Any events mentioned that should be added to a calendar. Include title, description, start time, and duration , if start time is not there give ${(conversationDate ?? DateTime.now()).toIso8601String()} and duration is not there then give 60 minute . The conversation date is ${(conversationDate ?? DateTime.now()).toIso8601String()}.
+7. Geolocation Details:
+  - Latitude: The latitude of the location.
+  - Longitude: The longitude of the location.
+  - Address: The address of the location.
+  - Google Place ID: Google Place ID
+  - Google Place Name:Google Place Name
+ 
 
 The date context for this conversation is ${DateTime.now().toIso8601String()}.
 
@@ -112,6 +119,7 @@ Respond in a JSON format with the following structure:
       "duration": number
     }
   ]
+  
 }
 ''';
   //debugPrint(prompt);

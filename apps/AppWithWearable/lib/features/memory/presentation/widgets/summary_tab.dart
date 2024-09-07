@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/pages/memory_detail/enable_title.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
@@ -28,34 +29,54 @@ class SummaryTab extends StatefulWidget {
 
 class _SummaryTabState extends State<SummaryTab> {
   late PageController _pageController;
-  late ScrollController _scrollController;
-  ScrollPhysics _scrollPhysics = const AlwaysScrollableScrollPhysics();
-  // List<Plugin> pluginsList = SharedPreferencesUtil().pluginsList;
-  // List<bool> pluginResponseExpanded = [];
+  final ScrollController _scrollController = ScrollController();
+  List<Plugin> pluginsList = SharedPreferencesUtil().pluginsList;
+  List<bool> pluginResponseExpanded = [];
+
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.memoryAtIndex);
-    _scrollController = ScrollController();
+
     widget.pageController.addListener(_onPageChanged);
-    _scrollController.addListener(_onScroll);
-    // pluginResponseExpanded = List.filled(
-    //     widget.memoryBloc.state.memories[widget.memoryAtIndex].pluginsResponse
-    //         .length,
-    //     false);
+    _scrollController.addListener(() {
+      _onScroll();
+    });
+    pluginResponseExpanded = List.filled(
+        widget.memoryBloc.state.memories[widget.memoryAtIndex].pluginsResponse
+            .length,
+        false);
   }
 
   void _onPageChanged() {
     final currentPage = widget.pageController.page?.round();
     if (currentPage != null) {
       widget.memoryBloc.add(MemoryIndexChanged(memoryIndex: currentPage));
+      setState(() {
+        pluginResponseExpanded = List.filled(
+          widget.memoryBloc.state.memories[currentPage].pluginsResponse.length,
+          false,
+        );
+      });
     }
-    // setState(() {
-    //   pluginsList[currentPage??0];
-    //   pluginResponseExpanded = List.filled(
-    //       widget.memoryBloc.state.memories[currentPage!].pluginsResponse.length,
-    //       false);
-    // });
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >
+        (_scrollController.position.maxScrollExtent + 50)) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+
+    if (_scrollController.position.pixels <
+        (_scrollController.position.minScrollExtent - 50)) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   @override
@@ -65,38 +86,20 @@ class _SummaryTabState extends State<SummaryTab> {
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.atEdge) {
-      if (_scrollController.position.pixels == 0) {
-        // Reached the top
-        setState(() {
-          _scrollPhysics = const NeverScrollableScrollPhysics();
-        });
-      } else {
-        // Reached the bottom
-        setState(() {
-          _scrollPhysics = const NeverScrollableScrollPhysics();
-        });
-      }
-    } else {
-      setState(() {
-        _scrollPhysics = const AlwaysScrollableScrollPhysics();
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: widget.memoryBloc,
       builder: (context, state) {
-        // _currentPage = state.memoryIndex;
         final selectedMemory = state.memories[state.memoryIndex];
+
         final structured = selectedMemory.structured.target!;
         final time = selectedMemory.startedAt == null
             ? dateTimeFormat('h:mm a', selectedMemory.createdAt)
             : '${dateTimeFormat('h:mm a', selectedMemory.startedAt)} to ${dateTimeFormat('h:mm a', selectedMemory.finishedAt)}';
-        print('index ${state.memoryIndex}');
+        print(
+            'index ${state.memoryIndex}, time:$time,title:${structured.title},overview:${structured.overview}');
+
         return PageView.builder(
           scrollDirection: Axis.vertical,
           controller: _pageController,
@@ -108,7 +111,7 @@ class _SummaryTabState extends State<SummaryTab> {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
-                physics: _scrollPhysics,
+                physics: const BouncingScrollPhysics(),
                 controller: _scrollController,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -359,9 +362,9 @@ class _SummaryTabState extends State<SummaryTab> {
                         );
                       },
                     ),
-                    const SizedBox(
-                      height: 25,
-                    ),
+                    // const SizedBox(
+                    //   height: 25,
+                    // ),
                     // ...getPluginsWidgets(
                     //   context,
                     //   state.memories[index],
