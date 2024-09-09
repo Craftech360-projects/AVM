@@ -9,6 +9,7 @@ class MemoryState extends Equatable {
   final String? failure;
   final int memoryIndex;
 
+
   const MemoryState({
     required this.status,
     this.memories = const [],
