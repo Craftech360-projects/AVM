@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
+import 'package:friend_private/features/capture/data/models/filterItem.dart';
 
 part 'memory_event.dart';
 part 'memory_state.dart';
@@ -15,6 +16,40 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
     on<SearchMemory>(_searchMemory);
     on<UpdatedMemory>(_updatedMemory);
     on<MemoryIndexChanged>(_memoryChanged);
+    on<FilterMemory>((event, emit) {
+      switch (event.filterItem.filterType) {
+        case 'Show All':
+          // For 'Show All', we want to display all memories.
+          emit(state.copyWith(
+            status: MemoryStatus.success,
+            memories: state.memories, // Keep all memories in the list
+          ));
+          break;
+
+        case 'Technology':
+          // Filter for 'Technology' category
+          final filteredMemories = state.memories
+              .where((e) => e.structured.target?.category == 'Technology')
+              .toList();
+          emit(state.copyWith(
+            status: MemoryStatus.success,
+            memories: filteredMemories,
+          ));
+          break;
+
+        default:
+          // Handle other cases or fallback logic here if necessary.
+          emit(state.copyWith(
+            status: MemoryStatus.success,
+            memories: state
+                .memories, // Optionally emit all memories or unchanged state
+          ));
+          break;
+      }
+
+      // Handle the toggle status of non-discarded items (outside switch)
+      add(DisplayedMemory(isNonDiscarded: event.filterItem.filterStatus));
+    });
   }
   FutureOr<void> _memoryChanged(event, emit) async {
     final int? newIndex = await event.memoryIndex;

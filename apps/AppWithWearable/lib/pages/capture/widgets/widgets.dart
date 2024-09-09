@@ -51,14 +51,16 @@ class CaptureCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showModalBottomSheet(
-          isScrollControlled: true,
-          context: context,
-          builder: (context) => SingleChildScrollView(
-            child: getTranscriptWidget(
-                memoryCreating, segments ?? [], photos, device),
-          ),
-        );
+        if (segments!.isNotEmpty) {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (context) => SingleChildScrollView(
+              child: getTranscriptWidget(
+                  memoryCreating, segments ?? [], photos, device),
+            ),
+          );
+        }
       },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16),

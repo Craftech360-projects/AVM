@@ -40,6 +40,10 @@ class CaptureMemoryPage extends StatefulWidget {
 class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   late MemoryBloc _memoryBloc;
   bool _isNonDiscarded = true;
+  // final List<FilterItem> _filters = [
+  //   FilterItem(filterType: 'Show All', filterStatus: false),
+  //   FilterItem(filterType: 'Technology', filterStatus: false),
+  // ];
   final TextEditingController _searchController = TextEditingController();
   @override
   void initState() {
@@ -81,6 +85,55 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           scrollController: widget.scrollController,
         ),
         //*--- Filter Button ---*//
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        //   child: Align(
+        //     alignment: Alignment.centerRight,
+        //     child: PopupMenuButton<FilterItem>(
+        //       icon: const Icon(
+        //         Icons.filter_alt_sharp,
+        //         size: 16,
+        //         color: Colors.grey,
+        //       ),
+        //       onSelected: (filterItem) {
+        //         print(
+        //             'filteredItem ${filterItem.filterStatus},${filterItem.filterType}');
+        //         _memoryBloc.add(FilterMemory(filterItem: filterItem));
+        //         // setState(() {
+        //         //   filterItem.filterStatus = !filterItem.filterStatus;
+
+        //         //   if (filterItem.filterType == 'Show All') {
+        //         //     _memoryBloc.add(DisplayedMemory(
+        //         //         isNonDiscarded: filterItem.filterStatus));
+        //         //   }
+
+        //         //   print(
+        //         //       'Selected filter: ${filterItem.filterType}, Status: ${filterItem.filterStatus}');
+        //         // });
+        //       },
+        //       itemBuilder: (context) => _filters.map((filterItem) {
+        //         return PopupMenuItem<FilterItem>(
+        //           value: filterItem,
+        //           child: Row(
+        //             children: [
+        //               filterItem.filterStatus
+        //                   ? const Icon(
+        //                       Icons.check,
+        //                       color: Colors.green,
+        //                     )
+        //                   : const Icon(
+        //                       Icons.check,
+        //                       color: Colors.grey,
+        //                     ),
+        //               Text(filterItem.filterType),
+        //             ],
+        //           ),
+        //         );
+        //       }).toList(),
+        //     ),
+        //   ),
+        // ),
+
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Align(
@@ -96,14 +149,15 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
               },
               label: Icon(
                 _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
-                color: Colors.white,
+                size: 16,
+                color: Colors.grey,
               ),
               icon: Text(
                 _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
+                    color: Color.fromARGB(255, 212, 212, 212),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
               ),
             ),
           ),

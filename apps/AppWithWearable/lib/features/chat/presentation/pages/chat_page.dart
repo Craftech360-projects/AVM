@@ -119,7 +119,7 @@ class _ChatPageTestState extends State<ChatPageTest>
                 width: double.infinity,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-                margin: EdgeInsets.only(
+                margin: const EdgeInsets.only(
                   left: 18,
                   right: 18,
                   bottom: 18,
@@ -132,25 +132,25 @@ class _ChatPageTestState extends State<ChatPageTest>
                     gradient: LinearGradient(
                       colors: [
                         Color.lerp(
-                          const Color.fromARGB(127, 208, 208, 208),
-                          const Color.fromARGB(127, 188, 99, 121),
+                          const Color.fromARGB(233, 208, 208, 208),
+                          const Color.fromARGB(227, 255, 255, 255),
                           _animation.value,
                         )!,
                         Color.lerp(
-                          const Color.fromARGB(127, 188, 99, 121),
-                          const Color.fromARGB(127, 86, 101, 182),
+                          const Color.fromARGB(227, 255, 255, 255),
+                          const Color.fromARGB(255, 89, 90, 92),
                           _animation.value,
                         )!,
                         Color.lerp(
-                          const Color.fromARGB(127, 86, 101, 182),
-                          const Color.fromARGB(127, 126, 190, 236),
+                          const Color.fromARGB(255, 89, 90, 92),
+                              const Color.fromARGB(233, 208, 208, 208),
                           _animation.value,
                         )!,
-                        Color.lerp(
-                          const Color.fromARGB(127, 126, 190, 236),
-                          const Color.fromARGB(127, 208, 208, 208),
-                          _animation.value,
-                        )!,
+                        // Color.lerp(
+                        //   const Color.fromARGB(255, 34, 34, 34),
+                        //   const Color.fromARGB(233, 208, 208, 208),
+                        //   _animation.value,
+                        // )!,
                       ],
                     ),
                     width: 1,

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'memory_bloc.dart';
 
 abstract class MemoryEvent extends Equatable {
@@ -41,4 +42,13 @@ class MemoryIndexChanged extends MemoryEvent {
   const MemoryIndexChanged({required this.memoryIndex});
   @override
   List<Object> get props => [memoryIndex];
+}
+
+class FilterMemory extends MemoryEvent {
+ final  FilterItem filterItem;
+ const FilterMemory({
+    required this.filterItem,
+  });
+  @override
+  List<Object> get props => [filterItem];
 }
