@@ -180,7 +180,7 @@ class Structured {
   String title;
   String overview;
   String emoji;
-  String category;
+  List<String> category = [];
 
   @Backlink('structured')
   final actionItems = ToMany<ActionItem>();
@@ -191,7 +191,7 @@ class Structured {
   String? get placeName => geolocation.target?.placeName;
 
   Structured(this.title, this.overview,
-      {this.id = 0, this.emoji = '', this.category = 'other'});
+      {this.id = 0, this.emoji = '', this.category = const []});
 
   getEmoji() {
     try {
@@ -207,42 +207,14 @@ class Structured {
       geolocation.target = location;
     }
   }
-  // static Structured fromJson(Map<String, dynamic> json) {
-  //   var structured = Structured(
-  //     json['title'],
-  //     json['overview'],
-  //     emoji: json['emoji'],
-  //     category: json['category'],
-  //   );
-  //   var aItems = json['actionItems'] ?? json['action_items'];
-  //   if (aItems != null) {
-  //     for (String item in aItems) {
-  //       if (item.isEmpty) continue;
-  //       structured.actionItems.add(ActionItem(item));
-  //     }
-  //   }
-
-  //   if (json['events'] != null) {
-  //     for (dynamic event in json['events']) {
-  //       if (event.isEmpty) continue;
-  //       structured.events.add(Event(
-  //         event['title'],
-  //         DateTime.parse(event['startsAt']),
-  //         event['duration'],
-  //         description: event['description'] ?? '',
-  //         created: false,
-  //       ));
-  //     }
-  //   }
-  //   return structured;
-  // }
 
   static Structured fromJson(Map<String, dynamic> json) {
     var structured = Structured(
       json['title'] ?? '',
       json['overview'] ?? '',
       emoji: json['emoji'] ?? '',
-      category: json['category'] ?? 'other',
+      category:
+          json['category'] != null ? List<String>.from(json['category']) : [],
     );
     if (json['geolocation'] != null) {
       structured.geolocation.target = Geolocation.fromJson(json['geolocation']);
@@ -284,7 +256,8 @@ class Structured {
   @override
   String toString() {
     var str = '';
-    str += '${getEmoji()} $title ($category)\n\nSummary: $overview\n\n';
+    str +=
+        '${getEmoji()} $title (${category.join(", ")})\n\nSummary: $overview\n\n';
     if (actionItems.isNotEmpty) {
       str += 'Action Items:\n';
       for (var item in actionItems) {

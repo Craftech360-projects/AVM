@@ -25,9 +25,9 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   void initState() {
+    super.initState();
     calendarEnabled = SharedPreferencesUtil().calendarEnabled;
     if (calendarEnabled) _getCalendars();
-    super.initState();
   }
 
   @override
@@ -44,40 +44,43 @@ class _CalendarPageState extends State<CalendarPage> {
           Container(
             margin: const EdgeInsets.all(8),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Row(
-                  children: [
-                    Icon(Icons.edit_calendar),
-                    SizedBox(width: 16),
-                    Text(
-                      'Enable integration',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+            child: SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.edit_calendar),
+                      SizedBox(width: 16),
+                      Text(
+                        'Enable integration',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Switch(
-                  value: calendarEnabled,
-                  onChanged: _onSwitchChanged,
-                ),
-              ],
+                    ],
+                  ),
+                  Switch(
+                    value: calendarEnabled,
+                    onChanged: _onSwitchChanged,
+                  ),
+                ],
+              ),
             ),
           ),
-          const Text(
-            'AVM can automatically schedule events from your conversations, or ask for your confirmation first.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 24),
-          if (calendarEnabled) ..._calendarType(),
-          const SizedBox(height: 24),
-          if (calendarEnabled) ..._displayCalendars(),
+          // const Text(
+          //   'AVM can automatically schedule events from your conversations, or ask for your confirmation first.',
+          //   textAlign: TextAlign.center,
+          //   style: TextStyle(
+          //     color: Colors.grey,
+          //   ),
+          // ),
+          // const SizedBox(height: 24),
+          // if (calendarEnabled) ..._calendarType(),
+          // const SizedBox(height: 24),
+          // if (calendarEnabled) ..._displayCalendars(),
         ],
       ),
     );

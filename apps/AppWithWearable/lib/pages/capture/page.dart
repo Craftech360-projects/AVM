@@ -412,7 +412,6 @@ class CapturePageState extends State<CapturePage>
               memoryCreating: memoryCreating,
               photos: photos,
               scrollController: _scrollController,
-          
             ),
             // ...getConnectionStateWidgets(
             //   context,

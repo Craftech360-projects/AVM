@@ -203,19 +203,19 @@ class _SettingsPageState extends State<SettingsPage> {
               //   MixpanelManager().pluginsOpened();
               //   routeToPage(context, const PluginsPage());
               // }, icon: Icons.integration_instructions),
-              SharedPreferencesUtil().useTranscriptServer
-                  ? getItemAddOn('Speech Profile', () {
-                      routeToPage(context, const SpeakerIdPage());
-                    }, icon: Icons.multitrack_audio)
-                  : Container(),
+              // SharedPreferencesUtil().useTranscriptServer
+              //     ? getItemAddOn('Speech Profile', () {
+              //         routeToPage(context, const SpeakerIdPage());
+              //       }, icon: Icons.multitrack_audio)
+              //     : Container(),
               getItemAddOn('Calendar Integration', () {
                 routeToPage(context, const CalendarPage());
               }, icon: Icons.calendar_month),
-              getItemAddOn('Developer Mode', () async {
-                MixpanelManager().devModePageOpened();
-                await routeToPage(context, const DeveloperSettingsPage());
-                setState(() {});
-              }, icon: Icons.code, visibility: devModeEnabled),
+              // getItemAddOn('Developer Mode', () async {
+              //   MixpanelManager().devModePageOpened();
+              //   await routeToPage(context, const DeveloperSettingsPage());
+              //   setState(() {});
+              // }, icon: Icons.code, visibility: devModeEnabled),
 
               const SizedBox(height: 32),
               const Spacer(),

@@ -125,7 +125,10 @@ Future<Memory> memoryCreationBlock(
     if (summarizeResult == null) {
       failed = true;
       summarizeResult = SummaryResult(
-          Structured('', '', emoji: '😢', category: 'failed'), []);
+        Structured('', '',
+            emoji: '😢', category: ['failed']), // Wrap 'failed' in a list
+        [],
+      );
       if (!retrievedFromCache) {
         InstabugLog.logError('Unable to create memory structure.');
         ScaffoldMessenger.of(context).removeCurrentSnackBar();

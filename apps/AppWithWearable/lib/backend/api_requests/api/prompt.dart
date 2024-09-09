@@ -39,42 +39,6 @@ Future<SummaryResult> summarizeMemory(
   // NOTE: PROMPT IS VERY DELICATE, IT CAN DISCARD EVERYTHING IF NOT HANDLED PROPERLY
   // The purpose for structuring this memory is to remember important conversations, decisions, and action items. If there's nothing like that in the transcript, output an empty title.
 
-  // TODO: Generate tags/topics relevant to better query?
-  // TODO: use name in any way?
-  // var extraStr = SharedPreferencesUtil().givenName.isEmpty ? '' : ' ${SharedPreferencesUtil().givenName}';
-  // Test and see if the action items say "name should do x thing" "speaker 0 should do y thing"
-
-  // Specify which speaker is responsible for each action item., to comment?
-
-  //openAi prompt
-  // var prompt =
-  //     '''Your task is to provide structure and clarity to the recording transcription of a conversation.
-  //   The conversation language is ${SharedPreferencesUtil().recordingsLanguage}. Use English for your response.
-
-  //   ${forceProcess ? "" : "It is possible that the conversation is not worth storing, there are no interesting topics, facts, or information, in that case, output an empty title, overview, and action items."}
-
-  //   For the title, use the main topic of the conversation.
-  //   For the overview, condense the conversation into a summary with the main topics discussed, make sure to capture the key points and important details from the conversation.
-  //   For the action items, include a list of commitments, specific tasks or actionable next steps from the conversation. Specify which speaker is responsible for each action item.
-  //   For the category, classify the conversation into one of the available categories.
-  //   For Calendar Events, include a list of events extracted from the conversation, that the user must have on his calendar. For date context, this conversation happened on ${(conversationDate ?? DateTime.now()).toIso8601String()}.
-
-  //   Transcript: ${transcript.trim()}
-
-  //   The output should be formatted as a JSON instance that conforms to the JSON schema below.
-
-  //   As an example, for the schema {"properties": {"foo": {"title": "Foo", "description": "a list of strings", "type": "array", "items": {"type": "string"}}}, "required": ["foo"]}
-  //   the object {"foo": ["bar", "baz"]} is a well-formatted instance of the schema. The object {"properties": {"foo": ["bar", "baz"]}} is not well-formatted.
-
-  //   Here is the output schema:
-
-  //   {"properties": {"title": {"title": "Title", "description": "A title/name for this conversation", "default": "", "type": "string"}, "overview": {"title": "Overview", "description": "A brief summary with the main topics discussed, make sure to capture the key details.", "default": "", "type": "string"}, "action_items": {"title": "Action Items", "description": "A list of action items from the conversation", "default": [], "type": "array", "items": {"type": "string"}}, "category": {"description": "A category for this memory", "default": "other", "allOf": [{"\$ref": "#/definitions/CategoryEnum"}]}, "emoji": {"title": "Emoji", "description": "An emoji to represent the memory", "default": "\ud83e\udde0", "type": "string"}, "events": {"title": "Events", "description": "A list of events extracted from the conversation, that the user must have on his calendar.", "default": [], "type": "array", "items": {"\$ref": "#/definitions/CalendarEvent"}}}, "definitions": {"CategoryEnum": {"title": "CategoryEnum", "description": "An enumeration.", "enum": ["personal", "education", "health", "finance", "legal", "phylosophy", "spiritual", "science", "entrepreneurship", "parenting", "romantic", "travel", "inspiration", "technology", "business", "social", "work", "other"], "type": "string"}, "CalendarEvent": {"title": "CalendarEvent", "type": "object", "properties": {"title": {"title": "Title", "description": "The title of the event", "type": "string"}, "description": {"title": "Description", "description": "A brief description of the event", "default": "", "type": "string"}, "startsAt": {"title": "Starts At", "description": "The start date and time of the event", "type": "string", "format": "date-time"}, "duration": {"title": "Duration", "description": "The duration of the event in minutes", "default": 30, "type": "integer"}}, "required": ["title", "startsAt"]}}}
-
-  //   '''
-  //         .replaceAll('     ', '')
-  //         .replaceAll('    ', '')
-  //         .trim();
-
   var prompt = '''
 Summarize the following conversation transcript. The conversation language is ${SharedPreferencesUtil().recordingsLanguage}. Respond in English.
 
@@ -84,15 +48,10 @@ Provide the following:
 1. Title: The main topic of the conversation.
 2. Overview: A brief summary of the main topics discussed, capturing key points and important details.
 3. Action Items: A list of commitments, tasks, or next steps from the conversation. Specify who is responsible for each.
-4. Category: Classify the conversation into one of these categories: personal, education, health, finance, legal, philosophy, spiritual, science, entrepreneurship, parenting, romantic, travel, inspiration, technology, business, social, work, other.
+4. Category: Classify the conversation into these categories, maximum 3: personal, education, health, finance, legal, philosophy, spiritual, science, entrepreneurship, parenting, romantic, travel, inspiration, technology, business, social, work, other.
 5. Emoji: An emoji that represents the conversation.
 6. Calendar Events: Any events mentioned that should be added to a calendar. Include title, description, start time, and duration , if start time is not there give ${(conversationDate ?? DateTime.now()).toIso8601String()} and duration is not there then give 60 minute . The conversation date is ${(conversationDate ?? DateTime.now()).toIso8601String()}.
-7. Geolocation Details:
-  - Latitude: The latitude of the location.
-  - Longitude: The longitude of the location.
-  - Address: The address of the location.
-  - Google Place ID: Google Place ID
-  - Google Place Name:Google Place Name
+
  
 
 The date context for this conversation is ${DateTime.now().toIso8601String()}.
@@ -109,7 +68,7 @@ Respond in a JSON format with the following structure:
       "responsible": "string"
     }
   ],
-  "category": "string",
+  "category":[{"string"}] ,
   "emoji": "string",
   "events": [
     {

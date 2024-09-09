@@ -15,9 +15,11 @@ scriptMemoryVectorsExecuted() async {
     return;
   }
   for (var i = 0; i < memories.length; i++) {
-    var f = getEmbeddingsFromInput(memories[i].structured.toString()).then((vector) {
+    var f = getEmbeddingsFromInput(memories[i].structured.toString())
+        .then((vector) {
       debugPrint('Memory: ${i + 1}');
-      upsertPineconeVector(memories[i].id.toString(), vector, memories[i].createdAt);
+      upsertPineconeVector(
+          memories[i].id.toString(), vector, memories[i].createdAt);
     });
     if (i % 10 == 0) {
       await f;

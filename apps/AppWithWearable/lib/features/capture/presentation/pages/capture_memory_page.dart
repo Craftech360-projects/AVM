@@ -59,7 +59,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   @override
   void dispose() {
     _searchController.dispose();
-    super.dispose();
+    super
+        .dispose(); // This ensures that the parent class's dispose method is called.
   }
 
   @override

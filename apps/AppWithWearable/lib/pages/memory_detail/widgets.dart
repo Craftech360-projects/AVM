@@ -81,9 +81,9 @@ List<Widget> getSummaryWidgets(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Text(
               structured.category.isEmpty
-                  ? ' '
-                  : structured.category[0].toUpperCase() +
-                      structured.category.substring(1),
+                  ? ' ' // Handle the case when the category list is empty
+                  : structured.category[0][0].toUpperCase() +
+                      structured.category[0].substring(1).toLowerCase(),
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
