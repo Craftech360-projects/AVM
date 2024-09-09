@@ -30,10 +30,9 @@ class MemoryCardWidget extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: (height-10)*0.38,
+          height: (height - 10) * 0.38,
           child: ListView.separated(
-            padding: const EdgeInsets.only(left: 12,right: 12,bottom:0),
-   
+            padding: const EdgeInsets.only(left: 12, right: 12, bottom: 0),
             shrinkWrap: true,
             itemCount: state.memories.length,
             separatorBuilder: (context, index) => const SizedBox(height: 8),
@@ -42,7 +41,9 @@ class MemoryCardWidget extends StatelessWidget {
               //*-- Delete Memory Card --*//
               return Dismissible(
                 direction: DismissDirection.endToStart,
-                background: Container(color: Colors.red.withOpacity(0.5),),
+                background: Container(
+                  color: Colors.red.withOpacity(0.5),
+                ),
                 key: Key(memory.id.toString()),
                 confirmDismiss: (direction) async {
                   return await showDialog(
@@ -101,8 +102,8 @@ class MemoryCardWidget extends StatelessWidget {
                   //*-- Memory Card --*//
                   child: Card(
                     child: Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 8),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -136,14 +137,16 @@ class MemoryCardWidget extends StatelessWidget {
                                   alignment: Alignment.topRight,
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Spacer(),
                                       Text(
                                         '${DateFormat('d MMM').format(memory.createdAt)}  '
                                         '   ${DateFormat('h:mm a').format(memory.createdAt)}',
-                                        style:
-                                            Theme.of(context).textTheme.bodySmall,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
                                       ),
                                     ],
                                   ),
@@ -174,7 +177,8 @@ class MemoryCardWidget extends StatelessWidget {
                                 memory.discarded
                                     ? const SizedBox.shrink()
                                     : Text(
-                                        memory.structured.target?.overview ?? '',
+                                        memory.structured.target?.overview ??
+                                            '',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium!
@@ -187,14 +191,29 @@ class MemoryCardWidget extends StatelessWidget {
                                 //*-- Chips --*//
                                 memory.discarded
                                     ? const SizedBox.shrink()
-                                    : Chip(
-                                        padding: EdgeInsets.zero,
-                                        visualDensity: VisualDensity.compact,
-                                        backgroundColor: Colors.black45,
-                                        label: Text(
-                                            memory.structured.target?.category ??
-                                                ''),
-                                      )
+                                    : Wrap(
+                                        spacing:
+                                            8.0, // Horizontal spacing between chips
+                                        runSpacing:
+                                            8.0, // Vertical spacing between lines
+                                        children: memory
+                                                .structured.target?.category
+                                                .map((category) => Chip(
+                                                      padding: EdgeInsets.zero,
+                                                      visualDensity:
+                                                          VisualDensity.compact,
+                                                      backgroundColor:
+                                                          Colors.black45,
+                                                      label: Text(
+                                                        category,
+                                                        style: const TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
+                                                    ))
+                                                .toList() ??
+                                            [],
+                                      ),
                               ],
                             ),
                           ),

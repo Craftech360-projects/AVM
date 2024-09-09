@@ -85,7 +85,7 @@
     },
     {
       "id": "2:6427539297124375252",
-      "lastPropertyId": "7:4057508104512714772",
+      "lastPropertyId": "8:4321600440594391155",
       "name": "Structured",
       "properties": [
         {
@@ -112,7 +112,15 @@
         {
           "id": "7:4057508104512714772",
           "name": "category",
-          "type": 9
+          "type": 30
+        },
+        {
+          "id": "8:4321600440594391155",
+          "name": "geolocationId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "11:8287585027820134538",
+          "relationTarget": "Geolocation"
         }
       ],
       "relations": []
@@ -358,7 +366,7 @@
     },
     {
       "id": "9:1071480816298889546",
-      "lastPropertyId": "9:3289333230014969644",
+      "lastPropertyId": "10:102446081966318350",
       "name": "Geolocation",
       "properties": [
         {
@@ -406,13 +414,18 @@
           "id": "9:3289333230014969644",
           "name": "locationType",
           "type": 9
+        },
+        {
+          "id": "10:102446081966318350",
+          "name": "placeName",
+          "type": 9
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "9:1071480816298889546",
-  "lastIndexId": "10:1684776336187677600",
+  "lastIndexId": "11:8287585027820134538",
   "lastRelationId": "3:7136919903563407649",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
