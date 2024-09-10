@@ -346,14 +346,16 @@ class CapturePageState extends State<CapturePage>
 
   @override
   void dispose() {
+    // Cancel all listeners, timers, and WebSockets first
     WidgetsBinding.instance.removeObserver(this);
-    record.dispose();
+    record.dispose(); // Make sure this method does not throw errors
     _bleBytesStream?.cancel();
     _memoryCreationTimer?.cancel();
-    WidgetsBinding.instance.removeObserver(this);
     closeWebSocket();
     _internetListener.cancel();
     _scrollController.dispose();
+
+    // Ensure this is called last
     super.dispose();
   }
 

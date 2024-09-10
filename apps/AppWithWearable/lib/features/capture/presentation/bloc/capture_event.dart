@@ -12,11 +12,12 @@ class InitiateWebSocket extends CaptureEvent {
   final BleAudioCodec? audioCodec;
   final int? sampleRate;
   final BTDeviceStruct? btDevice;
- const InitiateWebSocket( {
+  const InitiateWebSocket({
     this.audioCodec,
     this.sampleRate,
     this.btDevice,
   });
-    @override
-  List<Object?> get props => [audioCodec,sampleRate,btDevice];
+
+  @override
+  List<Object?> get props => [audioCodec, sampleRate, btDevice];
 }

@@ -21,6 +21,7 @@ class _CalendarPageState extends State<CalendarPage> {
     CalendarUtil().getCalendars().then((value) {
       setState(() => calendars = value);
     });
+    print("calender geting>>>>>>>>>>>>>>>>>");
   }
 
   @override
@@ -70,17 +71,17 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ),
           ),
-          // const Text(
-          //   'AVM can automatically schedule events from your conversations, or ask for your confirmation first.',
-          //   textAlign: TextAlign.center,
-          //   style: TextStyle(
-          //     color: Colors.grey,
-          //   ),
-          // ),
-          // const SizedBox(height: 24),
-          // if (calendarEnabled) ..._calendarType(),
-          // const SizedBox(height: 24),
-          // if (calendarEnabled) ..._displayCalendars(),
+          const Text(
+            'AVM can automatically schedule events from your conversations, or ask for your confirmation first.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 24),
+          if (calendarEnabled) ..._calendarType(),
+          const SizedBox(height: 24),
+          if (calendarEnabled) ..._displayCalendars(),
         ],
       ),
     );
@@ -124,10 +125,8 @@ class _CalendarPageState extends State<CalendarPage> {
           borderRadius: BorderRadius.all(Radius.circular(8)),
           border: GradientBoxBorder(
             gradient: LinearGradient(colors: [
-              Color.fromARGB(127, 208, 208, 208),
-              Color.fromARGB(127, 188, 99, 121),
-              Color.fromARGB(127, 86, 101, 182),
-              Color.fromARGB(127, 126, 190, 236)
+              const Color.fromARGB(233, 208, 208, 208),
+              const Color.fromARGB(227, 255, 255, 255)
             ]),
             width: 2,
           ),
@@ -142,7 +141,7 @@ class _CalendarPageState extends State<CalendarPage> {
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         child: Text(
-          'Select to which calendar you want your Friend to connect to.',
+          'Select to which calendar you want your AVM to connect to.',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.grey,

@@ -59,12 +59,12 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   @override
   void dispose() {
     _searchController.dispose();
-    super
-        .dispose(); // This ensures that the parent class's dispose method is called.
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
     return Column(
       children: [
         //*--- SEARCH BAR ---*//
@@ -166,6 +166,12 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         //*--- MEMORY LIST ---*//
         BlocConsumer<MemoryBloc, MemoryState>(
           bloc: _memoryBloc,
+          // buildWhen: (previousState, currentState) {
+          //   print('previous State${previousState.memories.length}');
+          //   print('current  State${currentState.memories.length}');
+          //   return previousState.memories.length !=
+          //       currentState.memories.length;
+          // },
           builder: (context, state) {
             print('>>>-${state.toString()}');
             if (state.status == MemoryStatus.loading) {
