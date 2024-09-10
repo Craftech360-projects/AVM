@@ -125,10 +125,8 @@ class _CalendarPageState extends State<CalendarPage> {
           borderRadius: BorderRadius.all(Radius.circular(8)),
           border: GradientBoxBorder(
             gradient: LinearGradient(colors: [
-              Color.fromARGB(127, 208, 208, 208),
-              Color.fromARGB(127, 188, 99, 121),
-              Color.fromARGB(127, 86, 101, 182),
-              Color.fromARGB(127, 126, 190, 236)
+              const Color.fromARGB(233, 208, 208, 208),
+              const Color.fromARGB(227, 255, 255, 255)
             ]),
             width: 2,
           ),
