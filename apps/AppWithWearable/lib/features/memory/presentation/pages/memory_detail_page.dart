@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/widgets/action_tab.dart';
+import 'package:friend_private/features/memory/presentation/widgets/custom_tag.dart';
 import 'package:friend_private/features/memory/presentation/widgets/event_tab.dart';
 import 'package:friend_private/features/memory/presentation/widgets/summary_tab.dart';
 import 'package:friend_private/features/memory/presentation/widgets/transcript_tab.dart';
@@ -117,7 +118,21 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
                             style: Theme.of(context).textTheme.titleLarge!,
                           ),
                         ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
+                      children:
+                          List.generate(structured.category.length, (index) {
+                        return CustomTag(
+                          tagName: structured.category[index],
+                        );
+                      }),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),

@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:friend_private/backend/database/memory_provider.dart';
-import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/pages/memory_detail/enable_title.dart';
-import 'package:friend_private/pages/settings/calendar.dart';
-import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/temp.dart';
 
 class SummaryTab extends StatefulWidget {
@@ -155,33 +150,11 @@ class _SummaryTabState extends State<SummaryTab> {
                 // ),
                 // const SizedBox(height: 16),
                 //*--- IMAGE ---*//
-                Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(16),
-                      ),
-                      child: Image.memory(selectedMemory.memoryImg!),
-                    ),
-                    Positioned(
-                      right: 10,
-                      top: 10,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        child: Text(
-                          structured.category.isNotEmpty
-                              ? '${structured.category[0][0].toUpperCase()}${structured.category[0].substring(1).toLowerCase()}'
-                              : 'other', // Handle the case where the category list is empty
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ),
-                    ),
-                  ],
+                ClipRRect(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(16),
+                  ),
+                  child: Image.memory(selectedMemory.memoryImg!),
                 ),
                 const SizedBox(height: 20),
                 //*--- OVERVIEW ---*//
