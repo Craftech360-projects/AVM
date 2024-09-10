@@ -297,8 +297,8 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
         - First determine if the conversation requires context, in the field "requires_context".
         - Context could be 2 different things:
           - A list of topics (each topic being 1 or 2 words, example are "Startups" "Funding" "Business Meeting" "Artificial Intelligence") that are going to be used to retrieve more context, in the field "topics". Leave an empty list if no context is needed.
-          - A dates range, if the context is time-based, in the field "dates_range". Leave an empty list if no context is needed. FYI if the user says today, today is ${DateTime.now().toIso8601String()}, and it should start from midnight 12am to next day midnight 12.
-        
+          - A dates range, if the context is time-based, in the field "dates_range". Leave an empty list if no context is needed. FYI, if the user mentions "today," "todays," or "today's," it should be interpreted as ${DateTime.now().toIso8601String()} (from midnight 12am to next day midnight 12). Similarly, handle variations for "tomorrow" and "yesterday" based on their respective dates.
+
         Conversation:
         ${Message.getMessagesAsString(messages)}
         

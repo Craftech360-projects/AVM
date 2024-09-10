@@ -67,7 +67,7 @@
 		<key>NSLocationUsageDescription</key>
 		<string>Older devices need location.</string>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>Need location when in use</string>
+		<string>We need access to your location to enhance your experience by adding your current location to the memory you're creating</string>
 		<key>NSMicrophoneUsageDescription</key>
 		<string>We need access to your microphone so you can share audio explanations of Bugs you find.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
