@@ -21,6 +21,7 @@ class _CalendarPageState extends State<CalendarPage> {
     CalendarUtil().getCalendars().then((value) {
       setState(() => calendars = value);
     });
+    print("calender geting>>>>>>>>>>>>>>>>>");
   }
 
   @override
@@ -70,17 +71,17 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
             ),
           ),
-          // const Text(
-          //   'AVM can automatically schedule events from your conversations, or ask for your confirmation first.',
-          //   textAlign: TextAlign.center,
-          //   style: TextStyle(
-          //     color: Colors.grey,
-          //   ),
-          // ),
-          // const SizedBox(height: 24),
-          // if (calendarEnabled) ..._calendarType(),
-          // const SizedBox(height: 24),
-          // if (calendarEnabled) ..._displayCalendars(),
+          const Text(
+            'AVM can automatically schedule events from your conversations, or ask for your confirmation first.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 24),
+          if (calendarEnabled) ..._calendarType(),
+          const SizedBox(height: 24),
+          if (calendarEnabled) ..._displayCalendars(),
         ],
       ),
     );

@@ -26,6 +26,7 @@ class AIMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isMemoriesEmpty = memories.isEmpty;
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,6 +91,7 @@ class AIMessage extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     color: Colors.grey.shade300),
               )),
+              if (isMemoriesEmpty) ..._getInitialOptions(context),
               if (message.id != 1) _getCopyButton(context),
               if (message.id == 1 && displayOptions) const SizedBox(height: 8),
               if (message.id == 1 && displayOptions)

@@ -48,18 +48,20 @@ class _ChatPageTestState extends State<ChatPageTest>
   }
 
   void _scrollToEnd() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _scrollController.dispose(); // Dispose of your controllers
     _animationController.dispose();
-    super.dispose();
+    super.dispose(); // Call the superclass's dispose method
   }
 
   @override
@@ -143,7 +145,7 @@ class _ChatPageTestState extends State<ChatPageTest>
                         )!,
                         Color.lerp(
                           const Color.fromARGB(255, 89, 90, 92),
-                              const Color.fromARGB(233, 208, 208, 208),
+                          const Color.fromARGB(233, 208, 208, 208),
                           _animation.value,
                         )!,
                         // Color.lerp(
