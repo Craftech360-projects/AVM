@@ -1,10 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
+import 'package:friend_private/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:friend_private/pages/memory_detail/page.dart';
 import 'package:friend_private/utils/other/temp.dart';
 
@@ -91,7 +93,7 @@ class AIMessage extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     color: Colors.grey.shade300),
               )),
-              if (isMemoriesEmpty) ..._getInitialOptions(context),
+              // if (isMemoriesEmpty) ..._getInitialOptions(context),
               if (message.id != 1) _getCopyButton(context),
               if (message.id == 1 && displayOptions) const SizedBox(height: 8),
               if (message.id == 1 && displayOptions)
@@ -201,7 +203,15 @@ class AIMessage extends StatelessWidget {
         child: Text(optionText, style: Theme.of(context).textTheme.bodyMedium),
       ),
       onTap: () {
-        sendMessage(optionText);
+        print("sending");
+        try {
+          // sendMessage(optionText);
+          // BlocProvider.of<ChatBloc>(context).add(SendMessage(optionText));
+          BlocProvider.of<ChatBloc>(context).add(SendMessage(optionText));
+        } catch (e) {
+          print("error,$e");
+        }
+        print('here');
       },
     );
   }

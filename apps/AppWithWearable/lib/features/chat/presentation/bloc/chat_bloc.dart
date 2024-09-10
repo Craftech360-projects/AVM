@@ -23,6 +23,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc(this.prefs, this.messageProvider, this.memoryProvider)
       : super(ChatState.initial()) {
     on<LoadInitialChat>(_onLoadedMessages);
+    on<SendInitialPluginMessage>(_onSendInitialPluginMessage);
 
     on<SendMessage>(
       (event, emit) async {
@@ -68,17 +69,67 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     // on<SendMessage>(_onSendMessage);
     // on<RefreshMessages>(_onRefreshMessages);
   }
+  Future<void> _onSendInitialPluginMessage(
+      SendInitialPluginMessage event, Emitter<ChatState> emit) async {
+    emit(state.copyWith(status: ChatStatus.loading));
+    try {
+      var ai = Message(DateTime.now(), '', 'ai', pluginId: event.plugin?.id);
+      await messageProvider.saveMessage(ai);
+
+      // Update state to include the new message and refresh the view
+      List<Message> messages = messageProvider.getMessages();
+      emit(state.copyWith(status: ChatStatus.loaded, messages: messages));
+
+      // Process the response from API
+      await streamApiResponse(
+        await getInitialPluginPrompt(event.plugin),
+        _callbackFunctionChatStreaming(ai),
+        () {
+          messageProvider.updateMessage(ai);
+          add(RefreshMessages());
+        },
+      );
+
+      // Optionally, you can handle loading state or other UI updates here
+      emit(state.copyWith(status: ChatStatus.loaded));
+    } catch (error) {
+      emit(state.copyWith(
+          status: ChatStatus.failure, errorMesage: error.toString()));
+    }
+  }
 
   FutureOr<void> _onLoadedMessages(event, emit) {
     emit(state.copyWith(status: ChatStatus.loading));
     try {
       List<Message> messages = messageProvider.getMessages();
       emit(state.copyWith(status: ChatStatus.loaded, messages: messages));
+      // Optionally, you can also get the count of messages
+      int messageCount = messageProvider.getMessagesCount();
+      print('Total number of messages: $messageCount');
+      if (messageCount == 0) {
+        sendInitialPluginMessage(null);
+      }
     } catch (error) {
       emit(state.copyWith(
           status: ChatStatus.failure, errorMesage: error.toString()));
     }
   }
+}
+
+sendInitialPluginMessage(Plugin? plugin) async {
+  var ai = Message(DateTime.now(), '', 'ai', pluginId: plugin?.id);
+  MessageProvider().saveMessage(ai);
+  // widget.messages.add(ai);
+  // _moveListToBottom();
+  streamApiResponse(
+    await getInitialPluginPrompt(plugin),
+    _callbackFunctionChatStreaming(ai),
+    () {
+      // MessageProvider().updateMessage(ai);
+      // widget.refreshMessages();
+    },
+  );
+  // changeLoadingState();
 }
 
 /*
