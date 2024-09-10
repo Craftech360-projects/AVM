@@ -7,7 +7,8 @@ import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/features/chat/presentation/bloc/chat_bloc.dart';
-import 'package:friend_private/pages/memory_detail/page.dart';
+import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
+import 'package:friend_private/features/memory/presentation/pages/memory_detail_page.dart';
 import 'package:friend_private/utils/other/temp.dart';
 
 class AIMessage extends StatelessWidget {
@@ -109,8 +110,12 @@ class AIMessage extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () async {
                         MixpanelManager().chatMessageMemoryClicked(memory);
+                        int memoryIndex = memories.indexOf(memory);
                         await Navigator.of(context).push(MaterialPageRoute(
-                            builder: (c) => MemoryDetailPage(memory: memory)));
+                            builder: (c) => CustomMemoryDetailPage(
+                                  memoryBloc: context.read<MemoryBloc>(),
+                                  memoryAtIndex: memoryIndex,
+                                )));
                         // TODO: maybe refresh memories here too
                       },
                       child: Container(

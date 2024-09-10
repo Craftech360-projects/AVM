@@ -44,7 +44,8 @@ class MemoryCardWidget extends StatelessWidget {
                 background: Container(
                   color: Colors.red.withOpacity(0.5),
                 ),
-                key: Key(memory.id.toString()),
+                key: UniqueKey(),
+                // key: Key(memory.id.toString()),
                 confirmDismiss: (direction) async {
                   return await showDialog(
                     context: context,
