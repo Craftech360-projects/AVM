@@ -29,3 +29,8 @@ class RefreshMessages extends ChatEvent {}
 
 //   CallbackFunctionChatStreaming(this.content);
 // }
+class SendInitialPluginMessage extends ChatEvent {
+  final Plugin? plugin;
+
+  SendInitialPluginMessage(this.plugin);
+}
