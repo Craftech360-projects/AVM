@@ -221,14 +221,14 @@ class CapturePageState extends State<CapturePage>
     // TODO: should clean variables here? and keep them locally?
     setState(() => memoryCreating = true);
     File? file;
-    if (audioStorage?.frames.isNotEmpty == true) {
-      try {
-        var secs = !forcedCreation ? quietSecondsForMemoryCreation : 0;
-        file =
-            (await audioStorage!.createWavFile(removeLastNSeconds: secs)).item1;
-        uploadFile(file);
-      } catch (e) {} // in case was a local recording and not a BLE recording
-    }
+    // if (audioStorage?.frames.isNotEmpty == true) {
+    //   try {
+    //     var secs = !forcedCreation ? quietSecondsForMemoryCreation : 0;
+    //     file =
+    //         (await audioStorage!.createWavFile(removeLastNSeconds: secs)).item1;
+    //     uploadFile(file);
+    //   } catch (e) {} // in case was a local recording and not a BLE recording
+    // }
     Memory? memory = await processTranscriptContent(
       context,
       TranscriptSegment.segmentsAsString(segments),
@@ -244,7 +244,9 @@ class CapturePageState extends State<CapturePage>
     debugPrint(memory.toString());
     // TODO: backup when useful memory created, maybe less later, 2k memories occupy 3MB in the json payload
     if (memory != null && !memory.discarded) executeBackupWithUid();
-      context.read<MemoryBloc>().add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
+    context
+        .read<MemoryBloc>()
+        .add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
     if (memory != null &&
         !memory.discarded &&
         SharedPreferencesUtil().postMemoryNotificationIsChecked) {
