@@ -22,13 +22,13 @@ Future<Uint8List> getImage() async {
 }
 
 Future<Uint8List> getImageFromPollinations(String prompt,
-    {int width = 1280, int height = 720}) async {
+    {int width = 1280, int height = 720, nologo = true}) async {
   // Replace spaces with underscores in the prompt
   String formattedPrompt = prompt.replaceAll(' ', '_');
 
   // Construct the URL for the Pollinations API with width and height parameters
   final String apiUrl = 'https://pollinations.ai/p/$formattedPrompt';
-  final url = Uri.parse('$apiUrl?width=$width&height=$height');
+  final url = Uri.parse('$apiUrl?width=$width&height=$height&nologo=$nologo');
 
   // Send a GET request to fetch the image
   final response = await http.get(url);
@@ -45,6 +45,7 @@ Future<Uint8List> getImageFromPollinations(String prompt,
 }
 
 Future<Uint8List> generateImageWithFallback(String prompt) async {
+  print("inmgaeeeeeeeeeeeeeee-----generation");
   try {
     // Try to get the image from Pollinations
     return await getImageFromPollinations(prompt);
