@@ -56,9 +56,24 @@ class CaptureCard extends StatelessWidget {
             isScrollControlled: true,
             context: context,
             builder: (context) => SingleChildScrollView(
-              child: getTranscriptWidget(
-                  memoryCreating, segments ?? [], photos, device),
-            ),
+                child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.close)),
+                ),
+                getTranscriptWidget(
+                  memoryCreating,
+                  segments ?? [],
+                  photos,
+                  device,
+                ),
+              ],
+            )),
           );
         }
       },
