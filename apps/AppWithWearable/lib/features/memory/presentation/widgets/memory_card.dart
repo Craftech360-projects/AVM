@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/pages/memory_detail_page.dart';
+import 'package:friend_private/features/memory/presentation/widgets/custom_tag.dart';
 import 'package:friend_private/pages/memories/widgets/empty_memories.dart';
 import 'package:intl/intl.dart';
 
@@ -105,119 +106,135 @@ class MemoryCardWidget extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 8),
-                      child: Row(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          //*-- Image --*//
-                          SizedBox(
-                            height: 80,
-                            width: 80,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(16),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              //*-- Image --*//
+                              SizedBox(
+                                height: 80,
+                                width: 80,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(16),
+                                  ),
+                                  child: memory.memoryImg == null
+                                      ? const SizedBox.shrink()
+                                      : Image.memory(
+                                          memory.memoryImg!,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                        ),
+                                ),
                               ),
-                              child: memory.memoryImg == null
-                                  ? const SizedBox.shrink()
-                                  : Image.memory(
-                                      memory.memoryImg!,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          //*-- Card Details --*//
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                //*-- Date and Time --*//
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const Spacer(),
-                                      Text(
-                                        '${DateFormat('d MMM').format(memory.createdAt)}  '
-                                        '   ${DateFormat('h:mm a').format(memory.createdAt)}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
+                              const SizedBox(width: 8),
+                              //*-- Card Details --*//
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    //*-- Date and Time --*//
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Spacer(),
+                                          Text(
+                                            '${DateFormat('d MMM').format(memory.createdAt)}  '
+                                            '   ${DateFormat('h:mm a').format(memory.createdAt)}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall,
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
+                                    memory.discarded
+                                        ? const SizedBox.shrink()
+                                        : const SizedBox(height: 4),
+                                    //*-- Title --*//
+                                    memory.discarded
+                                        ? Text(
+                                            'Discarded Memory',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge,
+                                            maxLines: 1,
+                                          )
+                                        : Text(
+                                            memory.structured.target?.title ??
+                                                '',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge,
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 1,
+                                            softWrap: false,
+                                          ),
+                                    memory.discarded
+                                        ? const SizedBox.shrink()
+                                        : const SizedBox(height: 8),
+                                    //*-- Overview --*//
+                                    memory.discarded
+                                        ? const SizedBox.shrink()
+                                        : Text(
+                                            memory.structured.target
+                                                    ?.overview ??
+                                                '',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .copyWith(
+                                                    color: Colors.grey.shade300,
+                                                    height: 1.3),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          //*-- Chips --*//
+                          memory.discarded
+                              ? const SizedBox.shrink()
+                              : SizedBox(
+                                  height: 40,
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: memory.structured.target
+                                            ?.category.length ??
+                                        0,
+                                    itemBuilder: (context, index) {
+                                      String category = memory.structured.target
+                                              ?.category[index] ??
+                                          '';
+
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4),
+                                        child: CustomTag(
+                                          tagName: category,
+                                          side: const BorderSide(
+                                            color:
+                                                Color.fromARGB(255, 93, 93, 93),
+                                          ),
+                                          backgroundColor: const Color.fromARGB(
+                                              162, 0, 0, 0),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
-                                memory.discarded
-                                    ? const SizedBox.shrink()
-                                    : const SizedBox(height: 4),
-                                //*-- Title --*//
-                                memory.discarded
-                                    ? Text(
-                                        'Discarded Memory',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge,
-                                        maxLines: 1,
-                                      )
-                                    : Text(
-                                        memory.structured.target?.title ?? '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge,
-                                        maxLines: 1,
-                                      ),
-                                memory.discarded
-                                    ? const SizedBox.shrink()
-                                    : const SizedBox(height: 8),
-                                //*-- Overview --*//
-                                memory.discarded
-                                    ? const SizedBox.shrink()
-                                    : Text(
-                                        memory.structured.target?.overview ??
-                                            '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                                color: Colors.grey.shade300,
-                                                height: 1.3),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                //*-- Chips --*//
-                                memory.discarded
-                                    ? const SizedBox.shrink()
-                                    : Wrap(
-                                        spacing:
-                                            8.0, // Horizontal spacing between chips
-                                        runSpacing:
-                                            8.0, // Vertical spacing between lines
-                                        children: memory
-                                                .structured.target?.category
-                                                .map((category) => Chip(
-                                                      padding: EdgeInsets.zero,
-                                                      visualDensity:
-                                                          VisualDensity.compact,
-                                                      backgroundColor:
-                                                          Colors.black45,
-                                                      label: Text(
-                                                        category,
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                    ))
-                                                .toList() ??
-                                            [],
-                                      ),
-                              ],
-                            ),
-                          ),
                         ],
                       ),
                     ),

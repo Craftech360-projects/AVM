@@ -160,10 +160,10 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
                         indicatorWeight: 0,
                         labelPadding: EdgeInsets.zero,
                         tabs: const [
-                          Tab(text: 'Transcript'),
-                          Tab(text: 'Summary'),
                           Tab(text: 'Action'),
+                          Tab(text: 'Summary'),
                           Tab(text: 'Events'),
+                          Tab(text: 'Transcript'),
                         ],
                       ),
                     ),
@@ -171,7 +171,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
                   Expanded(
                     child: TabBarView(
                       children: [
-                        TranscriptTab(
+                        ActionTab(
                           pageController: pageController,
                           memoryAtIndex: state.memoryIndex,
                           memoryBloc: widget.memoryBloc,
@@ -185,16 +185,16 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
                           memoryAtIndex: state.memoryIndex,
                           memoryBloc: widget.memoryBloc,
                         ),
-                        ActionTab(
-                          pageController: pageController,
-                          memoryAtIndex: state.memoryIndex,
-                          memoryBloc: widget.memoryBloc,
-                        ),
                         EventTab(
                           pageController: pageController,
                           memoryAtIndex: state.memoryIndex,
                           memoryBloc: widget.memoryBloc,
-                        )
+                        ),
+                        TranscriptTab(
+                          pageController: pageController,
+                          memoryAtIndex: state.memoryIndex,
+                          memoryBloc: widget.memoryBloc,
+                        ),
                       ],
                     ),
                   )

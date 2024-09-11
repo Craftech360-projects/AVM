@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 
 class CustomTag extends StatelessWidget {
-  const CustomTag({super.key, required this.tagName});
+  const CustomTag({
+    super.key,
+    required this.tagName,
+    this.backgroundColor = Colors.transparent,
+    this.side = const BorderSide(
+      color: Colors.grey,
+      width: 0.5,
+    ),
+  });
   final String tagName;
+  final Color backgroundColor;
+  final BorderSide side;
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +20,7 @@ class CustomTag extends StatelessWidget {
       elevation: 0,
       visualDensity: const VisualDensity(vertical: -4),
       labelPadding: EdgeInsets.zero,
-      backgroundColor: Colors.transparent, 
+      backgroundColor: backgroundColor,
       label: Text(
         tagName,
         style: const TextStyle(
@@ -18,11 +28,8 @@ class CustomTag extends StatelessWidget {
         ),
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6), 
-        side: const BorderSide(
-          color: Colors.grey,
-          width: 0.5, 
-        ),
+        borderRadius: BorderRadius.circular(6),
+        side: side
       ),
     );
   }

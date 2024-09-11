@@ -20,9 +20,9 @@ class _ScanningUIState extends State<ScanningUI> {
   Widget build(BuildContext context) {
     return const RippleAnimation(
       colors: [
-        Color.fromARGB(255, 231, 223, 236),
-        Color.fromARGB(255, 131, 130, 132),
-        Color.fromARGB(255, 225, 224, 203),
+        Color.fromARGB(212, 119, 171, 255),
+        Color.fromARGB(187, 88, 155, 255),
+        Color.fromARGB(208, 80, 123, 253),
         // Color(0xFF9E00FF),
         // Color(0xFF5A00FF),
         // Color(0xFF3400D8),
