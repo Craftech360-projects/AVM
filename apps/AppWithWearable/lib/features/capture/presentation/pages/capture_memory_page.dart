@@ -64,7 +64,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
+    // _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
     return Column(
       children: [
         //*--- SEARCH BAR ---*//
@@ -134,7 +134,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         //     ),
         //   ),
         // ),
-
+if(_isNonDiscarded||_memoryBloc.state.memories.isNotEmpty)
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Align(

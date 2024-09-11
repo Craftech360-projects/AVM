@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/api_requests/cloud_storage.dart';
 import 'package:friend_private/backend/database/memory.dart';
@@ -12,6 +13,7 @@ import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/features/capture/presentation/pages/capture_memory_page.dart';
+import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/pages/capture/location_service.dart';
 import 'package:friend_private/pages/capture/logic/openglass_mixin.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
@@ -242,6 +244,7 @@ class CapturePageState extends State<CapturePage>
     debugPrint(memory.toString());
     // TODO: backup when useful memory created, maybe less later, 2k memories occupy 3MB in the json payload
     if (memory != null && !memory.discarded) executeBackupWithUid();
+      context.read<MemoryBloc>().add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
     if (memory != null &&
         !memory.discarded &&
         SharedPreferencesUtil().postMemoryNotificationIsChecked) {

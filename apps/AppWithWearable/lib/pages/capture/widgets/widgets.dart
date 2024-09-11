@@ -58,6 +58,7 @@ class CaptureCard extends StatelessWidget {
             builder: (context) => SingleChildScrollView(
                 child: Column(
               children: [
+                const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(

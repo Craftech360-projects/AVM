@@ -175,7 +175,9 @@ class MemoryCardWidget extends StatelessWidget {
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .titleLarge,
+                                            overflow: TextOverflow.fade,
                                             maxLines: 1,
+                                            softWrap: false,
                                           ),
                                     memory.discarded
                                         ? const SizedBox.shrink()
@@ -223,15 +225,11 @@ class MemoryCardWidget extends StatelessWidget {
                                         child: CustomTag(
                                           tagName: category,
                                           side: const BorderSide(
-                                            color: Color.fromARGB(
-                                                75, 158, 158, 158),
+                                            color:
+                                                Color.fromARGB(255, 93, 93, 93),
                                           ),
                                           backgroundColor: const Color.fromARGB(
-                                            239,
-                                            0,
-                                            0,
-                                            0,
-                                          ),
+                                              162, 0, 0, 0),
                                         ),
                                       );
                                     },
