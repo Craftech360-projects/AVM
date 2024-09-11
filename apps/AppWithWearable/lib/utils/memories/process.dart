@@ -153,7 +153,9 @@ Future<Memory> memoryCreationBlock(
           description: event.description);
     }
   }
-  final memoryImg = await getImage();
+  // Pass the event title as the prompt for image generation
+  final memoryImg =
+      await generateImageWithFallback(summarizeResult.structured.title);
 
   debugPrint("going to save ,saving memory");
 
