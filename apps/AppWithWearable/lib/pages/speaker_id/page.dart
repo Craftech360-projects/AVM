@@ -103,7 +103,7 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
                 : TextButton(
                     onPressed: () {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(
-                          builder: (c) => const HomePageWrapperTest()));
+                          builder: (c) => const HomePageWrapper()));
                     },
                     child: const Text(
                       'Skip',
@@ -188,7 +188,7 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
     if (_currentIdx == _controller!.length - 1) {
       if (widget.onbording) {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (c) => const HomePageWrapperTest()));
+            MaterialPageRoute(builder: (c) => const HomePageWrapper()));
       } else {
         Navigator.pop(context);
       }

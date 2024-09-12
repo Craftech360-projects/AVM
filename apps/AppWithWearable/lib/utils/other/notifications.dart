@@ -167,6 +167,6 @@ class NotificationUtil {
       SharedPreferencesUtil().subPageToShowFromNotification = payload?['navigateTo'] ?? '';
     }
     SharedPreferencesUtil().pageToShowFromNotification = screensWithRespectToPath[payload?['path']] ?? 1;
-    MyApp.navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const HomePageWrapperTest()));
+    MyApp.navigatorKey.currentState?.pushReplacement(MaterialPageRoute(builder: (context) => const HomePageWrapper()));
   }
 }

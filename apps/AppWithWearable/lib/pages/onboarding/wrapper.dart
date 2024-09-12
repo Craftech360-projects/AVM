@@ -100,7 +100,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
                         MixpanelManager().onboardingStepICompleted('Auth');
                         if (SharedPreferencesUtil().onboardingCompleted) {
                           // previous users
-                          routeToPage(context, const HomePageWrapperTest(),
+                          routeToPage(context, const HomePageWrapper(),
                               replace: true);
                         } else {
                           _goNext();
@@ -133,7 +133,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
                     ),
                     CompletePage(
                       goNext: () {
-                        routeToPage(context, const HomePageWrapperTest(),
+                        routeToPage(context, const HomePageWrapper(),
                             replace: true);
                         MixpanelManager().onboardingStepICompleted('Finalize');
                         MixpanelManager().onboardingCompleted();
