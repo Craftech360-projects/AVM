@@ -217,7 +217,7 @@ class _SettingsPageState extends State<SettingsPage> {
               //   setState(() {});
               // }, icon: Icons.code, visibility: devModeEnabled),
 
-              const SizedBox(height: 32),
+              // const SizedBox(height: 32),
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.all(8),
@@ -242,7 +242,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 100),
             ],
           ),
         ),

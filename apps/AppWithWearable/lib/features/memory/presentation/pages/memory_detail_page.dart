@@ -35,6 +35,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
   List<bool> pluginResponseExpanded = [];
   @override
   Widget build(BuildContext context) {
+    print('memory index ${widget.memoryAtIndex}');
     return PopScope(
       onPopInvoked: (didPop) {
         widget.memoryBloc.add(

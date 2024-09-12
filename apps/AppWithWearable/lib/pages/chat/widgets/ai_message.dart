@@ -111,6 +111,7 @@ class AIMessage extends StatelessWidget {
                       onTap: () async {
                         MixpanelManager().chatMessageMemoryClicked(memory);
                         int memoryIndex = memories.indexOf(memory);
+                        print('chat memory index clicked $memoryIndex');
                         await Navigator.of(context).push(MaterialPageRoute(
                             builder: (c) => CustomMemoryDetailPage(
                                   memoryBloc: context.read<MemoryBloc>(),
