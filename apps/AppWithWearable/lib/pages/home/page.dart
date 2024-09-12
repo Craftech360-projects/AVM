@@ -660,12 +660,10 @@ import 'package:friend_private/features/chat/presentation/pages/chat_page.dart';
 import 'package:friend_private/main.dart';
 import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/pages/capture/page.dart';
-import 'package:friend_private/pages/chat/page.dart';
 // import 'package:friend_private/pages/chat/page.dart';
 // import 'package:friend_private/pages/chat/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
-import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/page.dart';
 import 'package:friend_private/scripts.dart';
 import 'package:friend_private/utils/audio/foreground.dart';
@@ -784,7 +782,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     _controller = TabController(
       length: 3,
       vsync: this,
-      initialIndex: SharedPreferencesUtil().pageToShowFromNotification,
+      initialIndex: 0,
+      // initialIndex: SharedPreferencesUtil().pageToShowFromNotification,
     );
 
     SharedPreferencesUtil().pageToShowFromNotification = 1;
@@ -898,7 +897,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   _tabChange(int index) {
     MixpanelManager()
-        .bottomNavigationTabClicked(['Device', 'Chat', 'Setting'][index]);
+        .bottomNavigationTabClicked(['Home', 'Chat', 'Setting'][index]);
     FocusScope.of(context).unfocus();
     setState(() {
       _controller!.index = index;
@@ -924,7 +923,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           child: Stack(
             children: [
               TabBarView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 controller: _controller,
                 // physics: const NeverScrollableScrollPhysics(),
                 children: [
@@ -934,7 +933,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   //   textFieldFocusNode: memoriesTextFieldFocusNode,
                   //   memories: memories,
                   // ),
-              
+
                   CapturePage(
                     key: capturePageKey,
                     device: _device,
@@ -960,86 +959,118 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    // margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      // borderRadius: const BorderRadius.all(Radius.circular(16)),
-                      // border: Border.all(color: Colors.grey),
-                      // border: GradientBoxBorder(
-                      //   gradient: LinearGradient(colors: [
-                      //     Color.fromARGB(127, 208, 208, 208),
-                      //     Color.fromARGB(127, 188, 99, 121),
-                      //     Color.fromARGB(127, 86, 101, 182),
-                      //     Color.fromARGB(127, 126, 190, 236)
-                      //   ]),
-                      //   width: 2,
-                      // ),
-                      // shape: BoxShape.rectangle,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: MaterialButton(
-                            onPressed: () => _tabChange(0),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                top: 20,
-                                bottom: 20,
-                              ),
-                              child: Text(
-                                'Capture',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: _controller!.index == 0
-                                      ? Colors.white
-                                      : Colors.grey,
-                                  fontSize: 16,
-                                ),
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                      // margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      decoration: const BoxDecoration(
+                        color: Colors.black,
+                        // borderRadius: const BorderRadius.all(Radius.circular(16)),
+                        // border: Border.all(color: Colors.grey),
+                        // border: GradientBoxBorder(
+                        //   gradient: LinearGradient(colors: [
+                        //     Color.fromARGB(127, 208, 208, 208),
+                        //     Color.fromARGB(127, 188, 99, 121),
+                        //     Color.fromARGB(127, 86, 101, 182),
+                        //     Color.fromARGB(127, 126, 190, 236)
+                        //   ]),
+                        //   width: 2,
+                        // ),
+                        // shape: BoxShape.rectangle,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: MaterialButton(
+                              onPressed: () => _tabChange(0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.home,
+                                    color: _controller!.index == 0
+                                        ? Colors.white
+                                        : Colors.grey,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      'Home',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: _controller!.index == 0
+                                            ? Colors.white
+                                            : Colors.grey,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: MaterialButton(
-                            onPressed: () => _tabChange(1),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 20, bottom: 20),
-                              child: Text('Chat',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: _controller!.index == 1
-                                          ? Colors.white
-                                          : Colors.grey,
-                                      fontSize: 16)),
+                          Expanded(
+                            child: MaterialButton(
+                              onPressed: () => _tabChange(1),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.chat,
+                                    color: _controller!.index == 1
+                                        ? Colors.white
+                                        : Colors.grey,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      'Chat',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: _controller!.index == 1
+                                            ? Colors.white
+                                            : Colors.grey,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: MaterialButton(
-                            onPressed: () => _tabChange(2),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 20, bottom: 20),
-                              child: Text(
-                                'Setting',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                          Expanded(
+                            child: MaterialButton(
+                              onPressed: () => _tabChange(2),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.settings,
                                     color: _controller!.index == 2
                                         ? Colors.white
                                         : Colors.grey,
-                                    fontSize: 16),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      'Setting',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: _controller!.index == 2
+                                            ? Colors.white
+                                            : Colors.grey,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
+                        ],
+                      )),
                 )
             ],
           ),
@@ -1128,7 +1159,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   height: 20,
                 ),
               ),
-                  //*-- Chat Plugin --*//
+              //*-- Chat Plugin --*//
               // _controller!.index == 1
               //     ? Padding(
               //         padding: const EdgeInsets.only(left: 0),
@@ -1195,7 +1226,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                               MixpanelManager().batteryIndicatorClicked();
                             },
                       child: Container(
-                    
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
