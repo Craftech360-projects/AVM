@@ -86,83 +86,36 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           scrollController: widget.scrollController,
         ),
         //*--- Filter Button ---*//
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        //   child: Align(
-        //     alignment: Alignment.centerRight,
-        //     child: PopupMenuButton<FilterItem>(
-        //       icon: const Icon(
-        //         Icons.filter_alt_sharp,
-        //         size: 16,
-        //         color: Colors.grey,
-        //       ),
-        //       onSelected: (filterItem) {
-        //         print(
-        //             'filteredItem ${filterItem.filterStatus},${filterItem.filterType}');
-        //         _memoryBloc.add(FilterMemory(filterItem: filterItem));
-        //         // setState(() {
-        //         //   filterItem.filterStatus = !filterItem.filterStatus;
 
-        //         //   if (filterItem.filterType == 'Show All') {
-        //         //     _memoryBloc.add(DisplayedMemory(
-        //         //         isNonDiscarded: filterItem.filterStatus));
-        //         //   }
-
-        //         //   print(
-        //         //       'Selected filter: ${filterItem.filterType}, Status: ${filterItem.filterStatus}');
-        //         // });
-        //       },
-        //       itemBuilder: (context) => _filters.map((filterItem) {
-        //         return PopupMenuItem<FilterItem>(
-        //           value: filterItem,
-        //           child: Row(
-        //             children: [
-        //               filterItem.filterStatus
-        //                   ? const Icon(
-        //                       Icons.check,
-        //                       color: Colors.green,
-        //                     )
-        //                   : const Icon(
-        //                       Icons.check,
-        //                       color: Colors.grey,
-        //                     ),
-        //               Text(filterItem.filterType),
-        //             ],
-        //           ),
-        //         );
-        //       }).toList(),
-        //     ),
-        //   ),
-        // ),
-if(_isNonDiscarded||_memoryBloc.state.memories.isNotEmpty)
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: () {
-                setState(() {
-                  _isNonDiscarded = !_isNonDiscarded;
-                  _memoryBloc.add(
-                    DisplayedMemory(isNonDiscarded: _isNonDiscarded),
-                  );
-                });
-              },
-              label: Icon(
-                _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
-                size: 16,
-                color: Colors.grey,
-              ),
-              icon: Text(
-                _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 212, 212, 212),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
+        if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _isNonDiscarded = !_isNonDiscarded;
+                    _memoryBloc.add(
+                      DisplayedMemory(isNonDiscarded: _isNonDiscarded),
+                    );
+                  });
+                },
+                label: Icon(
+                  _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
+                  size: 16,
+                  color: Colors.grey,
+                ),
+                icon: Text(
+                  _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 212, 212, 212),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
             ),
           ),
-        ),
         //*--- MEMORY LIST ---*//
         BlocConsumer<MemoryBloc, MemoryState>(
           bloc: _memoryBloc,
