@@ -37,12 +37,16 @@ class CapturePage extends StatefulWidget {
   final Function refreshMemories;
   final Function refreshMessages;
   final BTDeviceStruct? device;
+  // final Function restartWebSocket;
+  final Function initiateWebsocket;
 
   const CapturePage({
     super.key,
     required this.device,
     required this.refreshMemories,
     required this.refreshMessages,
+    // required this.restartWebSocket,
+    required this.initiateWebsocket,
   });
 
   @override
@@ -87,76 +91,76 @@ class CapturePageState extends State<CapturePage>
   DateTime? firstStreamReceivedAt;
   int? secondsMissedOnReconnect;
 
-  Future<void> initiateWebsocket(
-      [BleAudioCodec? audioCodec, int? sampleRate]) async {
-    // TODO: this will not work with opus for now, more complexity, unneeded rn
-    BleAudioCodec codec = audioCodec ??
-        (btDevice?.id == null
-            ? BleAudioCodec.pcm8
-            : await getAudioCodec(btDevice!.id));
-    await initWebSocket(
-      codec: codec,
-      sampleRate: sampleRate,
-      onConnectionSuccess: () {
-        if (segments.isNotEmpty) {
-          // means that it was a reconnection, so we need to reset
-          streamStartedAtSecond = null;
-          secondsMissedOnReconnect =
-              (DateTime.now().difference(firstStreamReceivedAt!).inSeconds);
-        }
-        setState(() {});
-      },
-      onConnectionFailed: (err) => setState(() {}),
-      onConnectionClosed: (int? closeCode, String? closeReason) {
-        // connection was closed, either on resetState, or by backend, or by some other reason.
-        setState(() {});
-      },
-      onConnectionError: (err) {
-        // connection was okay, but then failed.
-        setState(() {});
-      },
-      onMessageReceived: (List<TranscriptSegment> newSegments) {
-        if (newSegments.isEmpty) return;
+  // Future<void> initiateWebsocket(
+  //     [BleAudioCodec? audioCodec, int? sampleRate]) async {
+  //   // TODO: this will not work with opus for now, more complexity, unneeded rn
+  //   BleAudioCodec codec = audioCodec ??
+  //       (btDevice?.id == null
+  //           ? BleAudioCodec.pcm8
+  //           : await getAudioCodec(btDevice!.id));
+  //   await initWebSocket(
+  //     codec: codec,
+  //     sampleRate: sampleRate,
+  //     onConnectionSuccess: () {
+  //       if (segments.isNotEmpty) {
+  //         // means that it was a reconnection, so we need to reset
+  //         streamStartedAtSecond = null;
+  //         secondsMissedOnReconnect =
+  //             (DateTime.now().difference(firstStreamReceivedAt!).inSeconds);
+  //       }
+  //       setState(() {});
+  //     },
+  //     onConnectionFailed: (err) => setState(() {}),
+  //     onConnectionClosed: (int? closeCode, String? closeReason) {
+  //       // connection was closed, either on resetState, or by backend, or by some other reason.
+  //       setState(() {});
+  //     },
+  //     onConnectionError: (err) {
+  //       // connection was okay, but then failed.
+  //       setState(() {});
+  //     },
+  //     onMessageReceived: (List<TranscriptSegment> newSegments) {
+  //       if (newSegments.isEmpty) return;
 
-        if (segments.isEmpty) {
-          debugPrint('newSegments: ${newSegments.last}');
-          // TODO: small bug -> when memory A creates, and memory B starts, memory B will clean a lot more seconds than available,
-          //  losing from the audio the first part of the recording. All other parts are fine.
-          audioStorage?.removeFramesRange(
-              fromSecond: 0, toSecond: newSegments[0].start.toInt());
-          firstStreamReceivedAt = DateTime.now();
-        }
-        streamStartedAtSecond ??= newSegments[0].start;
+  //       if (segments.isEmpty) {
+  //         debugPrint('newSegments: ${newSegments.last}');
+  //         // TODO: small bug -> when memory A creates, and memory B starts, memory B will clean a lot more seconds than available,
+  //         //  losing from the audio the first part of the recording. All other parts are fine.
+  //         audioStorage?.removeFramesRange(
+  //             fromSecond: 0, toSecond: newSegments[0].start.toInt());
+  //         firstStreamReceivedAt = DateTime.now();
+  //       }
+  //       streamStartedAtSecond ??= newSegments[0].start;
 
-        TranscriptSegment.combineSegments(
-          segments,
-          newSegments,
-          toRemoveSeconds: streamStartedAtSecond ?? 0,
-          toAddSeconds: secondsMissedOnReconnect ?? 0,
-        );
-        triggerTranscriptSegmentReceivedEvents(newSegments, conversationId,
-            sendMessageToChat: sendMessageToChat);
-        SharedPreferencesUtil().transcriptSegments = segments;
-        setHasTranscripts(true);
-        debugPrint('Memory creation timer restarted');
-        _memoryCreationTimer?.cancel();
-        _memoryCreationTimer = Timer(
-            const Duration(seconds: quietSecondsForMemoryCreation),
-            () => _createMemory());
-        currentTranscriptStartedAt ??= DateTime.now();
-        currentTranscriptFinishedAt = DateTime.now();
-        if (_scrollController.hasClients) {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 100),
-            curve: Curves.easeOut,
-          );
-        }
+  //       TranscriptSegment.combineSegments(
+  //         segments,
+  //         newSegments,
+  //         toRemoveSeconds: streamStartedAtSecond ?? 0,
+  //         toAddSeconds: secondsMissedOnReconnect ?? 0,
+  //       );
+  //       triggerTranscriptSegmentReceivedEvents(newSegments, conversationId,
+  //           sendMessageToChat: sendMessageToChat);
+  //       SharedPreferencesUtil().transcriptSegments = segments;
+  //       setHasTranscripts(true);
+  //       debugPrint('Memory creation timer restarted');
+  //       _memoryCreationTimer?.cancel();
+  //       _memoryCreationTimer = Timer(
+  //           const Duration(seconds: quietSecondsForMemoryCreation),
+  //           () => _createMemory());
+  //       currentTranscriptStartedAt ??= DateTime.now();
+  //       currentTranscriptFinishedAt = DateTime.now();
+  //       if (_scrollController.hasClients) {
+  //         _scrollController.animateTo(
+  //           _scrollController.position.maxScrollExtent,
+  //           duration: const Duration(milliseconds: 100),
+  //           curve: Curves.easeOut,
+  //         );
+  //       }
 
-        setState(() {});
-      },
-    );
-  }
+  //       setState(() {});
+  //     },
+  //   );
+  // }
 
   Future<void> initiateBytesStreamingProcessing() async {
     if (btDevice == null) return;
@@ -205,10 +209,10 @@ class CapturePageState extends State<CapturePage>
     }
   }
 
-  void restartWebSocket() {
-    closeWebSocket();
-    initiateWebsocket();
-  }
+  // void restartWebSocket() {
+  //   closeWebSocket();
+  //   initiateWebsocket();
+  // }
 
   void sendMessageToChat(Message message, Memory? memory) {
     if (memory != null) message.memories.add(memory);
@@ -309,7 +313,7 @@ class CapturePageState extends State<CapturePage>
   void initState() {
     btDevice = widget.device;
     WavBytesUtil.clearTempWavFiles();
-    initiateWebsocket();
+    // initiateWebsocket();
     startOpenGlass();
     initiateBytesStreamingProcessing();
     processCachedTranscript();
@@ -356,7 +360,7 @@ class CapturePageState extends State<CapturePage>
     record.dispose(); // Make sure this method does not throw errors
     _bleBytesStream?.cancel();
     _memoryCreationTimer?.cancel();
-    closeWebSocket();
+    // closeWebSocket();
     _internetListener.cancel();
     _scrollController.dispose();
 
@@ -408,7 +412,7 @@ class CapturePageState extends State<CapturePage>
         Column(
           // physics: const NeverScrollableScrollPhysics(),
           children: [
-            speechProfileWidget(context, setState, restartWebSocket),
+            // speechProfileWidget(context, setState, widget.restartWebSocket),
             CaptureMemoryPage(
               context: context,
               hasTranscripts: _hasTranscripts,
@@ -456,7 +460,7 @@ class CapturePageState extends State<CapturePage>
             Navigator.pop(context);
             setState(() => recordingState = RecordingState.initialising);
             closeWebSocket();
-            await initiateWebsocket(BleAudioCodec.pcm16, 16000);
+            await widget.initiateWebsocket(BleAudioCodec.pcm16, 16000);
             await startStreamRecording(wsConnectionState, websocketChannel);
           },
           'Limited Capabilities',
