@@ -110,7 +110,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
     channel.ready.then((_) {
       startKeepAlive();
-
+      print("listerning>>>>>>>>>>>>>>>>>>>>>>");
       channel.stream.listen(
         (event) {
           if (event == 'ping') return;
@@ -133,6 +133,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
                     start: data['start'] ?? 0.0,
                     end: (data['start'] ?? 0.0) + (data['duration'] ?? 0.0),
                   );
+                  print("listerning>>>>>>>>>>>>>>>>>>>>>>");
                   onMessageReceived([segment]);
 
                   // Update the last audio time

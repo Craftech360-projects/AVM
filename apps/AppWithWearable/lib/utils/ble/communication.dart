@@ -99,7 +99,7 @@ Future<StreamSubscription?> getBleAudioBytesListener(
   debugPrint('Subscribed to audioBytes stream from AVM Device');
   var listener = audioDataStreamCharacteristic.lastValueStream.listen((value) {
     if (value.isNotEmpty) onAudioBytesReceived(value);
-    print(value);
+    //print(value);
   });
 
   final device = BluetoothDevice.fromId(deviceId);

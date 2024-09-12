@@ -244,160 +244,160 @@
 //               ],
 //             ),
 //           ),
-//           appBar: AppBar(
-//             automaticallyImplyLeading: false,
-//             backgroundColor: Theme.of(context).colorScheme.surface,
-//             leading: TextButton(
-//               onPressed: () async {
-//                 // if (SharedPreferencesUtil().deviceId.isEmpty) {
-//                 //   routeToPage(context, const ConnectDevicePage());
-//                 //   MixpanelManager().connectFriendClicked();
-//                 // } else {
-//                 //   await routeToPage(context,
-//                 //       const ConnectedDevice(device: null, batteryLevel: 0));
-//                 // }
-//                 // setState(() {});
-//               },
-//               // style: TextButton.styleFrom(
-//               //   padding: EdgeInsets.zero,
-//               //   backgroundColor: Colors.transparent,
-//               //   shape: RoundedRectangleBorder(
-//               //     borderRadius: BorderRadius.circular(10),
-//               //     side: const BorderSide(color: Colors.white, width: 1),
-//               //   ),
-//               // ),
-//               child: Image.asset(
-//                 'assets/images/herologo.png',
-//                 width: 60,
-//                 height: 40,
-//               ),
-//             ),
-//             //*-- Chat Plugin --*//
-//             // title: _selectedIndex == 1
-//             //     ? DropdownButton<String>(
-//             //         menuMaxHeight: 350,
-//             //         value: SharedPreferencesUtil().selectedChatPluginId,
-//             //         onChanged: (s) async {
-//             //           if ((s == 'no_selected' &&
-//             //                   SharedPreferencesUtil().pluginsEnabled.isEmpty) ||
-//             //               s == 'enable') {
-//             //             await routeToPage(
-//             //                 context, const PluginsPage(filterChatOnly: true));
-//             //             setState(() {});
-//             //             return;
-//             //           }
-//             //           print(
-//             //               'Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
-//             //           if (s == null ||
-//             //               s == SharedPreferencesUtil().selectedChatPluginId) {
-//             //             return;
-//             //           }
+// appBar: AppBar(
+//   automaticallyImplyLeading: false,
+//   backgroundColor: Theme.of(context).colorScheme.surface,
+//   leading: TextButton(
+//     onPressed: () async {
+//       // if (SharedPreferencesUtil().deviceId.isEmpty) {
+//       //   routeToPage(context, const ConnectDevicePage());
+//       //   MixpanelManager().connectFriendClicked();
+//       // } else {
+//       //   await routeToPage(context,
+//       //       const ConnectedDevice(device: null, batteryLevel: 0));
+//       // }
+//       // setState(() {});
+//     },
+//     // style: TextButton.styleFrom(
+//     //   padding: EdgeInsets.zero,
+//     //   backgroundColor: Colors.transparent,
+//     //   shape: RoundedRectangleBorder(
+//     //     borderRadius: BorderRadius.circular(10),
+//     //     side: const BorderSide(color: Colors.white, width: 1),
+//     //   ),
+//     // ),
+//     child: Image.asset(
+//       'assets/images/herologo.png',
+//       width: 60,
+//       height: 40,
+//     ),
+//   ),
+//   //*-- Chat Plugin --*//
+//   // title: _selectedIndex == 1
+//   //     ? DropdownButton<String>(
+//   //         menuMaxHeight: 350,
+//   //         value: SharedPreferencesUtil().selectedChatPluginId,
+//   //         onChanged: (s) async {
+//   //           if ((s == 'no_selected' &&
+//   //                   SharedPreferencesUtil().pluginsEnabled.isEmpty) ||
+//   //               s == 'enable') {
+//   //             await routeToPage(
+//   //                 context, const PluginsPage(filterChatOnly: true));
+//   //             setState(() {});
+//   //             return;
+//   //           }
+//   //           print(
+//   //               'Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
+//   //           if (s == null ||
+//   //               s == SharedPreferencesUtil().selectedChatPluginId) {
+//   //             return;
+//   //           }
 
-//             //           SharedPreferencesUtil().selectedChatPluginId = s;
-//             //          plugins.firstWhereOrNull((p) => p.id == s);
-//             //           // chatPageKey.currentState
-//             //           //     ?.sendInitialPluginMessage(plugin);
-//             //           setState(() {});
-//             //         },
-//             //         icon: Container(),
-//             //         alignment: Alignment.center,
-//             //         dropdownColor: Colors.black,
-//             //         style: const TextStyle(color: Colors.white, fontSize: 16),
-//             //         underline: Container(height: 0, color: Colors.transparent),
-//             //         isExpanded: false,
-//             //         itemHeight: 48,
-//             //         padding: EdgeInsets.zero,
-//             //         items: _getPluginsDropdownItems(context),
-//             //       )
-//             //     : const SizedBox.shrink(),
-//             actions: [
-//               //* AVM Battery indecator
-//               _device != null && batteryLevel != -1
-//                   ? GestureDetector(
-//                       onTap: _device == null
-//                           ? null
-//                           : () {
-//                               Navigator.of(context).push(
-//                                 MaterialPageRoute(
-//                                   builder: (c) => ConnectedDevice(
-//                                     device: _device!,
-//                                     batteryLevel: batteryLevel,
-//                                   ),
-//                                 ),
-//                               );
-//                               MixpanelManager().batteryIndicatorClicked();
-//                             },
-//                       child: Container(
-//                         margin: const EdgeInsets.only(
-//                             right: 10, top: 15, bottom: 15),
-//                         padding: const EdgeInsets.symmetric(
-//                             horizontal: 8, vertical: 0),
-//                         decoration: BoxDecoration(
-//                           color: Colors.transparent,
-//                           borderRadius: BorderRadius.circular(10),
-//                           border: Border.all(
-//                             color: const Color.fromARGB(106, 158, 158, 158),
-//                             width: 1,
-//                           ),
-//                         ),
-//                         child: Row(
-//                           mainAxisSize: MainAxisSize.min,
-//                           children: [
-//                             Icon(
-//                               Icons.bolt,
-//                               color: batteryLevel > 75
-//                                   ? const Color.fromARGB(255, 0, 255, 8)
-//                                   : batteryLevel > 20
-//                                       ? Colors.yellow.shade700
-//                                       : Colors.red,
-//                               size: 12,
-//                             ),
-//                             // Container(
-//                             //   width: 10,
-//                             //   height: 10,
-//                             //   decoration: BoxDecoration(
-//                             //     color: batteryLevel > 75
-//                             //         ? const Color.fromARGB(255, 0, 255, 8)
-//                             //         : batteryLevel > 20
-//                             //             ? Colors.yellow.shade700
-//                             //             : Colors.red,
-//                             //     shape: BoxShape.circle,
-//                             //   ),
-//                             // ),
-//                             // const SizedBox(width: 8.0),
-//                             Text(
-//                               '${batteryLevel.toString()}%',
-//                               style: const TextStyle(
-//                                 color: Colors.white,
-//                                 fontSize: 12,
-//                                 fontWeight: FontWeight.w300,
-//                               ),
-//                             ),
-//                           ],
+//   //           SharedPreferencesUtil().selectedChatPluginId = s;
+//   //          plugins.firstWhereOrNull((p) => p.id == s);
+//   //           // chatPageKey.currentState
+//   //           //     ?.sendInitialPluginMessage(plugin);
+//   //           setState(() {});
+//   //         },
+//   //         icon: Container(),
+//   //         alignment: Alignment.center,
+//   //         dropdownColor: Colors.black,
+//   //         style: const TextStyle(color: Colors.white, fontSize: 16),
+//   //         underline: Container(height: 0, color: Colors.transparent),
+//   //         isExpanded: false,
+//   //         itemHeight: 48,
+//   //         padding: EdgeInsets.zero,
+//   //         items: _getPluginsDropdownItems(context),
+//   //       )
+//   //     : const SizedBox.shrink(),
+//   actions: [
+//     //* AVM Battery indecator
+//     _device != null && batteryLevel != -1
+//         ? GestureDetector(
+//             onTap: _device == null
+//                 ? null
+//                 : () {
+//                     Navigator.of(context).push(
+//                       MaterialPageRoute(
+//                         builder: (c) => ConnectedDevice(
+//                           device: _device!,
+//                           batteryLevel: batteryLevel,
 //                         ),
 //                       ),
-//                     )
-//                   : Padding(
-//                       padding: const EdgeInsets.only(right: 10),
-//                       child: GestureDetector(
-//                           onTap: () async {
-//                             if (SharedPreferencesUtil().deviceId.isEmpty) {
-//                               routeToPage(context, const ConnectDevicePage());
-//                               MixpanelManager().connectFriendClicked();
-//                             } else {
-//                               await routeToPage(
-//                                   context,
-//                                   const ConnectedDevice(
-//                                       device: null, batteryLevel: 0));
-//                             }
-//                             setState(() {});
-//                           },
-//                           child: const ScanningUI()),
-//                     )
-//             ],
-//             centerTitle: true,
-//             elevation: 0,
-//           ),
+//                     );
+//                     MixpanelManager().batteryIndicatorClicked();
+//                   },
+//             child: Container(
+//               margin: const EdgeInsets.only(
+//                   right: 10, top: 15, bottom: 15),
+//               padding: const EdgeInsets.symmetric(
+//                   horizontal: 8, vertical: 0),
+//               decoration: BoxDecoration(
+//                 color: Colors.transparent,
+//                 borderRadius: BorderRadius.circular(10),
+//                 border: Border.all(
+//                   color: const Color.fromARGB(106, 158, 158, 158),
+//                   width: 1,
+//                 ),
+//               ),
+//               child: Row(
+//                 mainAxisSize: MainAxisSize.min,
+//                 children: [
+//                   Icon(
+//                     Icons.bolt,
+//                     color: batteryLevel > 75
+//                         ? const Color.fromARGB(255, 0, 255, 8)
+//                         : batteryLevel > 20
+//                             ? Colors.yellow.shade700
+//                             : Colors.red,
+//                     size: 12,
+//                   ),
+//                   // Container(
+//                   //   width: 10,
+//                   //   height: 10,
+//                   //   decoration: BoxDecoration(
+//                   //     color: batteryLevel > 75
+//                   //         ? const Color.fromARGB(255, 0, 255, 8)
+//                   //         : batteryLevel > 20
+//                   //             ? Colors.yellow.shade700
+//                   //             : Colors.red,
+//                   //     shape: BoxShape.circle,
+//                   //   ),
+//                   // ),
+//                   // const SizedBox(width: 8.0),
+//                   Text(
+//                     '${batteryLevel.toString()}%',
+//                     style: const TextStyle(
+//                       color: Colors.white,
+//                       fontSize: 12,
+//                       fontWeight: FontWeight.w300,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           )
+//         : Padding(
+//             padding: const EdgeInsets.only(right: 10),
+//             child: GestureDetector(
+//                 onTap: () async {
+//                   if (SharedPreferencesUtil().deviceId.isEmpty) {
+//                     routeToPage(context, const ConnectDevicePage());
+//                     MixpanelManager().connectFriendClicked();
+//                   } else {
+//                     await routeToPage(
+//                         context,
+//                         const ConnectedDevice(
+//                             device: null, batteryLevel: 0));
+//                   }
+//                   setState(() {});
+//                 },
+//                 child: const ScanningUI()),
+//           )
+//   ],
+//   centerTitle: true,
+//   elevation: 0,
+// ),
 //           // Add the BottomNavigationBar here
 //           bottomNavigationBar: BottomNavigationBar(
 //             items: const <BottomNavigationBarItem>[
@@ -532,12 +532,15 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/features/capture/presentation/pages/capture_memory_page.dart';
 import 'package:friend_private/features/chat/presentation/pages/chat_page.dart';
+import 'package:friend_private/pages/capture/connect.dart';
+import 'package:friend_private/pages/home/device.dart';
 import 'package:friend_private/pages/settings/page.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/ble/connected.dart';
 import 'package:friend_private/utils/ble/scan.dart';
 import 'package:friend_private/utils/enums.dart';
+import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:friend_private/widgets/scanning_ui.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -731,7 +734,7 @@ class _HomePageWrapperState extends State<HomePageWrapperTest>
 
   void _triggerMemoryCreationTimer() {
     _memoryCreationTimer?.cancel();
-    _memoryCreationTimer = Timer(const Duration(seconds: 120), _createMemory);
+    _memoryCreationTimer = Timer(const Duration(seconds: 60), _createMemory);
   }
 
   void _createMemory() async {
@@ -753,13 +756,166 @@ class _HomePageWrapperState extends State<HomePageWrapperTest>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   title: Text('AVM'),
+      //   actions: [
+      //     _device != null && _batteryLevel != -1
+      //         ? _buildBatteryIndicator()
+      //         : _buildScanningUI(),
+      //   ],
+      // ),
+
       appBar: AppBar(
-        title: Text('Friend'),
+        automaticallyImplyLeading: false,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        leading: TextButton(
+          onPressed: () async {
+            // if (SharedPreferencesUtil().deviceId.isEmpty) {
+            //   routeToPage(context, const ConnectDevicePage());
+            //   MixpanelManager().connectFriendClicked();
+            // } else {
+            //   await routeToPage(context,
+            //       const ConnectedDevice(device: null, batteryLevel: 0));
+            // }
+            // setState(() {});
+          },
+          // style: TextButton.styleFrom(
+          //   padding: EdgeInsets.zero,
+          //   backgroundColor: Colors.transparent,
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.circular(10),
+          //     side: const BorderSide(color: Colors.white, width: 1),
+          //   ),
+          // ),
+          child: Image.asset(
+            'assets/images/herologo.png',
+            width: 60,
+            height: 40,
+          ),
+        ),
+        //*-- Chat Plugin --*//
+        // title: _selectedIndex == 1
+        //     ? DropdownButton<String>(
+        //         menuMaxHeight: 350,
+        //         value: SharedPreferencesUtil().selectedChatPluginId,
+        //         onChanged: (s) async {
+        //           if ((s == 'no_selected' &&
+        //                   SharedPreferencesUtil().pluginsEnabled.isEmpty) ||
+        //               s == 'enable') {
+        //             await routeToPage(
+        //                 context, const PluginsPage(filterChatOnly: true));
+        //             setState(() {});
+        //             return;
+        //           }
+        //           print(
+        //               'Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
+        //           if (s == null ||
+        //               s == SharedPreferencesUtil().selectedChatPluginId) {
+        //             return;
+        //           }
+
+        //           SharedPreferencesUtil().selectedChatPluginId = s;
+        //          plugins.firstWhereOrNull((p) => p.id == s);
+        //           // chatPageKey.currentState
+        //           //     ?.sendInitialPluginMessage(plugin);
+        //           setState(() {});
+        //         },
+        //         icon: Container(),
+        //         alignment: Alignment.center,
+        //         dropdownColor: Colors.black,
+        //         style: const TextStyle(color: Colors.white, fontSize: 16),
+        //         underline: Container(height: 0, color: Colors.transparent),
+        //         isExpanded: false,
+        //         itemHeight: 48,
+        //         padding: EdgeInsets.zero,
+        //         items: _getPluginsDropdownItems(context),
+        //       )
+        //     : const SizedBox.shrink(),
         actions: [
+          //* AVM Battery indecator
           _device != null && _batteryLevel != -1
-              ? _buildBatteryIndicator()
-              : _buildScanningUI(),
+              ? GestureDetector(
+                  onTap: _device == null
+                      ? null
+                      : () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (c) => ConnectedDevice(
+                                device: _device!,
+                                batteryLevel: _batteryLevel,
+                              ),
+                            ),
+                          );
+                        },
+                  child: Container(
+                    margin:
+                        const EdgeInsets.only(right: 10, top: 15, bottom: 15),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: const Color.fromARGB(106, 158, 158, 158),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.bolt,
+                          color: _batteryLevel > 75
+                              ? const Color.fromARGB(255, 0, 255, 8)
+                              : _batteryLevel > 20
+                                  ? Colors.yellow.shade700
+                                  : Colors.red,
+                          size: 12,
+                        ),
+                        // Container(
+                        //   width: 10,
+                        //   height: 10,
+                        //   decoration: BoxDecoration(
+                        //     color: batteryLevel > 75
+                        //         ? const Color.fromARGB(255, 0, 255, 8)
+                        //         : batteryLevel > 20
+                        //             ? Colors.yellow.shade700
+                        //             : Colors.red,
+                        //     shape: BoxShape.circle,
+                        //   ),
+                        // ),
+                        // const SizedBox(width: 8.0),
+                        Text(
+                          '${_batteryLevel.toString()}%',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: GestureDetector(
+                      onTap: () async {
+                        if (SharedPreferencesUtil().deviceId.isEmpty) {
+                          routeToPage(context, const ConnectDevicePage());
+                        } else {
+                          await routeToPage(
+                              context,
+                              const ConnectedDevice(
+                                  device: null, batteryLevel: 0));
+                        }
+                        setState(() {});
+                      },
+                      child: const ScanningUI()),
+                )
         ],
+        centerTitle: true,
+        elevation: 0,
       ),
       body: IndexedStack(
         index: _selectedIndex,
