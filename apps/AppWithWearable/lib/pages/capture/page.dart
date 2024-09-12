@@ -37,12 +37,16 @@ class CapturePage extends StatefulWidget {
   final Function refreshMemories;
   final Function refreshMessages;
   final BTDeviceStruct? device;
+  // final Function restartWebSocket;
+  // final Function initiateWebsocket;
 
   const CapturePage({
     super.key,
     required this.device,
     required this.refreshMemories,
     required this.refreshMessages,
+    // required this.restartWebSocket,
+    // required this.initiateWebsocket,
   });
 
   @override
@@ -408,7 +412,7 @@ class CapturePageState extends State<CapturePage>
         Column(
           // physics: const NeverScrollableScrollPhysics(),
           children: [
-            speechProfileWidget(context, setState, restartWebSocket),
+            // speechProfileWidget(context, setState, widget.restartWebSocket),
             CaptureMemoryPage(
               context: context,
               hasTranscripts: _hasTranscripts,
