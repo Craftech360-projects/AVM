@@ -30,6 +30,9 @@ class AIMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isMemoriesEmpty = memories.isEmpty;
+    for (var element in memories) {
+      print('memories at ai ${element.structured.target!.title}');
+    }
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,21 +105,32 @@ class AIMessage extends StatelessWidget {
               if (memories.isNotEmpty) ...[
                 const SizedBox(height: 16),
                 for (var memory in (memories.length > 3
-                    ? memories.sublist(0, 3)
-                    : memories)) ...[
+                    ? memories.reversed.toList().sublist(0, 3)
+                    : memories.reversed.toList())) ...[
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(
                         0.0, 0.0, 0.0, 4.0),
                     child: GestureDetector(
                       onTap: () async {
                         MixpanelManager().chatMessageMemoryClicked(memory);
-                        int memoryIndex = memories.indexOf(memory);
-                        print('chat memory index clicked $memoryIndex');
-                        await Navigator.of(context).push(MaterialPageRoute(
-                            builder: (c) => CustomMemoryDetailPage(
-                                  memoryBloc: context.read<MemoryBloc>(),
-                                  memoryAtIndex: memoryIndex,
-                                )));
+                        int memoryIndex = memories.reversed.toList().indexOf(memory);
+                        // print('chat memory index clicked $memoryIndex');
+                        // BlocProvider.of<MemoryBloc>(context)
+                        //     .add(MemoryIndexChanged(memoryIndex: memoryIndex));
+                        // await Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (c) => CustomMemoryDetailPage(
+                        //           memoryBloc: context.read<MemoryBloc>(),
+                        //           memoryAtIndex: memoryIndex,
+                        //         )));
+                         BlocProvider.of<MemoryBloc>(context).add(MemoryIndexChanged(memoryIndex: memoryIndex));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CustomMemoryDetailPage(
+                          memoryBloc: BlocProvider.of<MemoryBloc>(context),
+                          memoryAtIndex: memoryIndex,
+                        ),
+                      ),
+                    );
                         // TODO: maybe refresh memories here too
                       },
                       child: Container(
