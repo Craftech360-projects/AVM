@@ -53,28 +53,32 @@ class CaptureCard extends StatelessWidget {
       onTap: () {
         if (segments!.isNotEmpty) {
           showModalBottomSheet(
+            useSafeArea: true,
             isScrollControlled: true,
             context: context,
-            builder: (context) => SingleChildScrollView(
-                child: Column(
+            builder: (context) => Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,
                   child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.close)),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.close),
+                  ),
                 ),
-                getTranscriptWidget(
-                  memoryCreating,
-                  segments ?? [],
-                  photos,
-                  device,
-                ),
+                Expanded(
+                    child: SingleChildScrollView(
+                  child: getTranscriptWidget(
+                    memoryCreating,
+                    segments ?? [],
+                    photos,
+                    device,
+                  ),
+                ))
               ],
-            )),
+            ),
           );
         }
       },

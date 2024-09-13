@@ -31,7 +31,7 @@ class MemoryCardWidget extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: (height - 10) * 0.38,
+          height: (height - 5) * 0.4,
           child: ListView.separated(
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 0),
             shrinkWrap: true,

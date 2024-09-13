@@ -431,7 +431,7 @@ String qaRagPrompt(String context, List<Message> messages, {Plugin? plugin}) {
   var prompt = '''
     You are an assistant for question-answering tasks. Use the following pieces of retrieved context and the conversation history to continue the conversation.
     If you don't know the answer, just say that you didn't find any related information or you that don't know. Use three sentences maximum and keep the answer concise.
-    If the message doesn't require context, it will be empty, so answer the question casually.
+    If the message doesn't require context, it will be empty, so answer the question casually. if the user mentions "today," "todays," or "today's," it should be interpreted as ${DateTime.now().toIso8601String()} (from midnight 12am to next day midnight 12). Similarly, handle variations for "tomorrow" and "yesterday" based on their respective dates.
     ${plugin == null ? '' : '\nYour name is: ${plugin.name}, and your personality/description is "${plugin.description}".\nMake sure to reflect your personality in your response.\n'}
     Conversation History:
     ${Message.getMessagesAsString(messages, useUserNameIfAvailable: true, usePluginNameIfAvailable: true)}

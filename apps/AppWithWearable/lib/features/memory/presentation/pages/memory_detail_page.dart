@@ -35,6 +35,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
   List<bool> pluginResponseExpanded = [];
   @override
   Widget build(BuildContext context) {
+    print('memory index ${widget.memoryAtIndex}');
     return PopScope(
       onPopInvoked: (didPop) {
         widget.memoryBloc.add(
@@ -78,6 +79,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
             bloc: widget.memoryBloc,
             builder: (context, state) {
               print('memory Details Page ${state.toString()}');
+          
               final selectedMemory = state.memories[state.memoryIndex];
 
               final structured = selectedMemory.structured.target!;

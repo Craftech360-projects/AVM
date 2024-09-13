@@ -68,6 +68,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     return Column(
       children: [
         //*--- SEARCH BAR ---*//
+         const SizedBox(height: 8),
         MemorySearchWidget(
           searchController: _searchController,
           memoryBloc: _memoryBloc,

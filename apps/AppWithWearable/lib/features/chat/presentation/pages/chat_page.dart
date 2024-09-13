@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/pages/chat/widgets/ai_message.dart';
 import 'package:friend_private/pages/chat/widgets/user_message.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
@@ -85,19 +86,22 @@ class _ChatPageTestState extends State<ChatPageTest>
                 padding: const EdgeInsets.only(
                   left: 20,
                   right: 20,
-                  bottom: 100,
+                  bottom: 130,
                 ),
                 itemCount: state.messages?.length ?? 0,
                 itemBuilder: (context, index) {
                   final message = state.messages?[index];
+              //  message!.memories.map((f)=>print('messages at chatpage ${f.structured.target!.title}'));
                   if (message?.senderEnum == MessageSender.ai) {
                     return AIMessage(
                       message: message!,
                       sendMessage: (msg) {
+                        // print('send Message ${message.text}');
                         // context.read<ChatBloc>().add(SendMessage(msg));
                       },
                       displayOptions: state.messages!.length <= 1,
                       memories: message.memories,
+                      // memories: message.memories,
                       pluginSender: SharedPreferencesUtil()
                           .pluginsList
                           .firstWhereOrNull((e) => e.id == message.pluginId),
@@ -121,11 +125,11 @@ class _ChatPageTestState extends State<ChatPageTest>
                 width: double.infinity,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-                margin: const EdgeInsets.only(
+                margin: EdgeInsets.only(
                   left: 18,
                   right: 18,
-                  bottom: 18,
-                  // bottom: widget.textFieldFocusNode.hasFocus ? 40 : 120,
+                  bottom: 70,
+                  // bottom: widget.textFieldFocusNode.hasFocus ? 40 : 70,
                 ),
                 decoration: BoxDecoration(
                   color: Colors.black,

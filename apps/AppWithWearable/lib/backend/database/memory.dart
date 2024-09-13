@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
@@ -170,6 +171,11 @@ class Memory {
       'photos': photos.map((photo) => photo.toJson()).toList(),
     };
   }
+
+  @override
+  String toString() {
+    return 'Memory(id: $id, createdAt: $createdAt, startedAt: $startedAt, finishedAt: $finishedAt, transcript: $transcript, memoryImg: $memoryImg, recordingFilePath: $recordingFilePath, discarded: $discarded)';
+  }
 }
 
 @Entity()
@@ -255,16 +261,7 @@ class Structured {
 
   @override
   String toString() {
-    var str = '';
-    str +=
-        '${getEmoji()} $title (${category.join(", ")})\n\nSummary: $overview\n\n';
-    if (actionItems.isNotEmpty) {
-      str += 'Action Items:\n';
-      for (var item in actionItems) {
-        str += '- ${item.description}\n';
-      }
-    }
-    return str.trim();
+    return 'Structured(id: $id, title: $title, overview: $overview, emoji: $emoji, category: $category)';
   }
 
   toJson() {

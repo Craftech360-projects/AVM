@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/api_requests/stream_api_response.dart';
 import 'package:friend_private/backend/database/memory.dart';
@@ -102,6 +103,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     emit(state.copyWith(status: ChatStatus.loading));
     try {
       List<Message> messages = messageProvider.getMessages();
+      for (var element in messages) {
+        debugPrint('chat message bloc ${element.memories}');
+      }
+      // print('message length ${messages}');
       emit(state.copyWith(status: ChatStatus.loaded, messages: messages));
       // Optionally, you can also get the count of messages
       int messageCount = messageProvider.getMessagesCount();

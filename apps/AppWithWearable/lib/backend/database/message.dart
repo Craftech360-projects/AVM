@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:objectbox/objectbox.dart';
@@ -63,5 +64,10 @@ class Message {
               : e.sender.toString().toUpperCase();
       return '(${e.createdAt.toIso8601String().split('.')[0]}) $sender: ${e.text}';
     }).join('\n');
+  }
+
+  @override
+  String toString() {
+    return 'Message(id: $id, createdAt: $createdAt, text: $text, sender: $sender, pluginId: $pluginId, fromIntegration: $fromIntegration, type: $type)';
   }
 }
