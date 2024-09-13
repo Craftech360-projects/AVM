@@ -302,7 +302,7 @@ class _DeveloperSettingsPageState extends State<DeveloperSettingsPage> {
                   GestureDetector(
                       onTap: () {
                         launchUrl(Uri.parse(
-                            'https://docs.basedhardware.com/developer/plugins/Integrations/'));
+                            'https://docs.craftech360.com.com/developer/plugins/Integrations/'));
                         MixpanelManager().advancedModeDocsOpened();
                       },
                       child: const Padding(
