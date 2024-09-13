@@ -60,11 +60,12 @@ void _exportPDF(Memory memory, bool isTranscript) async {
         build: (pw.Context context) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Text('Memory Export', style: const pw.TextStyle(fontSize: 24)),
+            pw.Text('${structured.title}',
+                style: const pw.TextStyle(fontSize: 24)),
             pw.SizedBox(height: 12),
-            pw.Text('Title: ${structured.title}',
-                style: const pw.TextStyle(fontSize: 18)),
-            pw.SizedBox(height: 12),
+            // pw.Text('Title: ${structured.title}',
+            //     style: const pw.TextStyle(fontSize: 18)),
+            // pw.SizedBox(height: 12),
             pw.Text('Overview', style: const pw.TextStyle(fontSize: 18)),
             pw.Text(structured.overview),
             pw.SizedBox(height: 12),

@@ -16,13 +16,15 @@ class FindDevicesPage extends StatefulWidget {
   final VoidCallback goNext;
   final bool includeSkip;
 
-  const FindDevicesPage({super.key, required this.goNext, this.includeSkip = true});
+  const FindDevicesPage(
+      {super.key, required this.goNext, this.includeSkip = true});
 
   @override
   _FindDevicesPageState createState() => _FindDevicesPageState();
 }
 
-class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProviderStateMixin {
+class _FindDevicesPageState extends State<FindDevicesPage>
+    with SingleTickerProviderStateMixin {
   List<BTDeviceStruct> deviceList = [];
   late Timer _didNotMakeItTimer;
   late Timer _findDevicesTimer;
@@ -73,11 +75,13 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
       }
     }
 
-    _didNotMakeItTimer = Timer(const Duration(seconds: 10), () => setState(() => enableInstructions = true));
+    _didNotMakeItTimer = Timer(const Duration(seconds: 10),
+        () => setState(() => enableInstructions = true));
     // Update foundDevicesMap with new devices and remove the ones not found anymore
     Map<String, BTDeviceStruct> foundDevicesMap = {};
 
-    _findDevicesTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+    _findDevicesTimer =
+        Timer.periodic(const Duration(seconds: 2), (timer) async {
       List<BTDeviceStruct> foundDevices = await bleFindDevices();
 
       // Update foundDevicesMap with new devices and remove the ones not found anymore
@@ -87,7 +91,10 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
         updatedDevicesMap[device.id] = device;
       }
       // Remove devices that are no longer found
-      foundDevicesMap.keys.where((id) => !updatedDevicesMap.containsKey(id)).toList().forEach(foundDevicesMap.remove);
+      foundDevicesMap.keys
+          .where((id) => !updatedDevicesMap.containsKey(id))
+          .toList()
+          .forEach(foundDevicesMap.remove);
 
       // Merge the new devices into the current map to maintain order
       foundDevicesMap.addAll(updatedDevicesMap);
@@ -111,10 +118,12 @@ class _FindDevicesPageState extends State<FindDevicesPage> with SingleTickerProv
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         FoundDevices(deviceList: deviceList, goNext: widget.goNext),
-        if (deviceList.isEmpty && enableInstructions) const SizedBox(height: 48),
+        if (deviceList.isEmpty && enableInstructions)
+          const SizedBox(height: 48),
         if (deviceList.isEmpty && enableInstructions)
           ElevatedButton(
-            onPressed: () => launchUrl(Uri.parse('mailto:team@basedhardware.com')),
+            onPressed: () =>
+                launchUrl(Uri.parse('mailto:craftechapps@gmail.com')),
             child: Container(
               width: double.infinity,
               height: 45,
