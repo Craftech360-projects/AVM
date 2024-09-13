@@ -175,7 +175,7 @@ class _HomePageWrapperState extends State<HomePageWrapperTest>
     });
 
     _refreshMessages();
-     initiateWebsocket();
+    initiateWebsocket();
     executeBackupWithUid();
     _initiateMemories();
     _initiatePlugins();
