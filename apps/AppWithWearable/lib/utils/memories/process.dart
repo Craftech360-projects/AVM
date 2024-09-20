@@ -53,6 +53,15 @@ Future<Memory?> processTranscriptContent(
       geolocation,
       photos,
     );
+
+
+ 
+  
+    // triggerIntegrations: triggerIntegrations,
+    // language: language,
+    // audioFile: audioFile,
+    // source: source,
+    // processingMemoryId: processingMemoryId,
     MemoryProvider().saveMemory(memory);
     triggerMemoryCreatedEvents(memory, sendMessageToChat: sendMessageToChat);
     return memory;
