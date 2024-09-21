@@ -149,14 +149,13 @@ class CapturePageState extends State<CapturePage>
             () => _createMemory());
         currentTranscriptStartedAt ??= DateTime.now();
         currentTranscriptFinishedAt = DateTime.now();
-        if (_scrollController.hasClients) {
+          if (_scrollController.hasClients) {
           _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,
             duration: const Duration(milliseconds: 100),
             curve: Curves.easeOut,
           );
         }
-
         setState(() {});
       },
     );

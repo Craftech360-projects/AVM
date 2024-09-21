@@ -111,7 +111,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                   ),
                 ),
             )
-            : CaptureCard(
+            : 
+            CaptureCard(
                 context: context,
                 hasTranscripts: widget.hasTranscripts,
                 wsConnectionState: widget.wsConnectionState,
