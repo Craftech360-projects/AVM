@@ -423,6 +423,11 @@ class CapturePageState extends State<CapturePage>
               memoryCreating: memoryCreating,
               photos: photos,
               scrollController: _scrollController,
+              onDismissmissedCaptureMemory: (direction)async {
+                print('dismissable triggered');
+               await _createMemory();
+                setState(() {});
+              },
             ),
             // ...getConnectionStateWidgets(
             //   context,

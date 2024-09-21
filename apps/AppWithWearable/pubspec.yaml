@@ -15,7 +15,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.20+76
+version: 1.0.20+78
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -37,7 +37,7 @@ dependencies:
   equatable: 2.0.5
   #  fonnx:
   #    git:
-  #      url: https://github.com/Telosnex/fonnx.git
+  #      url: https://github.com/Telosnex/fonnx.git 
   #      ref: main
   expandable_text: ^2.3.0
   file_picker: ^8.0.5
@@ -99,6 +99,7 @@ dependencies:
   record: ^5.1.2
   share_plus: ^9.0.0
   shared_preferences: ^2.2.3
+  shimmer: ^3.0.0
   sign_in_button: ^3.2.0
   sign_in_with_apple: ^6.1.1
   smooth_page_indicator: 1.1.0

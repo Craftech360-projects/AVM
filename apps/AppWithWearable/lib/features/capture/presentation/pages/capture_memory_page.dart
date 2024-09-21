@@ -8,21 +8,22 @@ import 'package:friend_private/features/memory/presentation/widgets/memory_searc
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tuple/tuple.dart';
 
 class CaptureMemoryPage extends StatefulWidget {
-  const CaptureMemoryPage({
-    super.key,
-    required this.context,
-    required this.hasTranscripts,
-    this.device,
-    required this.wsConnectionState,
-    this.internetStatus,
-    this.segments,
-    required this.memoryCreating,
-    required this.photos,
-    this.scrollController,
-  });
+  const CaptureMemoryPage(
+      {super.key,
+      required this.context,
+      required this.hasTranscripts,
+      this.device,
+      required this.wsConnectionState,
+      this.internetStatus,
+      this.segments,
+      required this.memoryCreating,
+      required this.photos,
+      this.scrollController,
+      required this.onDismissmissedCaptureMemory});
   final BuildContext context;
   final bool hasTranscripts;
   final BTDeviceStruct? device;
@@ -32,6 +33,7 @@ class CaptureMemoryPage extends StatefulWidget {
   final bool memoryCreating;
   final List<Tuple2<String, String>> photos;
   final ScrollController? scrollController;
+  final Function(DismissDirection) onDismissmissedCaptureMemory;
 
   @override
   State<CaptureMemoryPage> createState() => _CaptureMemoryPageState();
@@ -68,24 +70,59 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     return Column(
       children: [
         //*--- SEARCH BAR ---*//
-         const SizedBox(height: 8),
+        const SizedBox(height: 8),
         MemorySearchWidget(
           searchController: _searchController,
           memoryBloc: _memoryBloc,
         ),
         const SizedBox(height: 8),
         //*-- Capture --//
-        CaptureCard(
-          context: context,
-          hasTranscripts: widget.hasTranscripts,
-          wsConnectionState: widget.wsConnectionState,
-          device: widget.device,
-          internetStatus: widget.internetStatus,
-          segments: widget.segments,
-          memoryCreating: widget.memoryCreating,
-          photos: widget.photos,
-          scrollController: widget.scrollController,
-        ),
+        widget.hasTranscripts
+            ? SizedBox(
+              height: 176,
+              child: Dismissible(
+                  background: Shimmer.fromColors(
+                    baseColor: Colors.grey, 
+                    highlightColor: Colors.white, 
+                    child: const Center(
+                      child: Text(
+                        'Wait until memory created',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  key: GlobalKey(),
+                  direction: DismissDirection.startToEnd,
+                  onDismissed: (direction) =>
+                      widget.onDismissmissedCaptureMemory(direction),
+                  child: CaptureCard(
+                    context: context,
+                    hasTranscripts: widget.hasTranscripts,
+                    wsConnectionState: widget.wsConnectionState,
+                    device: widget.device,
+                    internetStatus: widget.internetStatus,
+                    segments: widget.segments,
+                    memoryCreating: widget.memoryCreating,
+                    photos: widget.photos,
+                    scrollController: widget.scrollController,
+                  ),
+                ),
+            )
+            : CaptureCard(
+                context: context,
+                hasTranscripts: widget.hasTranscripts,
+                wsConnectionState: widget.wsConnectionState,
+                device: widget.device,
+                internetStatus: widget.internetStatus,
+                segments: widget.segments,
+                memoryCreating: widget.memoryCreating,
+                photos: widget.photos,
+                scrollController: widget.scrollController,
+              ),
+
         //*--- Filter Button ---*//
         // Padding(
         //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -135,35 +172,35 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         //     ),
         //   ),
         // ),
-if(_isNonDiscarded||_memoryBloc.state.memories.isNotEmpty)
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: () {
-                setState(() {
-                  _isNonDiscarded = !_isNonDiscarded;
-                  _memoryBloc.add(
-                    DisplayedMemory(isNonDiscarded: _isNonDiscarded),
-                  );
-                });
-              },
-              label: Icon(
-                _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
-                size: 16,
-                color: Colors.grey,
-              ),
-              icon: Text(
-                _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 212, 212, 212),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
+        if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _isNonDiscarded = !_isNonDiscarded;
+                    _memoryBloc.add(
+                      DisplayedMemory(isNonDiscarded: _isNonDiscarded),
+                    );
+                  });
+                },
+                label: Icon(
+                  _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
+                  size: 16,
+                  color: Colors.grey,
+                ),
+                icon: Text(
+                  _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 212, 212, 212),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                ),
               ),
             ),
           ),
-        ),
         //*--- MEMORY LIST ---*//
         BlocConsumer<MemoryBloc, MemoryState>(
           bloc: _memoryBloc,

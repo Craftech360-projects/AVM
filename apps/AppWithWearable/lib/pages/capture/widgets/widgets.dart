@@ -50,6 +50,7 @@ class CaptureCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+        behavior: HitTestBehavior.opaque,
       onTap: () {
         if (segments!.isNotEmpty) {
           showModalBottomSheet(
@@ -123,7 +124,8 @@ class CaptureCard extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 10),
                                 Text(
-                                  utf8.decode(segment.text.toString().codeUnits,
+                                  utf8.decode(
+                                      segment.text.toString().codeUnits,
                                       allowMalformed: true),
                                   style: const TextStyle(
                                       letterSpacing: 0.0, color: Colors.grey),
