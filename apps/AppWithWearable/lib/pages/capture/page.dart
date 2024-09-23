@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
-import 'package:friend_private/backend/api_requests/cloud_storage.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/database/message_provider.dart';
@@ -60,7 +59,7 @@ class CapturePageState extends State<CapturePage>
         PhoneRecorderMixin,
         WebSocketMixin,
         OpenGlassMixin {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   @override
   bool get wantKeepAlive => true;
 
@@ -149,7 +148,7 @@ class CapturePageState extends State<CapturePage>
             () => _createMemory());
         currentTranscriptStartedAt ??= DateTime.now();
         currentTranscriptFinishedAt = DateTime.now();
-          if (_scrollController.hasClients) {
+        if (_scrollController.hasClients) {
           _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,
             duration: const Duration(milliseconds: 100),
@@ -250,8 +249,7 @@ class CapturePageState extends State<CapturePage>
     context
         .read<MemoryBloc>()
         .add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
-    if (memory != null &&
-        !memory.discarded &&
+    if (!memory.discarded &&
         SharedPreferencesUtil().postMemoryNotificationIsChecked) {
       postMemoryCreationNotification(memory).then((r) {
         // TODO: this should be a plugin instead.
@@ -422,10 +420,28 @@ class CapturePageState extends State<CapturePage>
               memoryCreating: memoryCreating,
               photos: photos,
               scrollController: _scrollController,
-              onDismissmissedCaptureMemory: (direction)async {
-                print('dismissable triggered');
-               await _createMemory();
+              onDismissmissedCaptureMemory: (direction) {
+                _createMemory();
                 setState(() {});
+                // if (segments.isNotEmpty) {
+
+                //   final removedSegment = segments[0];
+
+                //   setState(() {
+                //     segments.removeAt(0);
+
+                //   });
+
+                //   _createMemory().then((_) {
+                //     print('Memory created');
+                //   }).catchError((error) {
+                //     print('Error creating memory: $error');
+
+                //     setState(() {
+                //       segments.insert(0, removedSegment);
+                //     });
+                //   });
+                // }
               },
             ),
             // ...getConnectionStateWidgets(

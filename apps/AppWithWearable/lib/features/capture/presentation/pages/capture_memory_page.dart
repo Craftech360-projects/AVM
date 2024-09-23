@@ -5,6 +5,7 @@ import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/widgets/memory_card.dart';
 import 'package:friend_private/features/memory/presentation/widgets/memory_search.dart';
+import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -12,18 +13,19 @@ import 'package:shimmer/shimmer.dart';
 import 'package:tuple/tuple.dart';
 
 class CaptureMemoryPage extends StatefulWidget {
-  const CaptureMemoryPage(
-      {super.key,
-      required this.context,
-      required this.hasTranscripts,
-      this.device,
-      required this.wsConnectionState,
-      this.internetStatus,
-      this.segments,
-      required this.memoryCreating,
-      required this.photos,
-      this.scrollController,
-      required this.onDismissmissedCaptureMemory});
+  const CaptureMemoryPage({
+    super.key,
+    required this.context,
+    required this.hasTranscripts,
+    this.device,
+    required this.wsConnectionState,
+    this.internetStatus,
+    this.segments,
+    required this.memoryCreating,
+    required this.photos,
+    this.scrollController,
+    required this.onDismissmissedCaptureMemory,
+  });
   final BuildContext context;
   final bool hasTranscripts;
   final BTDeviceStruct? device;
@@ -42,6 +44,7 @@ class CaptureMemoryPage extends StatefulWidget {
 class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   late MemoryBloc _memoryBloc;
   bool _isNonDiscarded = true;
+  final GlobalKey<CapturePageState> capturePageKey = GlobalKey<CapturePageState>();
   // final List<FilterItem> _filters = [
   //   FilterItem(filterType: 'Show All', filterStatus: false),
   //   FilterItem(filterType: 'Technology', filterStatus: false),
@@ -79,14 +82,14 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         //*-- Capture --//
         widget.hasTranscripts
             ? SizedBox(
-              height: 176,
-              child: Dismissible(
+                height: 176,
+                child: Dismissible(
                   background: Shimmer.fromColors(
-                    baseColor: Colors.grey, 
-                    highlightColor: Colors.white, 
+                    baseColor: Colors.grey,
+                    highlightColor: Colors.white,
                     child: const Center(
                       child: Text(
-                        'Wait until memory created',
+                        'Please Wait!..\nMemory Creating',
                         style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold,
@@ -94,7 +97,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                       ),
                     ),
                   ),
-                  key: GlobalKey(),
+                 key:capturePageKey,
+                  // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
                   direction: DismissDirection.startToEnd,
                   onDismissed: (direction) =>
                       widget.onDismissmissedCaptureMemory(direction),
@@ -110,7 +114,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                     scrollController: widget.scrollController,
                   ),
                 ),
-            )
+              )
             : 
             CaptureCard(
                 context: context,
