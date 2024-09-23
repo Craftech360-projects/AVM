@@ -26,6 +26,7 @@ import 'package:friend_private/firebase_options_prod.dart' as prod;
 import 'package:friend_private/flavors.dart';
 import 'package:friend_private/pages/home/home_page_wrapper.dart';
 import 'package:friend_private/pages/home/page.dart';
+import 'package:friend_private/pages/onboarding/wrapper.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/theme/theme.dart';
@@ -221,10 +222,10 @@ class _MyAppState extends State<MyApp> {
                 fit: BoxFit.cover,
               ),
             ),
-            // SharedPreferencesUtil().onboardingCompleted && widget.isAuth
-            // ?
+            SharedPreferencesUtil().onboardingCompleted && widget.isAuth
+            ?
             const HomePageWrapper()
-            // : const OnboardingWrapper(),
+            : const OnboardingWrapper(),
           ],
         ),
       ),
