@@ -155,22 +155,24 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   int sampleRate,
   String codec,
 ) async {
+  print('codec value $codec');
   debugPrint('Websocket Opening');
   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
+  print('codec value $recordingsLanguage');
   final deepgramapikey = getDeepgramApiKeyForUsage();
   debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
   debugPrint("apikey , $deepgramapikey");
 
-  // Example codec value
-  String encoding = "opus";
+  // Example codec vaue
+  String encoding = 'opus';
 
-  // if (codec == 'pcm8' || codec == 'pcm16') {
-  //   // encoding = 'linear16';
-  //   encoding = 'opus';
-  // } else {
-  //   encoding = 'opus';
-  // }
+  if (codec == 'pcm8' || codec == 'pcm16') {
+    // encoding = 'linear16';
+    encoding = 'opus';
+  } else {
+    encoding = 'linear16';
+  }
   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
   final uri = Uri.parse(
