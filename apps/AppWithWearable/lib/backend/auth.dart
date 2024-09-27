@@ -146,3 +146,12 @@ listenAuthStateChanges() {
 Future isSignedIn() async {
   return FirebaseAuth.instance.currentUser != null;
 }
+getFirebaseUser() {
+  return FirebaseAuth.instance.currentUser;
+}
+Future<void> updateGivenName(String fullName) async {
+  var user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await user.updateProfile(displayName: fullName);
+  }
+}

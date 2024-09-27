@@ -5,6 +5,7 @@ import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/developer.dart';
+import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
 import 'package:friend_private/pages/speaker_id/page.dart';
 import 'package:friend_private/utils/other/temp.dart';
@@ -208,9 +209,15 @@ class _SettingsPageState extends State<SettingsPage> {
               //         routeToPage(context, const SpeakerIdPage());
               //       }, icon: Icons.multitrack_audio)
               //     : Container(),
+              getItemAddOn('Profile', () {
+                routeToPage(context, const ProfilePage());
+              }, icon: Icons.person),
               getItemAddOn('Calendar Integration', () {
                 routeToPage(context, const CalendarPage());
               }, icon: Icons.calendar_month),
+              // getItemAddOn('Speech Recognition', () {
+              //   routeToPage(context, const SpeakerIdPage());
+              // }, icon: Icons.multitrack_audio),
               // getItemAddOn('Developer Mode', () async {
               //   MixpanelManager().devModePageOpened();
               //   await routeToPage(context, const DeveloperSettingsPage());
@@ -219,16 +226,16 @@ class _SettingsPageState extends State<SettingsPage> {
 
               // const SizedBox(height: 32),
               const Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  SharedPreferencesUtil().uid,
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8),
+              //   child: Text(
+              //     SharedPreferencesUtil().uid,
+              //     style: const TextStyle(
+              //         color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+              //     maxLines: 1,
+              //     textAlign: TextAlign.center,
+              //   ),
+              // ),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -242,7 +249,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 100),
+              const SizedBox(height: 80),
             ],
           ),
         ),

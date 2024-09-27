@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
-import 'package:friend_private/widgets/transcript.dart';
+import 'package:friend_private/features/memory/presentation/widgets/chat_box.dart';
 
 class TranscriptTab extends StatefulWidget {
   const TranscriptTab({
@@ -47,23 +47,19 @@ class _TranscriptTabState extends State<TranscriptTab> {
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: widget.memoryBloc,
       builder: (context, state) {
-        // return PageView.builder(
-        //   scrollDirection: Axis.vertical,
-        //   controller: _pageController,
-        //   itemCount: state.memories.length,
-        //   onPageChanged: (index) {
-        //     widget.memoryBloc.add(MemoryIndexChanged(memoryIndex: index));
-        //   },
-        //   itemBuilder: (BuildContext context, int index) {
-            return SingleChildScrollView(
-              child: TranscriptWidget(
-                segments: state.memories[widget.memoryAtIndex].transcriptSegments,
-                // segments: state.memories[index].transcriptSegments,
-              ),
-            );
+        // log('memory at transcript tab- ${state.memories[widget.memoryAtIndex].transcriptSegments}');
+
+        final transcriptSegments =
+            state.memories[widget.memoryAtIndex].transcriptSegments;
+
+        return ListView.builder(
+          itemCount: transcriptSegments.length,
+          itemBuilder: (context, index) {
+            final segment = transcriptSegments[index];
+            return ChatBoxWidget(segment: segment);
           },
         );
-      // },
-    // );
+      },
+    );
   }
 }

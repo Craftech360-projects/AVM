@@ -104,6 +104,7 @@ dependencies:
   sign_in_with_apple: ^6.1.1
   smooth_page_indicator: 1.1.0
   swipe: ^0.0.1
+  top_snackbar_flutter: ^3.1.0
   tuple: ^2.0.2
   upgrader: ^10.3.0
   url_launcher: ^6.3.0
@@ -136,6 +137,7 @@ dev_dependencies:
   flutter_flavorizr: ^2.2.3
   flutter_launcher_icons: 0.13.1
   flutter_lints: ^4.0.0
+  lorem_ipsum: ^0.0.3
   flutter_test:
     sdk: flutter
   image: ^4.2.0

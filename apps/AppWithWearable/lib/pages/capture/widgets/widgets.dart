@@ -52,34 +52,34 @@ class CaptureCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (segments!.isNotEmpty) {
-          showModalBottomSheet(
-            useSafeArea: true,
-            isScrollControlled: true,
-            context: context,
-            builder: (context) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.close),
-                  ),
+        showModalBottomSheet(
+          useSafeArea: true,
+          isScrollControlled: true,
+          context: context,
+          builder: (context) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Align(
+                alignment: Alignment.centerRight,
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.close),
                 ),
-                Expanded(
-                    child: SingleChildScrollView(
-                  child: getTranscriptWidget(
-                    memoryCreating,
-                    segments ?? [],
-                    photos,
-                    device,
-                  ),
-                ))
-              ],
-            ),
-          );
+              ),
+              Expanded(
+                  child: SingleChildScrollView(
+                child: getTranscriptWidget(
+                  memoryCreating,
+                  segments ?? [],
+                  photos,
+                  device,
+                ),
+              ))
+            ],
+          ),
+        );
         }
       },
       child: Card(
@@ -94,9 +94,9 @@ class CaptureCard extends StatelessWidget {
                 child: SizedBox(
                   height: 140,
                   child: segments == null || segments!.isEmpty
-                      ? const Text(
-                          '👋🏻 Hi!, Ready to hear what awesome task you’ve got for me today!',
-                          style: TextStyle(
+                      ? Text(
+                          '👋🏻 Hi! ${SharedPreferencesUtil().givenName},\nReady to hear what awesome task you’ve got for me today!',
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
                           ),

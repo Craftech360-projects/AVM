@@ -9,13 +9,14 @@ import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
-import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/pages/capture/location_service.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/memories/integrations.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:tuple/tuple.dart';
 
 // Perform actions periodically
@@ -54,9 +55,6 @@ Future<Memory?> processTranscriptContent(
       photos,
     );
 
-
- 
-  
     // triggerIntegrations: triggerIntegrations,
     // language: language,
     // audioFile: audioFile,
@@ -141,13 +139,20 @@ Future<Memory> memoryCreationBlock(
       if (!retrievedFromCache) {
         InstabugLog.logError('Unable to create memory structure.');
         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-            'Unexpected error creating your memory. Please check your discarded memories.',
-            style: TextStyle(color: Colors.white),
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            message:
+                'Unexpected error creating your memory. Please check your discarded memories.',
           ),
-          duration: Duration(seconds: 4),
-        ));
+        );
+        // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        //   content: Text(
+        //     'Unexpected error creating your memory. Please check your discarded memories.',
+        //     style: TextStyle(color: Colors.white),
+        //   ),
+        //   duration: Duration(seconds: 4),
+        // ));
       }
     }
   }
@@ -186,20 +191,43 @@ Future<Memory> memoryCreationBlock(
   if (!retrievedFromCache) {
     if (structured.title.isEmpty && !failed) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text(
-          'Memory stored as discarded! Nothing useful. 😄',
-          style: TextStyle(color: Colors.white),
+      showTopSnackBar(
+        displayDuration: const Duration(milliseconds: 4000),
+        Overlay.of(context),
+        const CustomSnackBar.info(
+          maxLines: 6,
+          // textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+          message:
+              "Audio processing failed due to noise or unclear data.\nPlease reduce background noise and try again in a quieter place!",
         ),
-        duration: Duration(seconds: 4),
-      ));
+      );
+      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      //   content: Text(
+      //     'Memory stored as discarded! Nothing useful. 😄',
+      //     style: TextStyle(color: Colors.white),
+      //   ),
+      //   duration: Duration(seconds: 4),
+      // ));
     } else if (structured.title.isNotEmpty) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('New memory created! 🚀',
-            style: TextStyle(color: Colors.white)),
-        duration: Duration(seconds: 4),
-      ));
+      showTopSnackBar(
+        Overlay.of(context),
+        const CustomSnackBar.success(
+          message: 'New memory created! 🚀',
+        ),
+      );
+      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      //   content: Text('New memory created! 🚀',
+      //       style: TextStyle(color: Colors.white)),
+      //   duration: Duration(seconds: 4),
+      // ));
+    } else {
+      showTopSnackBar(
+        Overlay.of(context),
+        const CustomSnackBar.info(
+          message: 'Memory stored as discarded! There\'s Background noise 😄',
+        ),
+      );
     }
   }
   return memory;
@@ -265,7 +293,7 @@ Future<Memory> finalizeMemoryRecord(
 
   try {
     // Save the memory object
-    await MemoryProvider().saveMemory(memory);
+    MemoryProvider().saveMemory(memory);
     print("Success saving memory.");
   } catch (e) {
     print("Error saving memory: $e");

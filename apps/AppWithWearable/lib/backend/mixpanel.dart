@@ -85,6 +85,7 @@ class MixpanelManager {
 
   void settingsSaved() => track('Developer Settings Saved');
 
+  void pageOpened(String name) => track('$name Opened');
   void pluginsOpened() => track('Plugins Opened');
 
   void pluginEnabled(String pluginId) {
