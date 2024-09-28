@@ -49,37 +49,38 @@ class CaptureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('transcript segments check $segments');
     return GestureDetector(
       onTap: () {
         if (segments!.isNotEmpty) {
-        showModalBottomSheet(
-          useSafeArea: true,
-          isScrollControlled: true,
-          context: context,
-          builder: (context) => Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Align(
-                alignment: Alignment.centerRight,
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.close),
+          showModalBottomSheet(
+            useSafeArea: true,
+            isScrollControlled: true,
+            context: context,
+            builder: (context) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.close),
+                  ),
                 ),
-              ),
-              Expanded(
-                  child: SingleChildScrollView(
-                child: getTranscriptWidget(
-                  memoryCreating,
-                  segments ?? [],
-                  photos,
-                  device,
-                ),
-              ))
-            ],
-          ),
-        );
+                Expanded(
+                    child: SingleChildScrollView(
+                  child: getTranscriptWidget(
+                    memoryCreating,
+                    segments ?? [],
+                    photos,
+                    device,
+                  ),
+                ))
+              ],
+            ),
+          );
         }
       },
       child: Card(

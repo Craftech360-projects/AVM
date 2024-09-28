@@ -155,24 +155,22 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   int sampleRate,
   String codec,
 ) async {
-  print('codec value $codec');
   debugPrint('Websocket Opening');
   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
-  print('codec value $recordingsLanguage');
   final deepgramapikey = getDeepgramApiKeyForUsage();
   debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
   debugPrint("apikey , $deepgramapikey");
 
-  // Example codec vaue
-  String encoding = 'opus';
+  // Example codec value
+  String encoding = "opus";
 
-  if (codec == 'pcm8' || codec == 'pcm16') {
-    // encoding = 'linear16';
-    encoding = 'opus';
-  } else {
-    encoding = 'linear16';
-  }
+  // if (codec == 'pcm8' || codec == 'pcm16') {
+  //   // encoding = 'linear16';
+  //   encoding = 'opus';
+  // } else {
+  //   encoding = 'opus';
+  // }
   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
   final uri = Uri.parse(
@@ -233,6 +231,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
           if (event == 'ping') return;
           try {
             final data = jsonDecode(event);
+            print('json data ___$data');
+            print('-–--------------------------');
             if (data['type'] == 'Metadata') {
               // debugPrint('Metadata received: $data');
             } else if (data['type'] == 'Results') {
@@ -250,6 +250,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
                     start: data['start'] ?? 0.0,
                     end: (data['start'] ?? 0.0) + (data['duration'] ?? 0.0),
                   );
+                  print('data Received by ws ${[segment]}');
                   onMessageReceived([segment]);
 
                   // Update the last audio time

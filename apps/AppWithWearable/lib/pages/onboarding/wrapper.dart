@@ -61,7 +61,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
               child: Text(
                 _controller!.index == _controller!.length - 1
                     ? 'You are all set  🎉'
-                    : 'AVM',
+                    : '',
                 style: TextStyle(
                     color: Colors.grey.shade200,
                     fontSize:
