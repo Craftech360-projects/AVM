@@ -172,18 +172,19 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   //   encoding = 'opus';
   // }
   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
+  print("codec>>>>>----------------->>>>>>>>>>> , $codec");
 
-  final uri = Uri.parse(
-    'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
-  );
+  // final uri = Uri.parse(
+  //   'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+  // );
   // final uri = Uri.parse(
   //   'ws://living-alien-polite.ngrok-free.app',
   // );
-  // final uri = Uri.parse(
-  //   'ws://clownfish-app-uveug.ondigitalocean.app',
-  // );
+  final uri = Uri.parse(
+    'ws://clownfish-app-uveug.ondigitalocean.app',
+  );
 
-  debugPrint('Connecting to WebSocket URI: $uri');
+  debugPrint('Connecting to WebSocket URI: $uri, $sampleRate');
 
   try {
     IOWebSocketChannel channel = IOWebSocketChannel.connect(
