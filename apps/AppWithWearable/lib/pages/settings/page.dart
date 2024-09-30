@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
-import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
-import 'package:friend_private/pages/settings/developer.dart';
 import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
-import 'package:friend_private/pages/speaker_id/page.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -28,6 +25,7 @@ class _SettingsPageState extends State<SettingsPage> {
   late bool reconnectNotificationIsChecked;
   String? version;
   String? buildVersion;
+  final bool _customTileExpanded = false;
 
   @override
   void initState() {
@@ -215,6 +213,36 @@ class _SettingsPageState extends State<SettingsPage> {
               getItemAddOn('Calendar Integration', () {
                 routeToPage(context, const CalendarPage());
               }, icon: Icons.calendar_month),
+              ExpansionTile(
+                // onExpansionChanged: (value) {
+                //   print('on expansio changes $value');
+                // },
+
+                title: const Text('Developer Mode'),
+                children: [
+                  ListTile(
+                    title: const Text('Deepgram'),
+                    onTap: () {
+                      developerModeSelected(modeSelected: 'Deepgram');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Sarvam'),
+                    onTap: () {
+                      developerModeSelected(modeSelected: 'Sarvam');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Wisper'),
+                    onTap: () {
+                      developerModeSelected(modeSelected: 'Wisper');
+
+                      // Navigate, show a dialog, or perform any action here
+                    },
+                  ),
+                ],
+              ),
+
               // getItemAddOn('Speech Recognition', () {
               //   routeToPage(context, const SpeakerIdPage());
               // }, icon: Icons.multitrack_audio),
@@ -255,5 +283,20 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
       ),
     );
+  }
+
+  void developerModeSelected({required String modeSelected}) {
+    print('Mode Selected $modeSelected');
+
+    switch (modeSelected) {
+      case 'Deepgram':
+        break;
+      case 'Sarvam':
+        break;
+      case 'Wisper':
+        break;
+      default:
+        'Sarvam';
+    }
   }
 }

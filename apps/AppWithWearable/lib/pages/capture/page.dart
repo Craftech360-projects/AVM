@@ -120,6 +120,7 @@ class CapturePageState extends State<CapturePage>
         setState(() {});
       },
       onMessageReceived: (List<TranscriptSegment> newSegments) {
+    
         if (newSegments.isEmpty) return;
 
         if (segments.isEmpty) {

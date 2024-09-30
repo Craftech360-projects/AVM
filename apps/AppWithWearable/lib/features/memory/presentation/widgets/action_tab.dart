@@ -89,6 +89,7 @@ class _ActionTabState extends State<ActionTab> {
                           title: Text(
                             item.description,
                             style: TextStyle(
+                              decoration:item.completed? TextDecoration.lineThrough:null,
                               color: Colors.grey.shade300,
                               fontSize: 16,
                               height: 1.3,

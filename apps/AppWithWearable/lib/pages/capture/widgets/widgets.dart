@@ -57,27 +57,32 @@ class CaptureCard extends StatelessWidget {
             useSafeArea: true,
             isScrollControlled: true,
             context: context,
-            builder: (context) => Column(
-              mainAxisSize: MainAxisSize.min,
+            builder: (context) => Stack(
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.close),
-                  ),
+                Image.asset('assets/images/splash.png',fit: BoxFit.fill,width: double.maxFinite,),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
+                    ),
+                    Expanded(
+                        child: SingleChildScrollView(
+                      child: getTranscriptWidget(
+                        memoryCreating,
+                        segments ?? [],
+                        photos,
+                        device,
+                      ),
+                    ))
+                  ],
                 ),
-                Expanded(
-                    child: SingleChildScrollView(
-                  child: getTranscriptWidget(
-                    memoryCreating,
-                    segments ?? [],
-                    photos,
-                    device,
-                  ),
-                ))
               ],
             ),
           );
@@ -107,18 +112,22 @@ class CaptureCard extends StatelessWidget {
                           itemCount: segments!.length,
                           controller: scrollController,
                           itemBuilder: (context, index) {
-                            final segment = segments![index];
+                            TranscriptSegment segment = segments![index];
+                            String speakerName = segment.speaker == '0'
+                                ? '${SharedPreferencesUtil().givenName}(You)'
+                                : 'Speaker: ${segment.speaker}';
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  segment.isUser
-                                      ? SharedPreferencesUtil()
-                                              .givenName
-                                              .isNotEmpty
-                                          ? SharedPreferencesUtil().givenName
-                                          : 'You'
-                                      : 'Speaker ${segment.speakerId}',
+                                  // segment.isUser
+                                  //     ? SharedPreferencesUtil()
+                                  //             .givenName
+                                  //             .isNotEmpty
+                                  //         ? SharedPreferencesUtil().givenName
+                                  //         : 'You'
+                                  //     : 'Speaker ${segment.speaker}',
+                                  speakerName,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),

@@ -26,8 +26,18 @@ class TranscriptSegment {
     required this.end,
     // this.createdAt,
   }) {
-    speakerId = speaker != null ? int.parse(speaker!.split('_')[1]) : 0;
-    // createdAt ??= DateTime.now(); // TODO: -30 seconds + start time ? max(now, (now-30)
+    // speakerId = speaker != null ? int.parse(speaker!.split('_')[1]) : 0;
+    // // createdAt ??= DateTime.now(); // TODO: -30 seconds + start time ? max(now, (now-30)
+ try {
+  if (speaker != null && speaker!.contains('_')) {
+    speakerId = int.tryParse(speaker!.split('_')[1]) ?? 0;
+  } else {
+    speakerId = 0; // Default value if parsing fails
+  }
+} catch (e) {
+  speakerId = 0; // Default value in case of an error
+  print('Error parsing speaker: $e');
+}
   }
 
   @override
@@ -45,10 +55,12 @@ class TranscriptSegment {
   factory TranscriptSegment.fromJson(Map<String, dynamic> json) {
     return TranscriptSegment(
       text: json['text'] as String,
-      speaker: (json['speaker'] ?? 'SPEAKER_00') as String,
+    speaker: (json['speaker']?.toString() ?? 'SPEAKER_00'),
+
+      // speaker: (json['speaker'] ?? 'SPEAKER_00') as String,
       isUser: (json['is_user'] ?? false) as bool,
-      start: json['start'] as double,
-      end: json['end'] as double,
+      start: json['start'] as double??0.0,
+      end: json['end'] as double??0.0,
       // createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
     );
   }

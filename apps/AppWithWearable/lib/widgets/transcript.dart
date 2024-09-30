@@ -23,22 +23,24 @@ class TranscriptWidget extends StatefulWidget {
 class _TranscriptWidgetState extends State<TranscriptWidget> {
   @override
   Widget build(BuildContext context) {
-    for (var element in widget.segments) {
-      print('speech segments- ${element.toString()}');
-    }
+    // for (var element in widget.segments) {
+    //   print('speech segments- ${element.toString()}');
+    // }
     return ListView.separated(
       padding: EdgeInsets.zero,
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
-      itemCount: widget.segments.length + 2,
+      // itemCount: widget.segments.length + 2,
+      itemCount: widget.segments.length,
       physics: const NeverScrollableScrollPhysics(),
       separatorBuilder: (_, __) => const SizedBox(height: 16.0),
       itemBuilder: (context, idx) {
-        if (idx == 0) return SizedBox(height: widget.topMargin ? 8 : 0);
-        if (idx == widget.segments.length + 1)
-          return const SizedBox(height: 64);
-        final data = widget.segments[idx - 1];
-        return ChatBoxWidget(segment: data);
+       TranscriptSegment segment = widget.segments[idx];
+        // if (idx == 0) return SizedBox(height: widget.topMargin ? 8 : 0);
+        // if (idx == widget.segments.length + 1)
+        // return const SizedBox(height: 64);
+        // final data = widget.segments[idx - 1];
+        return ChatBoxWidget(segment: segment);
         // return Padding(
         //   padding: EdgeInsetsDirectional.fromSTEB(
         //       widget.horizontalMargin ? 16 : 0,
