@@ -6,6 +6,7 @@ import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:friend_private/utils/websockets.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -213,35 +214,51 @@ class _SettingsPageState extends State<SettingsPage> {
               getItemAddOn('Calendar Integration', () {
                 routeToPage(context, const CalendarPage());
               }, icon: Icons.calendar_month),
-              ExpansionTile(
-                // onExpansionChanged: (value) {
-                //   print('on expansio changes $value');
-                // },
+              SizedBox(height: 12),
+             Padding(
+               padding: const EdgeInsets.only(left: 8,right: 8),
+               child: ClipRRect(
+                 borderRadius: BorderRadius.circular(10),
+                 child: ExpansionTile(
+                  //  tilePadding: ,
+                   textColor: const Color.fromARGB(255, 150, 150, 150),
+                   collapsedBackgroundColor: const Color(0x22FFFFFF),
+                   backgroundColor: const Color(0x22FFFFFF),
+                   trailing: const Icon(
+                     Icons.arrow_forward_ios,
+                     size: 16,
+                     color: Colors.white,
+                   ),
+                   title: const Text(
+                     'Developer Mode',
+                     style: TextStyle(
+                       color: Color.fromARGB(255, 150, 150, 150),
+                     ),
+                   ),
+                   children: [
+                     ListTile(
+                       title: const Text('Deepgram'),
+                       onTap: () {
+                         developerModeSelected(modeSelected: 'Deepgram');
+                       },
+                     ),
+                     ListTile(
+                       title: const Text('Sarvam'),
+                       onTap: () {
+                         developerModeSelected(modeSelected: 'Sarvam');
+                       },
+                     ),
+                     ListTile(
+                       title: const Text('Wisper'),
+                       onTap: () {
+                         developerModeSelected(modeSelected: 'Wisper');
+                       },
+                     ),
+                   ],
+                 ),
+               ),
+             ),
 
-                title: const Text('Developer Mode'),
-                children: [
-                  ListTile(
-                    title: const Text('Deepgram'),
-                    onTap: () {
-                      developerModeSelected(modeSelected: 'Deepgram');
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Sarvam'),
-                    onTap: () {
-                      developerModeSelected(modeSelected: 'Sarvam');
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Wisper'),
-                    onTap: () {
-                      developerModeSelected(modeSelected: 'Wisper');
-
-                      // Navigate, show a dialog, or perform any action here
-                    },
-                  ),
-                ],
-              ),
 
               // getItemAddOn('Speech Recognition', () {
               //   routeToPage(context, const SpeakerIdPage());
@@ -287,16 +304,17 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void developerModeSelected({required String modeSelected}) {
     print('Mode Selected $modeSelected');
-
-    switch (modeSelected) {
-      case 'Deepgram':
-        break;
-      case 'Sarvam':
-        break;
-      case 'Wisper':
-        break;
-      default:
-        'Sarvam';
-    }
+    // setDiffApi(newApiType: modeSelected);
+    apiType = modeSelected;
+    // switch (modeSelected) {
+    //   case 'Deepgram':
+    //     break;
+    //   case 'Sarvam':
+    //     break;
+    //   case 'Wisper':
+    //     break;
+    //   default:
+    //     'Sarvam';
+    // }
   }
 }

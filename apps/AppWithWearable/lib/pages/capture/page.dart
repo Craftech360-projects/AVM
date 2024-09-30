@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
-import 'package:friend_private/backend/api_requests/cloud_storage.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/database/message_provider.dart';
@@ -28,6 +28,8 @@ import 'package:friend_private/utils/websockets.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:location/location.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:uuid/uuid.dart';
 
 import 'logic/websocket_mixin.dart';
@@ -60,7 +62,7 @@ class CapturePageState extends State<CapturePage>
         PhoneRecorderMixin,
         WebSocketMixin,
         OpenGlassMixin {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   @override
   bool get wantKeepAlive => true;
 
@@ -120,7 +122,6 @@ class CapturePageState extends State<CapturePage>
         setState(() {});
       },
       onMessageReceived: (List<TranscriptSegment> newSegments) {
-    
         if (newSegments.isEmpty) return;
 
         if (segments.isEmpty) {
@@ -252,8 +253,7 @@ class CapturePageState extends State<CapturePage>
     context
         .read<MemoryBloc>()
         .add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
-    if (memory != null &&
-        !memory.discarded &&
+    if (!memory.discarded &&
         SharedPreferencesUtil().postMemoryNotificationIsChecked) {
       postMemoryCreationNotification(memory).then((r) {
         // TODO: this should be a plugin instead.
@@ -351,8 +351,11 @@ class CapturePageState extends State<CapturePage>
           break;
       }
     });
+
     super.initState();
   }
+
+  
 
   @override
   void dispose() {

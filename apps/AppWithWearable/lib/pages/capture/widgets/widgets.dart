@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/growthbook.dart';
 import 'package:friend_private/backend/mixpanel.dart';
@@ -20,6 +22,8 @@ import 'package:friend_private/widgets/transcript.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:lottie/lottie.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -205,6 +209,7 @@ class GetConnectionStateWidgets extends StatelessWidget {
               width: 100,
               child: Builder(
                 builder: (context) {
+                    checkBluetoothStatus(context);
                   if (isDeviceDisconnected) {
                     if (SharedPreferencesUtil().deviceId.isEmpty) {
                       return const Icon(
@@ -308,6 +313,45 @@ class GetConnectionStateWidgets extends StatelessWidget {
       size: 50,
       color: Colors.grey,
     ));
+  }
+  void checkBluetoothStatus(BuildContext context) async {
+    if (Platform.isAndroid) {
+      // Check for Bluetooth status on Android
+      if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            message: "Bluetooth Disconnected",
+          ),
+        );
+      }
+      // else{
+      //    showTopSnackBar(
+      //     Overlay.of(context),
+      //     const CustomSnackBar.success(
+      //       message: "Bluetooth Connected",
+      //     ),
+      //   );
+      // }
+    } else if (Platform.isIOS) {
+      // Check for Bluetooth status on iOS
+      if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            message: "Bluetooth Disconnected",
+          ),
+        );
+      }
+      // else{
+      //    showTopSnackBar(
+      //     Overlay.of(context),
+      //     const CustomSnackBar.success(
+      //       message: "Bluetooth Connected",
+      //     ),
+      //   );
+      // }
+    }
   }
 }
 
