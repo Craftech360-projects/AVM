@@ -5,6 +5,7 @@ import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
+import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:friend_private/widgets/dialog.dart';
@@ -72,7 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
               left: 8,
               right: 8),
-          child: Column(
+          child: ListView(
             children: [
               const SizedBox(height: 32.0),
               ...getRecordingSettings((String? newValue) {
@@ -214,51 +215,48 @@ class _SettingsPageState extends State<SettingsPage> {
               getItemAddOn('Calendar Integration', () {
                 routeToPage(context, const CalendarPage());
               }, icon: Icons.calendar_month),
-              SizedBox(height: 12),
-             Padding(
-               padding: const EdgeInsets.only(left: 8,right: 8),
-               child: ClipRRect(
-                 borderRadius: BorderRadius.circular(10),
-                 child: ExpansionTile(
-                  //  tilePadding: ,
-                   textColor: const Color.fromARGB(255, 150, 150, 150),
-                   collapsedBackgroundColor: const Color(0x22FFFFFF),
-                   backgroundColor: const Color(0x22FFFFFF),
-                   trailing: const Icon(
-                     Icons.arrow_forward_ios,
-                     size: 16,
-                     color: Colors.white,
-                   ),
-                   title: const Text(
-                     'Developer Mode',
-                     style: TextStyle(
-                       color: Color.fromARGB(255, 150, 150, 150),
-                     ),
-                   ),
-                   children: [
-                     ListTile(
-                       title: const Text('Deepgram'),
-                       onTap: () {
-                         developerModeSelected(modeSelected: 'Deepgram');
-                       },
-                     ),
-                     ListTile(
-                       title: const Text('Sarvam'),
-                       onTap: () {
-                         developerModeSelected(modeSelected: 'Sarvam');
-                       },
-                     ),
-                     ListTile(
-                       title: const Text('Wisper'),
-                       onTap: () {
-                         developerModeSelected(modeSelected: 'Wisper');
-                       },
-                     ),
-                   ],
-                 ),
-               ),
-             ),
-
+              const SizedBox(height: 12),
+              CustomExpansionTile(
+                title: 'Developer Mode',
+                children: [
+                  ListTile(
+                    title: const Text('Deepgram'),
+                    onTap: () {
+                      developerModeSelected(modeSelected: 'Deepgram');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Sarvam'),
+                    onTap: () {
+                      developerModeSelected(modeSelected: 'Sarvam');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Wisper'),
+                    onTap: () {
+                      developerModeSelected(modeSelected: 'Wisper');
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              CustomExpansionTile(
+                title: 'Prompt',
+                children: [
+                  ListTile(
+                    title: const Text('Prompt 1'),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: const Text('Prompt 2'),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: const Text('Prompt 2'),
+                    onTap: () {},
+                  ),
+                ],
+              ),
 
               // getItemAddOn('Speech Recognition', () {
               //   routeToPage(context, const SpeakerIdPage());
@@ -269,8 +267,8 @@ class _SettingsPageState extends State<SettingsPage> {
               //   setState(() {});
               // }, icon: Icons.code, visibility: devModeEnabled),
 
-              // const SizedBox(height: 32),
-              const Spacer(),
+              const SizedBox(height: 32),
+              // const Spacer(),
               // Padding(
               //   padding: const EdgeInsets.all(8),
               //   child: Text(
