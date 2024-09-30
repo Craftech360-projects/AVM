@@ -7,7 +7,6 @@ import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
 import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dart';
 import 'package:friend_private/utils/other/temp.dart';
-import 'package:friend_private/utils/websockets.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -218,9 +217,11 @@ class _SettingsPageState extends State<SettingsPage> {
               const SizedBox(height: 12),
               CustomExpansionTile(
                 title: 'Developer Mode',
+                subtitle: SharedPreferencesUtil().getApiType('NewApiKey') ?? '',
                 children: [
                   ListTile(
                     title: const Text('Deepgram'),
+                   
                     onTap: () {
                       developerModeSelected(modeSelected: 'Deepgram');
                     },
@@ -303,7 +304,8 @@ class _SettingsPageState extends State<SettingsPage> {
   void developerModeSelected({required String modeSelected}) {
     print('Mode Selected $modeSelected');
     // setDiffApi(newApiType: modeSelected);
-    apiType = modeSelected;
+    SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
+    // apiType = modeSelected;
     // switch (modeSelected) {
     //   case 'Deepgram':
     //     break;

@@ -221,6 +221,12 @@ class SharedPreferencesUtil {
   bool? getBool(String key) {
     return _preferences?.getBool(key);
   }
+  Future<bool> saveApiType(String key, String value) async {
+    return await _preferences?.setString(key, value) ?? false;
+  }
+  String? getApiType(String key) {
+    return _preferences?.getString(key);
+  }
 
   Future<bool> saveDouble(String key, double value) async {
     return await _preferences?.setDouble(key, value) ?? false;

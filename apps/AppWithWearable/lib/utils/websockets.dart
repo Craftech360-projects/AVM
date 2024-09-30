@@ -31,20 +31,18 @@ String mapCodecToName(BleAudioCodec codec) {
 
 // String apiType='Sarvam';
 // void setDiffApi({required String newApiType}) {
-//   apiType = newApiType; 
- 
+//   apiType = newApiType;
+
 // }
 
-String _apiType = 'Sarvam'; // Private variable
+// String _apiType = 'Sarvam';
 
-// Getter for apiType
-String get apiType => _apiType;
+// String get apiType => _apiType;
 
-// Setter for apiType
-set apiType(String newApiType) {
-  _apiType = newApiType;
-  print('apiType updated to: $_apiType'); // Debugging print statement
-}
+// set apiType(String newApiType) {
+//   _apiType = newApiType;
+//   print('apiType updated to: $_apiType');
+// }
 Future<IOWebSocketChannel?> streamingTranscript({
   required VoidCallback onWebsocketConnectionSuccess,
   required void Function(dynamic) onWebsocketConnectionFailed,
@@ -88,7 +86,14 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
   debugPrint("apikey , $deepgramapikey");
+  // String encoding = "opus";
 
+  // if (codec == 'pcm8' || codec == 'pcm16') {
+  //   // encoding = 'linear16';
+  //   encoding = 'opus';
+  // } else {
+  //   encoding = 'linear16';
+  // }
   String encoding = "opus";
   const String language = 'en-US';
   const int sampleRate = 48000;
@@ -97,7 +102,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   Uri uri = Uri.parse(
     'wss://solid-wasp-balanced.ngrok-free.app?language=$language&sample_rate=$sampleRate&codec=$codec&channels=$channels',
   );
-   print('apiType at dee$apiType');
+  final String apiType = SharedPreferencesUtil().getApiType('NewApiKey')??'Sarvam';
+  print('apiType at dee$apiType');
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
@@ -153,7 +159,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
                   text: transcript,
                   // speaker: 'SPEAKER_00',
                   speaker: '1',
-                 
+
                   isUser: false,
                   start: (data['start'] as double?) ?? 0.0,
                   end: ((data['start'] as double?) ?? 0.0) +
