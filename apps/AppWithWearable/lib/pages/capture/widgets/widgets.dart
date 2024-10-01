@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/growthbook.dart';
 import 'package:friend_private/backend/mixpanel.dart';
@@ -20,6 +22,8 @@ import 'package:friend_private/widgets/transcript.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:lottie/lottie.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,7 +53,7 @@ class CaptureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
+
     return GestureDetector(
       onTap: () {
         if (segments!.isNotEmpty) {
@@ -57,27 +61,32 @@ class CaptureCard extends StatelessWidget {
             useSafeArea: true,
             isScrollControlled: true,
             context: context,
-            builder: (context) => Column(
-              mainAxisSize: MainAxisSize.min,
+            builder: (context) => Stack(
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.close),
-                  ),
+                Image.asset('assets/images/splash.png',fit: BoxFit.fill,width: double.maxFinite,),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
+                    ),
+                    Expanded(
+                        child: SingleChildScrollView(
+                      child: getTranscriptWidget(
+                        memoryCreating,
+                        segments ?? [],
+                        photos,
+                        device,
+                      ),
+                    ))
+                  ],
                 ),
-                Expanded(
-                    child: SingleChildScrollView(
-                  child: getTranscriptWidget(
-                    memoryCreating,
-                    segments ?? [],
-                    photos,
-                    device,
-                  ),
-                ))
               ],
             ),
           );
@@ -95,9 +104,9 @@ class CaptureCard extends StatelessWidget {
                 child: SizedBox(
                   height: 140,
                   child: segments == null || segments!.isEmpty
-                      ? const Text(
-                          '👋🏻 Hi!, Ready to hear what awesome task you’ve got for me today!',
-                          style: TextStyle(
+                      ? Text(
+                          '👋🏻 Hi! ${SharedPreferencesUtil().givenName},\nReady to hear what awesome task you’ve got for me today!',
+                          style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
                           ),
@@ -107,18 +116,22 @@ class CaptureCard extends StatelessWidget {
                           itemCount: segments!.length,
                           controller: scrollController,
                           itemBuilder: (context, index) {
-                            final segment = segments![index];
+                            TranscriptSegment segment = segments![index];
+                            String speakerName = segment.speaker == '0'
+                                ? '${SharedPreferencesUtil().givenName}(You)'
+                                : 'Speaker: ${segment.speaker}';
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  segment.isUser
-                                      ? SharedPreferencesUtil()
-                                              .givenName
-                                              .isNotEmpty
-                                          ? SharedPreferencesUtil().givenName
-                                          : 'You'
-                                      : 'Speaker ${segment.speakerId}',
+                                  // segment.isUser
+                                  //     ? SharedPreferencesUtil()
+                                  //             .givenName
+                                  //             .isNotEmpty
+                                  //         ? SharedPreferencesUtil().givenName
+                                  //         : 'You'
+                                  //     : 'Speaker ${segment.speaker}',
+                                  speakerName,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -196,6 +209,7 @@ class GetConnectionStateWidgets extends StatelessWidget {
               width: 100,
               child: Builder(
                 builder: (context) {
+                    checkBluetoothStatus(context);
                   if (isDeviceDisconnected) {
                     if (SharedPreferencesUtil().deviceId.isEmpty) {
                       return const Icon(
@@ -299,6 +313,45 @@ class GetConnectionStateWidgets extends StatelessWidget {
       size: 50,
       color: Colors.grey,
     ));
+  }
+  void checkBluetoothStatus(BuildContext context) async {
+    if (Platform.isAndroid) {
+      // Check for Bluetooth status on Android
+      if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            message: "Bluetooth Disconnected",
+          ),
+        );
+      }
+      // else{
+      //    showTopSnackBar(
+      //     Overlay.of(context),
+      //     const CustomSnackBar.success(
+      //       message: "Bluetooth Connected",
+      //     ),
+      //   );
+      // }
+    } else if (Platform.isIOS) {
+      // Check for Bluetooth status on iOS
+      if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
+        showTopSnackBar(
+          Overlay.of(context),
+          const CustomSnackBar.error(
+            message: "Bluetooth Disconnected",
+          ),
+        );
+      }
+      // else{
+      //    showTopSnackBar(
+      //     Overlay.of(context),
+      //     const CustomSnackBar.success(
+      //       message: "Bluetooth Connected",
+      //     ),
+      //   );
+      // }
+    }
   }
 }
 

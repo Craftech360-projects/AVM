@@ -18,13 +18,16 @@ class WavBytesUtil {
   final SimpleOpusDecoder opusDecoder = SimpleOpusDecoder(sampleRate: 16000, channels: 1);
 
   WavBytesUtil({this.codec = BleAudioCodec.pcm8});
-
+  final List<int> _audioBytes = [];
   // needed variables for `storeFramePacket`
   int lastPacketIndex = -1;
   int lastFrameId = -1;
   List<int> pending = [];
   int lost = 0;
-
+    List<int> get audioBytes => _audioBytes;
+  void addAudioBytes(List<int> bytes) {
+    _audioBytes.addAll(bytes);
+  }
   void storeFramePacket(value) {
     int index = value[0] + (value[1] << 8);
     int internal = value[2];

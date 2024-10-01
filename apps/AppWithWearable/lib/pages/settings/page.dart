@@ -1,15 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/pages/capture/logic/websocket_mixin.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
-import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
-import 'package:friend_private/pages/settings/developer.dart';
+import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
-import 'package:friend_private/pages/speaker_id/page.dart';
+import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:restart_app/restart_app.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -18,7 +21,7 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
   late String _selectedLanguage;
   late bool optInAnalytics;
   late bool devModeEnabled;
@@ -27,6 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
   late bool reconnectNotificationIsChecked;
   String? version;
   String? buildVersion;
+  final bool _customTileExpanded = false;
 
   @override
   void initState() {
@@ -72,7 +76,7 @@ class _SettingsPageState extends State<SettingsPage> {
               bottom: MediaQuery.of(context).viewInsets.bottom,
               left: 8,
               right: 8),
-          child: Column(
+          child: ListView(
             children: [
               const SizedBox(height: 32.0),
               ...getRecordingSettings((String? newValue) {
@@ -208,27 +212,80 @@ class _SettingsPageState extends State<SettingsPage> {
               //         routeToPage(context, const SpeakerIdPage());
               //       }, icon: Icons.multitrack_audio)
               //     : Container(),
+              getItemAddOn('Profile', () {
+                routeToPage(context, const ProfilePage());
+              }, icon: Icons.person),
               getItemAddOn('Calendar Integration', () {
                 routeToPage(context, const CalendarPage());
               }, icon: Icons.calendar_month),
+              const SizedBox(height: 12),
+              CustomExpansionTile(
+                title: 'Developer Mode',
+                subtitle: SharedPreferencesUtil().getApiType('NewApiKey') ?? '',
+                children: [
+                  ListTile(
+                    title: const Text('Deepgram'),
+                    onTap: () {
+                      developerModeSelected(modeSelected: 'Deepgram');
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('Sarvam'),
+                    onTap: () {
+                      developerModeSelected(modeSelected: 'Sarvam');
+                    },
+                  ),
+                  Visibility(
+                    visible: false,
+                    child: ListTile(
+                      title: const Text('Wisper'),
+                      onTap: () {
+                        developerModeSelected(modeSelected: 'Wisper');
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              CustomExpansionTile(
+                title: 'Prompt',
+                children: [
+                  ListTile(
+                    title: const Text('Prompt 1'),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: const Text('Prompt 2'),
+                    onTap: () {},
+                  ),
+                  ListTile(
+                    title: const Text('Prompt 2'),
+                    onTap: () {},
+                  ),
+                ],
+              ),
+
+              // getItemAddOn('Speech Recognition', () {
+              //   routeToPage(context, const SpeakerIdPage());
+              // }, icon: Icons.multitrack_audio),
               // getItemAddOn('Developer Mode', () async {
               //   MixpanelManager().devModePageOpened();
               //   await routeToPage(context, const DeveloperSettingsPage());
               //   setState(() {});
               // }, icon: Icons.code, visibility: devModeEnabled),
 
-              // const SizedBox(height: 32),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  SharedPreferencesUtil().uid,
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                ),
-              ),
+              const SizedBox(height: 32),
+              // const Spacer(),
+              // Padding(
+              //   padding: const EdgeInsets.all(8),
+              //   child: Text(
+              //     SharedPreferencesUtil().uid,
+              //     style: const TextStyle(
+              //         color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+              //     maxLines: 1,
+              //     textAlign: TextAlign.center,
+              //   ),
+              // ),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -242,11 +299,27 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 100),
+              const SizedBox(height: 80),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void developerModeSelected({required String modeSelected}) {
+    print('Mode Selected $modeSelected');
+    // setDiffApi(newApiType: modeSelected);
+    SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
+    const AlertDialog(
+      content: Text('To Reflect selected Changes\nApp Restarting...'),
+    );
+    Future.delayed(const Duration(seconds: 3));
+    if (Platform.isAndroid) Restart.restartApp();
+
+    Restart.restartApp(
+      notificationTitle: 'Restarting App',
+      notificationBody: 'Please tap here to open the app again.',
     );
   }
 }

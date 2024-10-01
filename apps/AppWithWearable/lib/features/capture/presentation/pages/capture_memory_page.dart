@@ -177,33 +177,40 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         //     ),
         //   ),
         // ),
-        if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: TextButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _isNonDiscarded = !_isNonDiscarded;
-                    _memoryBloc.add(
-                      DisplayedMemory(isNonDiscarded: _isNonDiscarded),
-                    );
-                  });
-                },
-                label: Icon(
-                  _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
-                  size: 16,
-                  color: Colors.grey,
-                ),
-                icon: Text(
-                  _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 212, 212, 212),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400),
-                ),
+
+if(_isNonDiscarded||_memoryBloc.state.memories.isNotEmpty)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () {
+                setState(() {
+                  _isNonDiscarded = !_isNonDiscarded;
+                  _memoryBloc.add(
+                    DisplayedMemory(isNonDiscarded: _isNonDiscarded),
+                  );
+                });
+              },
+              label:Text(
+                _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
+                style: const TextStyle(
+                    color: Color.fromARGB(255, 212, 212, 212),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400),
+
               ),
+              //  Icon(
+              //   _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
+              //   size: 16,
+              //   color: Colors.grey,
+              // ),
+              icon:  Icon(
+                _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
+                size: 16,
+                color: Colors.grey,
+              ),
+              
             ),
           ),
         //*--- MEMORY LIST ---*//

@@ -44,7 +44,11 @@ class _CompletionTabState extends State<CompletionTab> {
           child: Center(
             child: Text(
               'Your speech profile is now\nfully set up!',
-              style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w500, height: 1.5),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                  height: 1.5),
               textAlign: TextAlign.center,
             ),
           ),
@@ -55,7 +59,8 @@ class _CompletionTabState extends State<CompletionTab> {
           child: Center(
             child: Text(
               'You can always do it later and improve it\'s accuracy!',
-              style: TextStyle(color: Colors.grey.shade300, fontSize: 16, height: 1.5),
+              style: TextStyle(
+                  color: Colors.grey.shade300, fontSize: 16, height: 1.5),
               textAlign: TextAlign.center,
             ),
           ),
@@ -65,7 +70,8 @@ class _CompletionTabState extends State<CompletionTab> {
           children: [
             Expanded(
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: MaterialButton(
                   onPressed: () {
                     widget.goNext();

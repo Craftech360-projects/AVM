@@ -676,6 +676,8 @@ import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/scanning_ui.dart';
 import 'package:friend_private/widgets/upgrade_alert.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:upgrader/upgrader.dart';
 
 class HomePageWrapper extends StatefulWidget {
@@ -959,7 +961,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                       // margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       decoration: const BoxDecoration(
                         color: Colors.black,
@@ -974,7 +976,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                         //   ]),
                         //   width: 2,
                         // ),
-                        // shape: BoxShape.rectangle,
+                        // shape: BoxShape.rectangle,Fcustom
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1071,7 +1073,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                           ),
                         ],
                       )),
-                )
+                ),
+             
             ],
           ),
         ),

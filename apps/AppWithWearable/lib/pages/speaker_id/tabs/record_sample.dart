@@ -8,7 +8,6 @@ import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/backend/schema/sample.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/communication.dart';
-import 'package:tuple/tuple.dart';
 
 class RecordSampleTab extends StatefulWidget {
   final BTDeviceStruct? btDevice;
@@ -32,17 +31,14 @@ class RecordSampleTab extends StatefulWidget {
   State<RecordSampleTab> createState() => _RecordSampleTabState();
 }
 
-class _RecordSampleTabState extends State<RecordSampleTab> with TickerProviderStateMixin {
+class _RecordSampleTabState extends State<RecordSampleTab>
+    with TickerProviderStateMixin {
   StreamSubscription? audioBytesStream;
   WavBytesUtil? audioStorage;
   bool recording = false;
   bool speechRecorded = false;
   late AnimationController _controller;
   late Animation<double> _animation;
-
-  bool uploadingSample = false;
-
-  changeLoadingState() => setState(() => uploadingSample = !uploadingSample);
 
   @override
   void initState() {
@@ -57,13 +53,22 @@ class _RecordSampleTabState extends State<RecordSampleTab> with TickerProviderSt
   Future<void> startRecording() async {
     audioBytesStream?.cancel();
     if (widget.btDevice == null) return;
-    audioStorage = WavBytesUtil(codec: await getAudioCodec(widget.btDevice!.id));
+    WavBytesUtil wavBytesUtil = WavBytesUtil();
 
-    audioBytesStream = await getBleAudioBytesListener(widget.btDevice!.id, onAudioBytesReceived: (List<int> value) {
+    StreamSubscription? stream = await getBleAudioBytesListener(
+        widget.btDevice!.id, onAudioBytesReceived: (List<int> value) {
       if (value.isEmpty) return;
-      audioStorage!.storeFramePacket(value);
+      value.removeRange(0, 3);
+      for (int i = 0; i < value.length; i += 2) {
+        int byte1 = value[i];
+        int byte2 = value[i + 1];
+        int int16Value = (byte2 << 8) | byte1;
+        wavBytesUtil.addAudioBytes([int16Value]);
+      }
     });
 
+    audioBytesStream = stream;
+    audioStorage = wavBytesUtil;
     setState(() {
       recording = true;
       speechRecorded = false;
@@ -71,23 +76,22 @@ class _RecordSampleTabState extends State<RecordSampleTab> with TickerProviderSt
   }
 
   Future<void> confirmRecording() async {
-    // TODO: how to upload nonsense uploads?
-    // - people who say it too fast
-    // - people who spend a lot of time
-    // - people who don't say anything
-    if (!(audioStorage?.hasFrames() ?? false)) return;
-    changeLoadingState();
+    if ((audioStorage?.audioBytes ?? []).isEmpty) return;
+    var bytes = audioStorage!.audioBytes;
     setState(() {
       recording = false;
       speechRecorded = true;
     });
     widget.onRecordCompleted();
 
-    await Future.delayed(const Duration(seconds: 2)); // wait for bytes streaming to stream all
+    await Future.delayed(
+        const Duration(seconds: 2)); // wait for bytes streaming to stream all
     audioBytesStream?.cancel();
-    Tuple2<File, List<List<int>>> file = await audioStorage!.createWavFile(filename: '${widget.sample.id}.wav');
-    changeLoadingState();
-    await uploadSample(file.item1, SharedPreferencesUtil().uid); // optimistic request
+    File file = await WavBytesUtil()
+        .createWavByCodec([bytes], filename: '${widget.sample.id}.wav');
+    // File file = await WavBytesUtil.createWavFile(bytes,
+    //     filename: '${widget.sample.id}.wav');
+    await uploadSample(file, SharedPreferencesUtil().uid); // optimistic request
     // TODO: handle failures + url: null, retry sample
   }
 
@@ -121,7 +125,8 @@ class _RecordSampleTabState extends State<RecordSampleTab> with TickerProviderSt
         Center(
           child: Text(
             'Sample: ${widget.sampleIdx + 1}/${widget.totalSamples}',
-            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+            style: const TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ),
         const SizedBox(height: 32),
@@ -130,7 +135,10 @@ class _RecordSampleTabState extends State<RecordSampleTab> with TickerProviderSt
           child: Center(
             child: Text(
               widget.sample.phrase,
-              style: const TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.w500),
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                  fontWeight: FontWeight.w500),
               textAlign: TextAlign.center,
             ),
           ),
@@ -168,23 +176,16 @@ class _RecordSampleTabState extends State<RecordSampleTab> with TickerProviderSt
                   ),
                   child: !speechRecorded
                       ? IconButton(
-                          onPressed: recording ? confirmRecording : startRecording,
-                          icon: const Icon(Icons.mic, color: Colors.white, size: 48),
+                          onPressed:
+                              recording ? confirmRecording : startRecording,
+                          icon: const Icon(Icons.mic,
+                              color: Colors.white, size: 48),
                         )
-                      : uploadingSample
-                          ? const Center(
-                              child: SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            )
-                          : IconButton(
-                              onPressed: widget.goNext,
-                              icon: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 48),
-                            ),
+                      : IconButton(
+                          onPressed: widget.goNext,
+                          icon: const Icon(Icons.arrow_forward_ios,
+                              color: Colors.white, size: 48),
+                        ),
                 ),
               ],
             ),
