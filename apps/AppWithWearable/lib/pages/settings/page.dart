@@ -6,6 +6,8 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/capture/logic/websocket_mixin.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
+import 'package:friend_private/pages/settings/custom_prompt_page.dart';
+import 'package:friend_private/pages/settings/developer_page.dart';
 import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
 import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dart';
@@ -76,7 +78,7 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
               bottom: MediaQuery.of(context).viewInsets.bottom,
               left: 8,
               right: 8),
-          child: ListView(
+          child: Column(
             children: [
               const SizedBox(height: 32.0),
               ...getRecordingSettings((String? newValue) {
@@ -218,52 +220,57 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
               getItemAddOn('Calendar Integration', () {
                 routeToPage(context, const CalendarPage());
               }, icon: Icons.calendar_month),
-              const SizedBox(height: 12),
-              CustomExpansionTile(
-                title: 'Developer Mode',
-                subtitle: SharedPreferencesUtil().getApiType('NewApiKey') ?? '',
-                children: [
-                  ListTile(
-                    title: const Text('Deepgram'),
-                    onTap: () {
-                      developerModeSelected(modeSelected: 'Deepgram');
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Sarvam'),
-                    onTap: () {
-                      developerModeSelected(modeSelected: 'Sarvam');
-                    },
-                  ),
-                  Visibility(
-                    visible: false,
-                    child: ListTile(
-                      title: const Text('Wisper'),
-                      onTap: () {
-                        developerModeSelected(modeSelected: 'Wisper');
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              CustomExpansionTile(
-                title: 'Prompt',
-                children: [
-                  ListTile(
-                    title: const Text('Prompt 1'),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    title: const Text('Prompt 2'),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    title: const Text('Prompt 2'),
-                    onTap: () {},
-                  ),
-                ],
-              ),
+              getItemAddOn('Developers Option', () {
+                routeToPage(context, const DeveloperPage());
+              }, icon: Icons.settings_suggest),
+              // const SizedBox(height: 12),
+              // CustomExpansionTile(
+              //   title: 'Transcript Scervice',
+              //   subtitle: SharedPreferencesUtil().getApiType('NewApiKey') ?? '',
+              //   children: [
+              //     ListTile(
+              //       title: const Text('Deepgram'),
+              //       onTap: () {
+              //         developerModeSelected(modeSelected: 'Deepgram');
+              //       },
+              //     ),
+              //     ListTile(
+              //       title: const Text('Sarvam'),
+              //       onTap: () {
+              //         developerModeSelected(modeSelected: 'Sarvam');
+              //       },
+              //     ),
+              //     Visibility(
+              //       visible: false,
+              //       child: ListTile(
+              //         title: const Text('Wisper'),
+              //         onTap: () {
+              //           developerModeSelected(modeSelected: 'Wisper');
+              //         },
+              //       ),
+              //     ),
+              //   ],
+              // ),
+              // const SizedBox(height: 12),
+              // CustomExpansionTile(
+              //   title: 'Prompt',
+              //   children: [
+              //     ListTile(
+              //       title: const Text('Default'),
+              //       onTap: () {},
+              //     ),
+              //     ListTile(
+              //       title: const Text('Customize Prompt'),
+              //       onTap: () {
+              //         Navigator.of(context).push(
+              //           MaterialPageRoute(
+              //             builder: (context) => const CustomPromptPage(),
+              //           ),
+              //         );
+              //       },
+              //     ),
+              //   ],
+              // ),
 
               // getItemAddOn('Speech Recognition', () {
               //   routeToPage(context, const SpeakerIdPage());
@@ -274,8 +281,8 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
               //   setState(() {});
               // }, icon: Icons.code, visibility: devModeEnabled),
 
-              const SizedBox(height: 32),
-              // const Spacer(),
+              // const SizedBox(height: 32),
+              const Spacer(),
               // Padding(
               //   padding: const EdgeInsets.all(8),
               //   child: Text(
@@ -307,19 +314,19 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
     );
   }
 
-  void developerModeSelected({required String modeSelected}) {
-    print('Mode Selected $modeSelected');
-    // setDiffApi(newApiType: modeSelected);
-    SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
-    const AlertDialog(
-      content: Text('To Reflect selected Changes\nApp Restarting...'),
-    );
-    Future.delayed(const Duration(seconds: 3));
-    if (Platform.isAndroid) Restart.restartApp();
+  // void developerModeSelected({required String modeSelected}) {
+  //   print('Mode Selected $modeSelected');
+  //   // setDiffApi(newApiType: modeSelected);
+  //   SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
+  //   const AlertDialog(
+  //     content: Text('To Reflect selected Changes\nApp Restarting...'),
+  //   );
+  //   Future.delayed(const Duration(seconds: 3));
+  //   if (Platform.isAndroid) Restart.restartApp();
 
-    Restart.restartApp(
-      notificationTitle: 'Restarting App',
-      notificationBody: 'Please tap here to open the app again.',
-    );
-  }
+  //   Restart.restartApp(
+  //     notificationTitle: 'Restarting App',
+  //     notificationBody: 'Please tap here to open the app again.',
+  //   );
+  // }
 }

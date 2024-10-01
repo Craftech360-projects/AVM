@@ -212,7 +212,7 @@ if(_isNonDiscarded||_memoryBloc.state.memories.isNotEmpty)
               ),
               
             ),
-          ),
+          ),),
         //*--- MEMORY LIST ---*//
         BlocConsumer<MemoryBloc, MemoryState>(
           bloc: _memoryBloc,

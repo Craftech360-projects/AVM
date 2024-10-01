@@ -18,6 +18,23 @@ class SummaryResult {
 
   SummaryResult(this.structured, this.pluginsResponse);
 }
+class CustomPrompt {
+  final String? prompt;
+  final String? title;
+  final String? overview;
+  final String? actionItems;
+  final String? category;
+  final String? calendar;
+
+  CustomPrompt({
+    this.prompt,
+    this.title,
+    this.overview,
+    this.actionItems,
+    this.category,
+    this.calendar,
+  });
+}
 
 Future<SummaryResult> summarizeMemory(
   String transcript,
@@ -25,6 +42,7 @@ Future<SummaryResult> summarizeMemory(
   bool forceProcess = false,
   bool ignoreCache = false,
   DateTime? conversationDate,
+  CustomPrompt? customPromptDetails, 
 }) async {
   debugPrint('summarizeMemory transcript length: ${transcript.length}');
   if (transcript.isEmpty || transcript.split(' ').length < 7) {
@@ -38,21 +56,25 @@ Future<SummaryResult> summarizeMemory(
   // TODO: try later with temperature 0
   // NOTE: PROMPT IS VERY DELICATE, IT CAN DISCARD EVERYTHING IF NOT HANDLED PROPERLY
   // The purpose for structuring this memory is to remember important conversations, decisions, and action items. If there's nothing like that in the transcript, output an empty title.
-
-  var prompt = '''
+ var prompt = customPromptDetails?.prompt ?? '''
 Summarize the following conversation transcript. The conversation language is ${SharedPreferencesUtil().recordingsLanguage}. Respond in English.
 
-${forceProcess ? "" : "If the conversation is not worth storing (no interesting topics, facts, or information), output an empty title."}
+${forceProcess ? "" : "If the conversation does not contain significant insights or action items, output an empty title."}
+
+**Key Instructions**: 
+- Provide a detailed summary of the conversation, capturing the most important discussion points, insights, decisions, and commitments.
+- Ensure the summary is comprehensive and does not omit critical details.
+- Summaries should not be too brief. The overview must contain at least 100 words, and key highlights should provide enough context to understand the depth of the discussion.
 
 Provide the following:
-1. Title: The main topic of the conversation.
-2. Overview: A brief summary of the main topics discussed, capturing key points and important details.
-3. Action Items: A list of commitments, tasks, or next steps from the conversation. Specify who is responsible for each.
-4. Category: Classify the conversation into these categories, maximum 3: personal, education, health, finance, legal, philosophy, spiritual, science, entrepreneurship, parenting, romantic, travel, inspiration, technology, business, social, work, other.
-5. Emoji: An emoji that represents the conversation.
-6. Calendar Events: Any events mentioned that should be added to a calendar. Include title, description, start time, and duration , if start time is not there give ${(conversationDate ?? DateTime.now()).toIso8601String()} and duration is not there then give 60 minute . The conversation date is ${(conversationDate ?? DateTime.now()).toIso8601String()}.
+1. **Title**: ${customPromptDetails?.title ?? 'The main topic or most important theme of the conversation.'}
+2. **Overview**: ${customPromptDetails?.overview ?? 'A detailed summary (minimum 100 words) of the key points and most significant details discussed, including decisions and major insights.'}
+3. **Action Items**: ${customPromptDetails?.actionItems ?? 'A detailed list of tasks or commitments, including the context or reason behind each task, along with who is responsible for them and any deadlines.'}
+4. **Category**: ${customPromptDetails?.category ?? 'Classify the conversation under up to 3 categories (personal, education, health, finance, legal, philosophy, spiritual, science, entrepreneurship, parenting, romantic, travel, inspiration, technology, business, social, work, other).'}
+5. **Emoji**: A single emoji that represents the conversation theme.
+6. **Calendar Events**: ${customPromptDetails?.calendar ?? 'Any specific events mentioned during the conversation. Include the title, description, start time, and duration.'}
 
- 
+
 
 The date context for this conversation is ${DateTime.now().toIso8601String()}.
 
