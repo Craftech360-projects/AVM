@@ -87,7 +87,9 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
   debugPrint("apikey , $deepgramapikey");
+
   // String encoding = "opus";
+
 
   // if (codec == 'pcm8' || codec == 'pcm16') {
   //   // encoding = 'linear16';

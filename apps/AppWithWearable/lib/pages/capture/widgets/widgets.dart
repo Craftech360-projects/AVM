@@ -53,7 +53,7 @@ class CaptureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('transcript segments check $segments');
+
     return GestureDetector(
       onTap: () {
         if (segments!.isNotEmpty) {

@@ -158,7 +158,6 @@ class CapturePageState extends State<CapturePage>
             curve: Curves.easeOut,
           );
         }
-
         setState(() {});
       },
     );
@@ -427,6 +426,29 @@ class CapturePageState extends State<CapturePage>
               memoryCreating: memoryCreating,
               photos: photos,
               scrollController: _scrollController,
+              onDismissmissedCaptureMemory: (direction) {
+                _createMemory();
+                setState(() {});
+                // if (segments.isNotEmpty) {
+
+                //   final removedSegment = segments[0];
+
+                //   setState(() {
+                //     segments.removeAt(0);
+
+                //   });
+
+                //   _createMemory().then((_) {
+                //     print('Memory created');
+                //   }).catchError((error) {
+                //     print('Error creating memory: $error');
+
+                //     setState(() {
+                //       segments.insert(0, removedSegment);
+                //     });
+                //   });
+                // }
+              },
             ),
             // ...getConnectionStateWidgets(
             //   context,
