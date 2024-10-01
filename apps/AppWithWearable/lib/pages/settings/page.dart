@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/pages/capture/logic/websocket_mixin.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/profile.dart';
@@ -9,6 +12,7 @@ import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dar
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:restart_app/restart_app.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -17,7 +21,7 @@ class SettingsPage extends StatefulWidget {
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
   late String _selectedLanguage;
   late bool optInAnalytics;
   late bool devModeEnabled;
@@ -221,7 +225,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   ListTile(
                     title: const Text('Deepgram'),
-                   
                     onTap: () {
                       developerModeSelected(modeSelected: 'Deepgram');
                     },
@@ -232,11 +235,14 @@ class _SettingsPageState extends State<SettingsPage> {
                       developerModeSelected(modeSelected: 'Sarvam');
                     },
                   ),
-                  ListTile(
-                    title: const Text('Wisper'),
-                    onTap: () {
-                      developerModeSelected(modeSelected: 'Wisper');
-                    },
+                  Visibility(
+                    visible: false,
+                    child: ListTile(
+                      title: const Text('Wisper'),
+                      onTap: () {
+                        developerModeSelected(modeSelected: 'Wisper');
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -305,16 +311,15 @@ class _SettingsPageState extends State<SettingsPage> {
     print('Mode Selected $modeSelected');
     // setDiffApi(newApiType: modeSelected);
     SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
-    // apiType = modeSelected;
-    // switch (modeSelected) {
-    //   case 'Deepgram':
-    //     break;
-    //   case 'Sarvam':
-    //     break;
-    //   case 'Wisper':
-    //     break;
-    //   default:
-    //     'Sarvam';
-    // }
+    const AlertDialog(
+      content: Text('To Reflect selected Changes\nApp Restarting...'),
+    );
+    Future.delayed(const Duration(seconds: 3));
+    if (Platform.isAndroid) Restart.restartApp();
+
+    Restart.restartApp(
+      notificationTitle: 'Restarting App',
+      notificationBody: 'Please tap here to open the app again.',
+    );
   }
 }

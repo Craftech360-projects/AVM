@@ -243,6 +243,12 @@ class SharedPreferencesUtil {
   List<String>? getStringList(String key) {
     return _preferences?.getStringList(key);
   }
+Future<bool> saveSelectedPrompt(String key, String selectedValue) async {
+  return await _preferences?.setString(key, selectedValue) ?? false;
+}
+String? getSelectedPrompt(String key) {
+  return _preferences?.getString(key);
+}
 
   Future<bool> remove(String key) async {
     return await _preferences?.remove(key) ?? false;

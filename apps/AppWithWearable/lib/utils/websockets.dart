@@ -81,6 +81,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   String codec,
 ) async {
   debugPrint('Websocket Opening');
+  final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
 
   final deepgramapikey = getDeepgramApiKeyForUsage();
   debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
@@ -94,6 +95,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // } else {
   //   encoding = 'linear16';
   // }
+  //   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
+
   String encoding = "opus";
   const String language = 'en-US';
   const int sampleRate = 48000;
@@ -137,7 +140,42 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     );
 
     await channel.ready;
+    // DateTime? lastAudioTime;
+        await channel.ready;
+
+    // KeepAlive mechanism
+    Timer? keepAliveTimer;
+    const keepAliveInterval =
+        Duration(seconds: 7); // Send KeepAlive every 7 seconds
+    const silenceTimeout = Duration(seconds: 30); // Silence timeout
     DateTime? lastAudioTime;
+
+    void startKeepAlive() {
+      keepAliveTimer = Timer.periodic(keepAliveInterval, (timer) async {
+        try {
+          await channel.ready; // Ensure the channel is ready
+          final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
+          channel.sink.add(keepAliveMsg);
+          // debugPrint('Sent KeepAlive message');
+        } catch (e) {
+          debugPrint('Error sending KeepAlive message: $e');
+        }
+      });
+    }
+
+    void stopKeepAlive() {
+      keepAliveTimer?.cancel();
+    }
+
+    void checkSilence() {
+      if (lastAudioTime != null &&
+          DateTime.now().difference(lastAudioTime!) > silenceTimeout) {
+        // debugPrint(
+        //     'Silence detected for more than 30 seconds. Stopping KeepAlive.');
+        stopKeepAlive();
+      }
+    }
+
 
     channel.stream.listen(
       (event) {

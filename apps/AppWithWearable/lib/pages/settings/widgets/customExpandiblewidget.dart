@@ -62,7 +62,8 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
                   ),
                 ),
                    subtitle: (widget.subtitle != null && widget.subtitle!.isNotEmpty)
-                    ? Text(
+                    ? 
+                    Text(
                         widget.subtitle ?? '',
                         style: TextStyle(
                           color: widget.textColor,
