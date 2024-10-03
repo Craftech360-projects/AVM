@@ -99,11 +99,16 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // }
   //   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
-  String encoding = "opus";
+  String encoding = "linear16";
   const String language = 'en-US';
-  const int sampleRate = 48000;
-  const String codec = 'opus';
+  const int sampleRate = 8000;
+  const String codec = 'pcm8';
   const int channels = 1;
+  // String encoding = "opus";
+  // const String language = 'en-US';
+  // const int sampleRate = 48000;
+  // const String codec = 'opus';
+  // const int channels = 1;
   final String apiType = SharedPreferencesUtil().getApiType('NewApiKey')??'';
   Uri uri = Uri.parse(
      'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
@@ -113,12 +118,12 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
-        'wss://solid-wasp-balanced.ngrok-free.app?service=deepgram&language=${language}&sample_rate=${sampleRate}&codec=${codec}&channels=${channels}'
+        'wss://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=${language}&sample_rate=${sampleRate}&codec=${codec}&channels=${channels}'
       );
       break;
     case 'Sarvam':
       uri = Uri.parse(
-        'wss://solid-wasp-balanced.ngrok-free.app?service=service2&sample_rate=${sampleRate}&codec=pcm8&channels=1',
+        'wss://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=${sampleRate}&codec=pcm8&channels=1',
       );
       break;
     case 'Wisper':

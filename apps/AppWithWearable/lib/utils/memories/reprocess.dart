@@ -3,7 +3,10 @@ import 'package:friend_private/backend/api_requests/api/pinecone.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
+import 'package:friend_private/backend/database/prompt.dart';
+import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
+import 'package:friend_private/backend/preferences.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 
 Future<Memory?> reProcessMemory(
@@ -16,11 +19,21 @@ Future<Memory?> reProcessMemory(
   changeLoadingState();
   SummaryResult summaryResult;
   try {
+    bool isPromptSaved = SharedPreferencesUtil().isPromptSaved;
+  print('is prompt saved $isPromptSaved');
+  late Prompt? newPrompt;
+  if (isPromptSaved) {
+    final prompts = PromptProvider().getPrompts();
+    if (prompts.isNotEmpty) {
+      newPrompt = prompts.last;
+    }
+  }
     summaryResult = await summarizeMemory(
       memory.transcript,
       [],
       forceProcess: true,
       conversationDate: memory.createdAt,
+      newreprocessPrompt: newPrompt
       // customPromptDetails: CustomPrompt(
       //     prompt: 'summarazi the following output',
       //     title: 'the most important theme of conversation',

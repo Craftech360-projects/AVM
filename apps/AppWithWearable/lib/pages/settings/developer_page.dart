@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
@@ -124,11 +123,13 @@ class _DeveloperPageState extends State<DeveloperPage> {
                           //   calendar: null,
                           // );
 
-                          summarizeMemory(
-                            '',
-                            [],
-                            customPromptDetails: null,
-                          );
+                          // summarizeMemory(
+                          //   '',
+                          //   [],
+                          //   customPromptDetails: null,
+                          // );
+                          PromptProvider().removeAllPrompts();
+                          SharedPreferencesUtil().isPromptSaved = false;
                         },
                       ),
                       ListTile(
