@@ -291,6 +291,9 @@ String? getSelectedPrompt(String key) {
   set calendarEnabled(bool value) => saveBool('calendarEnabled', value);
 
   bool get calendarEnabled => getBool('calendarEnabled') ?? false;
+  set developerOptionEnabled(bool value) => saveBool('developerEnabled', value);
+
+  bool get developerOptionEnabled => getBool('developerEnabled') ?? false;
 
   set calendarId(String value) => saveString('calendarId', value);
 

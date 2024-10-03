@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -18,6 +19,7 @@ class SummaryResult {
 
   SummaryResult(this.structured, this.pluginsResponse);
 }
+
 class CustomPrompt {
   final String? prompt;
   final String? title;
@@ -34,6 +36,11 @@ class CustomPrompt {
     this.category,
     this.calendar,
   });
+
+  @override
+  String toString() {
+    return 'CustomPrompt(prompt: $prompt, title: $title, overview: $overview, actionItems: $actionItems, category: $category, calendar: $calendar)';
+  }
 }
 
 Future<SummaryResult> summarizeMemory(
@@ -42,8 +49,28 @@ Future<SummaryResult> summarizeMemory(
   bool forceProcess = false,
   bool ignoreCache = false,
   DateTime? conversationDate,
-  CustomPrompt? customPromptDetails, 
+  CustomPrompt? customPromptDetails,
 }) async {
+  
+  print('custom prompt ${customPromptDetails.toString()}');
+   if (customPromptDetails != null) {
+    final savedPrompt = SharedPreferencesUtil().getSelectedPrompt('prompt');
+    final savedTitle = SharedPreferencesUtil().getSelectedPrompt('title');
+    final savedOverview = SharedPreferencesUtil().getSelectedPrompt('overview');
+    final savedActionItems = SharedPreferencesUtil().getSelectedPrompt('actionItems');
+    final savedCategory = SharedPreferencesUtil().getSelectedPrompt('category');
+    final savedCalendar = SharedPreferencesUtil().getSelectedPrompt('calendar');
+
+    customPromptDetails = CustomPrompt(
+      prompt: savedPrompt,
+      title: savedTitle,
+      overview: savedOverview,
+      actionItems: savedActionItems,
+      category: savedCategory,
+      calendar: savedCalendar,
+    );
+  }
+
   debugPrint('summarizeMemory transcript length: ${transcript.length}');
   if (transcript.isEmpty || transcript.split(' ').length < 7) {
     return SummaryResult(Structured('', ''), []);
@@ -56,7 +83,8 @@ Future<SummaryResult> summarizeMemory(
   // TODO: try later with temperature 0
   // NOTE: PROMPT IS VERY DELICATE, IT CAN DISCARD EVERYTHING IF NOT HANDLED PROPERLY
   // The purpose for structuring this memory is to remember important conversations, decisions, and action items. If there's nothing like that in the transcript, output an empty title.
- var prompt = customPromptDetails?.prompt ?? '''
+  var prompt = customPromptDetails?.prompt ??
+      '''
 Summarize the following conversation transcript. The conversation language is ${SharedPreferencesUtil().recordingsLanguage}. Respond in English.
 
 ${forceProcess ? "" : "If the conversation does not contain significant insights or action items, output an empty title."}
@@ -444,7 +472,7 @@ String qaRagPrompt(String context, List<Message> messages, {Plugin? plugin}) {
       (plugin == null || !plugin.worksWithChat())) {
     SharedPreferencesUtil().selectedChatPluginId = 'no_selected';
   }
-  if (plugin != null && plugin.name != null) {
+  if (plugin != null) {
     debugPrint("Your name is>>>>>>>>>>>>>>>>>>>: ${plugin.name}");
   } else {
     debugPrint("Plugin or plugin name is null");

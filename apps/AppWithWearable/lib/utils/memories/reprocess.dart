@@ -21,15 +21,26 @@ Future<Memory?> reProcessMemory(
       [],
       forceProcess: true,
       conversationDate: memory.createdAt,
+      // customPromptDetails: CustomPrompt(
+      //     prompt: 'summarazi the following output',
+      //     title: 'the most important theme of conversation',
+      //     overview: 'give summary in points',
+      //     actionItems: 'A detailed list of doctor task',
+      //     category: 'medical field',
+      //     calendar: 'mention any date or event in calender'),
     );
   } catch (err, stacktrace) {
     print(err);
     var memoryReporting = MixpanelManager().getMemoryEventProperties(memory);
-    CrashReporting.reportHandledCrash(err, stacktrace, level: NonFatalExceptionLevel.critical, userAttributes: {
-      'memory_transcript_length': memoryReporting['transcript_length'].toString(),
-      'memory_transcript_word_count': memoryReporting['transcript_word_count'].toString(),
-      // 'memory_transcript_language': memoryReporting['transcript_language'], // TODO: this is incorrect
-    });
+    CrashReporting.reportHandledCrash(err, stacktrace,
+        level: NonFatalExceptionLevel.critical,
+        userAttributes: {
+          'memory_transcript_length':
+              memoryReporting['transcript_length'].toString(),
+          'memory_transcript_word_count':
+              memoryReporting['transcript_word_count'].toString(),
+          // 'memory_transcript_language': memoryReporting['transcript_language'], // TODO: this is incorrect
+        });
     onFailedProcessing();
     changeLoadingState();
     return null;
@@ -43,18 +54,24 @@ Future<Memory?> reProcessMemory(
   structured.category = newStructured.category;
 
   structured.actionItems.clear();
-  structured.actionItems.addAll(newStructured.actionItems.map<ActionItem>((i) => ActionItem(i.description)).toList());
+  structured.actionItems.addAll(newStructured.actionItems
+      .map<ActionItem>((i) => ActionItem(i.description))
+      .toList());
 
   structured.events.clear();
   for (var event in newStructured.events) {
-    structured.events.add(Event(event.title, event.startsAt, event.duration, description: event.description));
+    structured.events.add(Event(event.title, event.startsAt, event.duration,
+        description: event.description));
   }
 
   memory.structured.target = structured;
   memory.discarded = false;
   memory.pluginsResponse.clear();
   memory.pluginsResponse.addAll(
-    summaryResult.pluginsResponse.map<PluginResponse>((e) => PluginResponse(e.item2, pluginId: e.item1.id)).toList(),
+    summaryResult.pluginsResponse
+        .map<PluginResponse>(
+            (e) => PluginResponse(e.item2, pluginId: e.item1.id))
+        .toList(),
   );
 
   // Add Calendar Events

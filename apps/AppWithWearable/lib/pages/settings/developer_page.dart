@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/custom_prompt_page.dart';
@@ -16,6 +17,12 @@ class DeveloperPage extends StatefulWidget {
 
 class _DeveloperPageState extends State<DeveloperPage> {
   bool developerEnabled = false;
+  @override
+  void initState() {
+    super.initState();
+    developerEnabled = SharedPreferencesUtil().developerOptionEnabled;
+    // if (developerEnabled) _getCalendars();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +113,22 @@ class _DeveloperPageState extends State<DeveloperPage> {
                     children: [
                       ListTile(
                         title: const Text('Default'),
-                        onTap: () {},
+                        onTap: () {
+                          // final customPromptDetails = CustomPrompt(
+                          //   prompt: null,
+                          //   title: null,
+                          //   overview: null,
+                          //   actionItems: null,
+                          //   category: null,
+                          //   calendar: null,
+                          // );
+
+                          summarizeMemory(
+                            '',
+                            [],
+                            customPromptDetails: null,
+                          );
+                        },
                       ),
                       ListTile(
                         title: const Text('Customize Prompt'),
@@ -129,6 +151,17 @@ class _DeveloperPageState extends State<DeveloperPage> {
   }
 
   void _onSwitchChanged(bool value) {
+    SharedPreferencesUtil().developerOptionEnabled = value;
+    if (!value) {
+      SharedPreferencesUtil().saveApiType('NewApiKey', 'Default');
+      if (Platform.isAndroid) Restart.restartApp();
+
+      Restart.restartApp(
+        notificationTitle: 'Restarting App',
+        notificationBody: 'Please tap here to open the app again.',
+      );
+      print('developer option not true');
+    }
     setState(() {
       developerEnabled = value;
     });

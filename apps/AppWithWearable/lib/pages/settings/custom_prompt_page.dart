@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
+import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/widgets/custom_textfield.dart';
 
@@ -38,7 +39,12 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
             ? _calenderController.text
             : null,
       );
-
+ SharedPreferencesUtil().saveSelectedPrompt('prompt', _promptController.text);
+    SharedPreferencesUtil().saveSelectedPrompt('title', _titleController.text);
+    SharedPreferencesUtil().saveSelectedPrompt('overview', _overviewController.text);
+    SharedPreferencesUtil().saveSelectedPrompt('actionItems', _actionItemController.text);
+    SharedPreferencesUtil().saveSelectedPrompt('category', _categoryController.text);
+    SharedPreferencesUtil().saveSelectedPrompt('calendar', _calenderController.text);
       summarizeMemory(
         '',
         [],
