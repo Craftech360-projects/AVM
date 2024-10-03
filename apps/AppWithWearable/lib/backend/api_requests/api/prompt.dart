@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/llm.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/message.dart';
+import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/utils/other/string_utils.dart';
@@ -51,25 +52,30 @@ Future<SummaryResult> summarizeMemory(
   DateTime? conversationDate,
   CustomPrompt? customPromptDetails,
 }) async {
-  
-  print('custom prompt ${customPromptDetails.toString()}');
-   if (customPromptDetails != null) {
-    final savedPrompt = SharedPreferencesUtil().getSelectedPrompt('prompt');
-    final savedTitle = SharedPreferencesUtil().getSelectedPrompt('title');
-    final savedOverview = SharedPreferencesUtil().getSelectedPrompt('overview');
-    final savedActionItems = SharedPreferencesUtil().getSelectedPrompt('actionItems');
-    final savedCategory = SharedPreferencesUtil().getSelectedPrompt('category');
-    final savedCalendar = SharedPreferencesUtil().getSelectedPrompt('calendar');
-
-    customPromptDetails = CustomPrompt(
-      prompt: savedPrompt,
-      title: savedTitle,
-      overview: savedOverview,
-      actionItems: savedActionItems,
-      category: savedCategory,
-      calendar: savedCalendar,
-    );
+  bool isPromptSaved = SharedPreferencesUtil().isPromptSaved;
+  print('is prompt saved $isPromptSaved');
+  if (isPromptSaved) {
+    final prompt = PromptProvider().getPrompts().first;
+    print('prompt fetched from object box ${prompt.toString()}');
   }
+  print('custom prompt ${customPromptDetails.toString()}');
+  //  if (customPromptDetails != null) {
+  //   final savedPrompt = SharedPreferencesUtil().getSelectedPrompt('prompt');
+  //   final savedTitle = SharedPreferencesUtil().getSelectedPrompt('title');
+  //   final savedOverview = SharedPreferencesUtil().getSelectedPrompt('overview');
+  //   final savedActionItems = SharedPreferencesUtil().getSelectedPrompt('actionItems');
+  //   final savedCategory = SharedPreferencesUtil().getSelectedPrompt('category');
+  //   final savedCalendar = SharedPreferencesUtil().getSelectedPrompt('calendar');
+
+  //   customPromptDetails = CustomPrompt(
+  //     prompt: savedPrompt,
+  //     title: savedTitle,
+  //     overview: savedOverview,
+  //     actionItems: savedActionItems,
+  //     category: savedCategory,
+  //     calendar: savedCalendar,
+  //   );
+  // }
 
   debugPrint('summarizeMemory transcript length: ${transcript.length}');
   if (transcript.isEmpty || transcript.split(' ').length < 7) {

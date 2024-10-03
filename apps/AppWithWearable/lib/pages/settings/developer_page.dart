@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
+import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/custom_prompt_page.dart';
@@ -154,6 +155,9 @@ class _DeveloperPageState extends State<DeveloperPage> {
     SharedPreferencesUtil().developerOptionEnabled = value;
     if (!value) {
       SharedPreferencesUtil().saveApiType('NewApiKey', 'Default');
+      PromptProvider().removeAllPrompts();
+      SharedPreferencesUtil().isPromptSaved = false;
+
       if (Platform.isAndroid) Restart.restartApp();
 
       Restart.restartApp(
@@ -170,6 +174,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
   void developerModeSelected({required String modeSelected}) {
     print('Mode Selected $modeSelected');
     SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
+    // SharedPreferencesUtil().isPromptSaved = false;
     const AlertDialog(
       content: Text('To Reflect selected Changes\nApp Restarting...'),
     );

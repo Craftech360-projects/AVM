@@ -66,6 +66,11 @@ class SharedPreferencesUtil {
   String get webhookOnMemoryCreated => getString('webhookUrl') ?? '';
 
   set webhookOnMemoryCreated(String value) => saveString('webhookUrl', value);
+// Getter for isPromptSaved
+bool get isPromptSaved => getBool('isPromptSaved') ?? false;
+
+// Setter for isPromptSaved
+set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
 
   String get webhookOnTranscriptReceived =>
       getString('transcriptServerUrl') ?? '';

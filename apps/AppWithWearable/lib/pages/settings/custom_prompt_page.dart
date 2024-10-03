@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
+import 'package:friend_private/backend/database/prompt.dart';
+import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/widgets/custom_textfield.dart';
@@ -20,7 +22,7 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _calenderController = TextEditingController();
 
-  void _saveForm() {
+  void _saveForm()async {
     if (_formKey.currentState!.validate()) {
       final customPromptDetails = CustomPrompt(
         prompt:
@@ -39,17 +41,27 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
             ? _calenderController.text
             : null,
       );
- SharedPreferencesUtil().saveSelectedPrompt('prompt', _promptController.text);
-    SharedPreferencesUtil().saveSelectedPrompt('title', _titleController.text);
-    SharedPreferencesUtil().saveSelectedPrompt('overview', _overviewController.text);
-    SharedPreferencesUtil().saveSelectedPrompt('actionItems', _actionItemController.text);
-    SharedPreferencesUtil().saveSelectedPrompt('category', _categoryController.text);
-    SharedPreferencesUtil().saveSelectedPrompt('calendar', _calenderController.text);
-      summarizeMemory(
-        '',
-        [],
-        customPromptDetails: customPromptDetails,
+
+   await   PromptProvider().savePrompt(
+        Prompt(
+            prompt: _promptController.text,
+            title: _titleController.text,
+            overview: _overviewController.text,
+            actionItem: _actionItemController.text,
+            category: _categoryController.text,
+            calender: _calenderController.text),
       );
+ SharedPreferencesUtil().isPromptSaved=true;
+//     SharedPreferencesUtil().saveSelectedPrompt('title', _titleController.text);
+//     SharedPreferencesUtil().saveSelectedPrompt('overview', _overviewController.text);
+//     SharedPreferencesUtil().saveSelectedPrompt('actionItems', _actionItemController.text);
+//     SharedPreferencesUtil().saveSelectedPrompt('category', _categoryController.text);
+//     SharedPreferencesUtil().saveSelectedPrompt('calendar', _calenderController.text);
+      // summarizeMemory(
+      //   '',
+      //   [],
+      //   customPromptDetails: customPromptDetails,
+      // );
 
       print("Prompt: ${_promptController.text}");
       print("Title: ${_titleController.text}");
