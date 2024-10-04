@@ -218,7 +218,7 @@ Future<Memory> memoryCreationBlock(
           maxLines: 6,
           // textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
           message:
-              "Audio processing failed due to noise or unclear data.\nPlease reduce background noise and try again in a quieter place!",
+              "Audio processing failed due to noise \n Please try again in a \n quieter place!",
         ),
       );
       // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
