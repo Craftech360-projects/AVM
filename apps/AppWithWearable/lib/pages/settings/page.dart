@@ -1,20 +1,17 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/capture/logic/websocket_mixin.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
-import 'package:friend_private/pages/settings/custom_prompt_page.dart';
 import 'package:friend_private/pages/settings/developer_page.dart';
 import 'package:friend_private/pages/settings/profile.dart';
+import 'package:friend_private/pages/settings/setting_walkthrough.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
-import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:restart_app/restart_app.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -22,6 +19,8 @@ class SettingsPage extends StatefulWidget {
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
+
+GlobalKey<_SettingsPageState> settingPageState = GlobalKey();
 
 class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
   late String _selectedLanguage;
@@ -32,10 +31,19 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
   late bool reconnectNotificationIsChecked;
   String? version;
   String? buildVersion;
-  final bool _customTileExpanded = false;
+  // final bool _customTileExpanded = false;
+  GlobalKey calenderTour = GlobalKey();
+  GlobalKey ProfileTour = GlobalKey();
+  GlobalKey DeveloperTour = GlobalKey();
 
   @override
   void initState() {
+    settingWalkThrough(
+      calenderKey: calenderTour,
+      profileKey: ProfileTour,
+      developerKey: DeveloperTour,
+    );
+
     _selectedLanguage = SharedPreferencesUtil().recordingsLanguage;
     optInAnalytics = SharedPreferencesUtil().optInAnalytics;
     devModeEnabled = SharedPreferencesUtil().devModeEnabled;
@@ -52,6 +60,7 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
     super.initState();
   }
 
+  List<TargetFocus> targets = [];
   bool loadingExportMemories = false;
 
   @override
@@ -215,13 +224,28 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
               //       }, icon: Icons.multitrack_audio)
               //     : Container(),
               getItemAddOn('Profile', () {
-                routeToPage(context, const ProfilePage());
+                routeToPage(
+                  context,
+                  ProfilePage(
+                    key: ProfileTour,
+                  ),
+                );
               }, icon: Icons.person),
               getItemAddOn('Calendar Integration', () {
-                routeToPage(context, const CalendarPage());
+                routeToPage(
+                  context,
+                  CalendarPage(
+                    key: calenderTour,
+                  ),
+                );
               }, icon: Icons.calendar_month),
               getItemAddOn('Developers Option', () {
-                routeToPage(context, const DeveloperPage());
+                routeToPage(
+                  context,
+                  DeveloperPage(
+                    key: DeveloperTour,
+                  ),
+                );
               }, icon: Icons.settings_suggest),
               // const SizedBox(height: 12),
               // CustomExpansionTile(

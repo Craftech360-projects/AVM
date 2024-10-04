@@ -664,6 +664,7 @@ import 'package:friend_private/pages/capture/page.dart';
 // import 'package:friend_private/pages/chat/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
+import 'package:friend_private/pages/home/home_walkthrough.dart';
 import 'package:friend_private/pages/settings/page.dart';
 import 'package:friend_private/scripts.dart';
 import 'package:friend_private/utils/audio/foreground.dart';
@@ -676,8 +677,6 @@ import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/scanning_ui.dart';
 import 'package:friend_private/widgets/upgrade_alert.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:upgrader/upgrader.dart';
 
 class HomePageWrapper extends StatefulWidget {
@@ -711,7 +710,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   List<Plugin> plugins = [];
   final _upgrader = MyUpgrader(debugLogging: false, debugDisplayOnce: false);
-
+  GlobalKey bleConnectionTour = GlobalKey();
+  GlobalKey aiNavChatTour = GlobalKey();
   _initiateMemories() async {
     memories = MemoryProvider()
         .getMemoriesOrdered(includeDiscarded: true)
@@ -781,6 +781,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   @override
   void initState() {
+    homeWalkThrough(capturekey: bleConnectionTour, chatNavKey: aiNavChatTour);
+
     _controller = TabController(
       length: 3,
       vsync: this,
@@ -1015,6 +1017,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                             child: MaterialButton(
                               onPressed: () => _tabChange(1),
                               child: Column(
+                                key: aiNavChatTour,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(
@@ -1074,7 +1077,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                         ],
                       )),
                 ),
-             
             ],
           ),
         ),
@@ -1279,6 +1281,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   : Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
+                          key: bleConnectionTour,
                           onTap: () async {
                             if (SharedPreferencesUtil().deviceId.isEmpty) {
                               routeToPage(context, const ConnectDevicePage());

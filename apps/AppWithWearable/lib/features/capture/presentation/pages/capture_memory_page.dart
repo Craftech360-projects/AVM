@@ -5,12 +5,15 @@ import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/widgets/memory_card.dart';
 import 'package:friend_private/features/memory/presentation/widgets/memory_search.dart';
+import 'package:friend_private/pages/capture/capture_walkthrough.dart';
 import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
+import 'package:friend_private/utils/walkthrough/walkthrough_tutorial.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tuple/tuple.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class CaptureMemoryPage extends StatefulWidget {
   const CaptureMemoryPage({
@@ -44,21 +47,22 @@ class CaptureMemoryPage extends StatefulWidget {
 class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   late MemoryBloc _memoryBloc;
   bool _isNonDiscarded = true;
-  final GlobalKey<CapturePageState> capturePageKey = GlobalKey<CapturePageState>();
-  // final List<FilterItem> _filters = [
-  //   FilterItem(filterType: 'Show All', filterStatus: false),
-  //   FilterItem(filterType: 'Technology', filterStatus: false),
-  // ];
+  final GlobalKey<CapturePageState> capturePageKey =
+      GlobalKey<CapturePageState>();
+
   final TextEditingController _searchController = TextEditingController();
+
+  GlobalKey capturetour = GlobalKey();
+  GlobalKey searchtour = GlobalKey();
   @override
   void initState() {
     super.initState();
     _memoryBloc = BlocProvider.of<MemoryBloc>(context);
     _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
-
     _searchController.addListener(() {
       _memoryBloc.add(SearchMemory(query: _searchController.text));
     });
+    captureWalkThrough(capturekey: capturetour, searchKey: searchtour);
   }
 
   @override
@@ -72,9 +76,13 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     // _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
     return Column(
       children: [
+        FloatingActionButton(onPressed: () {
+          return showTutorial(context, targets: targets);
+        }),
         //*--- SEARCH BAR ---*//
         const SizedBox(height: 8),
         MemorySearchWidget(
+          key: searchtour,
           searchController: _searchController,
           memoryBloc: _memoryBloc,
         ),
@@ -97,7 +105,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                       ),
                     ),
                   ),
-                 key:capturePageKey,
+                  key: capturePageKey,
                   // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
                   direction: DismissDirection.startToEnd,
                   onDismissed: (direction) =>
@@ -115,8 +123,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                   ),
                 ),
               )
-            : 
-            CaptureCard(
+            : CaptureCard(
+                key: capturetour,
                 context: context,
                 hasTranscripts: widget.hasTranscripts,
                 wsConnectionState: widget.wsConnectionState,
@@ -178,41 +186,40 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         //   ),
         // ),
 
-if(_isNonDiscarded||_memoryBloc.state.memories.isNotEmpty)
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              onPressed: () {
-                setState(() {
-                  _isNonDiscarded = !_isNonDiscarded;
-                  _memoryBloc.add(
-                    DisplayedMemory(isNonDiscarded: _isNonDiscarded),
-                  );
-                });
-              },
-              label:Text(
-                _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 212, 212, 212),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-
+        if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _isNonDiscarded = !_isNonDiscarded;
+                    _memoryBloc.add(
+                      DisplayedMemory(isNonDiscarded: _isNonDiscarded),
+                    );
+                  });
+                },
+                label: Text(
+                  _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 212, 212, 212),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                ),
+                //  Icon(
+                //   _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
+                //   size: 16,
+                //   color: Colors.grey,
+                // ),
+                icon: Icon(
+                  _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
+                  size: 16,
+                  color: Colors.grey,
+                ),
               ),
-              //  Icon(
-              //   _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
-              //   size: 16,
-              //   color: Colors.grey,
-              // ),
-              icon:  Icon(
-                _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
-                size: 16,
-                color: Colors.grey,
-              ),
-              
             ),
-          ),),
+          ),
         //*--- MEMORY LIST ---*//
         BlocConsumer<MemoryBloc, MemoryState>(
           bloc: _memoryBloc,
