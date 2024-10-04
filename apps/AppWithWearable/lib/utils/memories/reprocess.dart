@@ -6,6 +6,9 @@ import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 
+import '../../backend/database/prompt_provider.dart';
+import '../../backend/preferences.dart';
+
 Future<Memory?> reProcessMemory(
   BuildContext context,
   Memory memory,
@@ -16,19 +19,28 @@ Future<Memory?> reProcessMemory(
   changeLoadingState();
   SummaryResult summaryResult;
   try {
-    summaryResult = await summarizeMemory(
-      memory.transcript,
-      [],
-      forceProcess: true,
-      conversationDate: memory.createdAt,
-      // customPromptDetails: CustomPrompt(
-      //     prompt: 'summarazi the following output',
-      //     title: 'the most important theme of conversation',
-      //     overview: 'give summary in points',
-      //     actionItems: 'A detailed list of doctor task',
-      //     category: 'medical field',
-      //     calendar: 'mention any date or event in calender'),
-    );
+    bool isPromptSaved = SharedPreferencesUtil().isPromptSaved;
+    print('is prompt saved $isPromptSaved');
+    CustomPrompt? savedPrompt;
+    if (isPromptSaved) {
+      final prompt = PromptProvider().getPrompts().first;
+      print('prompt fetched from object box ${prompt.toString()}');
+
+      // Create a CustomPrompt using the fields from the saved prompt
+      savedPrompt = CustomPrompt(
+        prompt: prompt.prompt,
+        title: prompt.title,
+        overview: prompt.overview,
+        // Set other fields to null or default values as they're not in the Prompt object
+        actionItems: prompt.actionItem,
+        category: prompt.category,
+        calendar: prompt.calender,
+      );
+    }
+    summaryResult = await summarizeMemory(memory.transcript, [],
+        forceProcess: true,
+        conversationDate: memory.createdAt,
+        customPromptDetails: savedPrompt);
   } catch (err, stacktrace) {
     print(err);
     var memoryReporting = MixpanelManager().getMemoryEventProperties(memory);

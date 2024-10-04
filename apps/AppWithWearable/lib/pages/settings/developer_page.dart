@@ -161,9 +161,9 @@ class _DeveloperPageState extends State<DeveloperPage> {
       if (Platform.isAndroid) Restart.restartApp();
 
       Restart.restartApp(
-        notificationTitle: 'Restarting App',
-        notificationBody: 'Please tap here to open the app again.',
-      );
+          // notificationTitle: 'Restarting App',
+          // notificationBody: 'Please tap here to open the app again.',
+          );
       print('developer option not true');
     }
     setState(() {
@@ -182,8 +182,8 @@ class _DeveloperPageState extends State<DeveloperPage> {
     if (Platform.isAndroid) Restart.restartApp();
 
     Restart.restartApp(
-      notificationTitle: 'Restarting App',
-      notificationBody: 'Please tap here to open the app again.',
-    );
+        // notificationTitle: 'Restarting App',
+        // notificationBody: 'Please tap here to open the app again.',
+        );
   }
 }

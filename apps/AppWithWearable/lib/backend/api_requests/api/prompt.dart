@@ -89,8 +89,7 @@ Future<SummaryResult> summarizeMemory(
   // TODO: try later with temperature 0
   // NOTE: PROMPT IS VERY DELICATE, IT CAN DISCARD EVERYTHING IF NOT HANDLED PROPERLY
   // The purpose for structuring this memory is to remember important conversations, decisions, and action items. If there's nothing like that in the transcript, output an empty title.
-  var prompt = customPromptDetails?.prompt ??
-      '''
+  var prompt = '''
 Summarize the following conversation transcript. The conversation language is ${SharedPreferencesUtil().recordingsLanguage}. Respond in English.
 
 ${forceProcess ? "" : "If the conversation does not contain significant insights or action items, output an empty title."}
@@ -108,9 +107,8 @@ Provide the following:
 5. **Emoji**: A single emoji that represents the conversation theme.
 6. **Calendar Events**: ${customPromptDetails?.calendar ?? 'Any specific events mentioned during the conversation. Include the title, description, start time, and duration.'}
 
-
-
 The date context for this conversation is ${DateTime.now().toIso8601String()}.
+
 
 Transcript: ${transcript.trim()}
 
@@ -137,7 +135,7 @@ Respond in a JSON format with the following structure:
   
 }
 ''';
-  //debugPrint(prompt);
+  print(">>>>>>, $prompt");
   var structuredResponse =
       extractJson(await executeGptPrompt(prompt, ignoreCache: ignoreCache));
 

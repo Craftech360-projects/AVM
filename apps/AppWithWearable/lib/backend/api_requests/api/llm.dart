@@ -173,7 +173,7 @@ Future<dynamic> llamaApiCall({
 Future<String> executeGptPrompt(String? prompt,
     {bool ignoreCache = false}) async {
   if (prompt == null) return '';
-  // print("executing prompt here>>>>>>>>>>>>>>>");
+  print("executing prompt here>>>>>>>>>>>>>>>, ${prompt.length}");
   var prefs = SharedPreferencesUtil();
   var promptBase64 = base64Encode(utf8.encode(prompt));
   var cachedResponse = prefs.gptCompletionCache(promptBase64);
