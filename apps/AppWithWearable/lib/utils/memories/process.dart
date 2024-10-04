@@ -84,7 +84,7 @@ Future<SummaryResult?> _retrieveStructure(
       print('is prompt saved $isPromptSaved');
       CustomPrompt? savedPrompt;
       if (isPromptSaved) {
-        final prompt = PromptProvider().getPrompts().first;
+        final prompt = PromptProvider().getPrompts().last;
         print('prompt fetched from object box ${prompt.toString()}');
 
         // Create a CustomPrompt using the fields from the saved prompt
