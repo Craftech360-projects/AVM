@@ -61,19 +61,19 @@ void showTutorial(BuildContext context, {required List<TargetFocus> targets}) {
     targets: targets,
     colorShadow: Colors.black,
     onClickTarget: (target) async {
-      print("Clicked on target: $target");
-      if (target.identify == "Target 2") {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => SettingsPage(key: settingPageState),
-          ),
-        );
+      // print("Clicked on target: $target");
+      // if (target.identify == "Target 2") {
+      //   await Navigator.of(context).push(
+      //     MaterialPageRoute(
+      //       builder: (context) => SettingsPage(key: settingPageState),
+      //     ),
+      //   );
 
-        showTutorial(
-          context,
-          targets: settingtargets,
-        );
-      }
+      //   showTutorial(
+      //     context,
+      //     targets: settingtargets,
+      //   );
+      // }
     },
     onClickTargetWithTapPosition: (target, tapDetails) {
       print("Target: $target");
