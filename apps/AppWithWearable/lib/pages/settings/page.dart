@@ -6,9 +6,9 @@ import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/developer_page.dart';
 import 'package:friend_private/pages/settings/profile.dart';
-import 'package:friend_private/pages/settings/setting_walkthrough.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:friend_private/utils/walkthrough/walkthrough_tutorial.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -35,15 +35,17 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
   GlobalKey calenderTour = GlobalKey();
   GlobalKey ProfileTour = GlobalKey();
   GlobalKey DeveloperTour = GlobalKey();
+  List<TargetFocus> settingtargets = [];
 
   @override
   void initState() {
-    settingWalkThrough(
-      calenderKey: calenderTour,
-      profileKey: ProfileTour,
-      developerKey: DeveloperTour,
-    );
-
+    print('setting init page triggered');
+    // settingWalkThrough(
+    //                     calenderKey: calenderTour,
+    //                     profileKey: ProfileTour,
+    //                     developerKey: DeveloperTour,
+    //                   );
+    settingTour();
     _selectedLanguage = SharedPreferencesUtil().recordingsLanguage;
     optInAnalytics = SharedPreferencesUtil().optInAnalytics;
     devModeEnabled = SharedPreferencesUtil().devModeEnabled;
@@ -60,8 +62,35 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
     super.initState();
   }
 
-  List<TargetFocus> targets = [];
   bool loadingExportMemories = false;
+
+  settingTour() {
+    settingtargets.add(
+      CustomTargetFocus().buildTarget(
+        keyTarget: ProfileTour,
+        identify: "Target 5",
+        titleText: "Configure your profile",
+        descriptionText: "Change your name to which AVM is recognised you",
+      ),
+    );
+    settingtargets.add(
+      CustomTargetFocus().buildTarget(
+        keyTarget: calenderTour,
+        identify: "Target 6",
+        titleText: "Manage the calendar",
+        descriptionText:
+            "Integrate the Google calendar and get notifications of it",
+      ),
+    );
+    settingtargets.add(
+      CustomTargetFocus().buildTarget(
+        keyTarget: DeveloperTour,
+        identify: "Target 7",
+        titleText: "Customise your needs",
+        descriptionText: "By using custom prompt, Customise the AVM",
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +118,10 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
               right: 8),
           child: Column(
             children: [
+              FloatingActionButton(onPressed: () async {
+                print('setting button pressed');
+                showTutorial(context, targets: settingtargets);
+              }),
               const SizedBox(height: 32.0),
               ...getRecordingSettings((String? newValue) {
                 if (newValue == null) return;
@@ -223,30 +256,43 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
               //         routeToPage(context, const SpeakerIdPage());
               //       }, icon: Icons.multitrack_audio)
               //     : Container(),
-              getItemAddOn('Profile', () {
-                routeToPage(
-                  context,
-                  ProfilePage(
-                    key: ProfileTour,
-                  ),
-                );
-              }, icon: Icons.person),
-              getItemAddOn('Calendar Integration', () {
-                routeToPage(
-                  context,
-                  CalendarPage(
-                    key: calenderTour,
-                  ),
-                );
-              }, icon: Icons.calendar_month),
-              getItemAddOn('Developers Option', () {
-                routeToPage(
-                  context,
-                  DeveloperPage(
-                    key: DeveloperTour,
-                  ),
-                );
-              }, icon: Icons.settings_suggest),
+              getItemAddOn(
+                key: ProfileTour,
+                'Profile',
+                () {
+                  routeToPage(
+                    context,
+                    const ProfilePage(),
+                  );
+                },
+                icon: Icons.person,
+              ),
+              getItemAddOn(
+                key: calenderTour,
+                'Calendar Integration',
+                () {
+                  routeToPage(
+                    context,
+                    const CalendarPage(
+                        // key: calenderTour,
+                        ),
+                  );
+                },
+                icon: Icons.calendar_month,
+              ),
+              getItemAddOn(
+                key: DeveloperTour,
+                'Developers Option',
+                () {
+                  routeToPage(
+                    context,
+                    const DeveloperPage(
+                        // key: DeveloperTour,
+                        ),
+                  );
+                },
+                icon: Icons.settings_suggest,
+              ),
               // const SizedBox(height: 12),
               // CustomExpansionTile(
               //   title: 'Transcript Scervice',

@@ -10,7 +10,7 @@ void onAccountCreated(BuildContext context) async {
   // }
 }
 List<TargetFocus> targets = [];
-
+  List<TargetFocus> settingtargets = [];
 class CustomTargetFocus {
   TargetFocus buildTarget({
     required GlobalKey keyTarget,
@@ -60,21 +60,19 @@ void showTutorial(BuildContext context, {required List<TargetFocus> targets}) {
   TutorialCoachMark(
     targets: targets,
     colorShadow: Colors.black,
-    onClickTarget: (target) {
+    onClickTarget: (target) async {
       print("Clicked on target: $target");
       if (target.identify == "Target 2") {
-        Navigator.of(context)
-            .push(
+        await Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => SettingsPage(
-              // key: settingPageState,
-            ),
+            builder: (context) => SettingsPage(key: settingPageState),
           ),
-        )
-            .then((value) {
-              
-          // settingPageState.currentState!.startTour();
-        });
+        );
+
+        showTutorial(
+          context,
+          targets: settingtargets,
+        );
       }
     },
     onClickTargetWithTapPosition: (target, tapDetails) {
