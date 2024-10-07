@@ -17,6 +17,7 @@ class DeveloperPage extends StatefulWidget {
 
 class _DeveloperPageState extends State<DeveloperPage> {
   bool developerEnabled = false;
+  bool isModeSelected = false;
   @override
   void initState() {
     super.initState();
@@ -26,6 +27,9 @@ class _DeveloperPageState extends State<DeveloperPage> {
 
   @override
   Widget build(BuildContext context) {
+    final String apiType =
+        SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
+    final bool isPromptSaved=SharedPreferencesUtil().isPromptSaved;
     return CustomScaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -85,12 +89,34 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         SharedPreferencesUtil().getApiType('NewApiKey') ?? '',
                     children: [
                       ListTile(
+                        leading: apiType == 'Deepgram'
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
                         title: const Text('Deepgram'),
                         onTap: () {
                           developerModeSelected(modeSelected: 'Deepgram');
                         },
                       ),
                       ListTile(
+                        leading: apiType == 'Sarvam'
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
                         title: const Text('Sarvam'),
                         onTap: () {
                           developerModeSelected(modeSelected: 'Sarvam');
@@ -110,8 +136,20 @@ class _DeveloperPageState extends State<DeveloperPage> {
                   const SizedBox(height: 12),
                   CustomExpansionTile(
                     title: 'Prompt',
+                    subtitle: isPromptSaved==false?'Default':'Customize Prompt',
                     children: [
                       ListTile(
+                         leading: isPromptSaved==false
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
                         title: const Text('Default'),
                         onTap: () {
                           // final customPromptDetails = CustomPrompt(
@@ -133,6 +171,17 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         },
                       ),
                       ListTile(
+                          leading: isPromptSaved
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
                         title: const Text('Customize Prompt'),
                         onTap: () {
                           Navigator.of(context).push(
@@ -172,8 +221,9 @@ class _DeveloperPageState extends State<DeveloperPage> {
     });
   }
 
-  void developerModeSelected({required String modeSelected}) {
+  void developerModeSelected({required String modeSelected}) async {
     print('Mode Selected $modeSelected');
+
     SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
     // SharedPreferencesUtil().isPromptSaved = false;
     const AlertDialog(
