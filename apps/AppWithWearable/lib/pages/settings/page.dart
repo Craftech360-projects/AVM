@@ -35,17 +35,18 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
   GlobalKey calenderTour = GlobalKey();
   GlobalKey ProfileTour = GlobalKey();
   GlobalKey DeveloperTour = GlobalKey();
-  List<TargetFocus> settingtargets = [];
-
+  // List<TargetFocus> settingtargets = [];
+ late TutorialCoachMark tutorialCoachMark;
   @override
   void initState() {
-    print('setting init page triggered');
+    createSecondPageTutorial();
+    Future.delayed(Duration.zero, showSecondPageTutorial);
     // settingWalkThrough(
     //                     calenderKey: calenderTour,
     //                     profileKey: ProfileTour,
     //                     developerKey: DeveloperTour,
     //                   );
-    settingTour();
+    // settingTour();
     _selectedLanguage = SharedPreferencesUtil().recordingsLanguage;
     optInAnalytics = SharedPreferencesUtil().optInAnalytics;
     devModeEnabled = SharedPreferencesUtil().devModeEnabled;
@@ -118,10 +119,10 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
               right: 8),
           child: Column(
             children: [
-              FloatingActionButton(onPressed: () async {
-                print('setting button pressed');
-                showTutorial(context, targets: settingtargets);
-              }),
+              // FloatingActionButton(onPressed: () async {
+              //   print('setting button pressed');
+              //   showTutorial(context, targets: settingtargets);
+              // }),
               const SizedBox(height: 32.0),
               ...getRecordingSettings((String? newValue) {
                 if (newValue == null) return;
@@ -383,20 +384,46 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
       ),
     );
   }
+  void showSecondPageTutorial() {
+    tutorialCoachMark.show(context: context);
+  }
+  void createSecondPageTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createSecondPageTargets(),
+      colorShadow: Colors.black,
+      textSkip: "SKIP",
+      opacityShadow: 0.8,
+      onFinish: () {
+        print("Second Page Tutorial Finished");
+      },
+      onSkip: () {
+        print("Second Page Tutorial Skipped");
+        return true;
+      },
+    );
+  }
 
-  // void developerModeSelected({required String modeSelected}) {
-  //   print('Mode Selected $modeSelected');
-  //   // setDiffApi(newApiType: modeSelected);
-  //   SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
-  //   const AlertDialog(
-  //     content: Text('To Reflect selected Changes\nApp Restarting...'),
-  //   );
-  //   Future.delayed(const Duration(seconds: 3));
-  //   if (Platform.isAndroid) Restart.restartApp();
-
-  //   Restart.restartApp(
-  //     notificationTitle: 'Restarting App',
-  //     notificationBody: 'Please tap here to open the app again.',
-  //   );
-  // }
+  List<TargetFocus> _createSecondPageTargets() {
+    return [
+      CustomTargetFocus().buildTarget(
+        keyTarget: ProfileTour,
+        identify: "Target 5",
+        titleText: "Configure your profile",
+        descriptionText: "Change your name to which AVM is recognised you",
+      ),
+      CustomTargetFocus().buildTarget(
+        keyTarget: calenderTour,
+        identify: "Target 6",
+        titleText: "Manage the calendar",
+        descriptionText:
+            "Integrate the Google calendar and get notifications of it",
+      ),
+      CustomTargetFocus().buildTarget(
+        keyTarget: DeveloperTour,
+        identify: "Target 7",
+        titleText: "Customise your needs",
+        descriptionText: "By using custom prompt, Customise the AVM",
+      ),
+    ];
+  }
 }

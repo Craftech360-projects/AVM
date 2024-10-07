@@ -88,6 +88,11 @@ void showTutorial(BuildContext context, {required List<TargetFocus> targets}) {
       return true;
     },
     onFinish: () {
+      Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const SettingsPage(),
+          ),
+        );
       print("Tutorial finished");
     },
   ).show(context: context);
