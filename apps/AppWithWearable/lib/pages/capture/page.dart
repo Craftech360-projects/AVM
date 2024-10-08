@@ -316,24 +316,27 @@ class CapturePageState extends State<CapturePage>
     processCachedTranscript();
 
     WidgetsBinding.instance.addObserver(this);
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (await LocationService().displayPermissionsDialog()) {
-        showDialog(
-          context: context,
-          builder: (c) => getDialog(
-            context,
-            () => Navigator.of(context).pop(),
-            () async {
-              Navigator.of(context).pop();
-              await requestLocationPermission();
-            },
-            'Enable Location Services?  🌍',
-            'We need your location permissions to add a location tag to your memories. This will help you remember where they happened.',
-            singleButton: false,
-          ),
-        );
-      }
-    });
+    if (SharedPreferencesUtil().secondPageTutorialCompleted) {
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        if (await LocationService().displayPermissionsDialog()) {
+          showDialog(
+            context: context,
+            builder: (c) => getDialog(
+              context,
+              () => Navigator.of(context).pop(),
+              () async {
+                Navigator.of(context).pop();
+                await requestLocationPermission();
+              },
+              'Enable Location Services?  🌍',
+              'We need your location permissions to add a location tag to your memories. This will help you remember where they happened.',
+              singleButton: false,
+            ),
+          );
+        }
+      });
+    }
+
     _internetListener =
         InternetConnection().onStatusChange.listen((InternetStatus status) {
       switch (status) {

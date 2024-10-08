@@ -660,6 +660,7 @@ import 'package:friend_private/features/chat/presentation/pages/chat_page.dart';
 import 'package:friend_private/main.dart';
 import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/pages/capture/page.dart';
+import 'package:friend_private/pages/capture/widgets/widgets.dart';
 // import 'package:friend_private/pages/chat/page.dart';
 // import 'package:friend_private/pages/chat/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
@@ -917,6 +918,9 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   @override
   Widget build(BuildContext context) {
+    if (_controller?.index == 0) {
+      checkBluetoothStatus(context);
+    }
     return WithForegroundTask(
         child: MyUpgradeAlert(
       upgrader: _upgrader,

@@ -2,15 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/pages/settings/page.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
-void onAccountCreated(BuildContext context) async {
-  // bool isFirstTime = await TutorialService.isFirstTimeUser();
-  // if (isFirstTime) {
-  //   showTutorial(context);  // Trigger tutorial
-  // TutorialService.markTutorialCompleted();  // Mark tutorial as completed
-  // }
-}
+
 List<TargetFocus> targets = [];
-  List<TargetFocus> settingtargets = [];
+List<TargetFocus> settingtargets = [];
+
 class CustomTargetFocus {
   TargetFocus buildTarget({
     required GlobalKey keyTarget,
@@ -61,19 +56,7 @@ void showTutorial(BuildContext context, {required List<TargetFocus> targets}) {
     targets: targets,
     colorShadow: Colors.black,
     onClickTarget: (target) async {
-      // print("Clicked on target: $target");
-      // if (target.identify == "Target 2") {
-      //   await Navigator.of(context).push(
-      //     MaterialPageRoute(
-      //       builder: (context) => SettingsPage(key: settingPageState),
-      //     ),
-      //   );
-
-      //   showTutorial(
-      //     context,
-      //     targets: settingtargets,
-      //   );
-      // }
+   
     },
     onClickTargetWithTapPosition: (target, tapDetails) {
       print("Target: $target");
@@ -87,13 +70,14 @@ void showTutorial(BuildContext context, {required List<TargetFocus> targets}) {
       print("Tutorial skipped");
       return true;
     },
-    onFinish: () {
-      Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => const SettingsPage(),
-          ),
-        );
-      print("Tutorial finished");
-    },
+onFinish: () {
+  print("Tutorial finished");
+  Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) => const SettingsPage(),
+    ),
+  );
+},
+
   ).show(context: context);
 }
