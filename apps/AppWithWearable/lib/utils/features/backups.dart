@@ -9,7 +9,8 @@ import 'package:friend_private/backend/preferences.dart';
 
 String encodeJson(List<dynamic> jsonObj, String password) {
   String jsonString = json.encode(jsonObj);
-  final key = encrypt.Key.fromUtf8(sha256.convert(utf8.encode(password)).toString().substring(0, 32));
+  final key = encrypt.Key.fromUtf8(
+      sha256.convert(utf8.encode(password)).toString().substring(0, 32));
   final iv = encrypt.IV.fromSecureRandom(16); // Generate a random IV
   final encrypter = encrypt.Encrypter(encrypt.AES(key));
   final encrypted = encrypter.encrypt(jsonString, iv: iv);
@@ -25,7 +26,8 @@ List<dynamic> decodeJson(String encryptedJson, String password) {
   final iv = encrypt.IV.fromBase64(parts[0]);
   final encryptedData = parts[1];
 
-  final key = encrypt.Key.fromUtf8(sha256.convert(utf8.encode(password)).toString().substring(0, 32));
+  final key = encrypt.Key.fromUtf8(
+      sha256.convert(utf8.encode(password)).toString().substring(0, 32));
   final encrypter = encrypt.Encrypter(encrypt.AES(key));
   final decrypted = encrypter.decrypt64(encryptedData, iv: iv);
   return json.decode(decrypted);
@@ -54,9 +56,10 @@ Future<bool> executeBackupWithUid({String? uid}) async {
 
   var memories = MemoryProvider().getMemories();
   if (memories.isEmpty) return true;
-  var encoded = encodeJson(memories.map((e) => e.toJson()).toList(), uid ?? SharedPreferencesUtil().uid);
+  var encoded = encodeJson(memories.map((e) => e.toJson()).toList(),
+      uid ?? SharedPreferencesUtil().uid);
   // SharedPreferencesUtil().lastBackupDate = DateTime.now().toIso8601String();
-  await uploadBackupApi(encoded);
+  // await uploadBackupApi(encoded);
   return true;
 }
 
@@ -69,7 +72,8 @@ Future<List<Memory>> retrieveBackup(String uid) async {
   return memories;
 }
 
-Future<List<Memory>> getDecodedMemories(String encodedMemories, String password) async {
+Future<List<Memory>> getDecodedMemories(
+    String encodedMemories, String password) async {
   if (password.isEmpty) return [];
   try {
     var decoded = decodeJson(encodedMemories, password);

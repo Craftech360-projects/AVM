@@ -90,7 +90,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
   // String encoding = "opus";
 
-
   // if (codec == 'pcm8' || codec == 'pcm16') {
   //   // encoding = 'linear16';
   //   encoding = 'opus';
@@ -109,17 +108,16 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // const int sampleRate = 48000;
   // const String codec = 'opus';
   // const int channels = 1;
-  final String apiType = SharedPreferencesUtil().getApiType('NewApiKey')??'';
+  final String apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
   Uri uri = Uri.parse(
-     'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+    'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
   );
 
   print('apiType at dee$apiType');
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
-        'wss://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=${language}&sample_rate=${sampleRate}&codec=${codec}&channels=${channels}'
-      );
+          'wss://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=${language}&sample_rate=${sampleRate}&codec=${codec}&channels=${channels}');
       break;
     case 'Sarvam':
       uri = Uri.parse(
@@ -149,7 +147,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
     await channel.ready;
     // DateTime? lastAudioTime;
-        await channel.ready;
+    await channel.ready;
 
     // KeepAlive mechanism
     Timer? keepAliveTimer;
@@ -184,11 +182,9 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
       }
     }
 
-
     channel.stream.listen(
       (event) {
         if (event == 'ping') return;
-
         try {
           final data = jsonDecode(event);
           print('websocket data satyam $event');

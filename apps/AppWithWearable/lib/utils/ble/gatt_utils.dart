@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/utils/ble/errors.dart';
 
@@ -45,12 +46,26 @@ Future<List<BluetoothService>> getBleServices(String deviceId) async {
 
 Future<BluetoothService?> getServiceByUuid(String deviceId, String uuid) async {
   final services = await getBleServices(deviceId);
+
+  debugPrint("???????>>>>> ,${services.toString()}");
+  debugPrint(
+      "Available Services: ${services.map((service) => service.uuid.str128).toList()}");
+
   return services
       .firstWhereOrNull((service) => service.uuid.str128.toLowerCase() == uuid);
 }
 
 BluetoothCharacteristic? getCharacteristicByUuid(
     BluetoothService service, String uuid) {
+  // Print the UUID of the service being checked
+  debugPrint("Checking characteristics in service: ${service.uuid.str128}");
+
+  // Check and print each characteristic's UUID
+  for (var characteristic in service.characteristics) {
+    debugPrint("Characteristic UUID: ${characteristic.uuid.str128}");
+  }
+
+  // Find the characteristic with the matching UUID
   return service.characteristics.firstWhereOrNull(
     (characteristic) =>
         characteristic.uuid.str128.toLowerCase() == uuid.toLowerCase(),

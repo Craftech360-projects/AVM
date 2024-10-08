@@ -51,16 +51,15 @@ Future<SummaryResult> summarizeMemory(
   bool forceProcess = false,
   bool ignoreCache = false,
   DateTime? conversationDate,
-Prompt? newreprocessPrompt,
+  Prompt? newreprocessPrompt,
 }) async {
   bool isPromptSaved = SharedPreferencesUtil().isPromptSaved;
   print('is prompt saved $isPromptSaved');
   late Prompt? newPrompt;
- if (newreprocessPrompt != null) {
+  if (newreprocessPrompt != null) {
     newPrompt = newreprocessPrompt;
     print('Using new reprocess prompt');
   } else if (isPromptSaved) {
-
     final prompts = PromptProvider().getPrompts();
     if (prompts.isNotEmpty) {
       newPrompt = prompts.last;
@@ -68,11 +67,10 @@ Prompt? newreprocessPrompt,
     }
   }
 
-
   debugPrint('summarizeMemory transcript length: ${transcript.length}');
-  if (transcript.isEmpty || transcript.split(' ').length < 7) {
-    return SummaryResult(Structured('', ''), []);
-  }
+  // if (transcript.isEmpty || transcript.split(' ').length < 7) {
+  //   return SummaryResult(Structured('', ''), []);
+  // }
   if (transcript.split(' ').length > 100) {
     // TODO: try lower count?
     forceProcess = true;

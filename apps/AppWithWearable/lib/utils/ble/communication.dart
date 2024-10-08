@@ -246,3 +246,55 @@ Future<StreamSubscription?> getBleImageBytesListener(
 
   return listener;
 }
+
+Future<void> listenToCharacteristicUpdates(String deviceId) async {
+  // Get the specific service using the UUID
+  print("<<<<<<<<<<<<<<<<<<<<< $friendServiceUuid ");
+  final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
+  // debugPrint(friendService);
+  if (friendService == null) {
+    print('Service with UUID $friendServiceUuid not found on device $deviceId');
+    return;
+  } else {
+    print("not null");
+  }
+
+  // Get the specific characteristic within the service (e.g., the characteristic you're looking for)
+  final BluetoothCharacteristic? targetCharacteristic = getCharacteristicByUuid(
+      friendService, '19b10003-e8f2-537e-4f6c-d104768a1214');
+
+  if (targetCharacteristic == null) {
+    print('Characteristic not found in service $friendServiceUuid');
+    return;
+  } else {
+    print("not >>>>>>>>null, ${targetCharacteristic.toString()}");
+
+    try {
+      // Check if the characteristic supports notifications
+      if (targetCharacteristic.properties.notify) {
+        // Enable notifications for the characteristic
+        await targetCharacteristic.setNotifyValue(true);
+        var value = await targetCharacteristic.read();
+        print("valuevalue, $value");
+        // Listen for characteristic value changes (notifications)
+        targetCharacteristic.lastValueStream.listen((value) {
+          print(">>>>>>>>VALUE, $value");
+          if (value.isNotEmpty) {
+            // Convert the first byte value (0x6D) to a character
+            String charValue = String.fromCharCode(value[0]);
+
+            // Print and set the value in the UI
+            print('Notification from ${targetCharacteristic.uuid}: $charValue');
+            // setState(() {
+            //   swingSpeed = '$charValue'; // Update UI with the new value
+            // });
+          }
+        });
+      } else {
+        print('Characteristic does not support notifications.');
+      }
+    } catch (e) {
+      print('Error enabling notifications for characteristic: $e');
+    }
+  }
+}
