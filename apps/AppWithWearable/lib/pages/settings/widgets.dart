@@ -342,8 +342,7 @@ getItemAddOn(String title, VoidCallback onTap,
                 Text(
                   title,
                   style: const TextStyle(
-                      color: Color.fromARGB(255, 150, 150, 150),
-                      fontSize: 16),
+                      color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
                 ),
                 const SizedBox(width: 16),
                 Icon(icon, color: Colors.white, size: 16),

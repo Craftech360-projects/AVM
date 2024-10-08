@@ -5,6 +5,8 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/capture/logic/websocket_mixin.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/pages/settings/BackupButton.dart';
+import 'package:friend_private/pages/settings/RestoreButton.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/custom_prompt_page.dart';
 import 'package:friend_private/pages/settings/developer_page.dart';
@@ -223,6 +225,12 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
               getItemAddOn('Developers Option', () {
                 routeToPage(context, const DeveloperPage());
               }, icon: Icons.settings_suggest),
+              const SizedBox(height: 16),
+              const BackupButton(),
+              const SizedBox(height: 16), // Backup button added here
+              const RestoreButton(), // Backup button added here
+
+              const SizedBox(height: 16),
               // const SizedBox(height: 12),
               // CustomExpansionTile(
               //   title: 'Transcript Scervice',

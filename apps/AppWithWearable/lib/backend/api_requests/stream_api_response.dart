@@ -102,7 +102,7 @@ Future streamApiResponse(
   };
 
   var body = jsonEncode({
-    "model": "llama3-8b-8192",
+    "model": "llama-3.1-70b-versatile",
     "messages": [
       {"role": "system", "content": ""},
       {"role": "user", "content": prompt}
