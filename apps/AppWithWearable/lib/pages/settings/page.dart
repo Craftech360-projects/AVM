@@ -36,17 +36,12 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
   GlobalKey ProfileTour = GlobalKey();
   GlobalKey DeveloperTour = GlobalKey();
   // List<TargetFocus> settingtargets = [];
- late TutorialCoachMark tutorialCoachMark;
+  late TutorialCoachMark tutorialCoachMark;
   @override
   void initState() {
     createSecondPageTutorial();
     Future.delayed(Duration.zero, showSecondPageTutorial);
-    // settingWalkThrough(
-    //                     calenderKey: calenderTour,
-    //                     profileKey: ProfileTour,
-    //                     developerKey: DeveloperTour,
-    //                   );
-    // settingTour();
+
     _selectedLanguage = SharedPreferencesUtil().recordingsLanguage;
     optInAnalytics = SharedPreferencesUtil().optInAnalytics;
     devModeEnabled = SharedPreferencesUtil().devModeEnabled;
@@ -384,9 +379,11 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
       ),
     );
   }
+
   void showSecondPageTutorial() {
     tutorialCoachMark.show(context: context);
   }
+
   void createSecondPageTutorial() {
     tutorialCoachMark = TutorialCoachMark(
       targets: _createSecondPageTargets(),

@@ -78,9 +78,9 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     // _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
     return Column(
       children: [
-        FloatingActionButton(onPressed: () {
-          showTutorial(context, targets: targets);
-        }),
+        // FloatingActionButton(onPressed: () {
+        //   showTutorial(context, targets: targets);
+        // }),
         //*--- SEARCH BAR ---*//
         const SizedBox(height: 8),
         MemorySearchWidget(

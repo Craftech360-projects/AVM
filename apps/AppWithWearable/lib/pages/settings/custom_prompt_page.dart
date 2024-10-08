@@ -22,63 +22,75 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
   final TextEditingController _categoryController = TextEditingController();
   final TextEditingController _calenderController = TextEditingController();
 
-  void _saveForm()async {
-    if (_formKey.currentState!.validate()) {
-      final customPromptDetails = CustomPrompt(
-        prompt:
-            _promptController.text.isNotEmpty ? _promptController.text : null,
-        title: _titleController.text.isNotEmpty ? _titleController.text : null,
-        overview: _overviewController.text.isNotEmpty
-            ? _overviewController.text
-            : null,
-        actionItems: _actionItemController.text.isNotEmpty
-            ? _actionItemController.text
-            : null,
-        category: _categoryController.text.isNotEmpty
-            ? _categoryController.text
-            : null,
-        calendar: _calenderController.text.isNotEmpty
-            ? _calenderController.text
-            : null,
-      );
+  @override
+  void initState() {
+    super.initState();
 
-   await   PromptProvider().savePrompt(
-        Prompt(
-            prompt: _promptController.text,
-            title: _titleController.text,
-            overview: _overviewController.text,
-            actionItem: _actionItemController.text,
-            category: _categoryController.text,
-            calender: _calenderController.text),
-      );
- SharedPreferencesUtil().isPromptSaved=true;
-//     SharedPreferencesUtil().saveSelectedPrompt('title', _titleController.text);
-//     SharedPreferencesUtil().saveSelectedPrompt('overview', _overviewController.text);
-//     SharedPreferencesUtil().saveSelectedPrompt('actionItems', _actionItemController.text);
-//     SharedPreferencesUtil().saveSelectedPrompt('category', _categoryController.text);
-//     SharedPreferencesUtil().saveSelectedPrompt('calendar', _calenderController.text);
-      // summarizeMemory(
-      //   '',
-      //   [],
-      //   customPromptDetails: customPromptDetails,
-      // );
+  
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final prompts = await PromptProvider().getPrompts();
+      
+      if (prompts.isNotEmpty) {
+        final lastPrompt = prompts.last;
 
-      print("Prompt: ${_promptController.text}");
-      print("Title: ${_titleController.text}");
-      print("Overview: ${_overviewController.text}");
-      print("Action Items: ${_actionItemController.text}");
-      print("Category: ${_categoryController.text}");
-      print("Calendar: ${_calenderController.text}");
+        setState(() {
+          _promptController.text = lastPrompt.prompt;
+          _titleController.text = lastPrompt.title;
+          _overviewController.text = lastPrompt.overview;
+          _actionItemController.text = lastPrompt.actionItem;
+          _categoryController.text = lastPrompt.category;
+          _calenderController.text = lastPrompt.calender;
+        });
 
-      _promptController.clear();
-      _titleController.clear();
-      _overviewController.clear();
-      _actionItemController.clear();
-      _categoryController.clear();
-      _calenderController.clear();
+        print('Using saved prompt');
+      }
+    });
+  }
 
-      _formKey.currentState!.reset();
-    }
+  void _saveForm() async {
+
+    final customPromptDetails = CustomPrompt(
+      prompt: _promptController.text.isNotEmpty ? _promptController.text : null,
+      title: _titleController.text.isNotEmpty ? _titleController.text : null,
+      overview: _overviewController.text.isNotEmpty ? _overviewController.text : null,
+      actionItems: _actionItemController.text.isNotEmpty ? _actionItemController.text : null,
+      category: _categoryController.text.isNotEmpty ? _categoryController.text : null,
+      calendar: _calenderController.text.isNotEmpty ? _calenderController.text : null,
+    );
+
+    await PromptProvider().savePrompt(
+      Prompt(
+        prompt: _promptController.text,
+        title: _titleController.text,
+        overview: _overviewController.text,
+        actionItem: _actionItemController.text,
+        category: _categoryController.text,
+        calender: _calenderController.text,
+      ),
+    );
+
+    SharedPreferencesUtil().isPromptSaved = true;
+
+   
+    _promptController.clear();
+    _titleController.clear();
+    _overviewController.clear();
+    _actionItemController.clear();
+    _categoryController.clear();
+    _calenderController.clear();
+
+    _formKey.currentState!.reset();
+  }
+
+  @override
+  void dispose() {
+    _promptController.dispose();
+    _titleController.dispose();
+    _overviewController.dispose();
+    _actionItemController.dispose();
+    _categoryController.dispose();
+    _calenderController.dispose();
+    super.dispose();
   }
 
   @override
@@ -101,14 +113,7 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
                 maxLines: 9,
                 minLines: 9,
                 keyboardType: TextInputType.multiline,
-                hintText:
-                    'Summarize the following conversation transcript. If the conversation does not contain significant insights or action items, output an empty title.',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a valid prompt';
-                  }
-                  return null;
-                },
+                hintText: 'Summarize the following conversation transcript. If the conversation does not contain significant insights or action items, output an empty title.',
               ),
               const SizedBox(height: 16),
               CustomTextField(
@@ -117,14 +122,7 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
                 maxLines: 4,
                 minLines: 4,
                 keyboardType: TextInputType.multiline,
-                hintText:
-                    'The main topic or most important theme of the conversation.',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a title';
-                  }
-                  return null;
-                },
+                hintText: 'The main topic or most important theme of the conversation.',
               ),
               const SizedBox(height: 16),
               CustomTextField(
@@ -133,14 +131,7 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
                 maxLines: 4,
                 minLines: 4,
                 keyboardType: TextInputType.multiline,
-                hintText:
-                    'A detailed summary (minimum 100 words) of the key points and most significant details discussed, including decisions and major insights.',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an overview';
-                  }
-                  return null;
-                },
+                hintText: 'A detailed summary (minimum 100 words) of the key points and most significant details discussed, including decisions and major insights.',
               ),
               const SizedBox(height: 16),
               CustomTextField(
@@ -149,14 +140,7 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
                 maxLines: 4,
                 minLines: 4,
                 keyboardType: TextInputType.multiline,
-                hintText:
-                    'A detailed list of tasks or commitments, including the context or reason behind each task, along with who is responsible for them and any deadlines.',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter action items';
-                  }
-                  return null;
-                },
+                hintText: 'A detailed list of tasks or commitments, including the context or reason behind each task, along with who is responsible for them and any deadlines.',
               ),
               const SizedBox(height: 16),
               CustomTextField(
@@ -165,14 +149,7 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
                 maxLines: 4,
                 minLines: 4,
                 keyboardType: TextInputType.multiline,
-                hintText:
-                    'Classify the conversation under up to 3 categories (personal, education, health, finance, legal, etc.).',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a category';
-                  }
-                  return null;
-                },
+                hintText: 'Classify the conversation under up to 3 categories (personal, education, health, finance, legal, etc.).',
               ),
               const SizedBox(height: 16),
               CustomTextField(
@@ -181,24 +158,13 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
                 maxLines: 4,
                 minLines: 4,
                 keyboardType: TextInputType.multiline,
-                hintText:
-                    'Any specific events mentioned during the conversation. Include the title.',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter calendar events';
-                  }
-                  return null;
-                },
+                hintText: 'Any specific events mentioned during the conversation. Include the title.',
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
                 onPressed: _saveForm,
-                child: const Text(
-                  'Save',
-                  style: TextStyle(color: Colors.white),
-                ),
+                child: const Text('Save', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),

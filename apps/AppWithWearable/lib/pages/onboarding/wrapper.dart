@@ -132,18 +132,13 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
                       },
                     ),
                     CompletePage(
-                      goNext: () {
-                        routeToPage(context, const HomePageWrapper(),
-                                replace: true)
-                            .then((_) {
-                          debugPrint('checking for app tour');
-                          bool isfirstTime =
-                              !SharedPreferencesUtil().onboardingCompleted;
-                          debugPrint('is first time Printed ${isfirstTime}');
-                          if (isfirstTime) {
-                            showTutorial(context, targets: targets);
-                          }
-                        });
+                      goNext: () async {
+                        await routeToPage(context, const HomePageWrapper(),
+                            replace: true);
+
+                        debugPrint('checking for app tour');
+                      
+
                         MixpanelManager().onboardingStepICompleted('Finalize');
                         MixpanelManager().onboardingCompleted();
                       },

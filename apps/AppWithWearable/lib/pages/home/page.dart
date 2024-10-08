@@ -674,6 +674,7 @@ import 'package:friend_private/utils/ble/scan.dart';
 import 'package:friend_private/utils/features/backups.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:friend_private/utils/walkthrough/walkthrough_tutorial.dart';
 import 'package:friend_private/widgets/scanning_ui.dart';
 import 'package:friend_private/widgets/upgrade_alert.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
@@ -781,6 +782,12 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   @override
   void initState() {
+    bool isfirstTime = !SharedPreferencesUtil().onboardingCompleted;
+    debugPrint('is first time Printed $isfirstTime');
+
+    if (isfirstTime) {
+      showTutorial(context, targets: targets);
+    }
     homeWalkThrough(capturekey: bleConnectionTour, chatNavKey: aiNavChatTour);
 
     _controller = TabController(
