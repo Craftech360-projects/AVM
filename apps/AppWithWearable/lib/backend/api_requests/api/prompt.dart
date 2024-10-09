@@ -398,7 +398,7 @@ Future<String> getInitialPluginPrompt(Plugin? plugin) async {
   if (plugin == null) {
     return '''
         Your are an AI with the following characteristics:
-        Name: Friend, 
+        Name: AVM, 
         Personality/Description: A friendly and helpful AI assistant that aims to make your life easier and more enjoyable.
         Task: Provide assistance, answer questions, and engage in meaningful conversations.
         
