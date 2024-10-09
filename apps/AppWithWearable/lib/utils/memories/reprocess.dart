@@ -3,11 +3,11 @@ import 'package:friend_private/backend/api_requests/api/pinecone.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
-import 'package:friend_private/backend/database/prompt.dart';
-import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
-import 'package:friend_private/backend/preferences.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
+
+import '../../backend/database/prompt_provider.dart';
+import '../../backend/preferences.dart';
 
 Future<Memory?> reProcessMemory(
   BuildContext context,
@@ -20,28 +20,27 @@ Future<Memory?> reProcessMemory(
   SummaryResult summaryResult;
   try {
     bool isPromptSaved = SharedPreferencesUtil().isPromptSaved;
-  print('is prompt saved $isPromptSaved');
-  late Prompt? newPrompt;
-  if (isPromptSaved) {
-    final prompts = PromptProvider().getPrompts();
-    if (prompts.isNotEmpty) {
-      newPrompt = prompts.last;
+    print('is prompt saved $isPromptSaved');
+    CustomPrompt? savedPrompt;
+    if (isPromptSaved) {
+      final prompt = PromptProvider().getPrompts().last;
+      print('prompt fetched from object box ${prompt.toString()}');
+
+      // Create a CustomPrompt using the fields from the saved prompt
+      savedPrompt = CustomPrompt(
+        prompt: prompt.prompt,
+        title: prompt.title,
+        overview: prompt.overview,
+        // Set other fields to null or default values as they're not in the Prompt object
+        actionItems: prompt.actionItem,
+        category: prompt.category,
+        calendar: prompt.calender,
+      );
     }
-  }
-    summaryResult = await summarizeMemory(
-      memory.transcript,
-      [],
-      forceProcess: true,
-      conversationDate: memory.createdAt,
-      newreprocessPrompt: newPrompt
-      // customPromptDetails: CustomPrompt(
-      //     prompt: 'summarazi the following output',
-      //     title: 'the most important theme of conversation',
-      //     overview: 'give summary in points',
-      //     actionItems: 'A detailed list of doctor task',
-      //     category: 'medical field',
-      //     calendar: 'mention any date or event in calender'),
-    );
+    summaryResult = await summarizeMemory(memory.transcript, [],
+        forceProcess: true,
+        conversationDate: memory.createdAt,
+        customPromptDetails: savedPrompt);
   } catch (err, stacktrace) {
     print(err);
     var memoryReporting = MixpanelManager().getMemoryEventProperties(memory);

@@ -8,6 +8,7 @@ import 'package:friend_private/backend/database/geolocation.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/database/message.dart';
+import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
@@ -79,7 +80,26 @@ Future<SummaryResult?> _retrieveStructure(
     if (photos.isNotEmpty) {
       summary = await summarizePhotos(photos);
     } else {
-      summary = await summarizeMemory(transcript, [], ignoreCache: ignoreCache);
+      bool isPromptSaved = SharedPreferencesUtil().isPromptSaved;
+      print('is prompt saved $isPromptSaved');
+      CustomPrompt? savedPrompt;
+      if (isPromptSaved) {
+        final prompt = PromptProvider().getPrompts().last;
+        print('prompt fetched from object box ${prompt.toString()}');
+
+        // Create a CustomPrompt using the fields from the saved prompt
+        savedPrompt = CustomPrompt(
+          prompt: prompt.prompt,
+          title: prompt.title,
+          overview: prompt.overview,
+          // Set other fields to null or default values as they're not in the Prompt object
+          actionItems: prompt.actionItem,
+          category: prompt.category,
+          calendar: prompt.calender,
+        );
+      }
+      summary = await summarizeMemory(transcript, [],
+          ignoreCache: ignoreCache, customPromptDetails: savedPrompt);
       debugPrint("its reached here ${summary.structured}");
       debugPrint("Structured content:");
       debugPrint("Title: ${summary.structured.title}");
@@ -198,7 +218,7 @@ Future<Memory> memoryCreationBlock(
           maxLines: 6,
           // textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
           message:
-              "Audio processing failed due to noise or unclear data.\nPlease reduce background noise and try again in a quieter place!",
+              "Audio processing failed due to noise \n Please try again in a \n quieter place!",
         ),
       );
       // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

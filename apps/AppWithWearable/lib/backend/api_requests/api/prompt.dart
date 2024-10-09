@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/llm.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/message.dart';
-import 'package:friend_private/backend/database/prompt.dart';
 import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
@@ -51,23 +50,32 @@ Future<SummaryResult> summarizeMemory(
   bool forceProcess = false,
   bool ignoreCache = false,
   DateTime? conversationDate,
-Prompt? newreprocessPrompt,
+  CustomPrompt? customPromptDetails,
 }) async {
   bool isPromptSaved = SharedPreferencesUtil().isPromptSaved;
   print('is prompt saved $isPromptSaved');
-  late Prompt? newPrompt;
- if (newreprocessPrompt != null) {
-    newPrompt = newreprocessPrompt;
-    print('Using new reprocess prompt');
-  } else if (isPromptSaved) {
-
-    final prompts = PromptProvider().getPrompts();
-    if (prompts.isNotEmpty) {
-      newPrompt = prompts.last;
-      print('Using saved prompt');
-    }
+  if (isPromptSaved) {
+    final prompt = PromptProvider().getPrompts().first;
+    print('prompt fetched from object box ${prompt.toString()}');
   }
+  print('custom prompt ${customPromptDetails.toString()}');
+  //  if (customPromptDetails != null) {
+  //   final savedPrompt = SharedPreferencesUtil().getSelectedPrompt('prompt');
+  //   final savedTitle = SharedPreferencesUtil().getSelectedPrompt('title');
+  //   final savedOverview = SharedPreferencesUtil().getSelectedPrompt('overview');
+  //   final savedActionItems = SharedPreferencesUtil().getSelectedPrompt('actionItems');
+  //   final savedCategory = SharedPreferencesUtil().getSelectedPrompt('category');
+  //   final savedCalendar = SharedPreferencesUtil().getSelectedPrompt('calendar');
 
+  //   customPromptDetails = CustomPrompt(
+  //     prompt: savedPrompt,
+  //     title: savedTitle,
+  //     overview: savedOverview,
+  //     actionItems: savedActionItems,
+  //     category: savedCategory,
+  //     calendar: savedCalendar,
+  //   );
+  // }
 
   debugPrint('summarizeMemory transcript length: ${transcript.length}');
   if (transcript.isEmpty || transcript.split(' ').length < 7) {
@@ -81,8 +89,7 @@ Prompt? newreprocessPrompt,
   // TODO: try later with temperature 0
   // NOTE: PROMPT IS VERY DELICATE, IT CAN DISCARD EVERYTHING IF NOT HANDLED PROPERLY
   // The purpose for structuring this memory is to remember important conversations, decisions, and action items. If there's nothing like that in the transcript, output an empty title.
-  var prompt = newPrompt?.prompt ??
-      '''
+  var prompt = '''
 Summarize the following conversation transcript. The conversation language is ${SharedPreferencesUtil().recordingsLanguage}. Respond in English.
 
 ${forceProcess ? "" : "If the conversation does not contain significant insights or action items, output an empty title."}
@@ -93,16 +100,15 @@ ${forceProcess ? "" : "If the conversation does not contain significant insights
 - Summaries should not be too brief. The overview must contain at least 100 words, and key highlights should provide enough context to understand the depth of the discussion.
 
 Provide the following:
-1. **Title**: ${newPrompt?.title ?? 'The main topic or most important theme of the conversation.'}
-2. **Overview**: ${newPrompt?.overview ?? 'A detailed summary (minimum 100 words) of the key points and most significant details discussed, including decisions and major insights.'}
-3. **Action Items**: ${newPrompt?.actionItem ?? 'A detailed list of tasks or commitments, including the context or reason behind each task, along with who is responsible for them and any deadlines.'}
-4. **Category**: ${newPrompt?.category ?? 'Classify the conversation under up to 3 categories (personal, education, health, finance, legal, philosophy, spiritual, science, entrepreneurship, parenting, romantic, travel, inspiration, technology, business, social, work, other).'}
+1. **Title**: ${customPromptDetails?.title ?? 'The main topic or most important theme of the conversation.'}
+2. **Overview**: ${customPromptDetails?.overview ?? 'A detailed summary (minimum 100 words) of the key points and most significant details discussed, including decisions and major insights.'}
+3. **Action Items**: ${customPromptDetails?.actionItems ?? 'A detailed list of tasks or commitments, including the context or reason behind each task, along with who is responsible for them and any deadlines.'}
+4. **Category**: ${customPromptDetails?.category ?? 'Classify the conversation under up to 3 categories (personal, education, health, finance, legal, philosophy, spiritual, science, entrepreneurship, parenting, romantic, travel, inspiration, technology, business, social, work, other).'}
 5. **Emoji**: A single emoji that represents the conversation theme.
-6. **Calendar Events**: ${newPrompt?.calender ?? 'Any specific events mentioned during the conversation. Include the title, description, start time, and duration.'}
-
-
+6. **Calendar Events**: ${customPromptDetails?.calendar ?? 'Any specific events mentioned during the conversation. Include the title, description, start time, and duration.'}
 
 The date context for this conversation is ${DateTime.now().toIso8601String()}.
+
 
 Transcript: ${transcript.trim()}
 
@@ -129,7 +135,7 @@ Respond in a JSON format with the following structure:
   
 }
 ''';
-  //debugPrint(prompt);
+  print(">>>>>>, $prompt");
   var structuredResponse =
       extractJson(await executeGptPrompt(prompt, ignoreCache: ignoreCache));
 
