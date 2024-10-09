@@ -174,8 +174,12 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
                 },
                 icon: Icons.settings_suggest,
               ),
-
-              const Spacer(),
+               const SizedBox(height: 16),
+              const BackupButton(),
+              const SizedBox(height: 16), 
+              const RestoreButton(), 
+              const SizedBox(height: 16),
+           
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Align(
