@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/memory.dart';
@@ -80,10 +81,11 @@ class _RestoreButtonState extends State<RestoreButton> {
       print(latestBackup);
       // Read the latest backup
       String content = await latestBackup.readAsString();
+   
       List<dynamic> jsonData = jsonDecode(content);
-
+     
       for (var memory in jsonData) {
-        print(memory);
+      
         MemoryProvider().saveMemory(Memory.fromJson(memory));
       }
 

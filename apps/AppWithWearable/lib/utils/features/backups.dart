@@ -1,18 +1,13 @@
 import 'dart:convert';
+import 'dart:io'; // For file system
 
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/server.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
-
 import 'package:path_provider/path_provider.dart';
-import 'dart:io'; // For file system
-// For getting directories
-import 'package:permission_handler/permission_handler.dart'; // For requesting permissions
 
 String encodeJson(List<dynamic> jsonObj, String password) {
   String jsonString = json.encode(jsonObj);
@@ -133,7 +128,9 @@ Future<bool> executeManualBackupWithUid({String? uid}) async {
   //   memories.map((e) => e.toJson()).toList(),
   //   uid ?? SharedPreferencesUtil().uid,
   // );
-  var rawData = memories.map((e) => e.toJson()).toList();
+  var rawData = memories.map((e) {
+    return e.toJson();
+  }).toList();
 
   try {
     // Save to external storage (accessible directory)

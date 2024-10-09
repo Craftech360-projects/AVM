@@ -5,7 +5,6 @@ import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
-import 'package:friend_private/pages/home/home_page_wrapper.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/pages/onboarding/auth.dart';
 import 'package:friend_private/pages/onboarding/complete/complete.dart';
