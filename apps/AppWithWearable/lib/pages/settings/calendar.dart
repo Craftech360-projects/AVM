@@ -68,7 +68,7 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
           ),
           const Text(
-            'Friend can automatically schedule events from your conversations, or ask for your confirmation first.',
+            'AVM can automatically schedule events from your conversations, or ask for your confirmation first.',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.grey,
@@ -139,7 +139,7 @@ class _CalendarPageState extends State<CalendarPage> {
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 8.0),
         child: Text(
-          'Select to which calendar you want your Friend to connect to.',
+          'Select to which calendar you want your AVM to connect to.',
           textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.grey,
