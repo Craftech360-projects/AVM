@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/message.dart';
@@ -28,8 +27,6 @@ import 'package:friend_private/utils/websockets.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:location/location.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:uuid/uuid.dart';
 
 import 'logic/websocket_mixin.dart';
@@ -319,24 +316,27 @@ class CapturePageState extends State<CapturePage>
     processCachedTranscript();
 
     WidgetsBinding.instance.addObserver(this);
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (await LocationService().displayPermissionsDialog()) {
-        showDialog(
-          context: context,
-          builder: (c) => getDialog(
-            context,
-            () => Navigator.of(context).pop(),
-            () async {
-              Navigator.of(context).pop();
-              await requestLocationPermission();
-            },
-            'Enable Location Services?  🌍',
-            'We need your location permissions to add a location tag to your memories. This will help you remember where they happened.',
-            singleButton: false,
-          ),
-        );
-      }
-    });
+    if (SharedPreferencesUtil().secondPageTutorialCompleted) {
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        if (await LocationService().displayPermissionsDialog()) {
+          showDialog(
+            context: context,
+            builder: (c) => getDialog(
+              context,
+              () => Navigator.of(context).pop(),
+              () async {
+                Navigator.of(context).pop();
+                await requestLocationPermission();
+              },
+              'Enable Location Services?  🌍',
+              'We need your location permissions to add a location tag to your memories. This will help you remember where they happened.',
+              singleButton: false,
+            ),
+          );
+        }
+      });
+    }
+
     _internetListener =
         InternetConnection().onStatusChange.listen((InternetStatus status) {
       switch (status) {

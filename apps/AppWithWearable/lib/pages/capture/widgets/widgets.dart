@@ -209,7 +209,7 @@ class GetConnectionStateWidgets extends StatelessWidget {
               width: 100,
               child: Builder(
                 builder: (context) {
-                    checkBluetoothStatus(context);
+             
                   if (isDeviceDisconnected) {
                     if (SharedPreferencesUtil().deviceId.isEmpty) {
                       return const Icon(
@@ -314,7 +314,9 @@ class GetConnectionStateWidgets extends StatelessWidget {
       color: Colors.grey,
     ));
   }
-  void checkBluetoothStatus(BuildContext context) async {
+}
+  
+void checkBluetoothStatus(BuildContext context) async {
     if (Platform.isAndroid) {
       // Check for Bluetooth status on Android
       if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
@@ -353,8 +355,6 @@ class GetConnectionStateWidgets extends StatelessWidget {
       // }
     }
   }
-}
-
 getConnectionStateWidgets(
     BuildContext context,
     bool hasTranscripts,

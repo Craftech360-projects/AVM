@@ -98,7 +98,16 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // }
   //   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
+
   String encoding = "linear16";
+
+  // String encoding = "linear16";
+  // const String language = 'en-US';
+  // const int sampleRate = 8000;
+  // const String codec = 'pcm8';
+  // const int channels = 1;
+
+
   const String language = 'en-US';
   const int sampleRate = 8000;
   const String codec = 'pcm8';
@@ -117,11 +126,13 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
+
           'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=$language&sample_rate=$sampleRate&codec=$codec&channels=$channels');
       break;
     case 'Sarvam':
       uri = Uri.parse(
         'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=$sampleRate&codec=pcm8&channels=1',
+
       );
       break;
     case 'Wisper':

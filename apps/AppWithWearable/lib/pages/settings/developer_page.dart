@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
@@ -18,15 +17,55 @@ class DeveloperPage extends StatefulWidget {
 
 class _DeveloperPageState extends State<DeveloperPage> {
   bool developerEnabled = false;
+  bool isModeSelected = false;
+  bool isPromptSaved = false; 
+
   @override
   void initState() {
     super.initState();
     developerEnabled = SharedPreferencesUtil().developerOptionEnabled;
-    // if (developerEnabled) _getCalendars();
+    isPromptSaved = SharedPreferencesUtil()
+        .isPromptSaved; 
+  }
+
+
+
+  // void developerModeSelected({required String modeSelected}) {
+  //   setState(() {
+  //     isModeSelected = true;
+  //     SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
+  //   });
+  // }
+
+  void _setDefaultPrompt() {
+    setState(() {
+     
+      PromptProvider().removeAllPrompts();
+      SharedPreferencesUtil().isPromptSaved = false;
+      isPromptSaved = false; 
+    });
+  }
+
+  void _customizePrompt() {
+    Navigator.of(context)
+        .push(
+      MaterialPageRoute(
+        builder: (context) => const CustomPromptPage(),
+      ),
+    )
+        .then((_) {
+     
+      setState(() {
+        isPromptSaved = SharedPreferencesUtil().isPromptSaved;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final String apiType =
+        SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
+
     return CustomScaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -86,60 +125,75 @@ class _DeveloperPageState extends State<DeveloperPage> {
                         SharedPreferencesUtil().getApiType('NewApiKey') ?? '',
                     children: [
                       ListTile(
+                        leading: apiType == 'Deepgram'
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
                         title: const Text('Deepgram'),
                         onTap: () {
                           developerModeSelected(modeSelected: 'Deepgram');
                         },
                       ),
                       ListTile(
+                        leading: apiType == 'Sarvam'
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
                         title: const Text('Sarvam'),
                         onTap: () {
                           developerModeSelected(modeSelected: 'Sarvam');
                         },
-                      ),
-                      Visibility(
-                        visible: false,
-                        child: ListTile(
-                          title: const Text('Wisper'),
-                          onTap: () {
-                            developerModeSelected(modeSelected: 'Wisper');
-                          },
-                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 12),
                   CustomExpansionTile(
                     title: 'Prompt',
+                    subtitle: isPromptSaved ? 'Customize Prompt' : 'Default',
                     children: [
                       ListTile(
+                        leading: !isPromptSaved
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
                         title: const Text('Default'),
-                        onTap: () {
-                          // final customPromptDetails = CustomPrompt(
-                          //   prompt: null,
-                          //   title: null,
-                          //   overview: null,
-                          //   actionItems: null,
-                          //   category: null,
-                          //   calendar: null,
-                          // );
-
-                          summarizeMemory(
-                            '',
-                            [],
-                            customPromptDetails: null,
-                          );
-                        },
+                        onTap: _setDefaultPrompt,
                       ),
                       ListTile(
+                        leading: isPromptSaved
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
                         title: const Text('Customize Prompt'),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const CustomPromptPage(),
-                            ),
-                          );
-                        },
+                        onTap: _customizePrompt,
                       ),
                     ],
                   ),
@@ -170,20 +224,23 @@ class _DeveloperPageState extends State<DeveloperPage> {
       developerEnabled = value;
     });
   }
+}
 
-  void developerModeSelected({required String modeSelected}) {
-    print('Mode Selected $modeSelected');
-    SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
-    // SharedPreferencesUtil().isPromptSaved = false;
-    const AlertDialog(
-      content: Text('To Reflect selected Changes\nApp Restarting...'),
-    );
-    Future.delayed(const Duration(seconds: 3));
-    if (Platform.isAndroid) Restart.restartApp();
+void developerModeSelected({required String modeSelected}) async {
+  print('Mode Selected $modeSelected');
 
-    Restart.restartApp(
-        // notificationTitle: 'Restarting App',
-        // notificationBody: 'Please tap here to open the app again.',
-        );
-  }
+
+  SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
+  // SharedPreferencesUtil().isPromptSaved = false;
+  const AlertDialog(
+    content: Text('To Reflect selected Changes\nApp Restarting...'),
+  );
+  Future.delayed(const Duration(seconds: 3));
+  if (Platform.isAndroid) Restart.restartApp();
+
+  Restart.restartApp(
+    notificationTitle: 'Restarting App',
+    notificationBody: 'Please tap here to open the app again.',
+  );
+
 }

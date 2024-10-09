@@ -12,6 +12,7 @@ import 'package:friend_private/pages/onboarding/find_device/page.dart';
 import 'package:friend_private/pages/onboarding/permissions/permissions.dart';
 import 'package:friend_private/pages/onboarding/welcome/page.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:friend_private/utils/walkthrough/walkthrough_tutorial.dart';
 import 'package:friend_private/widgets/device_widget.dart';
 
 class OnboardingWrapper extends StatefulWidget {
@@ -131,9 +132,13 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
                       },
                     ),
                     CompletePage(
-                      goNext: () {
-                        routeToPage(context, const HomePageWrapper(),
+                      goNext: () async {
+                        await routeToPage(context, const HomePageWrapper(),
                             replace: true);
+
+                        debugPrint('checking for app tour');
+                      
+
                         MixpanelManager().onboardingStepICompleted('Finalize');
                         MixpanelManager().onboardingCompleted();
                       },
