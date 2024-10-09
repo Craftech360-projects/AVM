@@ -65,7 +65,7 @@ class CapturePageState extends State<CapturePage>
 
   BTDeviceStruct? btDevice;
   bool _hasTranscripts = false;
-  static const quietSecondsForMemoryCreation = 120;
+  static const quietSecondsForMemoryCreation = 60;
 
   /// ----
   List<TranscriptSegment> segments = [];
@@ -171,7 +171,7 @@ class CapturePageState extends State<CapturePage>
         audioStorage!.storeFramePacket(value);
         value.removeRange(0, 3);
         if (wsConnectionState == WebsocketConnectionStatus.connected) {
-          // debugPrint("Adding audio>>>>>>>>>>>>>");
+          //    debugPrint("Adding audio>>>>>>>>>>>>>,$value");
           websocketChannel?.sink.add(value);
         }
       },

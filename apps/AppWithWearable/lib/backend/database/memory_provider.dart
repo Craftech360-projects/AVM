@@ -176,6 +176,8 @@ class MemoryProvider {
      Geolocation: ${memory.geolocation.target != null ? memory.geolocation.target.toString() : 'None'}}
     ''';
   }
+
+  //void addMemory(Memory fromJson) {}
 }
 
 String getPrettyJSONString(jsonObject) {

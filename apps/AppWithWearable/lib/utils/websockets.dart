@@ -90,7 +90,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
   // String encoding = "opus";
 
-
   // if (codec == 'pcm8' || codec == 'pcm16') {
   //   // encoding = 'linear16';
   //   encoding = 'opus';
@@ -99,31 +98,41 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // }
   //   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
+
+  String encoding = "linear16";
+
   // String encoding = "linear16";
   // const String language = 'en-US';
   // const int sampleRate = 8000;
   // const String codec = 'pcm8';
   // const int channels = 1;
-  String encoding = "opus";
+
+
   const String language = 'en-US';
-  const int sampleRate = 48000;
-  const String codec = 'opus';
+  const int sampleRate = 8000;
+  const String codec = 'pcm8';
   const int channels = 1;
-  final String apiType = SharedPreferencesUtil().getApiType('NewApiKey')??'';
+  //   String encoding = "opus";
+  // const String language = 'en-US';
+  // const int sampleRate = 48000;
+  // const String codec = 'opus';
+  // const int channels = 1;
+  final String apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
   Uri uri = Uri.parse(
-     'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+    'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
   );
 
   print('apiType at dee$apiType');
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
-        'wss://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=${language}&sample_rate=${sampleRate}&codec=${codec}&channels=${channels}'
-      );
+
+          'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=$language&sample_rate=$sampleRate&codec=$codec&channels=$channels');
       break;
     case 'Sarvam':
       uri = Uri.parse(
-        'wss://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=${sampleRate}&codec=pcm8&channels=1',
+        'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=$sampleRate&codec=pcm8&channels=1',
+
       );
       break;
     case 'Wisper':
@@ -149,7 +158,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
     await channel.ready;
     // DateTime? lastAudioTime;
-        await channel.ready;
+    await channel.ready;
 
     // KeepAlive mechanism
     Timer? keepAliveTimer;
@@ -183,7 +192,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
         stopKeepAlive();
       }
     }
-
 
     channel.stream.listen(
       (event) {

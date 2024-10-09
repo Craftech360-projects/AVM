@@ -1175,6 +1175,19 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   height: 20,
                 ),
               ),
+              // if (_controller!.index == 0)
+              //   IconButton(
+              //     onPressed: () async {
+              //       await ObjectBoxUtil.clearObjectBox();
+              //       await SharedPreferencesUtil().clear();
+              //       if (Platform.isAndroid) await Restart.restartApp();
+              //     },
+              //     icon: const Icon(
+              //       Icons.warning_rounded,
+              //       color: Colors.red,
+              //     ),
+              //   ),
+
               //*-- Chat Plugin --*//
               // _controller!.index == 1
               //     ? Padding(
@@ -1264,19 +1277,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                                       : Colors.red,
                               size: 12,
                             ),
-                            // Container(
-                            //   width: 10,
-                            //   height: 10,
-                            //   decoration: BoxDecoration(
-                            //     color: batteryLevel > 75
-                            //         ? const Color.fromARGB(255, 0, 255, 8)
-                            //         : batteryLevel > 20
-                            //             ? Colors.yellow.shade700
-                            //             : Colors.red,
-                            //     shape: BoxShape.circle,
-                            //   ),
-                            // ),
-                            // const SizedBox(width: 8.0),
                             Text(
                               '${batteryLevel.toString()}%',
                               style: const TextStyle(

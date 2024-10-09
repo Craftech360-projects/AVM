@@ -134,7 +134,7 @@ Future<dynamic> llamaApiCall({
   // Construct the body of the request
   final body = jsonEncode({
     // Replace with specific model identifier if needed
-    "model": "llama3-8b-8192",
+    "model": "llama-3.2-90b-text-preview",
     'messages': [
       {'role': 'system', 'content': ''' '''},
       {
@@ -173,7 +173,7 @@ Future<dynamic> llamaApiCall({
 Future<String> executeGptPrompt(String? prompt,
     {bool ignoreCache = false}) async {
   if (prompt == null) return '';
-  // print("executing prompt here>>>>>>>>>>>>>>>");
+  print("executing prompt here>>>>>>>>>>>>>>>, ${prompt.length}");
   var prefs = SharedPreferencesUtil();
   var promptBase64 = base64Encode(utf8.encode(prompt));
   var cachedResponse = prefs.gptCompletionCache(promptBase64);

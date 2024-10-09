@@ -3,6 +3,8 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/capture/logic/websocket_mixin.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/pages/settings/BackupButton.dart';
+import 'package:friend_private/pages/settings/RestoreButton.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/developer_page.dart';
 import 'package:friend_private/pages/settings/profile.dart';
@@ -137,6 +139,8 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
                   textAlign: TextAlign.start,
                 ),
               ),
+
+
               getItemAddOn(
                 key: ProfileTour,
                 'Profile',
@@ -170,6 +174,7 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
                 },
                 icon: Icons.settings_suggest,
               ),
+
               const Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
