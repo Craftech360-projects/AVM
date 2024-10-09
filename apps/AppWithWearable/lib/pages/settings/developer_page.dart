@@ -30,12 +30,12 @@ class _DeveloperPageState extends State<DeveloperPage> {
 
 
 
-  void developerModeSelected({required String modeSelected}) {
-    setState(() {
-      isModeSelected = true;
-      SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
-    });
-  }
+  // void developerModeSelected({required String modeSelected}) {
+  //   setState(() {
+  //     isModeSelected = true;
+  //     SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
+  //   });
+  // }
 
   void _setDefaultPrompt() {
     setState(() {
