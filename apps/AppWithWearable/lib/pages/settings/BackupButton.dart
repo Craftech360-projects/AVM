@@ -72,12 +72,14 @@ class _BackupButtonState extends State<BackupButton> {
       children: [
         // Automatic Backup Switch
         ListTile(
-          title: const Text('Automatic Backups',
+          title: const Text('Backups & Restore',
               style: TextStyle(color: Colors.white)),
-          subtitle: backupsEnabled
-              ? const Text('Backups are enabled')
-              : const Text('Backups are disabled'),
+         
           trailing: Switch(
+            activeTrackColor: Colors.grey, 
+            inactiveTrackColor: Colors.white30, 
+            activeColor: Colors.white,
+            inactiveThumbColor: Colors.white,
             value: backupsEnabled,
             onChanged: (bool value) {
               setState(() {
@@ -92,20 +94,38 @@ class _BackupButtonState extends State<BackupButton> {
         ),
 
         // Manual Backup Button
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: ElevatedButton.icon(
-            icon: const Icon(Icons.backup),
-            label: const Text('Manual Backup'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              textStyle: const TextStyle(color: Colors.white),
+        ListTile(
+          contentPadding: const EdgeInsets.fromLTRB(4, 0, 24, 0),
+          title: Text(
+            'Manual Backup',
+            style: TextStyle(
+              color: backupsEnabled ? Colors.white : Colors.grey,
             ),
-            onPressed: backupsEnabled
-                ? _manualBackup
-                : null, // Disable button if backups are disabled
           ),
+    subtitle: backupsEnabled
+              ? const Text('Enabled')
+              : const Text('Disabled'),
+          trailing:  Icon(
+            Icons.backup,
+            size: 20,
+               color: backupsEnabled ? Colors.white : Colors.grey,
+          ),
+          onTap: backupsEnabled ? _manualBackup : null,
         ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+        //   child: ElevatedButton.icon(
+        //     icon: const Icon(Icons.backup),
+        //     label: const Text('Manual Backup'),
+        //     style: ElevatedButton.styleFrom(
+        //       backgroundColor: Colors.blue,
+        //       textStyle: const TextStyle(color: Colors.white),
+        //     ),
+        //     onPressed: backupsEnabled
+        //         ? _manualBackup
+        //         : null, // Disable button if backups are disabled
+        //   ),
+        // ),
 
         if (isManualBackupInProgress)
           const Padding(

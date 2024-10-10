@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RestoreButton extends StatefulWidget {
-  const RestoreButton({Key? key}) : super(key: key);
+  const RestoreButton({super.key});
 
   @override
   _RestoreButtonState createState() => _RestoreButtonState();
@@ -23,18 +23,30 @@ class _RestoreButtonState extends State<RestoreButton> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Restore Backup Button
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: ElevatedButton.icon(
-            icon: const Icon(Icons.restore),
-            label: const Text('Restore Latest Backup'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              textStyle: const TextStyle(color: Colors.white),
-            ),
-            onPressed: _restoreBackup,
+        ListTile(
+          contentPadding: const EdgeInsets.fromLTRB(4, 0, 24, 0),
+          title: const Text(
+            'Restore Latest Backup',
+            style: TextStyle(color: Colors.white),
           ),
+          trailing: const Icon(
+            Icons.restore,
+            size: 20,
+          ),
+          onTap: _restoreBackup,
         ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+        //   child: ElevatedButton.icon(
+        //     icon: const Icon(Icons.restore),
+        //     label: const Text('Restore Latest Backup'),
+        //     style: ElevatedButton.styleFrom(
+        //       backgroundColor: Colors.green,
+        //       textStyle: const TextStyle(color: Colors.white),
+        //     ),
+        //     onPressed: _restoreBackup,
+        //   ),
+        // ),
 
         if (isRestoreInProgress)
           const Padding(
@@ -81,11 +93,10 @@ class _RestoreButtonState extends State<RestoreButton> {
       print(latestBackup);
       // Read the latest backup
       String content = await latestBackup.readAsString();
-   
+
       List<dynamic> jsonData = jsonDecode(content);
-     
+
       for (var memory in jsonData) {
-      
         MemoryProvider().saveMemory(Memory.fromJson(memory));
       }
 
@@ -125,19 +136,19 @@ class _RestoreButtonState extends State<RestoreButton> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Permission Required"),
-          content: Text(
+          title: const Text("Permission Required"),
+          content: const Text(
               "Storage permission is required to access files. Please enable it in the app settings."),
           actions: <Widget>[
             TextButton(
-              child: Text("Settings"),
+              child: const Text("Settings"),
               onPressed: () {
                 openAppSettings();
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text("Cancel"),
+              child: const Text("Cancel"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
