@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
+import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/utils/features/backups.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -61,28 +63,34 @@ class _RestoreButtonState extends State<RestoreButton> {
   // Restore backup function
   void _restoreBackup() async {
     setState(() => isRestoreInProgress = true);
-
     try {
-      // Get backup directory
+      await requestStoragePermission();
       final directory = await getExternalStorageDirectory();
       if (directory == null) {
-        print('Backup directory not found.');
+        print('External storage directory not found.');
+        setState(() => isRestoreInProgress = false);
+        return;
+      }
+      // final backupDirectory = Directory('${directory.path}/Documents/AVM_Backups');
+      final backupDirectory =
+          Directory('/storage/emulated/0/Documents/Avm/Backups');
+
+      if (!await backupDirectory.exists()) {
+        print('Backup directory does not exist.');
         setState(() => isRestoreInProgress = false);
         return;
       }
 
-      // Get the list of files in the directory
-      List<FileSystemEntity> files = Directory(directory.path).listSync();
+      List<FileSystemEntity> files = backupDirectory.listSync();
+      print('list of files $files');
       List<FileSystemEntity> backupFiles =
           files.where((file) => file.path.endsWith('.json')).toList();
-
-      // Sort files by timestamp and get the latest one
+      print('backups file found ${backupFiles}');
       if (backupFiles.isEmpty) {
         print('No backup files found.');
         setState(() => isRestoreInProgress = false);
         return;
       }
-
       backupFiles.sort((a, b) {
         String aTime = a.path.split('backup_')[1].split('.json')[0];
         String bTime = b.path.split('backup_')[1].split('.json')[0];
@@ -90,16 +98,15 @@ class _RestoreButtonState extends State<RestoreButton> {
       });
 
       File latestBackup = File(backupFiles.first.path);
-      print(latestBackup);
-      // Read the latest backup
+      print('Restoring from: ${latestBackup.path}');
       String content = await latestBackup.readAsString();
 
-      List<dynamic> jsonData = jsonDecode(content);
-
-      for (var memory in jsonData) {
-        MemoryProvider().saveMemory(Memory.fromJson(memory));
+      String password = SharedPreferencesUtil().uid;
+      List<dynamic> jsonData = decodeJson(content, password);
+      for (var memoryData in jsonData) {
+        Memory memory = Memory.fromJson(memoryData);
+        MemoryProvider().saveMemory(memory);
       }
-
       print('Restore completed successfully.');
     } catch (e) {
       print('Error during restore: $e');
@@ -110,9 +117,9 @@ class _RestoreButtonState extends State<RestoreButton> {
 
   // Request storage permission (using the same method you provided)
 
-  Future<bool> requestStoragePermission(BuildContext context) async {
+  Future<bool> requestStoragePermission() async {
     var status = await Permission.storage.status;
-    print(status.isGranted);
+    print('is permission granted:${status.isGranted}');
     if (status.isGranted) {
       // Permission is already granted
       return true;

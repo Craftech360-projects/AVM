@@ -64,83 +64,38 @@ Future<bool> executeBackupWithUid({String? uid}) async {
   await uploadBackupApi(encoded);
   return true;
 }
-// import 'package:permission_handler/permission_handler.dart';
-// import 'package:flutter/material.dart';
-// import 'dart:io';
 
-// Future<bool> executeManualBackupWithUid({String? uid}) async {
-//   // Check if backups are enabled
-//   if (!SharedPreferencesUtil().backupsEnabled) return false;
-
-//   print('executeBackupWithUid: $uid');
-
-//   // Get the memories (data) that needs to be backed up
-//   var memories = MemoryProvider().getMemories();
-
-//   // If there's no data to back up, return true (no need to proceed)
-//   if (memories.isEmpty) return true;
-
-//   // Encode the memories to JSON format and include the uid if provided or use the stored one
-//   var encoded = encodeJson(
-//     memories.map((e) => e.toJson()).toList(),
-//     uid ?? SharedPreferencesUtil().uid,
-//   );
-//   try {
-//     // Get the application documents directory
-//     final directory = await getApplicationDocumentsDirectory();
-//     final file = File(
-//         '${directory.path}/backup_${DateTime.now().millisecondsSinceEpoch}.json');
-
-//     // Write the encoded data to the file
-//     await file.writeAsString(encoded);
-
-//     print('Backup saved to: ${file.path}');
-
-//     // Update the last backup date
-//     // SharedPreferencesUtil().lastBackupDate = DateTime.now().toIso8601String();
-
-//     return true;
-//   } catch (e) {
-//     print('Error saving backup: $e');
-//     return false;
-//   }
-//   // Uncomment the following line to upload the backup data via an API call
-//   // await uploadBackupApi(encoded);
-
-//   // Optionally, update the last backup date
-//   // SharedPreferencesUtil().lastBackupDate = DateTime.now().toIso8601String();
-
-//   return true;
-// }
 
 // For external storage
 
 Future<bool> executeManualBackupWithUid({String? uid}) async {
   if (!SharedPreferencesUtil().backupsEnabled) return false;
-
   print('executeBackupWithUid: $uid');
 
   var memories = MemoryProvider().getMemories();
-
   if (memories.isEmpty) return true;
 
-  // var encoded = encodeJson(
-  //   memories.map((e) => e.toJson()).toList(),
-  //   uid ?? SharedPreferencesUtil().uid,
-  // );
-  var rawData = memories.map((e) {
-    return e.toJson();
-  }).toList();
+  var encoded = encodeJson(
+    memories.map((e) => e.toJson()).toList(),
+    uid ?? SharedPreferencesUtil().uid,
+  );
 
   try {
-    // Save to external storage (accessible directory)
-    final directory =
-        await getExternalStorageDirectory(); // Modified to use external storage
-    print(directory);
-    final file = File(
-        '${directory!.path}/backup_${DateTime.now().millisecondsSinceEpoch}.json');
 
-    await file.writeAsString(jsonEncode(rawData));
+    final directory = await getExternalStorageDirectory();
+    if (directory == null)
+      throw Exception("Could not get external storage directory");
+
+    final backupDirectory =
+        // Directory('${directory.path}/Documents/AVM_Backups');
+ Directory('/storage/emulated/0/Documents/Avm/Backups');
+    if (!await backupDirectory.exists()) {
+      await backupDirectory.create(recursive: true);
+    }
+
+    final file = File(
+        '${backupDirectory.path}/backup_${DateTime.now().millisecondsSinceEpoch}.json');
+    await file.writeAsString(encoded);
 
     print('Backup saved to: ${file.path}');
     return true;
