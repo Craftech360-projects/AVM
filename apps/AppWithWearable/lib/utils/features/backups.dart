@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io'; // For file system
+import 'dart:io'; 
 
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
@@ -7,16 +7,14 @@ import 'package:friend_private/backend/api_requests/api/server.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
-import 'package:path_provider/path_provider.dart';
 
 String encodeJson(List<dynamic> jsonObj, String password) {
   String jsonString = json.encode(jsonObj);
   final key = encrypt.Key.fromUtf8(
       sha256.convert(utf8.encode(password)).toString().substring(0, 32));
-  final iv = encrypt.IV.fromSecureRandom(16); // Generate a random IV
+  final iv = encrypt.IV.fromSecureRandom(16); 
   final encrypter = encrypt.Encrypter(encrypt.AES(key));
   final encrypted = encrypter.encrypt(jsonString, iv: iv);
-  // Return the encrypted string with the IV prepended
   return '${iv.base64}:${encrypted.base64}';
 }
 
@@ -35,23 +33,6 @@ List<dynamic> decodeJson(String encryptedJson, String password) {
   return json.decode(decrypted);
 }
 
-// Future<String> getEncodedMemories() async {
-//   var password = SharedPreferencesUtil().backupPassword;
-//   if (password.isEmpty) return '';
-//   var memories = MemoryProvider().getMemories();
-//   return encodeJson(memories.map((e) => e.toJson()).toList(), password);
-// }
-
-// Future<bool> executeBackup() async {
-//   if (!SharedPreferencesUtil().backupsEnabled) return false;
-//   var result = await getEncodedMemories();
-//   if (result == '') return false;
-//   await getDecodedMemories(result, SharedPreferencesUtil().backupPassword);
-//   SharedPreferencesUtil().lastBackupDate = DateTime.now().toIso8601String();
-//   await uploadBackupApi(result);
-//   return true;
-// }
-
 Future<bool> executeBackupWithUid({String? uid}) async {
   if (!SharedPreferencesUtil().backupsEnabled) return false;
   print('executeBackupWithUid: $uid');
@@ -60,43 +41,30 @@ Future<bool> executeBackupWithUid({String? uid}) async {
   if (memories.isEmpty) return true;
   var encoded = encodeJson(memories.map((e) => e.toJson()).toList(),
       uid ?? SharedPreferencesUtil().uid);
-  // SharedPreferencesUtil().lastBackupDate = DateTime.now().toIso8601String();
+
   await uploadBackupApi(encoded);
   return true;
 }
 
-
-// For external storage
-
 Future<bool> executeManualBackupWithUid({String? uid}) async {
   if (!SharedPreferencesUtil().backupsEnabled) return false;
+
   print('executeBackupWithUid: $uid');
 
   var memories = MemoryProvider().getMemories();
+
   if (memories.isEmpty) return true;
 
-  var encoded = encodeJson(
-    memories.map((e) => e.toJson()).toList(),
-    uid ?? SharedPreferencesUtil().uid,
-  );
+  var rawData = memories.map((e) {
+    return e.toJson();
+  }).toList();
 
   try {
-
-    final directory = await getExternalStorageDirectory();
-    if (directory == null)
-      throw Exception("Could not get external storage directory");
-
-    final backupDirectory =
-        // Directory('${directory.path}/Documents/AVM_Backups');
- Directory('/storage/emulated/0/Documents/Avm/Backups');
-    if (!await backupDirectory.exists()) {
-      await backupDirectory.create(recursive: true);
-    }
-
+    final directory = Directory('/storage/emulated/0/Documents/Avm/Backups');
+    print(directory);
     final file = File(
-        '${backupDirectory.path}/backup_${DateTime.now().millisecondsSinceEpoch}.json');
-    await file.writeAsString(encoded);
-
+        '${directory.path}/backup_${DateTime.now().millisecondsSinceEpoch}.json');
+    await file.writeAsString(jsonEncode(rawData));
     print('Backup saved to: ${file.path}');
     return true;
   } catch (e) {
