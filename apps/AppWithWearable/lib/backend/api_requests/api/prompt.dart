@@ -78,13 +78,88 @@ Future<SummaryResult> summarizeMemory(
   // }
 
   debugPrint('summarizeMemory transcript length: ${transcript.length}');
-  if (transcript.isEmpty || transcript.split(' ').length < 7) {
+  if (transcript.isEmpty || transcript.split(' ').length < 1) {
     return SummaryResult(Structured('', ''), []);
   }
-  if (transcript.split(' ').length > 100) {
-    // TODO: try lower count?
+
+  // TODO: it  will avoide creating memory , if the trnascrpt lenght is below 100 char
+  // if (transcript.split(' ').length > 100) {
+
+  //   forceProcess = true;
+  // }
+
+  if (transcript.split(' ').length > 1) {
     forceProcess = true;
   }
+//first diarize
+
+//   final String message = """
+// I have a transcription of a conversation that I would like to diarize. Please assign different sections of the transcription to individual users, and label them as Speaker 1, Speaker 2, and so on.
+
+// Additionally, if the transcription contains any irrelevant background noise or speech (e.g., a YouTube video playing or any non-conversational audio), please eliminate that data from the output.
+
+// Here is the transcription:
+
+// "$transcript"
+
+// Please return the diarized transcript in JSON format with the following structure:
+
+// {
+//   "diarized_transcript": [
+//     {
+//       "speaker": "Speaker 1",
+//       "text": "Section of transcript spoken by Speaker 1"
+//     },
+//     {
+//       "speaker": "Speaker 2",
+//       "text": "Section of transcript spoken by Speaker 2"
+//     },
+//     {
+//       "speaker": "Speaker N",
+//       "text": "Section of transcript spoken by Speaker N"
+//     }
+//   ],
+//   "irrelevant_data_removed": "true or false"
+// }
+
+// Make sure each section of the transcription is labeled with the corresponding speaker, and that any unwanted background noise or irrelevant content is removed.
+// """;
+
+//   final String message = """
+// I have a transcription of a conversation that I would like to diarize. Please assign different sections of the transcription to individual users. If the speaker's name can be identified from the transcription, use that name instead of generic labels like Speaker 1, Speaker 2, etc.
+
+// Additionally, if the transcription contains any irrelevant background noise or speech (e.g., a YouTube video playing or any non-conversational audio), please eliminate that data from the output.
+
+// Here is the transcription:
+
+// "$transcript"
+
+// Please return the diarized transcript in JSON format with the following structure:
+
+// {
+//   "diarized_transcript": [
+//     {
+//       "speaker": "Identified name of speaker or generic label (e.g., Speaker 1)",
+//       "text": "Section of transcript spoken by this speaker"
+//     },
+//     {
+//       "speaker": "Identified name of speaker or generic label (e.g., Speaker 2)",
+//       "text": "Section of transcript spoken by this speaker"
+//     },
+//     {
+//       "speaker": "Identified name of speaker or generic label (e.g., Speaker N)",
+//       "text": "Section of transcript spoken by this speaker"
+//     }
+//   ],
+//   "irrelevant_data_removed": "true or false"
+// }
+
+// Ensure that each section is labeled with either the speaker's name (if identifiable) or a generic label like Speaker 1, Speaker 2. Remove any irrelevant or unwanted data.
+// """;
+
+  // final String finalTranscript = await executeSpeechDiarizationPrompt(message);
+  // print("Diarized Transcript: $finalTranscript");
+//then summray
 
   // TODO: try later with temperature 0
   // NOTE: PROMPT IS VERY DELICATE, IT CAN DISCARD EVERYTHING IF NOT HANDLED PROPERLY

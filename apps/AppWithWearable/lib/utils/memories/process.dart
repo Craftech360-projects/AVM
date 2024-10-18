@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:friend_private/backend/api_requests/api/llm.dart';
 import 'package:friend_private/backend/api_requests/api/pinecone.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/api_requests/api/random_memory_img.dart';
@@ -44,6 +45,8 @@ Future<Memory?> processTranscriptContent(
     debugPrint("Geolocation permissions not granted or service disabled.");
   }
   if (transcript.isNotEmpty || photos.isNotEmpty) {
+//should we do transcription diarize here?
+
     Memory? memory = await memoryCreationBlock(
       context,
       transcript,
@@ -98,6 +101,43 @@ Future<SummaryResult?> _retrieveStructure(
           calendar: prompt.calender,
         );
       }
+
+      final String message = """
+I have a transcription of a conversation that I would like to speaker diarization. Please assign different sections of the transcription to individual users, and label them as Speaker 1, Speaker 2, and so on.
+
+Additionally, if the transcription contains any irrelevant background noise or speech (e.g., a YouTube video playing or any non-conversational audio), please eliminate that data from the output.
+
+Here is the transcription:
+
+"${transcript}"
+
+Please return the diarized transcript in JSON format with the following structure:
+
+{
+  "diarized_transcript": [
+    {
+      "speaker": "Speaker 1",
+      "text": "Section of transcript spoken by Speaker 1"
+    },
+    {
+      "speaker": "Speaker 2",
+      "text": "Section of transcript spoken by Speaker 2"
+    },
+    {
+      "speaker": "Speaker N",
+      "text": "Section of transcript spoken by Speaker N"
+    }
+  ],
+  "irrelevant_data_removed": "true or false"
+}
+
+Make sure each section of the transcription is labeled with the corresponding speaker, and that any unwanted background noise or irrelevant content is removed.
+""";
+      final String finalTranscript =
+          await executeSpeechDiarizationPrompt(message);
+      print("Diarized Transcript: $finalTranscript");
+      transcript = finalTranscript;
+
       summary = await summarizeMemory(transcript, [],
           ignoreCache: ignoreCache, customPromptDetails: savedPrompt);
       debugPrint("its reached here ${summary.structured}");

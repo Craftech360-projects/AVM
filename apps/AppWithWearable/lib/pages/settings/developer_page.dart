@@ -18,17 +18,14 @@ class DeveloperPage extends StatefulWidget {
 class _DeveloperPageState extends State<DeveloperPage> {
   bool developerEnabled = false;
   bool isModeSelected = false;
-  bool isPromptSaved = false; 
+  bool isPromptSaved = false;
 
   @override
   void initState() {
     super.initState();
     developerEnabled = SharedPreferencesUtil().developerOptionEnabled;
-    isPromptSaved = SharedPreferencesUtil()
-        .isPromptSaved; 
+    isPromptSaved = SharedPreferencesUtil().isPromptSaved;
   }
-
-
 
   // void developerModeSelected({required String modeSelected}) {
   //   setState(() {
@@ -39,10 +36,9 @@ class _DeveloperPageState extends State<DeveloperPage> {
 
   void _setDefaultPrompt() {
     setState(() {
-     
       PromptProvider().removeAllPrompts();
       SharedPreferencesUtil().isPromptSaved = false;
-      isPromptSaved = false; 
+      isPromptSaved = false;
     });
   }
 
@@ -54,7 +50,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
       ),
     )
         .then((_) {
-     
       setState(() {
         isPromptSaved = SharedPreferencesUtil().isPromptSaved;
       });
@@ -158,6 +153,23 @@ class _DeveloperPageState extends State<DeveloperPage> {
                           developerModeSelected(modeSelected: 'Sarvam');
                         },
                       ),
+                      ListTile(
+                        leading: apiType == 'Whisper'
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
+                        title: const Text('Whisper'),
+                        onTap: () {
+                          developerModeSelected(modeSelected: 'Whisper');
+                        },
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -229,7 +241,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
 void developerModeSelected({required String modeSelected}) async {
   print('Mode Selected $modeSelected');
 
-
   SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
   // SharedPreferencesUtil().isPromptSaved = false;
   const AlertDialog(
@@ -242,5 +253,4 @@ void developerModeSelected({required String modeSelected}) async {
     notificationTitle: 'Restarting App',
     notificationBody: 'Please tap here to open the app again.',
   );
-
 }
