@@ -107,16 +107,16 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // const int channels = 1;
 
 
-  // String encoding = "linear16";
-  // const String language = 'en-US';
-  // const int sampleRate = 8000;
-  // const String codec = 'pcm8';
-  // const int channels = 1;
-    String encoding = "opus";
+  String encoding = "linear16";
   const String language = 'en-US';
-  const int sampleRate = 48000;
-  const String codec = 'opus';
+  const int sampleRate = 8000;
+  const String codec = 'pcm8';
   const int channels = 1;
+  //   String encoding = "opus";
+  // const String language = 'en-US';
+  // const int sampleRate = 48000;
+  // const String codec = 'opus';
+  // const int channels = 1;
   final String apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
   Uri uri = Uri.parse(
     'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
