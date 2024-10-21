@@ -9,6 +9,7 @@ import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/custom_prompt_page.dart';
 import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dart';
 import 'package:friend_private/utils/ble/communication.dart';
+import 'package:friend_private/utils/websockets.dart';
 import 'package:restart_app/restart_app.dart';
 
 class DeveloperPage extends StatefulWidget {
@@ -136,15 +137,18 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
                               ),
                         title: const Text('Deepgram'),
                         onTap: () async {
+                          await closeWebSocket();
                           // developerModeSelected(modeSelected: 'Deepgram');
                           // closeWebSocket();
+                          //   closeWebSocket2();
+                          developerModeSelected(modeSelected: 'Deepgram');
+
                           await initWebSocket(
                             onConnectionClosed:
                                 (int? closeCode, String? closeReason) {
                               setState(() {});
                             },
                             onConnectionSuccess: () {
-                              developerModeSelected(modeSelected: 'Deepgram');
                               setState(() {});
                             },
                             onConnectionError: (p1) {},
@@ -169,13 +173,14 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
                         onTap: () async {
                           // developerModeSelected(modeSelected: 'Sarvam');
                           // closeWebSocket();
+                          await closeWebSocket();
+                          developerModeSelected(modeSelected: 'Sarvam');
                           await initWebSocket(
                             onConnectionClosed:
                                 (int? closeCode, String? closeReason) {
                               setState(() {});
                             },
                             onConnectionSuccess: () {
-                              developerModeSelected(modeSelected: 'Sarvam');
                               setState(() {});
                             },
                             onConnectionError: (p1) {},
@@ -251,19 +256,32 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
         sampleRate: sampleRate);
   }
 
-  void _onSwitchChanged(bool value) {
+  void _onSwitchChanged(bool value) async {
     SharedPreferencesUtil().developerOptionEnabled = value;
     if (!value) {
       SharedPreferencesUtil().saveApiType('NewApiKey', 'Default');
       PromptProvider().removeAllPrompts();
       SharedPreferencesUtil().isPromptSaved = false;
 
-      if (Platform.isAndroid) Restart.restartApp();
+      //  developerModeSelected(modeSelected: 'Deepgram');
+      // if (Platform.isAndroid) Restart.restartApp();
 
-      Restart.restartApp(
-          // notificationTitle: 'Restarting App',
-          // notificationBody: 'Please tap here to open the app again.',
-          );
+      // Restart.restartApp(
+      //     // notificationTitle: 'Restarting App',
+      //     // notificationBody: 'Please tap here to open the app again.',
+      //     );
+      await closeWebSocket();
+      await initWebSocket(
+        onConnectionClosed: (int? closeCode, String? closeReason) {
+          setState(() {});
+        },
+        onConnectionSuccess: () {
+          setState(() {});
+        },
+        onConnectionError: (p1) {},
+        onConnectionFailed: (p1) {},
+        onMessageReceived: (List<TranscriptSegment> p1) {},
+      );
       print('developer option not true');
     }
     setState(() {
@@ -276,6 +294,7 @@ void developerModeSelected({required String modeSelected}) async {
   print('Mode Selected $modeSelected');
 
   SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
+  print("updated type");
   // // SharedPreferencesUtil().isPromptSaved = false;
   // const AlertDialog(
   //   content: Text('To Reflect selected Changes\nApp Restarting...'),
