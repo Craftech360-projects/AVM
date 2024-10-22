@@ -7,7 +7,7 @@ import 'package:friend_private/features/memory/presentation/widgets/custom_tag.d
 import 'package:friend_private/pages/memories/widgets/empty_memories.dart';
 import 'package:intl/intl.dart';
 
-class MemoryCardWidget extends StatelessWidget {
+class MemoryCardWidget extends StatefulWidget {
   const MemoryCardWidget({
     super.key,
     required MemoryBloc memoryBloc,
@@ -16,10 +16,16 @@ class MemoryCardWidget extends StatelessWidget {
   final MemoryBloc _memoryBloc;
 
   @override
+  State<MemoryCardWidget> createState() => _MemoryCardWidgetState();
+}
+
+class _MemoryCardWidgetState extends State<MemoryCardWidget> {
+  // final deleteCard = UniqueKey();
+  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return BlocBuilder<MemoryBloc, MemoryState>(
-      bloc: _memoryBloc,
+      bloc: widget._memoryBloc,
       builder: (context, state) {
         print('state of memory ${state.memories}');
         if (state.memories.isEmpty) {
@@ -45,8 +51,8 @@ class MemoryCardWidget extends StatelessWidget {
                 background: Container(
                   color: Colors.red.withOpacity(0.5),
                 ),
-                key: UniqueKey(),
-                // key: Key(memory.id.toString()),
+                // key:deleteCard,
+                key: Key(index.toString()),
                 confirmDismiss: (direction) async {
                   return await showDialog(
                     context: context,
@@ -84,18 +90,19 @@ class MemoryCardWidget extends StatelessWidget {
                   );
                 },
                 onDismissed: (direction) {
-                  _memoryBloc.add(
+                  widget._memoryBloc.add(
                     DeletedMemory(memory: memory),
                   );
                 },
                 //*-- GoTo Memory Detail page --*//
                 child: GestureDetector(
                   onTap: () {
-                    _memoryBloc.add(MemoryIndexChanged(memoryIndex: index));
+                    widget._memoryBloc
+                        .add(MemoryIndexChanged(memoryIndex: index));
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => CustomMemoryDetailPage(
-                          memoryBloc: _memoryBloc,
+                          memoryBloc: widget._memoryBloc,
                           memoryAtIndex: index,
                         ),
                       ),

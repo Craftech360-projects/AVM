@@ -61,15 +61,16 @@ class _AuthComponentState extends State<AuthComponent> {
                           changeLoadingState();
                         },
                 )
-              : SignInWithAppleButton(
+            : SignInWithAppleButton(
                   style: SignInWithAppleButtonStyle.whiteOutlined,
                   onPressed: loading
                       ? () {}
                       : () async {
-                          changeLoadingState();
-                          await signInWithApple();
-                          _signIn();
-                          changeLoadingState();
+                          var userCred = await signInWithApple();
+                          if (userCred != null) {
+                            _signIn();
+                            changeLoadingState();
+                          }
                         },
                   height: 52,
                 ),

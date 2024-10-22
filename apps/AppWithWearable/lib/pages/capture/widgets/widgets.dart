@@ -117,25 +117,26 @@ class CaptureCard extends StatelessWidget {
                           controller: scrollController,
                           itemBuilder: (context, index) {
                             TranscriptSegment segment = segments![index];
-                            String speakerName = segment.speaker == '0'
-                                ? '${SharedPreferencesUtil().givenName}(You)'
-                                : 'Speaker: ${segment.speaker}';
+                            // String speakerName = segment.speaker == '0'
+                            //     ? 'You'
+                            //     // ? '${SharedPreferencesUtil().givenName}(You)'
+                            //     : 'Speaker: ${segment.speaker}';
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  // segment.isUser
-                                  //     ? SharedPreferencesUtil()
-                                  //             .givenName
-                                  //             .isNotEmpty
-                                  //         ? SharedPreferencesUtil().givenName
-                                  //         : 'You'
-                                  //     : 'Speaker ${segment.speaker}',
-                                  speakerName,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 10),
+                                // Text(
+                                //   // segment.isUser
+                                //   //     ? SharedPreferencesUtil()
+                                //   //             .givenName
+                                //   //             .isNotEmpty
+                                //   //         ? SharedPreferencesUtil().givenName
+                                //   //         : 'You'
+                                //   //     : 'Speaker ${segment.speaker}',
+                                //   speakerName,
+                                //   style: const TextStyle(
+                                //       fontWeight: FontWeight.bold),
+                                // ),
+                                // const SizedBox(height: 10),
                                 Text(
                                   utf8.decode(segment.text.toString().codeUnits,
                                       allowMalformed: true),

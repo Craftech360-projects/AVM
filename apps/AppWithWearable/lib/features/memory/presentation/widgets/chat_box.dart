@@ -14,7 +14,7 @@ class ChatBoxWidget extends StatelessWidget {
     log('transcript tab- $segment');
     // final isCurrentUser = chatUser.id == '4';
     final isCurrentUser = segment.speaker == '0';
-    final yourName = SharedPreferencesUtil().givenName;
+    // final yourName = SharedPreferencesUtil().givenName;
 
     return Align(
       alignment: isCurrentUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -39,16 +39,17 @@ class ChatBoxWidget extends StatelessWidget {
               isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              isCurrentUser
-                  ? '$yourName (You)'
-                  : 'Speaker: ${segment.speaker}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 12),
+            // Text(
+            //   isCurrentUser
+            //       ? 'You'
+            //       // ? '$yourName (You)'
+            //       : 'Speaker: ${segment.speaker}',
+            //   style: const TextStyle(
+            //     fontWeight: FontWeight.bold,
+            //     color: Colors.white,
+            //   ),
+            // ),
+            // const SizedBox(height: 12),
             ExpandableTextUtil(
               text: segment.text,
               style: const TextStyle(

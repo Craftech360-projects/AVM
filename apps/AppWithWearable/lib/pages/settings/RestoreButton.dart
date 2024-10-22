@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
-import 'package:friend_private/utils/features/backups.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RestoreButton extends StatefulWidget {
@@ -35,7 +33,9 @@ class _RestoreButtonState extends State<RestoreButton> {
             Icons.restore,
             size: 20,
           ),
-          onTap: _restoreBackup,
+          onTap: () {
+            _restoreBackup();
+          },
         ),
         // Padding(
         //   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -114,18 +114,13 @@ class _RestoreButtonState extends State<RestoreButton> {
   //     setState(() => isRestoreInProgress = false);
   //   }
   // }
- void _restoreBackup() async {
+  void _restoreBackup() async {
     setState(() => isRestoreInProgress = true);
 
     try {
-        await requestStoragePermission();
+      await requestStoragePermission();
       // Get backup directory
-      final directory =  Directory('/storage/emulated/0/Documents/Avm/Backups');
-      if (directory == null) {
-        print('Backup directory not found.');
-        setState(() => isRestoreInProgress = false);
-        return;
-      }
+      final directory = Directory('/storage/emulated/0/Documents/Avm/Backups');
 
       // Get the list of files in the directory
       List<FileSystemEntity> files = Directory(directory.path).listSync();
@@ -149,14 +144,13 @@ class _RestoreButtonState extends State<RestoreButton> {
       print(latestBackup);
       // Read the latest backup
       String content = await latestBackup.readAsString();
-   
+
       List<dynamic> jsonData = jsonDecode(content);
-     
+
       for (var memory in jsonData) {
-      
         MemoryProvider().saveMemory(Memory.fromJson(memory));
       }
-
+      SharedPreferencesUtil().isRestoreSuccessful = true;
       print('Restore completed successfully.');
     } catch (e) {
       print('Error during restore: $e');
@@ -165,38 +159,17 @@ class _RestoreButtonState extends State<RestoreButton> {
     }
   }
 
-
   Future<bool> requestStoragePermission() async {
-  var status = await Permission.storage.status;
-  print('is permission granted: ${status.isGranted}');
-  
-  if (status.isGranted) {
-   
-    if (await Permission.manageExternalStorage.isGranted) {
-    
-      print('Manage External Storage Permission granted');
-      return true;
-    } else {
-   
-      var manageExternalStorageStatus = await Permission.manageExternalStorage.request();
-      if (manageExternalStorageStatus.isGranted) {
-        print('Manage External Storage Permission granted');
-        return true;
-      } else {
-        print('Manage External Storage Permission denied');
-        return false;
-      }
-    }
-  } else if (status.isDenied) {
-    
-    status = await Permission.storage.request();
-    
+    var status = await Permission.storage.status;
+    print('is permission granted: ${status.isGranted}');
+
     if (status.isGranted) {
       if (await Permission.manageExternalStorage.isGranted) {
         print('Manage External Storage Permission granted');
         return true;
       } else {
-        var manageExternalStorageStatus = await Permission.manageExternalStorage.request();
+        var manageExternalStorageStatus =
+            await Permission.manageExternalStorage.request();
         if (manageExternalStorageStatus.isGranted) {
           print('Manage External Storage Permission granted');
           return true;
@@ -205,14 +178,32 @@ class _RestoreButtonState extends State<RestoreButton> {
           return false;
         }
       }
-    } else {
-      _showPermissionDeniedDialog(context);
-      return false;
+    } else if (status.isDenied) {
+      status = await Permission.storage.request();
+
+      if (status.isGranted) {
+        if (await Permission.manageExternalStorage.isGranted) {
+          print('Manage External Storage Permission granted');
+          return true;
+        } else {
+          var manageExternalStorageStatus =
+              await Permission.manageExternalStorage.request();
+          if (manageExternalStorageStatus.isGranted) {
+            print('Manage External Storage Permission granted');
+            return true;
+          } else {
+            print('Manage External Storage Permission denied');
+            return false;
+          }
+        }
+      } else {
+        _showPermissionDeniedDialog(context);
+        return false;
+      }
     }
+
+    return false;
   }
-  
-  return false;
-}
 
   // Show a dialog if permission is denied
   void _showPermissionDeniedDialog(BuildContext context) {

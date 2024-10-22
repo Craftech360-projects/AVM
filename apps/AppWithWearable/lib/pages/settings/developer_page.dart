@@ -1,12 +1,12 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/prompt_provider.dart';
+import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/pages/capture/logic/websocket_mixin.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/custom_prompt_page.dart';
 import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dart';
-import 'package:restart_app/restart_app.dart';
+import 'package:friend_private/utils/ble/communication.dart';
 
 class DeveloperPage extends StatefulWidget {
   const DeveloperPage({super.key});
@@ -15,7 +15,7 @@ class DeveloperPage extends StatefulWidget {
   State<DeveloperPage> createState() => _DeveloperPageState();
 }
 
-class _DeveloperPageState extends State<DeveloperPage> {
+class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
   bool developerEnabled = false;
   bool isModeSelected = false;
   bool isPromptSaved = false;
@@ -132,8 +132,25 @@ class _DeveloperPageState extends State<DeveloperPage> {
                                 size: 18,
                               ),
                         title: const Text('Deepgram'),
-                        onTap: () {
+                        onTap: () async {
+                          await closeWebSocket();
+                          // developerModeSelected(modeSelected: 'Deepgram');
+                          // closeWebSocket();
+                          //   closeWebSocket2();
                           developerModeSelected(modeSelected: 'Deepgram');
+
+                          await initWebSocket(
+                            onConnectionClosed:
+                                (int? closeCode, String? closeReason) {
+                              setState(() {});
+                            },
+                            onConnectionSuccess: () {
+                              setState(() {});
+                            },
+                            onConnectionError: (p1) {},
+                            onConnectionFailed: (p1) {},
+                            onMessageReceived: (List<TranscriptSegment> p1) {},
+                          );
                         },
                       ),
                       ListTile(
@@ -149,9 +166,25 @@ class _DeveloperPageState extends State<DeveloperPage> {
                                 size: 18,
                               ),
                         title: const Text('Sarvam'),
-                        onTap: () {
+                        onTap: () async {
+                          // developerModeSelected(modeSelected: 'Sarvam');
+                          // closeWebSocket();
+                          await closeWebSocket();
                           developerModeSelected(modeSelected: 'Sarvam');
+                          await initWebSocket(
+                            onConnectionClosed:
+                                (int? closeCode, String? closeReason) {
+                              setState(() {});
+                            },
+                            onConnectionSuccess: () {
+                              setState(() {});
+                            },
+                            onConnectionError: (p1) {},
+                            onConnectionFailed: (p1) {},
+                            onMessageReceived: (List<TranscriptSegment> p1) {},
+                          );
                         },
+                        
                       ),
                       ListTile(
                         leading: apiType == 'Whisper'
@@ -166,8 +199,21 @@ class _DeveloperPageState extends State<DeveloperPage> {
                                 size: 18,
                               ),
                         title: const Text('Whisper'),
-                        onTap: () {
-                          developerModeSelected(modeSelected: 'Whisper');
+                        onTap: () async{
+                          await closeWebSocket();
+                          developerModeSelected(modeSelected: 'Wisper');
+                          await initWebSocket(
+                            onConnectionClosed:
+                                (int? closeCode, String? closeReason) {
+                              setState(() {});
+                            },
+                            onConnectionSuccess: () {
+                              setState(() {});
+                            },
+                            onConnectionError: (p1) {},
+                            onConnectionFailed: (p1) {},
+                            onMessageReceived: (List<TranscriptSegment> p1) {},
+                          );
                         },
                       ),
                     ],
@@ -217,19 +263,52 @@ class _DeveloperPageState extends State<DeveloperPage> {
     );
   }
 
-  void _onSwitchChanged(bool value) {
+  @override
+  Future<void> initWebSocket(
+      {required Function onConnectionSuccess,
+      required Function(dynamic p1) onConnectionFailed,
+      required Function(int? p1, String? p2) onConnectionClosed,
+      required Function(dynamic p1) onConnectionError,
+      required Function(List<TranscriptSegment> p1) onMessageReceived,
+      BleAudioCodec codec = BleAudioCodec.pcm8,
+      int? sampleRate = 16000}) {
+    // TODO: implement initWebSocket
+    return super.initWebSocket(
+        onConnectionSuccess: onConnectionSuccess,
+        onConnectionFailed: onConnectionFailed,
+        onConnectionClosed: onConnectionClosed,
+        onConnectionError: onConnectionError,
+        onMessageReceived: onMessageReceived,
+        codec: codec,
+        sampleRate: sampleRate);
+  }
+
+  void _onSwitchChanged(bool value) async {
     SharedPreferencesUtil().developerOptionEnabled = value;
     if (!value) {
       SharedPreferencesUtil().saveApiType('NewApiKey', 'Default');
       PromptProvider().removeAllPrompts();
       SharedPreferencesUtil().isPromptSaved = false;
 
-      if (Platform.isAndroid) Restart.restartApp();
+      //  developerModeSelected(modeSelected: 'Deepgram');
+      // if (Platform.isAndroid) Restart.restartApp();
 
-      Restart.restartApp(
-          // notificationTitle: 'Restarting App',
-          // notificationBody: 'Please tap here to open the app again.',
-          );
+      // Restart.restartApp(
+      //     // notificationTitle: 'Restarting App',
+      //     // notificationBody: 'Please tap here to open the app again.',
+      //     );
+      await closeWebSocket();
+      await initWebSocket(
+        onConnectionClosed: (int? closeCode, String? closeReason) {
+          setState(() {});
+        },
+        onConnectionSuccess: () {
+          setState(() {});
+        },
+        onConnectionError: (p1) {},
+        onConnectionFailed: (p1) {},
+        onMessageReceived: (List<TranscriptSegment> p1) {},
+      );
       print('developer option not true');
     }
     setState(() {
@@ -242,15 +321,16 @@ void developerModeSelected({required String modeSelected}) async {
   print('Mode Selected $modeSelected');
 
   SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
-  // SharedPreferencesUtil().isPromptSaved = false;
-  const AlertDialog(
-    content: Text('To Reflect selected Changes\nApp Restarting...'),
-  );
-  Future.delayed(const Duration(seconds: 3));
-  if (Platform.isAndroid) Restart.restartApp();
+  print("updated type");
+  // // SharedPreferencesUtil().isPromptSaved = false;
+  // const AlertDialog(
+  //   content: Text('To Reflect selected Changes\nApp Restarting...'),
+  // );
+  // Future.delayed(const Duration(seconds: 3));
+  // if (Platform.isAndroid) Restart.restartApp();
 
-  Restart.restartApp(
-    notificationTitle: 'Restarting App',
-    notificationBody: 'Please tap here to open the app again.',
-  );
+  // Restart.restartApp(
+  //   notificationTitle: 'Restarting App',
+  //   notificationBody: 'Please tap here to open the app again.',
+  // );
 }
