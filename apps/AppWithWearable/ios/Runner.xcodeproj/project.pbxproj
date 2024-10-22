@@ -507,6 +507,8 @@
 				PRODUCT_NAME = Runner;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
+				GOOGLE_SERVICE_INFO_PLIST = GoogleService-Info-prod.plist;
+
 			};
 			name = "Release-prod";
 		};

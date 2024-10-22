@@ -3,21 +3,21 @@ import 'package:instabug_flutter/instabug_flutter.dart';
 
 void logErrorMessage(String message, String deviceId) {
   debugPrint('($deviceId) $message');
-  CrashReporting.reportHandledCrash(
-    Exception(message),
-    StackTrace.current,
-    level: NonFatalExceptionLevel.error,
-  );
+  // CrashReporting.reportHandledCrash(
+  //   Exception(message),
+  //   StackTrace.current,
+  //   level: NonFatalExceptionLevel.error,
+  // );
 }
 
 void logCrashMessage(String message, String deviceId, Object e, StackTrace stackTrace) {
   logErrorMessage('$message error: $e', deviceId);
-  CrashReporting.reportHandledCrash(
-    e,
-    stackTrace,
-    level: NonFatalExceptionLevel.error,
-    userAttributes: {'deviceId': deviceId},
-  );
+  // CrashReporting.reportHandledCrash(
+  //   e,
+  //   stackTrace,
+  //   level: NonFatalExceptionLevel.error,
+  //   userAttributes: {'deviceId': deviceId},
+  // );
 }
 
 void logServiceNotFoundError(String serviceName, String deviceId) {

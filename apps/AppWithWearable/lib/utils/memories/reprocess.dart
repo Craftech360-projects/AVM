@@ -44,15 +44,15 @@ Future<Memory?> reProcessMemory(
   } catch (err, stacktrace) {
     print(err);
     var memoryReporting = MixpanelManager().getMemoryEventProperties(memory);
-    CrashReporting.reportHandledCrash(err, stacktrace,
-        level: NonFatalExceptionLevel.critical,
-        userAttributes: {
-          'memory_transcript_length':
-              memoryReporting['transcript_length'].toString(),
-          'memory_transcript_word_count':
-              memoryReporting['transcript_word_count'].toString(),
-          // 'memory_transcript_language': memoryReporting['transcript_language'], // TODO: this is incorrect
-        });
+    // CrashReporting.reportHandledCrash(err, stacktrace,
+    //     level: NonFatalExceptionLevel.critical,
+    //     userAttributes: {
+    //       'memory_transcript_length':
+    //           memoryReporting['transcript_length'].toString(),
+    //       'memory_transcript_word_count':
+    //           memoryReporting['transcript_word_count'].toString(),
+    //       // 'memory_transcript_language': memoryReporting['transcript_language'], // TODO: this is incorrect
+    //     });
     onFailedProcessing();
     changeLoadingState();
     return null;

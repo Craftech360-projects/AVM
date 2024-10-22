@@ -12,6 +12,8 @@
 		<true/>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
+		<key>FirebaseConfigurationFile</key>
+   		<string>$(GOOGLE_SERVICE_INFO_PLIST)</string>
 		<key>CFBundleDisplayName</key>
 		<string>$(BUNDLE_DISPLAY_NAME)</string>
 		<key>CFBundleExecutable</key>
@@ -29,6 +31,7 @@
 		<key>CFBundleSignature</key>
 		<string>????</string>
 		<key>CFBundleURLTypes</key>
+
 		<array>
 			<dict>
 				<key>CFBundleTypeRole</key>

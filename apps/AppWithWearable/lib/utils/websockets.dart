@@ -260,7 +260,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     CrashReporting.reportHandledCrash(
       err,
       stackTrace,
-      level: NonFatalExceptionLevel.warning,
+      // level: NonFatalExceptionLevel.warning,
     );
     return null;
   }

@@ -155,8 +155,8 @@ class WavBytesUtil {
       }
       wavBytes = getUInt8ListBytes(decodedSamples, 16000);
     } else {
-      CrashReporting.reportHandledCrash(UnimplementedError('unknown codec'), StackTrace.current,
-          level: NonFatalExceptionLevel.error);
+      // CrashReporting.reportHandledCrash(UnimplementedError('unknown codec'), StackTrace.current,
+      //     level: NonFatalExceptionLevel.error);
       throw UnimplementedError('unknown codec');
     }
     return createWav(wavBytes, filename: filename);
