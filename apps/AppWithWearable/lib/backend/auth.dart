@@ -155,7 +155,7 @@ Future<UserCredential> signInWithApple() async {
     ],
     nonce: nonce,
   );
-
+  print(appleCredential.toString());
   // If Apple provides email and name (only during the first sign-in), store them
   if (appleCredential.email != null) {
     SharedPreferencesUtil().email = appleCredential.email!;
@@ -166,21 +166,38 @@ Future<UserCredential> signInWithApple() async {
   if (appleCredential.givenName != null) {
     SharedPreferencesUtil().givenName = appleCredential.givenName!;
     SharedPreferencesUtil().familyName = appleCredential.familyName ?? '';
+    print(appleCredential.givenName);
+    print(appleCredential.familyName);
   } else {
     print("Name is null on this sign-in.");
   }
+  print('OAuthCredential ID Token: ${appleCredential.identityToken}');
+  if (appleCredential.identityToken == null) {
+    throw Exception('Identity token is null');
+  }
 
   // Create an OAuthCredential for Firebase Authentication
+  // Debugging the idToken and rawNonce
+  print('Apple ID Token: ${appleCredential.identityToken}');
+  print('Raw Nonce: $rawNonce');
+  print('SHA-256 Nonce: $nonce');
+
+// Create the OAuth credential for Firebase
   final oauthCredential = OAuthProvider("apple.com").credential(
-    idToken: appleCredential.identityToken,
-    rawNonce: rawNonce,
+    idToken: appleCredential.identityToken, // ID token must not be null
+    accessToken: appleCredential.authorizationCode,
+    rawNonce: rawNonce, // Ensure rawNonce is passed, not the hashed one
   );
+
+// Debug the OAuthCredential to see what's being passed
+  print("OAuth Credential: ${oauthCredential.toString()}");
 
   // Sign in with Firebase
   UserCredential userCred =
       await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+  print(userCred.toString());
   var user = FirebaseAuth.instance.currentUser!;
-
+  print(user);
   // If givenName is null (likely a second or subsequent sign-in), retrieve name from Firebase
   if (SharedPreferencesUtil().givenName.isEmpty) {
     if (user.displayName != null) {

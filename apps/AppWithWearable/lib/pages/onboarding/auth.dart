@@ -87,29 +87,29 @@ class _AuthComponentState extends State<AuthComponent> {
                           }
                         },
                 ),
-          // const SizedBox(height: 16),
-          // SignInWithAppleButton(
-          //   style: SignInWithAppleButtonStyle.whiteOutlined,
-          //   onPressed: loading
-          //       ? () {}
-          //       : () async {
-          //           try {
-          //             changeLoadingState();
-          //             var userCred = await signInWithApple();
+          const SizedBox(height: 16),
+          SignInWithAppleButton(
+            style: SignInWithAppleButtonStyle.whiteOutlined,
+            onPressed: loading
+                ? () {}
+                : () async {
+                    try {
+                      changeLoadingState();
+                      var userCred = await signInWithApple();
 
-          //             if (userCred != null) {
-          //               _signIn();
-          //             } else {
-          //               print("its null");
-          //             }
-          //           } catch (e) {
-          //             print("Error during sign-in: $e");
-          //           } finally {
-          //             changeLoadingState(); // This will ensure loading state is reset in all cases.
-          //           }
-          //         },
-          //   height: 52,
-          // ),
+                      if (userCred != null) {
+                        _signIn();
+                      } else {
+                        print("its null");
+                      }
+                    } catch (e) {
+                      print("Error during sign-in: $e");
+                    } finally {
+                      changeLoadingState(); // This will ensure loading state is reset in all cases.
+                    }
+                  },
+            height: 52,
+          ),
           const SizedBox(height: 16),
           RichText(
             textAlign: TextAlign.center,
