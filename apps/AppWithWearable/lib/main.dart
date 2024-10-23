@@ -222,10 +222,12 @@ class _MyAppState extends State<MyApp> {
                 fit: BoxFit.cover,
               ),
             ),
-            SharedPreferencesUtil().onboardingCompleted && widget.isAuth
+            SharedPreferencesUtil().onboardingCompleted && true
+            // SharedPreferencesUtil().onboardingCompleted && widget.isAuth
             ?
             const HomePageWrapper()
-            : const OnboardingWrapper(),
+            : 
+            const OnboardingWrapper(),
           ],
         ),
       ),
