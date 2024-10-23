@@ -77,8 +77,8 @@ Future<SummaryResult> summarizeMemory(
   //   );
   // }
 
-  debugPrint('summarizeMemory transcript length: ${transcript.length}');
-  if (transcript.isEmpty || transcript.split(' ').length < 1) {
+  debugPrint('summarizeMemory transcript length: $transcript');
+  if (transcript.isEmpty || transcript.split(' ').isEmpty) {
     return SummaryResult(Structured('', ''), []);
   }
 
@@ -91,6 +91,20 @@ Future<SummaryResult> summarizeMemory(
   if (transcript.split(' ').length > 1) {
     forceProcess = true;
   }
+
+    // final Map<String, dynamic> parsedJson = json.decode(transcript);
+    // print('json parsed data1 $parsedJson');
+    // final List<dynamic> diarizedTranscript = parsedJson['diarized_transcript'];
+    // print('json parsed data1 $diarizedTranscript');
+
+    // for (var element in diarizedTranscript) {
+    //   print('Transcript segment diarization: ${element.toString()}');
+    //   print('Speaker: ${element['speaker']}');
+    //   print('Text: ${element['text']}');
+    // }
+
+   
+ 
 //first diarize
 
 //   final String message = """

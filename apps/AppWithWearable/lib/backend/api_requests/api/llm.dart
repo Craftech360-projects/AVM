@@ -272,8 +272,8 @@ Future<String> executeSpeechDiarizationPrompt(String? prompt,
       temperature: 0.7, // Adjust temperature as needed
       maxTokens: 1000 // Adjust maxTokens as needed or set to -1 for default
       );
-  debugPrint(">>>>>>>>>>>>>>>>??? $response");
-  // debugPrint('executeGptPrompt response: $response');
+  debugPrint(">>>>>>>>>>>>>>>>???llamaDiarizationApiCall $response");
+  // debugPrint('executeGptPrompt response: $response'); 
   //prefs.setGptCompletionCache(promptBase64, response);
   //debugPrint('executeGptPrompt response: $response');
   return response;

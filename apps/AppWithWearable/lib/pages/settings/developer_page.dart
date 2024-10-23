@@ -201,7 +201,7 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
                         title: const Text('Whisper'),
                         onTap: () async{
                           await closeWebSocket();
-                          developerModeSelected(modeSelected: 'Wisper');
+                          developerModeSelected(modeSelected: 'Whipser');
                           await initWebSocket(
                             onConnectionClosed:
                                 (int? closeCode, String? closeReason) {

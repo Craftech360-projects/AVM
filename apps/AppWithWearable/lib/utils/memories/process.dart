@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -58,7 +59,16 @@ Future<Memory?> processTranscriptContent(
       geolocation,
       photos,
     );
-
+    final Map<String, dynamic> parsedJson = json.decode(transcript);
+    print('json parsed data1 $parsedJson');
+    final List<dynamic> diarizedTranscript = parsedJson['diarized_transcript'];
+    print('json parsed data1 $diarizedTranscript');
+    memory.transcriptSegments.addAll(diarizedTranscript as List<TranscriptSegment>);
+    // for (var element in diarizedTranscript) {
+    //   print('Transcript segment diarization: ${element.toString()}');
+    //   print('Speaker: ${element['speaker']}');
+    //   print('Text: ${element['text']}');
+    // }
     // triggerIntegrations: triggerIntegrations,
     // language: language,
     // audioFile: audioFile,
@@ -140,6 +150,7 @@ Make sure each section of the transcription is labeled with the corresponding sp
 
       summary = await summarizeMemory(transcript, [],
           ignoreCache: ignoreCache, customPromptDetails: savedPrompt);
+
       debugPrint("its reached here ${summary.structured}");
       debugPrint("Structured content:");
       debugPrint("Title: ${summary.structured.title}");

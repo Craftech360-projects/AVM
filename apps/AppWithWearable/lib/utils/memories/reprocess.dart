@@ -1,9 +1,13 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/llm.dart';
 import 'package:friend_private/backend/api_requests/api/pinecone.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
+import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 
@@ -76,12 +80,18 @@ Make sure each section of the transcription is labeled with the corresponding sp
 """;
     final String finalTranscript =
         await executeSpeechDiarizationPrompt(message);
-    print("Diarized Transcript: $finalTranscript");
+    log("Diarized Transcript: $finalTranscript");
     memory.transcript = finalTranscript;
     summaryResult = await summarizeMemory(memory.transcript, [],
         forceProcess: true,
         conversationDate: memory.createdAt,
         customPromptDetails: savedPrompt);
+   final Map<String, dynamic> parsedJson = json.decode(finalTranscript);
+    print('json parsed data1 $parsedJson');
+    final List<dynamic> diarizedTranscript = parsedJson['diarized_transcript'];
+    print('json parsed data1 $diarizedTranscript');
+    memory.transcriptSegments.addAll(diarizedTranscript as List<TranscriptSegment>);
+    print('summarize result ${summaryResult.toString()}');
   } catch (err, stacktrace) {
     print(err);
     var memoryReporting = MixpanelManager().getMemoryEventProperties(memory);
