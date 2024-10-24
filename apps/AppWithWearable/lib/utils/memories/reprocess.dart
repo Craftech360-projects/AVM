@@ -55,7 +55,7 @@ Here is the transcription:
 Please return the diarized transcript in JSON format with the following structure:
 
 {
-  "diarized_transcript": [
+  diarized_transcript: [
     {
       "speaker": "Speaker 1",
       "text": "Section of transcript spoken by Speaker 1"
@@ -74,7 +74,7 @@ Please return the diarized transcript in JSON format with the following structur
 
 Make sure each section of the transcription is labeled with the corresponding speaker, and that any unwanted background noise or irrelevant content is removed.
 """;
-    final String finalTranscript =
+    final dynamic finalTranscript =
         await executeSpeechDiarizationPrompt(message);
     print("Diarized Transcript: $finalTranscript");
     memory.transcript = finalTranscript;

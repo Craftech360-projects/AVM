@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
@@ -47,7 +49,7 @@ class _TranscriptTabState extends State<TranscriptTab> {
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: widget.memoryBloc,
       builder: (context, state) {
-        // log('memory at transcript tab- ${state.memories[widget.memoryAtIndex].transcriptSegments}');
+        log('memory at transcript tab- ${state.memories[widget.memoryAtIndex].transcript}');
 
         final transcriptSegments =
             state.memories[widget.memoryAtIndex].transcriptSegments;

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -214,8 +215,17 @@ Future<dynamic> llamaDiarizationApiCall({
       // return jsonDecode(response.body);
       var decodedResponse = jsonDecode(response.body);
       // Extract and return only the content
-      debugPrint(decodedResponse['choices'][0]['message']['content']);
-      return decodedResponse['choices'][0]['message']['content'];
+      log(decodedResponse['choices'][0]['message']['content']);
+      // Since 'content' appears to be a stringified JSON, parse it again
+      var content =
+          jsonDecode(decodedResponse['choices'][0]['message']['content']);
+
+// Now extract 'diarized_transcript' from the parsed 'content'
+      var diarizedTranscript = content['diarized_transcript'];
+
+// Print and return only the 'diarized_transcript'
+      debugPrint(diarizedTranscript.toString());
+      return diarizedTranscript.toString();
     } else {
       debugPrint("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
       return null;
@@ -256,7 +266,7 @@ Future<String> executeGptPrompt(String? prompt,
   return response;
 }
 
-Future<String> executeSpeechDiarizationPrompt(String? prompt,
+Future<dynamic> executeSpeechDiarizationPrompt(String? prompt,
     {bool ignoreCache = false}) async {
   if (prompt == null) return '';
   print("executing diarization prompt here>>>>>>>>>>>>>>>, ${prompt.length}");

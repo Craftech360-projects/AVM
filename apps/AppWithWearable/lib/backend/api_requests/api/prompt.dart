@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
@@ -210,7 +211,7 @@ Respond in a JSON format with the following structure:
   
 }
 ''';
-  print(">>>>>>, $prompt");
+  log(">>>>>>, $prompt");
   var structuredResponse =
       extractJson(await executeGptPrompt(prompt, ignoreCache: ignoreCache));
 
