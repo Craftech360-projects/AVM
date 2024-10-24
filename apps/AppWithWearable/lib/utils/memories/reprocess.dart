@@ -86,12 +86,12 @@ Make sure each section of the transcription is labeled with the corresponding sp
         forceProcess: true,
         conversationDate: memory.createdAt,
         customPromptDetails: savedPrompt);
-   final Map<String, dynamic> parsedJson = json.decode(finalTranscript);
-    print('json parsed data1 $parsedJson');
-    final List<dynamic> diarizedTranscript = parsedJson['diarized_transcript'];
-    print('json parsed data1 $diarizedTranscript');
-    memory.transcriptSegments.addAll(diarizedTranscript as List<TranscriptSegment>);
-    print('summarize result ${summaryResult.toString()}');
+  //  final Map<String, dynamic> parsedJson = json.decode(finalTranscript);
+  //   print('json parsed data1 $parsedJson');
+  //   final List<dynamic> diarizedTranscript = parsedJson['diarized_transcript'];
+  //   print('json parsed data1 $diarizedTranscript');
+  //   memory.transcriptSegments.addAll(diarizedTranscript as List<TranscriptSegment>);
+  //   print('summarize result ${summaryResult.toString()}');
   } catch (err, stacktrace) {
     print(err);
     var memoryReporting = MixpanelManager().getMemoryEventProperties(memory);

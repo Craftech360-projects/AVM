@@ -47,11 +47,15 @@ Future<Memory?> processTranscriptContent(
   }
   if (transcript.isNotEmpty || photos.isNotEmpty) {
 //should we do transcription diarize here?
+    final String message = speakerPrompt(transcript: transcript);
+    final List<dynamic> finalTranscript =
+        await executeSpeechDiarizationPrompt(message);
 
+    print('final script at process ${finalTranscript}');
     Memory? memory = await memoryCreationBlock(
       context,
-      transcript,
-      transcriptSegments,
+      message,
+      finalTranscript as List<TranscriptSegment>,
       recordingFilePath,
       retrievedFromCache,
       startedAt,
@@ -59,11 +63,12 @@ Future<Memory?> processTranscriptContent(
       geolocation,
       photos,
     );
-    final Map<String, dynamic> parsedJson = json.decode(transcript);
-    print('json parsed data1 $parsedJson');
-    final List<dynamic> diarizedTranscript = parsedJson['diarized_transcript'];
-    print('json parsed data1 $diarizedTranscript');
-    memory.transcriptSegments.addAll(diarizedTranscript as List<TranscriptSegment>);
+    memory.transcriptSegments.addAll(finalTranscript);
+    // final Map<String, dynamic> parsedJson = json.decode(transcript);
+    // print('json parsed data1 $parsedJson');
+    // final List<dynamic> diarizedTranscript = parsedJson['diarized_transcript'];
+    // print('json parsed data1 $diarizedTranscript');
+    // memory.transcriptSegments.addAll(diarizedTranscript as List<TranscriptSegment>);
     // for (var element in diarizedTranscript) {
     //   print('Transcript segment diarization: ${element.toString()}');
     //   print('Speaker: ${element['speaker']}');
@@ -75,6 +80,7 @@ Future<Memory?> processTranscriptContent(
     // source: source,
     // processingMemoryId: processingMemoryId,
     MemoryProvider().saveMemory(memory);
+    memory.transcriptSegments.addAll(finalTranscript);
     triggerMemoryCreatedEvents(memory, sendMessageToChat: sendMessageToChat);
     return memory;
   }
@@ -112,41 +118,39 @@ Future<SummaryResult?> _retrieveStructure(
         );
       }
 
-      final String message = """
-I have a transcription of a conversation that I would like to speaker diarization. Please assign different sections of the transcription to individual users, and label them as Speaker 1, Speaker 2, and so on.
+//       final String message = """
+// I have a transcription of a conversation that I would like to speaker diarization. Please assign different sections of the transcription to individual users, and label them as Speaker 1, Speaker 2, and so on.
 
-Additionally, if the transcription contains any irrelevant background noise or speech (e.g., a YouTube video playing or any non-conversational audio), please eliminate that data from the output.
+// Additionally, if the transcription contains any irrelevant background noise or speech (e.g., a YouTube video playing or any non-conversational audio), please eliminate that data from the output.
 
-Here is the transcription:
+// Here is the transcription:
 
-"${transcript}"
+// "${transcript}"
 
-Please return the diarized transcript in JSON format with the following structure:
+// Please return the diarized transcript in JSON format with the following structure:
 
-{
-  "diarized_transcript": [
-    {
-      "speaker": "Speaker 1",
-      "text": "Section of transcript spoken by Speaker 1"
-    },
-    {
-      "speaker": "Speaker 2",
-      "text": "Section of transcript spoken by Speaker 2"
-    },
-    {
-      "speaker": "Speaker N",
-      "text": "Section of transcript spoken by Speaker N"
-    }
-  ],
-  "irrelevant_data_removed": "true or false"
-}
+// {
+//   "diarized_transcript": [
+//     {
+//       "speaker": "Speaker 1",
+//       "text": "Section of transcript spoken by Speaker 1"
+//     },
+//     {
+//       "speaker": "Speaker 2",
+//       "text": "Section of transcript spoken by Speaker 2"
+//     },
+//     {
+//       "speaker": "Speaker N",
+//       "text": "Section of transcript spoken by Speaker N"
+//     }
+//   ],
+//   "irrelevant_data_removed": "true or false"
+// }
 
-Make sure each section of the transcription is labeled with the corresponding speaker, and that any unwanted background noise or irrelevant content is removed.
-""";
-      final String finalTranscript =
-          await executeSpeechDiarizationPrompt(message);
-      print("Diarized Transcript: $finalTranscript");
-      transcript = finalTranscript;
+// Make sure each section of the transcription is labeled with the corresponding speaker, and that any unwanted background noise or irrelevant content is removed.
+// """;
+      // final String finalTranscript =
+      //     await executeSpeechDiarizationPrompt(message);
 
       summary = await summarizeMemory(transcript, [],
           ignoreCache: ignoreCache, customPromptDetails: savedPrompt);
@@ -193,12 +197,15 @@ Future<Memory> memoryCreationBlock(
   Geolocation? geolocation,
   List<Tuple2<String, String>> photos,
 ) async {
+  final String message = speakerPrompt(transcript: transcript);
+  final List<TranscriptSegment> finalTranscript =
+      await executeSpeechDiarizationPrompt(message) as List<TranscriptSegment>;
   SummaryResult? summarizeResult =
       await _retrieveStructure(context, transcript, photos, retrievedFromCache);
   bool failed = false;
   if (summarizeResult == null) {
     summarizeResult = await _retrieveStructure(
-        context, transcript, photos, retrievedFromCache,
+        context, message, photos, retrievedFromCache,
         ignoreCache: true);
     if (summarizeResult == null) {
       failed = true;
@@ -245,8 +252,8 @@ Future<Memory> memoryCreationBlock(
   debugPrint("going to save ,saving memory");
 
   Memory memory = await finalizeMemoryRecord(
-    transcript,
-    transcriptSegments,
+    message,
+    finalTranscript,
     structured,
     summarizeResult.pluginsResponse,
     recordingFilePath,

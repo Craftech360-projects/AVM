@@ -92,19 +92,17 @@ Future<SummaryResult> summarizeMemory(
     forceProcess = true;
   }
 
-    // final Map<String, dynamic> parsedJson = json.decode(transcript);
-    // print('json parsed data1 $parsedJson');
-    // final List<dynamic> diarizedTranscript = parsedJson['diarized_transcript'];
-    // print('json parsed data1 $diarizedTranscript');
+  // final Map<String, dynamic> parsedJson = json.decode(transcript);
+  // print('json parsed data1 $parsedJson');
+  // final List<dynamic> diarizedTranscript = parsedJson['diarized_transcript'];
+  // print('json parsed data1 $diarizedTranscript');
 
-    // for (var element in diarizedTranscript) {
-    //   print('Transcript segment diarization: ${element.toString()}');
-    //   print('Speaker: ${element['speaker']}');
-    //   print('Text: ${element['text']}');
-    // }
+  // for (var element in diarizedTranscript) {
+  //   print('Transcript segment diarization: ${element.toString()}');
+  //   print('Speaker: ${element['speaker']}');
+  //   print('Text: ${element['text']}');
+  // }
 
-   
- 
 //first diarize
 
 //   final String message = """
@@ -693,4 +691,40 @@ Future<SummaryResult> summarizePhotos(
   var structuredResponse = extractJson(await executeGptPrompt(prompt));
   var structured = Structured.fromJson(jsonDecode(structuredResponse));
   return SummaryResult(structured, []);
+}
+
+String speakerPrompt({required String transcript}) {
+  final String message = """
+I have a transcription of a conversation that I would like to speaker diarization. Please assign different sections of the transcription to individual users, and label them as Speaker 1, Speaker 2, and so on.
+
+Additionally, if the transcription contains any irrelevant background noise or speech (e.g., a YouTube video playing or any non-conversational audio), please eliminate that data from the output.
+
+Here is the transcription:
+
+"$transcript"
+
+Please return the diarized transcript in JSON format with the following structure:
+
+{
+  "diarized_transcript": [
+    {
+      "speaker": "Speaker 1",
+      "text": "Section of transcript spoken by Speaker 1"
+    },
+    {
+      "speaker": "Speaker 2",
+      "text": "Section of transcript spoken by Speaker 2"
+    },
+    {
+      "speaker": "Speaker N",
+      "text": "Section of transcript spoken by Speaker N"
+    }
+  ],
+  "irrelevant_data_removed": "true or false"
+}
+
+Make sure each section of the transcription is labeled with the corresponding speaker, and that any unwanted background noise or irrelevant content is removed.
+""";
+
+  return message;
 }

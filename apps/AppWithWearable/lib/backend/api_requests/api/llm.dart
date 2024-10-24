@@ -256,7 +256,7 @@ Future<String> executeGptPrompt(String? prompt,
   return response;
 }
 
-Future<String> executeSpeechDiarizationPrompt(String? prompt,
+Future<dynamic> executeSpeechDiarizationPrompt(String? prompt,
     {bool ignoreCache = false}) async {
   if (prompt == null) return '';
   print("executing diarization prompt here>>>>>>>>>>>>>>>, ${prompt.length}");
@@ -276,5 +276,19 @@ Future<String> executeSpeechDiarizationPrompt(String? prompt,
   // debugPrint('executeGptPrompt response: $response'); 
   //prefs.setGptCompletionCache(promptBase64, response);
   //debugPrint('executeGptPrompt response: $response');
-  return response;
+   final Map<String, dynamic> responseObject = jsonDecode(response);
+// Access the 'diarized_transcript' field, which is a List of Maps
+  List<dynamic> diarizedTranscript = responseObject['diarized_transcript'];
+// Now you can access the fields as an object
+  // debugPrint("Diarized Transcript: ${responseObject['diarized_transcript']}");
+// Iterate through each entry in the diarized transcript
+  for (var entry in diarizedTranscript) {
+    final String speaker = entry['speaker']; // Access the 'speaker' key
+    final String text = entry['text']; // Access the 'text' key
+
+    print("Speaker: $speaker");
+    print("Text: $text");
+  }
+  ;
+  return diarizedTranscript;
 }

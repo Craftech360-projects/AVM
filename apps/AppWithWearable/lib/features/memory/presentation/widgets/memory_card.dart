@@ -110,9 +110,11 @@ class _MemoryCardWidgetState extends State<MemoryCardWidget> {
                   },
                   //*-- Memory Card --*//
                   child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12 + 6)),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 8),
+                          horizontal: 6, vertical: 6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -126,7 +128,7 @@ class _MemoryCardWidgetState extends State<MemoryCardWidget> {
                                 width: 80,
                                 child: ClipRRect(
                                   borderRadius: const BorderRadius.all(
-                                    Radius.circular(16),
+                                    Radius.circular(12),
                                   ),
                                   child: memory.memoryImg == null
                                       ? const SizedBox.shrink()
@@ -155,18 +157,20 @@ class _MemoryCardWidgetState extends State<MemoryCardWidget> {
                                         children: [
                                           const Spacer(),
                                           Text(
-                                            '${DateFormat('d MMM').format(memory.createdAt)}  '
-                                            '   ${DateFormat('h:mm a').format(memory.createdAt)}',
+                                            '${DateFormat('d MMM').format(memory.createdAt)},'
+                                            ' ${DateFormat('h:mm a').format(memory.createdAt)}',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodySmall,
                                           ),
+                                          const SizedBox(width: 4),
                                         ],
                                       ),
                                     ),
                                     memory.discarded
                                         ? const SizedBox.shrink()
                                         : const SizedBox(height: 4),
+
                                     //*-- Title --*//
                                     memory.discarded
                                         ? Text(
@@ -189,59 +193,65 @@ class _MemoryCardWidgetState extends State<MemoryCardWidget> {
                                     memory.discarded
                                         ? const SizedBox.shrink()
                                         : const SizedBox(height: 8),
-                                    //*-- Overview --*//
+                                    //*-- Chips --*//
                                     memory.discarded
                                         ? const SizedBox.shrink()
-                                        : Text(
-                                            memory.structured.target
-                                                    ?.overview ??
-                                                '',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium!
-                                                .copyWith(
-                                                    color: Colors.grey.shade300,
-                                                    height: 1.3),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
+                                        : SizedBox(
+                                            height: 30,
+                                            child: ListView.builder(
+                                              padding: EdgeInsets.zero,
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: memory
+                                                      .structured
+                                                      .target
+                                                      ?.category
+                                                      .length ??
+                                                  0,
+                                              itemBuilder: (context, index) {
+                                                String category = memory
+                                                        .structured
+                                                        .target
+                                                        ?.category[index] ??
+                                                    '';
+
+                                                return Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(horizontal: 0),
+                                                  child: CustomTag(
+                                                    tagName: category,
+                                                    side: const BorderSide(
+                                                      color: Color.fromARGB(
+                                                          255, 93, 93, 93),
+                                                    ),
+                                                    backgroundColor:
+                                                        const Color.fromARGB(
+                                                            162, 0, 0, 0),
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                           ),
+                                    //*-- Overview --*//
+                                    // memory.discarded
+                                    //     ? const SizedBox.shrink()
+                                    //     : Text(
+                                    //         memory.structured.target
+                                    //                 ?.overview ??
+                                    //             '',
+                                    //         style: Theme.of(context)
+                                    //             .textTheme
+                                    //             .bodyMedium!
+                                    //             .copyWith(
+                                    //                 color: Colors.grey.shade300,
+                                    //                 height: 1.3),
+                                    //         maxLines: 2,
+                                    //         overflow: TextOverflow.ellipsis,
+                                    //       ),
                                   ],
                                 ),
                               ),
                             ],
                           ),
-                          //*-- Chips --*//
-                          memory.discarded
-                              ? const SizedBox.shrink()
-                              : SizedBox(
-                                  height: 40,
-                                  child: ListView.builder(
-                                    padding: EdgeInsets.zero,
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: memory.structured.target
-                                            ?.category.length ??
-                                        0,
-                                    itemBuilder: (context, index) {
-                                      String category = memory.structured.target
-                                              ?.category[index] ??
-                                          '';
-
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4),
-                                        child: CustomTag(
-                                          tagName: category,
-                                          side: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 93, 93, 93),
-                                          ),
-                                          backgroundColor: const Color.fromARGB(
-                                              162, 0, 0, 0),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
                         ],
                       ),
                     ),
