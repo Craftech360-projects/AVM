@@ -51,11 +51,15 @@ Future<Memory?> processTranscriptContent(
     final List<dynamic> finalTranscript =
         await executeSpeechDiarizationPrompt(message);
 
-    print('final script at process ${finalTranscript}');
+    print('final script at process ${finalTranscript.runtimeType}');
+   List<TranscriptSegment> transcriptSegments = List.from(finalTranscript.map(
+  (e) => TranscriptSegment.fromJson(e as Map<String, dynamic>),
+));
+
     Memory? memory = await memoryCreationBlock(
       context,
       message,
-      finalTranscript as List<TranscriptSegment>,
+      transcriptSegments,
       recordingFilePath,
       retrievedFromCache,
       startedAt,
@@ -63,7 +67,7 @@ Future<Memory?> processTranscriptContent(
       geolocation,
       photos,
     );
-    memory.transcriptSegments.addAll(finalTranscript);
+
     // final Map<String, dynamic> parsedJson = json.decode(transcript);
     // print('json parsed data1 $parsedJson');
     // final List<dynamic> diarizedTranscript = parsedJson['diarized_transcript'];
@@ -80,7 +84,7 @@ Future<Memory?> processTranscriptContent(
     // source: source,
     // processingMemoryId: processingMemoryId,
     MemoryProvider().saveMemory(memory);
-    memory.transcriptSegments.addAll(finalTranscript);
+    memory.transcriptSegments.addAll(transcriptSegments);
     triggerMemoryCreatedEvents(memory, sendMessageToChat: sendMessageToChat);
     return memory;
   }
@@ -197,15 +201,15 @@ Future<Memory> memoryCreationBlock(
   Geolocation? geolocation,
   List<Tuple2<String, String>> photos,
 ) async {
-  final String message = speakerPrompt(transcript: transcript);
-  final List<TranscriptSegment> finalTranscript =
-      await executeSpeechDiarizationPrompt(message) as List<TranscriptSegment>;
+  // final String message = speakerPrompt(transcript: transcript);
+  // final List<TranscriptSegment> finalTranscript =
+  //     await executeSpeechDiarizationPrompt(message) as List<TranscriptSegment>;
   SummaryResult? summarizeResult =
       await _retrieveStructure(context, transcript, photos, retrievedFromCache);
   bool failed = false;
   if (summarizeResult == null) {
     summarizeResult = await _retrieveStructure(
-        context, message, photos, retrievedFromCache,
+        context, transcript, photos, retrievedFromCache,
         ignoreCache: true);
     if (summarizeResult == null) {
       failed = true;
@@ -252,8 +256,8 @@ Future<Memory> memoryCreationBlock(
   debugPrint("going to save ,saving memory");
 
   Memory memory = await finalizeMemoryRecord(
-    message,
-    finalTranscript,
+    transcript,
+    transcriptSegments,
     structured,
     summarizeResult.pluginsResponse,
     recordingFilePath,
@@ -264,7 +268,7 @@ Future<Memory> memoryCreationBlock(
     geolocation,
     photos,
   );
-  debugPrint('Memory created: ${memory.id}');
+  debugPrint('Memory created: ${memory.toString()}');
 
   if (!retrievedFromCache) {
     if (structured.title.isEmpty && !failed) {

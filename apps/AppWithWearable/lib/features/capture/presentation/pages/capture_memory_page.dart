@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:friend_private/backend/database/memory.dart';
+import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
@@ -75,17 +79,20 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
 
   @override
   Widget build(BuildContext context) {
- 
     if (SharedPreferencesUtil().isRestoreSuccessful) {
       _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
     }
     SharedPreferencesUtil().isRestoreSuccessful = false;
-   
+
     return Column(
       children: [
-        // FloatingActionButton(onPressed: () {
-        //   showTutorial(context, targets: targets);
-        // }),
+        FloatingActionButton(onPressed: () {
+          final List<Memory> memories = MemoryProvider().getMemories();
+          for (var element in memories) {
+            log('entire memory in console ${element.toString()}');
+          }
+          // showTutorial(context, targets: targets);
+        }),
         //*--- SEARCH BAR ---*//
         const SizedBox(height: 8),
         MemorySearchWidget(

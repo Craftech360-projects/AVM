@@ -11,7 +11,9 @@ class ChatBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('transcript tab- $segment');
+    // log('transcript tab- ${}');
+
+
     // final isCurrentUser = chatUser.id == '4';
     final isCurrentUser = segment.speaker == '0';
     // final yourName = SharedPreferencesUtil().givenName;

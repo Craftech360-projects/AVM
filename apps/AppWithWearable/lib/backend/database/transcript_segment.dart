@@ -53,17 +53,14 @@ class TranscriptSegment {
 
   // Factory constructor to create a new Message instance from a map
   factory TranscriptSegment.fromJson(Map<String, dynamic> json) {
-    return TranscriptSegment(
-      text: json['text'] as String,
+  return TranscriptSegment(
+    text: json['text'] as String,
     speaker: (json['speaker']?.toString() ?? 'SPEAKER_00'),
-
-      // speaker: (json['speaker'] ?? 'SPEAKER_00') as String,
-      isUser: (json['is_user'] ?? false) as bool,
-      start: json['start'] as double??0.0,
-      end: json['end'] as double??0.0,
-      // createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
-    );
-  }
+    isUser: (json['is_user'] ?? false) as bool,
+    start: (json['start'] as double?) ?? 0.0,  // Correct usage of ?? and casting
+    end: (json['end'] as double?) ?? 0.0,      // Correct usage of ?? and casting
+  );
+}
 
   // Method to convert a Message instance into a map
   Map<String, dynamic> toJson() {
