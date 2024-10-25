@@ -184,7 +184,6 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
                             onMessageReceived: (List<TranscriptSegment> p1) {},
                           );
                         },
-                        
                       ),
                       ListTile(
                         leading: apiType == 'Whisper'
@@ -199,9 +198,9 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
                                 size: 18,
                               ),
                         title: const Text('Whisper'),
-                        onTap: () async{
+                        onTap: () async {
                           await closeWebSocket();
-                          developerModeSelected(modeSelected: 'Wisper');
+                          developerModeSelected(modeSelected: 'Whisper');
                           await initWebSocket(
                             onConnectionClosed:
                                 (int? closeCode, String? closeReason) {

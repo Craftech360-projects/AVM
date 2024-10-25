@@ -403,15 +403,24 @@ Future<String> dailySummaryNotifications(List<Memory> memories) async {
   Remember $str is busy so this has to be very efficient and concise.
   Respond in at most 50 words.
   
-  Output your response in plain text, without markdown.
+  Output your response in json format, without markdown.
   ```
   ${Memory.memoriesToString(memories, includeTranscript: true)}
   ```
   ''';
-  debugPrint(prompt);
+
   var result = await executeGptPrompt(prompt);
+  log(result);
   debugPrint('dailySummaryNotifications result: $result');
-  return result.replaceAll('```', '').trim();
+  // return result.replaceAll('```', '').trim();
+
+  final Map<String, dynamic> parsedResult = jsonDecode(result);
+
+// Extract the summary portion
+  String summary = parsedResult['summary'];
+
+// Return the summary as a trimmed string
+  return summary.trim();
 }
 
 // ------

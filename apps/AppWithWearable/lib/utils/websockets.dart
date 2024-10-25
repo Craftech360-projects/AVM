@@ -124,6 +124,9 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
       uri = Uri.parse(
         'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
       );
+      // uri = Uri.parse(
+      //   'ws://a492-124-40-247-18.ngrok-free.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
+      // );
       break;
     default:
       'Deepgram';
