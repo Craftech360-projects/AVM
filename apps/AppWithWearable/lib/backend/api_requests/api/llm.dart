@@ -135,7 +135,8 @@ Future<dynamic> llamaApiCall({
   // Construct the body of the request
   final body = jsonEncode({
     // Replace with specific model identifier if needed
-    "model": "llama-3.2-90b-text-preview",
+    // "model": "llama-3.2-90b-text-preview",
+    "model": "llama-3.1-8b-instant",
     'messages': [
       {'role': 'system', 'content': ''' '''},
       {
@@ -191,7 +192,8 @@ Future<dynamic> llamaDiarizationApiCall({
   // Construct the body of the request
   final body = jsonEncode({
     // Replace with specific model identifier if needed
-    "model": "llama-3.2-90b-text-preview",
+    // "model": "llama-3.2-90b-text-preview",
+    "model": "llama-3.1-8b-instant",
     'messages': [
       {'role': 'system', 'content': ''' '''},
       {
