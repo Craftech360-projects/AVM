@@ -89,7 +89,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
 
     try {
       final allMemories = MemoryProvider().getMemories();
-      print('>>> bloc all memories$allMemories');
+      //  print('>>> bloc all memories$allMemories');
       final nonDiscardedMemories =
           allMemories.where((memory) => !memory.discarded).toList();
       final memoriesToConsider =
