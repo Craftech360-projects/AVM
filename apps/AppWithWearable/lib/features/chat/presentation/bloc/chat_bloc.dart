@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
@@ -76,80 +77,82 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   //   });
   // }
 
-  // Future<void> _onInitializeDailySummary(
-  //     InitializeDailySummary event, Emitter<ChatState> emit) async {
-  //   _dailySummaryTimer =
-  //       Timer.periodic(const Duration(minutes: 1), (timer) async {
-  //     // Changed to run every minute
-  //     var now = DateTime.now();
-  //     if (now.hour < 20) return; // Only run after 8 PM
-
-  //     if (prefs.lastDailySummaryDay != '') {
-  //       var secondsFrom8pm = now
-  //           .difference(DateTime(now.year, now.month, now.day, 20))
-  //           .inSeconds;
-  //       var lastRunTime = DateTime.parse(prefs.lastDailySummaryDay);
-  //       var secondsFromLast = now.difference(lastRunTime).inSeconds;
-  //       if (secondsFromLast < secondsFrom8pm) {
-  //         timer.cancel();
-  //         return;
-  //       }
-  //     }
-
-  //     timer.cancel(); // Stop the timer after running the summary
-  //     var memories = memoryProvider.retrieveDayMemories(now);
-  //     if (memories.isEmpty) {
-  //       prefs.lastDailySummaryDay = DateTime.now().toIso8601String();
-  //       return;
-  //     }
-
-  //     var message = Message(DateTime.now(), '', 'ai', type: 'daySummary');
-  //     messageProvider.saveMessage(message);
-
-  //     // Here you would send the summary notification
-  //     var result = await dailySummaryNotifications(memories);
-  //     prefs.lastDailySummaryDay = DateTime.now().toIso8601String();
-  //     message.text = result;
-  //     message.memories.addAll(memories);
-  //     messageProvider.updateMessage(message);
-
-  //     add(LoadInitialChat()); // Reload chat to display the summary
-  //   });
-  // }
-
-  //test function for 1 minute daily memory
-
   Future<void> _onInitializeDailySummary(
       InitializeDailySummary event, Emitter<ChatState> emit) async {
-    print('InitializeDailySummary');
     _dailySummaryTimer =
-        Timer.periodic(const Duration(minutes: 1), (timer) async {
-      // Now runs every minute regardless of previous executions
+        Timer.periodic(const Duration(hours: 1), (timer) async {
+      // Changed to run every minute
       var now = DateTime.now();
-
+      log(timer.tick.toString());
+      log("daily timer runnig>>>>>>>>>>>>>>");
       if (now.hour < 20) return; // Only run after 8 PM
 
-      // No check for previous summary; we want to create one every time
-      var memories = memoryProvider.retrieveDayMemories(now);
+      if (prefs.lastDailySummaryDay != '') {
+        var secondsFrom8pm = now
+            .difference(DateTime(now.year, now.month, now.day, 20))
+            .inSeconds;
+        var lastRunTime = DateTime.parse(prefs.lastDailySummaryDay);
+        var secondsFromLast = now.difference(lastRunTime).inSeconds;
+        if (secondsFromLast < secondsFrom8pm) {
+          timer.cancel();
+          return;
+        }
+      }
 
-      // Create a message object
+      timer.cancel(); // Stop the timer after running the summary
+      var memories = memoryProvider.retrieveDayMemories(now);
+      if (memories.isEmpty) {
+        prefs.lastDailySummaryDay = DateTime.now().toIso8601String();
+        return;
+      }
+
       var message = Message(DateTime.now(), '', 'ai', type: 'daySummary');
       messageProvider.saveMessage(message);
 
-      // Send the summary notification
+      // Here you would send the summary notification
       var result = await dailySummaryNotifications(memories);
-
-      // Update the message with the new details
+      prefs.lastDailySummaryDay = DateTime.now().toIso8601String();
       message.text = result;
       message.memories.addAll(memories);
       messageProvider.updateMessage(message);
 
-      // Update the last summary day regardless of previous runs
-      prefs.lastDailySummaryDay = DateTime.now().toIso8601String();
-
       add(LoadInitialChat()); // Reload chat to display the summary
     });
   }
+
+  //test function for 1 minute daily memory
+
+  // Future<void> _onInitializeDailySummary(
+  //     InitializeDailySummary event, Emitter<ChatState> emit) async {
+  //   print('InitializeDailySummary');
+  //   _dailySummaryTimer =
+  //       Timer.periodic(const Duration(minutes: 1), (timer) async {
+  //     // Now runs every minute regardless of previous executions
+  //     var now = DateTime.now();
+
+  //     if (now.hour < 20) return; // Only run after 8 PM
+
+  //     // No check for previous summary; we want to create one every time
+  //     var memories = memoryProvider.retrieveDayMemories(now);
+
+  //     // Create a message object
+  //     var message = Message(DateTime.now(), '', 'ai', type: 'daySummary');
+  //     messageProvider.saveMessage(message);
+
+  //     // Send the summary notification
+  //     var result = await dailySummaryNotifications(memories);
+
+  //     // Update the message with the new details
+  //     message.text = result;
+  //     message.memories.addAll(memories);
+  //     messageProvider.updateMessage(message);
+
+  //     // Update the last summary day regardless of previous runs
+  //     prefs.lastDailySummaryDay = DateTime.now().toIso8601String();
+
+  //     add(LoadInitialChat()); // Reload chat to display the summary
+  //   });
+  // }
 
   Future<void> sendInitialPluginMessage(Plugin? plugin) async {
     var ai = Message(DateTime.now(), '', 'ai', pluginId: plugin?.id);
