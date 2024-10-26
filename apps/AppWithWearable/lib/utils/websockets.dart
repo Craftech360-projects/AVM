@@ -132,8 +132,16 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
         'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=$sampleRate&codec=pcm8&channels=1',
       );
       break;
-    case 'Wisper':
-      print('No api for this');
+    case 'Whisper':
+      // uri = Uri.parse(
+      //   'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service3&sample_rate=$sampleRate&codec=pcm8&channels=1',
+      // );
+
+      //whisper ngrok url
+
+      uri = Uri.parse(
+        'ws://living-alien-polite.ngrok-free.app?service=service3&sample_rate=$sampleRate&codec=pcm8&channels=1',
+      );
       break;
     default:
       'Deepgram';

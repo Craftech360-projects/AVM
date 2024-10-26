@@ -189,6 +189,38 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
                           );
                         },
                       ),
+                      ListTile(
+                        leading: apiType == 'Whisper'
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
+                        title: const Text('Whisper'),
+                        onTap: () async {
+                          // developerModeSelected(modeSelected: 'Sarvam');
+                          // closeWebSocket();
+                          await closeWebSocket();
+                          developerModeSelected(modeSelected: 'Whisper');
+                          await initWebSocket(
+                            onConnectionClosed:
+                                (int? closeCode, String? closeReason) {
+                              setState(() {});
+                            },
+                            onConnectionSuccess: () {
+                              setState(() {});
+                            },
+                            onConnectionError: (p1) {},
+                            onConnectionFailed: (p1) {},
+                            onMessageReceived: (List<TranscriptSegment> p1) {},
+                          );
+                        },
+                      ),
                     ],
                   ),
                   const SizedBox(height: 12),
