@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -134,7 +135,8 @@ Future<dynamic> llamaApiCall({
   // Construct the body of the request
   final body = jsonEncode({
     // Replace with specific model identifier if needed
-    "model": "llama-3.2-90b-text-preview",
+    // "model": "llama-3.2-90b-text-preview",
+    "model": "llama-3.1-8b-instant",
     'messages': [
       {'role': 'system', 'content': ''' '''},
       {
@@ -160,6 +162,72 @@ Future<dynamic> llamaApiCall({
       // Extract and return only the content
       debugPrint(decodedResponse['choices'][0]['message']['content']);
       return decodedResponse['choices'][0]['message']['content'];
+    } else {
+      debugPrint("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
+      return null;
+    }
+  } catch (e) {
+    debugPrint("Error making LLaMA API call: $e");
+    return null;
+  }
+}
+
+Future<dynamic> llamaDiarizationApiCall({
+  required String message,
+  double temperature = 0.7,
+  int maxTokens = -1,
+}) async {
+  debugPrint("Inside llamaDiarizationApiCall API call");
+  print(message);
+  // Define the URL for the LLaMA API
+  const url = 'https://api.groq.com/openai/v1/chat/completions';
+
+  // Define the headers for the request
+  final headers = {
+    'Content-Type': 'application/json',
+    'Authorization':
+        'Bearer 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',
+  };
+
+  // Construct the body of the request
+  final body = jsonEncode({
+    // Replace with specific model identifier if needed
+    // "model": "llama-3.2-90b-text-preview",
+    "model": "llama-3.1-8b-instant",
+    'messages': [
+      {'role': 'system', 'content': ''' '''},
+      {
+        'role': 'user',
+        'content': " {$message}",
+      },
+    ],
+    'temperature': temperature,
+    'max_tokens': maxTokens,
+    'stream': false,
+    'response_format': {"type": "json_object"},
+  });
+
+  // Make the API call
+  try {
+    var response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+    if (response.statusCode == 200) {
+      debugPrint("Success: ${response.statusCode}, ${response.body}");
+      // print(">>>> $jsonDecode(response.body)");
+      // return jsonDecode(response.body);
+      var decodedResponse = jsonDecode(response.body);
+      // Extract and return only the content
+      log(decodedResponse['choices'][0]['message']['content']);
+      // Since 'content' appears to be a stringified JSON, parse it again
+      var content =
+          jsonDecode(decodedResponse['choices'][0]['message']['content']);
+
+// Now extract 'diarized_transcript' from the parsed 'content'
+      var diarizedTranscript = content['diarized_transcript'];
+
+// Print and return only the 'diarized_transcript'
+      debugPrint(diarizedTranscript.toString());
+      return diarizedTranscript.toString();
     } else {
       debugPrint("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
       return null;
@@ -196,6 +264,29 @@ Future<String> executeGptPrompt(String? prompt,
   debugPrint(">>>>>>>>>>>>>>>>??? $response");
   // debugPrint('executeGptPrompt response: $response');
   prefs.setGptCompletionCache(promptBase64, response);
+  //debugPrint('executeGptPrompt response: $response');
+  return response;
+}
+
+Future<dynamic> executeSpeechDiarizationPrompt(String? prompt,
+    {bool ignoreCache = false}) async {
+  if (prompt == null) return '';
+  print("executing diarization prompt here>>>>>>>>>>>>>>>, ${prompt.length}");
+  var prefs = SharedPreferencesUtil();
+  var promptBase64 = base64Encode(utf8.encode(prompt));
+  var cachedResponse = prefs.gptCompletionCache(promptBase64);
+  if (!ignoreCache && prefs.gptCompletionCache(promptBase64).isNotEmpty) {
+    return cachedResponse;
+  }
+
+  String response = await llamaDiarizationApiCall(
+      message: prompt,
+      temperature: 0.7, // Adjust temperature as needed
+      maxTokens: 1000 // Adjust maxTokens as needed or set to -1 for default
+      );
+  debugPrint(">>>>>>>>>>>>>>>>??? $response");
+  // debugPrint('executeGptPrompt response: $response');
+  //prefs.setGptCompletionCache(promptBase64, response);
   //debugPrint('executeGptPrompt response: $response');
   return response;
 }

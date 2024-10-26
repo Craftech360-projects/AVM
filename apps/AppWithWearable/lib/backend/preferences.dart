@@ -60,7 +60,10 @@ class SharedPreferencesUtil {
   set gcpCredentials(String value) => saveString('gcpCredentials', value);
 
   String get gcpBucketName => getString('gcpBucketName') ?? '';
+set isRestoreSuccessful(bool value) => saveBool('isRestoreSuccessful', value);
 
+
+bool get isRestoreSuccessful => getBool('isRestoreSuccessful') ?? false;
   set gcpBucketName(String value) => saveString('gcpBucketName', value);
 
   String get webhookOnMemoryCreated => getString('webhookUrl') ?? '';

@@ -30,8 +30,13 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
   void initState() {
     _controller = TabController(length: 5, vsync: this);
     _controller!.addListener(() => setState(() {}));
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   if (await isSignedIn() && !SharedPreferencesUtil().onboardingCompleted) {
+    //     _goNext();
+    //   }
+    // });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (await isSignedIn() && !SharedPreferencesUtil().onboardingCompleted) {
+      if ( true && !SharedPreferencesUtil().onboardingCompleted) {
         _goNext();
       }
     });

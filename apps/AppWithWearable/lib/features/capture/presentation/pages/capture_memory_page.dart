@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
+import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/widgets/memory_card.dart';
@@ -8,7 +9,6 @@ import 'package:friend_private/features/memory/presentation/widgets/memory_searc
 import 'package:friend_private/pages/capture/capture_walkthrough.dart';
 import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
-import 'package:friend_private/utils/walkthrough/walkthrough_tutorial.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shimmer/shimmer.dart';
@@ -75,7 +75,12 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    // _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
+ 
+    if (SharedPreferencesUtil().isRestoreSuccessful) {
+      _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
+    }
+    SharedPreferencesUtil().isRestoreSuccessful = false;
+   
     return Column(
       children: [
         // FloatingActionButton(onPressed: () {
@@ -139,54 +144,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
               ),
 
         //*--- Filter Button ---*//
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        //   child: Align(
-        //     alignment: Alignment.centerRight,
-        //     child: PopupMenuButton<FilterItem>(
-        //       icon: const Icon(
-        //         Icons.filter_alt_sharp,
-        //         size: 16,
-        //         color: Colors.grey,
-        //       ),
-        //       onSelected: (filterItem) {
-        //         print(
-        //             'filteredItem ${filterItem.filterStatus},${filterItem.filterType}');
-        //         _memoryBloc.add(FilterMemory(filterItem: filterItem));
-        //         // setState(() {
-        //         //   filterItem.filterStatus = !filterItem.filterStatus;
-
-        //         //   if (filterItem.filterType == 'Show All') {
-        //         //     _memoryBloc.add(DisplayedMemory(
-        //         //         isNonDiscarded: filterItem.filterStatus));
-        //         //   }
-
-        //         //   print(
-        //         //       'Selected filter: ${filterItem.filterType}, Status: ${filterItem.filterStatus}');
-        //         // });
-        //       },
-        //       itemBuilder: (context) => _filters.map((filterItem) {
-        //         return PopupMenuItem<FilterItem>(
-        //           value: filterItem,
-        //           child: Row(
-        //             children: [
-        //               filterItem.filterStatus
-        //                   ? const Icon(
-        //                       Icons.check,
-        //                       color: Colors.green,
-        //                     )
-        //                   : const Icon(
-        //                       Icons.check,
-        //                       color: Colors.grey,
-        //                     ),
-        //               Text(filterItem.filterType),
-        //             ],
-        //           ),
-        //         );
-        //       }).toList(),
-        //     ),
-        //   ),
-        // ),
 
         if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
           Padding(
@@ -256,6 +213,11 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                 ),
               );
             }
+            // print('is shared prederence status ${SharedPreferencesUtil().isRestoreSuccessful}');
+            // if (SharedPreferencesUtil().isRestoreSuccessful) {
+            //   _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
+            // }
+            // SharedPreferencesUtil().isRestoreSuccessful = false;
           },
         ),
       ],

@@ -1,36 +1,49 @@
+// part of 'chat_bloc.dart';
+
+// abstract class ChatEvent {}
+
+// class LoadInitialChat extends ChatEvent {}
+
+// class SendMessage extends ChatEvent {
+//   final String message;
+//   SendMessage(this.message);
+// }
+
+// class RefreshMessages extends ChatEvent {}
+
+// class SendInitialPluginMessage extends ChatEvent {
+//   final Plugin? plugin;
+
+//   SendInitialPluginMessage(this.plugin);
+// }
+
 part of 'chat_bloc.dart';
 
-abstract class ChatEvent {}
+abstract class ChatEvent extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
 class LoadInitialChat extends ChatEvent {}
 
 class SendMessage extends ChatEvent {
   final String message;
+
   SendMessage(this.message);
+
+  @override
+  List<Object?> get props => [message]; // Include message for equality checks
 }
 
 class RefreshMessages extends ChatEvent {}
-// class PrepareStreaming extends ChatEvent {
-//   final String text;
-//   final String? pluginId;
 
-//   PrepareStreaming(this.text, {this.pluginId});
-// }
-
-// class RetrieveRAGContext extends ChatEvent {
-//   final String message;
-//   final String? pluginId;
-
-//   RetrieveRAGContext(this.message, {this.pluginId});
-// }
-
-// class CallbackFunctionChatStreaming extends ChatEvent {
-//   final String content;
-
-//   CallbackFunctionChatStreaming(this.content);
-// }
 class SendInitialPluginMessage extends ChatEvent {
   final Plugin? plugin;
 
   SendInitialPluginMessage(this.plugin);
+
+  @override
+  List<Object?> get props => [plugin]; // Include plugin for equality checks
 }
+
+class InitializeDailySummary extends ChatEvent {} // Add daily summary event

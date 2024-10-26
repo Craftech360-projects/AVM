@@ -98,11 +98,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // }
   //   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
-  // String encoding = "linear16";
-  // const String language = 'en-US';
-  // const int sampleRate = 8000;
-  // const String codec = 'pcm8';
-  // const int channels = 1;
 
   String encoding = "linear16";
   const String language = 'en-US';
@@ -125,23 +120,24 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
-          'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=$language&sample_rate=$sampleRate&codec=$codec&channels=$channels');
+
+        'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+      );
       break;
     case 'Sarvam':
       uri = Uri.parse(
-        'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=$sampleRate&codec=pcm8&channels=1',
+        'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=${sampleRate}&codec=pcm8&channels=1',
       );
       break;
     case 'Whisper':
+      uri = Uri.parse(
+        'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
+      );
       // uri = Uri.parse(
-      //   'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service3&sample_rate=$sampleRate&codec=pcm8&channels=1',
+      //   'ws://a492-124-40-247-18.ngrok-free.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
       // );
 
-      //whisper ngrok url
-
-      uri = Uri.parse(
-        'ws://living-alien-polite.ngrok-free.app?service=service3&sample_rate=$sampleRate&codec=pcm8&channels=1',
-      );
+  
       break;
     default:
       'Deepgram';
@@ -204,11 +200,11 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
         try {
           final data = jsonDecode(event);
-          print('websocket data satyam $event');
+          //   print('websocket data satyam $event');
           if (data['type'] == 'Metadata') {
             // Handle metadata event
           } else if (data['type'] == 'Results') {
-            print('deepgram sever selected');
+            //   print('deepgram sever selected');
             // Handle results event
             final alternatives = data['channel']['alternatives'];
             if (alternatives is List && alternatives.isNotEmpty) {
@@ -228,7 +224,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
                 lastAudioTime = DateTime.now();
                 debugPrint('updated lastAudioTime: $lastAudioTime');
               } else {
-                debugPrint('Empty or invalid transcript');
+                //   debugPrint('Empty or invalid transcript');
               }
             } else {
               debugPrint('No alternatives found in the result');

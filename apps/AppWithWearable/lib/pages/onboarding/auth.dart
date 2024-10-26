@@ -66,6 +66,7 @@ class _AuthComponentState extends State<AuthComponent> {
                           }
                         },
                 )
+
               : SignInButton(
                   Buttons.google,
                   padding:
@@ -82,6 +83,7 @@ class _AuthComponentState extends State<AuthComponent> {
                           } catch (e) {
                             print("Google Sign-in failed: $e");
                           } finally {
+
                             changeLoadingState();
                           }
                         },
