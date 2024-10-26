@@ -5,7 +5,6 @@ import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
-import 'package:friend_private/pages/home/home_page_wrapper.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/pages/onboarding/auth.dart';
 import 'package:friend_private/pages/onboarding/complete/complete.dart';
@@ -13,6 +12,7 @@ import 'package:friend_private/pages/onboarding/find_device/page.dart';
 import 'package:friend_private/pages/onboarding/permissions/permissions.dart';
 import 'package:friend_private/pages/onboarding/welcome/page.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:friend_private/utils/walkthrough/walkthrough_tutorial.dart';
 import 'package:friend_private/widgets/device_widget.dart';
 
 class OnboardingWrapper extends StatefulWidget {
@@ -132,9 +132,13 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
                       },
                     ),
                     CompletePage(
-                      goNext: () {
-                        routeToPage(context, const HomePageWrapper(),
+                      goNext: () async {
+                        await routeToPage(context, const HomePageWrapper(),
                             replace: true);
+
+                        debugPrint('checking for app tour');
+                      
+
                         MixpanelManager().onboardingStepICompleted('Finalize');
                         MixpanelManager().onboardingCompleted();
                       },

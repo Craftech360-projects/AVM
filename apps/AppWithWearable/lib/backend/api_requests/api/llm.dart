@@ -134,7 +134,7 @@ Future<dynamic> llamaApiCall({
   // Construct the body of the request
   final body = jsonEncode({
     // Replace with specific model identifier if needed
-    "model": "llama3-8b-8192",
+    "model": "llama-3.2-90b-text-preview",
     'messages': [
       {'role': 'system', 'content': ''' '''},
       {

@@ -90,6 +90,9 @@ set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
   bool get onboardingCompleted => getBool('onboardingCompleted') ?? false;
 
   set onboardingCompleted(bool value) => saveBool('onboardingCompleted', value);
+  bool get secondPageTutorialCompleted => getBool('secondPageTutorialCompleted') ?? false;
+
+  set secondPageTutorialCompleted(bool value) => saveBool('secondPageTutorialCompleted', value);
 
   String get customWebsocketUrl => getString('customWebsocketUrl') ?? '';
 

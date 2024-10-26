@@ -84,7 +84,7 @@ class Memory {
     var memory = Memory(
       DateTime.parse(json['createdAt']),
       json['transcript'],
-      json['memoryImg'],
+       json['memoryImg'] != null ? Uint8List.fromList(List<int>.from(json['memoryImg'])) : null,
       json['discarded'],
       recordingFilePath: json['recordingFilePath'],
       startedAt:
@@ -98,6 +98,7 @@ class Memory {
     if (json['structured'] != null) {
       memory.structured.target = Structured.fromJson(json['structured']);
     }
+    
     if (json['geolocation'] != null) {
       memory.geolocation.target = Geolocation.fromJson(json['geolocation']);
       if (memory.structured.target != null) {
@@ -154,7 +155,8 @@ class Memory {
       'id': id,
       'createdAt': createdAt.toIso8601String(),
       'startedAt': startedAt?.toIso8601String(),
-      'memoryImg': memoryImg != null ? 'True' : 'False',
+      'memoryImg': memoryImg ,
+      // 'memoryImg': memoryImg != null ? 'True' : 'False',
       'finishedAt': finishedAt?.toIso8601String(),
       'transcript': transcript,
       'recordingFilePath': recordingFilePath,

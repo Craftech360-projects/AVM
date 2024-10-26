@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
@@ -8,15 +6,14 @@ import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/BackupButton.dart';
 import 'package:friend_private/pages/settings/RestoreButton.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
-import 'package:friend_private/pages/settings/custom_prompt_page.dart';
 import 'package:friend_private/pages/settings/developer_page.dart';
 import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
-import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:friend_private/utils/walkthrough/walkthrough_tutorial.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:restart_app/restart_app.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -24,6 +21,8 @@ class SettingsPage extends StatefulWidget {
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
+
+GlobalKey<_SettingsPageState> settingPageState = GlobalKey();
 
 class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
   late String _selectedLanguage;
@@ -34,10 +33,21 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
   late bool reconnectNotificationIsChecked;
   String? version;
   String? buildVersion;
-  final bool _customTileExpanded = false;
-
+  // final bool _customTileExpanded = false;
+  GlobalKey calenderTour = GlobalKey();
+  GlobalKey ProfileTour = GlobalKey();
+  GlobalKey DeveloperTour = GlobalKey();
+  // List<TargetFocus> settingtargets = [];
+  late TutorialCoachMark tutorialCoachMark;
   @override
   void initState() {
+    createSecondPageTutorial();
+    print(
+        'second page tutorial completed ${SharedPreferencesUtil().secondPageTutorialCompleted}');
+    if (SharedPreferencesUtil().secondPageTutorialCompleted==false) {
+      Future.delayed(Duration.zero, showSecondPageTutorial);
+    }
+
     _selectedLanguage = SharedPreferencesUtil().recordingsLanguage;
     optInAnalytics = SharedPreferencesUtil().optInAnalytics;
     devModeEnabled = SharedPreferencesUtil().devModeEnabled;
@@ -56,25 +66,40 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
 
   bool loadingExportMemories = false;
 
+  settingTour() {
+    settingtargets.add(
+      CustomTargetFocus().buildTarget(
+        keyTarget: ProfileTour,
+        identify: "Target 5",
+        titleText: "Configure your profile",
+        descriptionText: "Change your name to which AVM is recognised you",
+      ),
+    );
+    settingtargets.add(
+      CustomTargetFocus().buildTarget(
+        keyTarget: calenderTour,
+        identify: "Target 6",
+        titleText: "Manage the calendar",
+        descriptionText:
+            "Integrate the Google calendar and get notifications of it",
+      ),
+    );
+    settingtargets.add(
+      CustomTargetFocus().buildTarget(
+        keyTarget: DeveloperTour,
+        identify: "Target 7",
+        titleText: "Customise your needs",
+        descriptionText: "By using custom prompt, Customise the AVM",
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: true,
       child: CustomScaffold(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        // appBar: AppBar(
-        //   backgroundColor: Theme.of(context).colorScheme.surface,
-        //   automaticallyImplyLeading: true,
-        //   title: const Text('Settings'),
-        //   centerTitle: false,
-        //   // leading: IconButton(
-        //   //   icon: const Icon(Icons.arrow_back_ios_new),
-        //   //   onPressed: () {
-        //   //     Navigator.pop(context);
-        //   //   },
-        //   // ),
-        //   elevation: 0,
-        // ),
         body: Padding(
           padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -104,99 +129,6 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
                 SharedPreferencesUtil().recordingsLanguage = _selectedLanguage;
                 MixpanelManager().recordingLanguageChanged(_selectedLanguage);
               }, _selectedLanguage),
-              // TODO: do not works like this, fix if reusing
-              // ...getNotificationsWidgets(setState, postMemoryNotificationIsChecked, reconnectNotificationIsChecked),
-              //! Disabled As of now
-              /*
-                ...getPreferencesWidgets(
-                  onOptInAnalytics: () {
-                    setState(() {
-                      optInAnalytics = !SharedPreferencesUtil().optInAnalytics;
-                      SharedPreferencesUtil().optInAnalytics =
-                          !SharedPreferencesUtil().optInAnalytics;
-                      optInAnalytics
-                          ? MixpanelManager().optInTracking()
-                          : MixpanelManager().optOutTracking();
-                    });
-                  },
-                  viewPrivacyDetails: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => const PrivacyInfoPage()));
-                    MixpanelManager().privacyDetailsPageOpened();
-                  },
-                  optInAnalytics: optInAnalytics,
-                  devModeEnabled: devModeEnabled,
-                  onDevModeClicked: () {
-                    setState(() {
-                      if (devModeEnabled) {
-                        devModeEnabled = false;
-                        SharedPreferencesUtil().devModeEnabled = false;
-                        MixpanelManager().developerModeDisabled();
-                      } else {
-                        devModeEnabled = true;
-                        MixpanelManager().developerModeEnabled();
-                        SharedPreferencesUtil().devModeEnabled = true;
-                      }
-                    });
-                  },
-                  backupsEnabled: backupsEnabled,
-                  onBackupsClicked: () {
-                    setState(() {
-                      if (backupsEnabled) {
-                        showDialog(
-                          context: context,
-                          builder: (c) => getDialog(
-                            context,
-                            () => Navigator.of(context).pop(),
-                            () {
-                              backupsEnabled = false;
-                              SharedPreferencesUtil().backupsEnabled = false;
-                              MixpanelManager().backupsDisabled();
-                              deleteBackupApi();
-                              Navigator.of(context).pop();
-                              setState(() {});
-                            },
-                            'Disable Automatic Backups',
-                            'You will be responsible for backing up your own data. We will not be able to restore it automatically once you disable this feature. Are you sure?',
-                          ),
-                        );
-                      } else {
-                        SharedPreferencesUtil().backupsEnabled = true;
-                        setState(() => backupsEnabled = true);
-                        MixpanelManager().backupsEnabled();
-                        executeBackupWithUid();
-                      }
-                    });
-                  },
-                ),
-                
-                const SizedBox(height: 16),
-                ListTile(
-                  title: const Text('Need help?',
-                      style: TextStyle(color: Colors.white)),
-                  subtitle: const Text('team@basedhardware.com'),
-                  contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  trailing: const Icon(Icons.arrow_forward_ios,
-                      color: Colors.white, size: 16),
-                  onTap: () {
-                    launchUrl(Uri.parse('mailto:team@basedhardware.com'));
-                    MixpanelManager().supportContacted();
-                  },
-                ),
-                ListTile(
-                  contentPadding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  title: const Text('Join the community!',
-                      style: TextStyle(color: Colors.white)),
-                  subtitle: const Text('2300+ members and counting.'),
-                  trailing:
-                      const Icon(Icons.discord, color: Colors.purple, size: 20),
-                  onTap: () {
-                    launchUrl(Uri.parse('https://discord.gg/ZutWMTJnwA'));
-                    MixpanelManager().joinDiscordClicked();
-                  },
-                ),
-                const SizedBox(height: 32.0),
-                */
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -207,101 +139,47 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
                   textAlign: TextAlign.start,
                 ),
               ),
-              // getItemAddOn('Plugins', () {
-              //   MixpanelManager().pluginsOpened();
-              //   routeToPage(context, const PluginsPage());
-              // }, icon: Icons.integration_instructions),
-              // SharedPreferencesUtil().useTranscriptServer
-              //     ? getItemAddOn('Speech Profile', () {
-              //         routeToPage(context, const SpeakerIdPage());
-              //       }, icon: Icons.multitrack_audio)
-              //     : Container(),
-              getItemAddOn('Profile', () {
-                routeToPage(context, const ProfilePage());
-              }, icon: Icons.person),
-              getItemAddOn('Calendar Integration', () {
-                routeToPage(context, const CalendarPage());
-              }, icon: Icons.calendar_month),
-              getItemAddOn('Developers Option', () {
-                routeToPage(context, const DeveloperPage());
-              }, icon: Icons.settings_suggest),
-              const SizedBox(height: 16),
-              const BackupButton(),
-              const SizedBox(height: 16), // Backup button added here
-              const RestoreButton(), // Backup button added here
 
-              const SizedBox(height: 16),
-              // const SizedBox(height: 12),
-              // CustomExpansionTile(
-              //   title: 'Transcript Scervice',
-              //   subtitle: SharedPreferencesUtil().getApiType('NewApiKey') ?? '',
-              //   children: [
-              //     ListTile(
-              //       title: const Text('Deepgram'),
-              //       onTap: () {
-              //         developerModeSelected(modeSelected: 'Deepgram');
-              //       },
-              //     ),
-              //     ListTile(
-              //       title: const Text('Sarvam'),
-              //       onTap: () {
-              //         developerModeSelected(modeSelected: 'Sarvam');
-              //       },
-              //     ),
-              //     Visibility(
-              //       visible: false,
-              //       child: ListTile(
-              //         title: const Text('Wisper'),
-              //         onTap: () {
-              //           developerModeSelected(modeSelected: 'Wisper');
-              //         },
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(height: 12),
-              // CustomExpansionTile(
-              //   title: 'Prompt',
-              //   children: [
-              //     ListTile(
-              //       title: const Text('Default'),
-              //       onTap: () {},
-              //     ),
-              //     ListTile(
-              //       title: const Text('Customize Prompt'),
-              //       onTap: () {
-              //         Navigator.of(context).push(
-              //           MaterialPageRoute(
-              //             builder: (context) => const CustomPromptPage(),
-              //           ),
-              //         );
-              //       },
-              //     ),
-              //   ],
-              // ),
 
-              // getItemAddOn('Speech Recognition', () {
-              //   routeToPage(context, const SpeakerIdPage());
-              // }, icon: Icons.multitrack_audio),
-              // getItemAddOn('Developer Mode', () async {
-              //   MixpanelManager().devModePageOpened();
-              //   await routeToPage(context, const DeveloperSettingsPage());
-              //   setState(() {});
-              // }, icon: Icons.code, visibility: devModeEnabled),
-
-              // const SizedBox(height: 32),
-              const Spacer(),
-              // Padding(
-              //   padding: const EdgeInsets.all(8),
-              //   child: Text(
-              //     SharedPreferencesUtil().uid,
-              //     style: const TextStyle(
-              //         color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
-              //     maxLines: 1,
-              //     textAlign: TextAlign.center,
-              //   ),
-              // ),
-
+              getItemAddOn(
+                key: ProfileTour,
+                'Profile',
+                () {
+                  routeToPage(
+                    context,
+                    const ProfilePage(),
+                  );
+                },
+                icon: Icons.person,
+              ),
+              getItemAddOn(
+                key: calenderTour,
+                'Calendar Integration',
+                () {
+                  routeToPage(
+                    context,
+                    const CalendarPage(),
+                  );
+                },
+                icon: Icons.calendar_month,
+              ),
+              getItemAddOn(
+                key: DeveloperTour,
+                'Developers Option',
+                () {
+                  routeToPage(
+                    context,
+                    const DeveloperPage(),
+                  );
+                },
+                icon: Icons.settings_suggest,
+              ),
+              //  const SizedBox(height: 16),
+              // const BackupButton(),
+              // const SizedBox(height: 16), 
+              // const RestoreButton(), 
+              // const SizedBox(height: 16),
+           Spacer(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Align(
@@ -322,19 +200,48 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
     );
   }
 
-  // void developerModeSelected({required String modeSelected}) {
-  //   print('Mode Selected $modeSelected');
-  //   // setDiffApi(newApiType: modeSelected);
-  //   SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
-  //   const AlertDialog(
-  //     content: Text('To Reflect selected Changes\nApp Restarting...'),
-  //   );
-  //   Future.delayed(const Duration(seconds: 3));
-  //   if (Platform.isAndroid) Restart.restartApp();
+  void showSecondPageTutorial() {
+    tutorialCoachMark.show(context: context);
+    SharedPreferencesUtil().secondPageTutorialCompleted = true;
+  }
 
-  //   Restart.restartApp(
-  //     notificationTitle: 'Restarting App',
-  //     notificationBody: 'Please tap here to open the app again.',
-  //   );
-  // }
+  void createSecondPageTutorial() {
+    tutorialCoachMark = TutorialCoachMark(
+      targets: _createSecondPageTargets(),
+      colorShadow: Colors.black,
+      textSkip: "SKIP",
+      opacityShadow: 0.8,
+      onFinish: () {
+        print("Second Page Tutorial Finished");
+      },
+      onSkip: () {
+        print("Second Page Tutorial Skipped");
+        return true;
+      },
+    );
+  }
+
+  List<TargetFocus> _createSecondPageTargets() {
+    return [
+      CustomTargetFocus().buildTarget(
+        keyTarget: ProfileTour,
+        identify: "Target 5",
+        titleText: "Configure your profile",
+        descriptionText: "Change your name to which AVM is recognised you",
+      ),
+      CustomTargetFocus().buildTarget(
+        keyTarget: calenderTour,
+        identify: "Target 6",
+        titleText: "Manage the calendar",
+        descriptionText:
+            "Integrate the Google calendar and get notifications of it",
+      ),
+      CustomTargetFocus().buildTarget(
+        keyTarget: DeveloperTour,
+        identify: "Target 7",
+        titleText: "Customise your needs",
+        descriptionText: "By using custom prompt, Customise the AVM",
+      ),
+    ];
+  }
 }

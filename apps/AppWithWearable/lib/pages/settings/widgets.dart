@@ -322,8 +322,9 @@ getPreferencesWidgets({
 }
 
 getItemAddOn(String title, VoidCallback onTap,
-    {required IconData icon, bool visibility = true}) {
+    {required IconData icon, bool visibility = true,GlobalKey? key}) {
   return Visibility(
+    key: key,
     visible: visibility,
     child: GestureDetector(
       onTap: onTap,

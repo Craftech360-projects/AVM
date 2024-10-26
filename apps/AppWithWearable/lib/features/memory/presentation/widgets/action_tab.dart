@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
-import 'package:friend_private/utils/other/temp.dart';
 
 class ActionTab extends StatefulWidget {
   const ActionTab(
@@ -27,11 +26,11 @@ class _ActionTabState extends State<ActionTab> {
       builder: (context, state) {
         final selectedMemory = state.memories[state.memoryIndex];
         final structured = state.memories[state.memoryIndex].structured.target!;
-       
+
         if (state.status == MemoryStatus.success) {
           return SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Column(
                 children: [
                   structured.actionItems.isNotEmpty
@@ -52,7 +51,8 @@ class _ActionTabState extends State<ActionTab> {
                                         '- ${structured.actionItems.map((e) => e.description).join('\n- ')}'));
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(
-                                  content: Text('Action items copied to clipboard'),
+                                  content:
+                                      Text('Action items copied to clipboard'),
                                   duration: Duration(seconds: 2),
                                 ));
                                 MixpanelManager().copiedMemoryDetails(
@@ -67,7 +67,8 @@ class _ActionTabState extends State<ActionTab> {
                       : const SizedBox(
                           height: 400,
                           child: Center(
-                              child: Text("Oops! This Memory Don't have Action")),
+                              child:
+                                  Text("Oops! This Memory Don't have Action")),
                         ),
                   ...structured.actionItems.map<Widget>(
                     (item) {
@@ -83,14 +84,20 @@ class _ActionTabState extends State<ActionTab> {
                           contentPadding: EdgeInsets.zero,
                           leading: Icon(
                             color: item.completed ? Colors.green : Colors.grey,
-                            item.completed ? Icons.task_alt : Icons.circle_outlined,
+                            item.completed
+                                ? Icons.task_alt
+                                : Icons.circle_outlined,
                             size: 20,
                           ),
                           title: Text(
                             item.description,
                             style: TextStyle(
-                              decoration:item.completed? TextDecoration.lineThrough:null,
-                              color: Colors.grey.shade300,
+                              decoration: item.completed
+                                  ? TextDecoration.lineThrough
+                                  : null,
+                              color: item.completed
+                                  ? Colors.grey
+                                  : Colors.grey.shade300,
                               fontSize: 16,
                               height: 1.3,
                             ),

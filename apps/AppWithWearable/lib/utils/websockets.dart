@@ -98,12 +98,25 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // }
   //   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
+  // String encoding = "linear16";
+  // const String language = 'en-US';
+  // const int sampleRate = 8000;
+  // const String codec = 'pcm8';
+  // const int channels = 1;
+
   String encoding = "linear16";
   const String language = 'en-US';
   const int sampleRate = 8000;
   const String codec = 'pcm8';
   const int channels = 1;
-  final String apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
+  //   String encoding = "opus";
+  // const String language = 'en-US';
+  // const int sampleRate = 48000;
+  // const String codec = 'opus';
+  // const int channels = 1;
+
+  String apiType = '';
+  apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
   Uri uri = Uri.parse(
     'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
   );
@@ -112,15 +125,23 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
-          'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=${language}&sample_rate=${sampleRate}&codec=${codec}&channels=${channels}');
+          'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=$language&sample_rate=$sampleRate&codec=$codec&channels=$channels');
       break;
     case 'Sarvam':
       uri = Uri.parse(
-        'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=${sampleRate}&codec=pcm8&channels=1',
+        'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=$sampleRate&codec=pcm8&channels=1',
       );
       break;
-    case 'Wisper':
-      print('No api for this');
+    case 'Whisper':
+      // uri = Uri.parse(
+      //   'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service3&sample_rate=$sampleRate&codec=pcm8&channels=1',
+      // );
+
+      //whisper ngrok url
+
+      uri = Uri.parse(
+        'ws://living-alien-polite.ngrok-free.app?service=service3&sample_rate=$sampleRate&codec=pcm8&channels=1',
+      );
       break;
     default:
       'Deepgram';
@@ -263,5 +284,23 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
       // level: NonFatalExceptionLevel.warning,
     );
     return null;
+  }
+}
+
+void closeWebSocket2(IOWebSocketChannel? channel, Timer? keepAliveTimer) {
+  if (channel != null) {
+    try {
+      // Close the WebSocket connection
+      channel.sink.close();
+      debugPrint('WebSocket connection closed.');
+    } catch (e) {
+      debugPrint('Error closing WebSocket: $e');
+    }
+  }
+
+  // Stop the keep-alive timer if it's running
+  if (keepAliveTimer != null && keepAliveTimer.isActive) {
+    keepAliveTimer.cancel();
+    debugPrint('KeepAlive timer stopped.');
   }
 }

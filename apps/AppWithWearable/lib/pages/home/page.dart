@@ -660,10 +660,12 @@ import 'package:friend_private/features/chat/presentation/pages/chat_page.dart';
 import 'package:friend_private/main.dart';
 import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/pages/capture/page.dart';
+import 'package:friend_private/pages/capture/widgets/widgets.dart';
 // import 'package:friend_private/pages/chat/page.dart';
 // import 'package:friend_private/pages/chat/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
+import 'package:friend_private/pages/home/home_walkthrough.dart';
 import 'package:friend_private/pages/settings/page.dart';
 import 'package:friend_private/scripts.dart';
 import 'package:friend_private/utils/audio/foreground.dart';
@@ -673,11 +675,10 @@ import 'package:friend_private/utils/ble/scan.dart';
 import 'package:friend_private/utils/features/backups.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:friend_private/utils/walkthrough/walkthrough_tutorial.dart';
 import 'package:friend_private/widgets/scanning_ui.dart';
 import 'package:friend_private/widgets/upgrade_alert.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:upgrader/upgrader.dart';
 
 class HomePageWrapper extends StatefulWidget {
@@ -711,7 +712,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   List<Plugin> plugins = [];
   final _upgrader = MyUpgrader(debugLogging: false, debugDisplayOnce: false);
-
+  GlobalKey bleConnectionTour = GlobalKey();
+  GlobalKey aiNavChatTour = GlobalKey();
   _initiateMemories() async {
     memories = MemoryProvider()
         .getMemoriesOrdered(includeDiscarded: true)
@@ -781,6 +783,14 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   @override
   void initState() {
+    bool isfirstTime = !SharedPreferencesUtil().onboardingCompleted;
+    debugPrint('is first time Printed $isfirstTime');
+
+    if (isfirstTime) {
+      showTutorial(context, targets: targets);
+    }
+    homeWalkThrough(capturekey: bleConnectionTour, chatNavKey: aiNavChatTour);
+
     _controller = TabController(
       length: 3,
       vsync: this,
@@ -908,6 +918,9 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   @override
   Widget build(BuildContext context) {
+    if (_controller?.index == 0) {
+      checkBluetoothStatus(context);
+    }
     return WithForegroundTask(
         child: MyUpgradeAlert(
       upgrader: _upgrader,
@@ -1015,6 +1028,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                             child: MaterialButton(
                               onPressed: () => _tabChange(1),
                               child: Column(
+                                key: aiNavChatTour,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(
@@ -1074,7 +1088,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                         ],
                       )),
                 ),
-             
             ],
           ),
         ),
@@ -1162,6 +1175,19 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   height: 20,
                 ),
               ),
+              // if (_controller!.index == 0)
+              //   IconButton(
+              //     onPressed: () async {
+              //       await ObjectBoxUtil.clearObjectBox();
+              //       await SharedPreferencesUtil().clear();
+              //       if (Platform.isAndroid) await Restart.restartApp();
+              //     },
+              //     icon: const Icon(
+              //       Icons.warning_rounded,
+              //       color: Colors.red,
+              //     ),
+              //   ),
+
               //*-- Chat Plugin --*//
               // _controller!.index == 1
               //     ? Padding(
@@ -1251,19 +1277,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                                       : Colors.red,
                               size: 12,
                             ),
-                            // Container(
-                            //   width: 10,
-                            //   height: 10,
-                            //   decoration: BoxDecoration(
-                            //     color: batteryLevel > 75
-                            //         ? const Color.fromARGB(255, 0, 255, 8)
-                            //         : batteryLevel > 20
-                            //             ? Colors.yellow.shade700
-                            //             : Colors.red,
-                            //     shape: BoxShape.circle,
-                            //   ),
-                            // ),
-                            // const SizedBox(width: 8.0),
                             Text(
                               '${batteryLevel.toString()}%',
                               style: const TextStyle(
@@ -1279,6 +1292,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   : Padding(
                       padding: const EdgeInsets.only(right: 10),
                       child: GestureDetector(
+                          key: bleConnectionTour,
                           onTap: () async {
                             if (SharedPreferencesUtil().deviceId.isEmpty) {
                               routeToPage(context, const ConnectDevicePage());
