@@ -49,12 +49,12 @@ Future<http.Response?> makeApiCall({
     }
   } catch (e, stackTrace) {
     debugPrint('HTTP request failed: $e');
-    CrashReporting.reportHandledCrash(
-      e,
-      stackTrace,
-      userAttributes: {'url': url, 'method': method},
-      level: NonFatalExceptionLevel.warning,
-    );
+    // CrashReporting.reportHandledCrash(
+    //   e,
+    //   stackTrace,
+    //   userAttributes: {'url': url, 'method': method},
+    //   level: NonFatalExceptionLevel.warning,
+    // );
     return null;
   } finally {}
 }
@@ -81,17 +81,17 @@ dynamic extractContentFromResponse(
   } else {
     debugPrint('Error fetching data: ${response?.statusCode}');
     // TODO: handle error, better specially for script migration
-    CrashReporting.reportHandledCrash(
-      Exception('Error fetching data: ${response?.statusCode}'),
-      StackTrace.current,
-      userAttributes: {
-        'response_null': (response == null).toString(),
-        'response_status_code': response?.statusCode.toString() ?? '',
-        'is_embedding': isEmbedding.toString(),
-        'is_function_calling': isFunctionCalling.toString(),
-      },
-      level: NonFatalExceptionLevel.warning,
-    );
+    // CrashReporting.reportHandledCrash(
+    //   Exception('Error fetching data: ${response?.statusCode}'),
+    //   StackTrace.current,
+    //   userAttributes: {
+    //     'response_null': (response == null).toString(),
+    //     'response_status_code': response?.statusCode.toString() ?? '',
+    //     'is_embedding': isEmbedding.toString(),
+    //     'is_function_calling': isFunctionCalling.toString(),
+    //   },
+    //   level: NonFatalExceptionLevel.warning,
+    // );
     return null;
   }
 }

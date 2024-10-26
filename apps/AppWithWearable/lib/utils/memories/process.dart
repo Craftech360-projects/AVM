@@ -193,17 +193,17 @@ Future<SummaryResult?> _retrieveStructure(
     }
   } catch (e, stacktrace) {
     debugPrint('Error: $e');
-    CrashReporting.reportHandledCrash(e, stacktrace,
-        level: NonFatalExceptionLevel.error,
-        userAttributes: {
-          'transcript_length': transcript.length.toString(),
-          'transcript_words': transcript.split(' ').length.toString(),
-          'language': SharedPreferencesUtil().recordingsLanguage,
-          'developer_mode_enabled':
-              SharedPreferencesUtil().devModeEnabled.toString(),
-          'dev_mode_has_api_key':
-              (SharedPreferencesUtil().openAIApiKey != '').toString(),
-        });
+    // CrashReporting.reportHandledCrash(e, stacktrace,
+    //     level: NonFatalExceptionLevel.error,
+    //     userAttributes: {
+    //       'transcript_length': transcript.length.toString(),
+    //       'transcript_words': transcript.split(' ').length.toString(),
+    //       'language': SharedPreferencesUtil().recordingsLanguage,
+    //       'developer_mode_enabled':
+    //           SharedPreferencesUtil().devModeEnabled.toString(),
+    //       'dev_mode_has_api_key':
+    //           (SharedPreferencesUtil().openAIApiKey != '').toString(),
+    //     });
     return null;
   }
   return summary;

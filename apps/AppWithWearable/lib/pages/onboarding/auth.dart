@@ -56,24 +56,61 @@ class _AuthComponentState extends State<AuthComponent> {
                       ? () {}
                       : () async {
                           changeLoadingState();
-                          await signInWithGoogle();
-                          _signIn();
-                          changeLoadingState();
-                        },
-                )
-            : SignInWithAppleButton(
-                  style: SignInWithAppleButtonStyle.whiteOutlined,
-                  onPressed: loading
-                      ? () {}
-                      : () async {
-                          var userCred = await signInWithApple();
-                          if (userCred != null) {
+                          try {
+                            await signInWithGoogle();
                             _signIn();
+                          } catch (e) {
+                            print("Google Sign-in failed: $e");
+                          } finally {
                             changeLoadingState();
                           }
                         },
-                  height: 52,
+                )
+
+              : SignInButton(
+                  Buttons.google,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  onPressed: loading
+                      ? () {}
+                      : () async {
+                          changeLoadingState();
+                          try {
+                            await signInWithGoogle2();
+                            _signIn();
+                          } catch (e) {
+                            print("Google Sign-in failed: $e");
+                          } finally {
+
+                            changeLoadingState();
+                          }
+                        },
                 ),
+          const SizedBox(height: 16),
+          SignInWithAppleButton(
+            style: SignInWithAppleButtonStyle.whiteOutlined,
+            onPressed: loading
+                ? () {}
+                : () async {
+                    try {
+                      changeLoadingState();
+                      var userCred = await signInWithApple();
+
+                      if (userCred != null) {
+                        _signIn();
+                      } else {
+                        print("its null");
+                      }
+                    } catch (e) {
+                      print("Error during sign-in: $e");
+                    } finally {
+                      changeLoadingState(); // This will ensure loading state is reset in all cases.
+                    }
+                  },
+            height: 52,
+          ),
           const SizedBox(height: 16),
           RichText(
             textAlign: TextAlign.center,
@@ -113,8 +150,8 @@ class _AuthComponentState extends State<AuthComponent> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Failed to retrieve firebase token, please try again.'),
       ));
-      CrashReporting.reportHandledCrash(e, stackTrace,
-          level: NonFatalExceptionLevel.error);
+      // CrashReporting.reportHandledCrash(e, stackTrace,
+      //     level: NonFatalExceptionLevel.error);
       return;
     }
     print('Token: $token');
@@ -127,11 +164,11 @@ class _AuthComponentState extends State<AuthComponent> {
           content: Text(
               'Unexpected error signing in, Firebase error, please try again.'),
         ));
-        CrashReporting.reportHandledCrash(
-          e,
-          stackTrace,
-          level: NonFatalExceptionLevel.error,
-        );
+        // CrashReporting.reportHandledCrash(
+        //   e,
+        //   stackTrace,
+        //   level: NonFatalExceptionLevel.error,
+        // );
         return;
       }
 
@@ -145,15 +182,15 @@ class _AuthComponentState extends State<AuthComponent> {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Text('Unexpected error retrieving your memories backup.'),
           ));
-          CrashReporting.reportHandledCrash(
-            e,
-            stackTrace,
-            level: NonFatalExceptionLevel.error,
-            userAttributes: {
-              'prevUid': prevUid,
-              'newUid': newUid,
-            },
-          );
+          // CrashReporting.reportHandledCrash(
+          //   e,
+          //   stackTrace,
+          //   level: NonFatalExceptionLevel.error,
+          //   userAttributes: {
+          //     'prevUid': prevUid,
+          //     'newUid': newUid,
+          //   },
+          // );
         }
         SharedPreferencesUtil().uid = newUid;
       } else {

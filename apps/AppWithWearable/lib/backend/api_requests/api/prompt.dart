@@ -269,13 +269,13 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
         return Tuple2(
             plugin, response.replaceAll('```', '').replaceAll('""', '').trim());
       } catch (e, stacktrace) {
-        CrashReporting.reportHandledCrash(e, stacktrace,
-            level: NonFatalExceptionLevel.critical,
-            userAttributes: {
-              'plugin': plugin.id,
-              'plugins_count': pluginsEnabled.length.toString(),
-              'transcript_length': transcript.length.toString(),
-            });
+        // CrashReporting.reportHandledCrash(e, stacktrace,
+        //     level: NonFatalExceptionLevel.critical,
+        //     userAttributes: {
+        //       'plugin': plugin.id,
+        //       'plugins_count': pluginsEnabled.length.toString(),
+        //       'transcript_length': transcript.length.toString(),
+        //     });
         debugPrint('Error executing plugin ${plugin.id}');
         return Tuple2(plugin, '');
       }
@@ -288,12 +288,12 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
     var responses = await allPluginResponses;
     return responses.where((e) => e.item2.length > 5).toList();
   } catch (e, stacktrace) {
-    CrashReporting.reportHandledCrash(e, stacktrace,
-        level: NonFatalExceptionLevel.critical,
-        userAttributes: {
-          'plugins_count': pluginsEnabled.length.toString(),
-          'transcript_length': transcript.length.toString(),
-        });
+    // CrashReporting.reportHandledCrash(e, stacktrace,
+    //     level: NonFatalExceptionLevel.critical,
+    //     userAttributes: {
+    //       'plugins_count': pluginsEnabled.length.toString(),
+    //       'transcript_length': transcript.length.toString(),
+    //     });
     return [];
   }
 }
@@ -477,13 +477,13 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
     debugPrint('topics: $topics, dates: $dates');
     return Tuple2<List<String>, List<DateTime>>(topics, dates);
   } catch (e) {
-    CrashReporting.reportHandledCrash(e, StackTrace.current,
-        level: NonFatalExceptionLevel.critical,
-        userAttributes: {
-          'response': cleanedResponse,
-          'message_length': message.length.toString(),
-          'message_words': message.split(' ').length.toString(),
-        });
+    // CrashReporting.reportHandledCrash(e, StackTrace.current,
+    //     level: NonFatalExceptionLevel.critical,
+    //     userAttributes: {
+    //       'response': cleanedResponse,
+    //       'message_length': message.length.toString(),
+    //       'message_words': message.split(' ').length.toString(),
+    //     });
     debugPrint('Error determining requires context: $e');
     return null;
   }

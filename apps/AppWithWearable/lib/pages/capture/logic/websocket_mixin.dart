@@ -277,6 +277,7 @@ mixin WebSocketMixin {
   //   _reconnectionTimer?.cancel();
   //   _internetListener.cancel();
   // }
+
   Future<void> closeWebSocket() async {
     try {
       if (websocketChannel != null) {

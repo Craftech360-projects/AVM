@@ -128,9 +128,9 @@ Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory, {bool r
     return body['message'] ?? '';
   } catch (e) {
     debugPrint('Error triggering memory request at endpoint: $e');
-    CrashReporting.reportHandledCrash(e, StackTrace.current, level: NonFatalExceptionLevel.warning, userAttributes: {
-      'url': url,
-    });
+    // CrashReporting.reportHandledCrash(e, StackTrace.current, level: NonFatalExceptionLevel.warning, userAttributes: {
+    //   'url': url,
+    // });
     return '';
   }
 }
@@ -159,9 +159,9 @@ Future<String> triggerTranscriptSegmentsRequest(String url, String sessionId, Li
     return body['message'] ?? '';
   } catch (e) {
     debugPrint('Error triggering transcript request at endpoint: $e');
-    CrashReporting.reportHandledCrash(e, StackTrace.current, level: NonFatalExceptionLevel.warning, userAttributes: {
-      'url': url,
-    });
+    // CrashReporting.reportHandledCrash(e, StackTrace.current, level: NonFatalExceptionLevel.warning, userAttributes: {
+    //   'url': url,
+    // });
     return '';
   }
 }

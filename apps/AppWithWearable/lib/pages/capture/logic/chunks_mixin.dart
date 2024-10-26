@@ -117,12 +117,12 @@ mixin AudioChunksMixin {
           } catch (e, stacktrace) {
             debugPrint('Error processing 30 seconds frame');
             print(e);
-            CrashReporting.reportHandledCrash(
-              e,
-              stacktrace,
-              level: NonFatalExceptionLevel.warning,
-              userAttributes: {'seconds': (data.item2.length ~/ 100).toString()},
-            );
+            // CrashReporting.reportHandledCrash(
+            //   e,
+            //   stacktrace,
+            //   level: NonFatalExceptionLevel.warning,
+            //   userAttributes: {'seconds': (data.item2.length ~/ 100).toString()},
+            // );
             toProcessBytes2.insertAudioBytes(data.item2);
           }
           WavBytesUtil.deleteTempWav();
