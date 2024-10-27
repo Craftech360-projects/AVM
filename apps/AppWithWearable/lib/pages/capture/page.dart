@@ -17,6 +17,7 @@ import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dar
 import 'package:friend_private/pages/capture/location_service.dart';
 import 'package:friend_private/pages/capture/logic/openglass_mixin.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
+import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/enums.dart';
@@ -99,7 +100,7 @@ class CapturePageState extends State<CapturePage>
     BleAudioCodec codec = audioCodec ??
         (btDevice?.id == null
             ? BleAudioCodec.pcm8
-            : await getAudioCodec(btDevice!.id));
+            : await BleConnectionDatasource().getAudioCodec(btDevice!.id));
     await initWebSocket(
       codec: codec,
       sampleRate: sampleRate,
@@ -165,9 +166,9 @@ class CapturePageState extends State<CapturePage>
 
   Future<void> initiateBytesStreamingProcessing() async {
     if (btDevice == null) return;
-    BleAudioCodec codec = await getAudioCodec(btDevice!.id);
+    BleAudioCodec codec = await BleConnectionDatasource().getAudioCodec(btDevice!.id);
     audioStorage = WavBytesUtil(codec: codec);
-    _bleBytesStream = await getBleAudioBytesListener(
+    _bleBytesStream = await BleConnectionDatasource().getBleAudioBytesListener(
       btDevice!.id,
       onAudioBytesReceived: (List<int> value) {
         if (value.isEmpty) return;
@@ -185,7 +186,7 @@ class CapturePageState extends State<CapturePage>
 
   Future<void> startOpenGlass() async {
     if (btDevice == null) return;
-    isGlasses = await hasPhotoStreamingCharacteristic(btDevice!.id);
+    // isGlasses = await hasPhotoStreamingCharacteristic(btDevice!.id);
     debugPrint('startOpenGlass isGlasses: $isGlasses');
     if (!isGlasses) return;
 

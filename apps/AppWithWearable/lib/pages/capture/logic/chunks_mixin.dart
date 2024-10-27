@@ -7,6 +7,7 @@ import 'package:friend_private/backend/api_requests/api/other.dart';
 import 'package:friend_private/backend/api_requests/api/server.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
@@ -94,7 +95,7 @@ mixin AudioChunksMixin {
     // }
 
     WavBytesUtil toProcessBytes2 = WavBytesUtil(codec: deviceCodec);
-    return await getBleAudioBytesListener(
+    return await BleConnectionDatasource().getBleAudioBytesListener(
       deviceId,
       onAudioBytesReceived: (List<int> value) async {
         if (value.isEmpty) return;

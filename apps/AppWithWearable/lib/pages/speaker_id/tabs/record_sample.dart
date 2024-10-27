@@ -6,6 +6,7 @@ import 'package:friend_private/backend/api_requests/api/server.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/backend/schema/sample.dart';
+import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 
@@ -55,7 +56,7 @@ class _RecordSampleTabState extends State<RecordSampleTab>
     if (widget.btDevice == null) return;
     WavBytesUtil wavBytesUtil = WavBytesUtil();
 
-    StreamSubscription? stream = await getBleAudioBytesListener(
+    StreamSubscription? stream = await BleConnectionDatasource().getBleAudioBytesListener(
         widget.btDevice!.id, onAudioBytesReceived: (List<int> value) {
       if (value.isEmpty) return;
       value.removeRange(0, 3);

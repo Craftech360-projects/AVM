@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
@@ -7,6 +9,8 @@ import 'package:friend_private/features/memory/presentation/widgets/memory_card.
 import 'package:friend_private/features/memory/presentation/widgets/memory_search.dart';
 import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
+import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shimmer/shimmer.dart';
@@ -44,7 +48,8 @@ class CaptureMemoryPage extends StatefulWidget {
 class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   late MemoryBloc _memoryBloc;
   bool _isNonDiscarded = true;
-  final GlobalKey<CapturePageState> capturePageKey = GlobalKey<CapturePageState>();
+  final GlobalKey<CapturePageState> capturePageKey =
+      GlobalKey<CapturePageState>();
   // final List<FilterItem> _filters = [
   //   FilterItem(filterType: 'Show All', filterStatus: false),
   //   FilterItem(filterType: 'Technology', filterStatus: false),
@@ -72,6 +77,44 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     // _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
     return Column(
       children: [
+        FloatingActionButton(
+          onPressed: () async {
+            // final batteryLevelStream = await BleConnectionDatasource()
+            //     .getBleBatteryLevelListener('C4:E8:E3:9F:D2:AE');
+
+            // if (batteryLevelStream != null) {
+            //   batteryLevelStream.onData(
+            //     (data) => print('datat received ${data.first.toString()}'),
+            //   );
+            //   print(
+            //       'Connected to BLE device. Listening for battery level updates...');
+            // }
+            //!
+            // final wavBytesUtil = WavBytesUtil();
+            // StreamSubscription? stream = await BleConnectionDatasource()
+            //     .getBleAudioBytesListener('C4:E8:E3:9F:D2:AE',
+            //         onAudioBytesReceived: (List<int> value) {
+            //   print('audio values printed $value');
+            //   if (value.isEmpty) return;
+            //   value.removeRange(0, 3);
+            //   for (int i = 0; i < value.length; i += 2) {
+            //     int byte1 = value[i];
+            //     int byte2 = value[i + 1];
+            //     int int16Value = (byte2 << 8) | byte1;
+            //     wavBytesUtil.addAudioBytes([int16Value]);
+            //   }
+            // });
+            //!
+            final codecformat =
+                await BleConnectionDatasource().getAudioCodec('C4:E8:E3:9F:D2:AE');
+            print('codecic format ${codecformat}');
+          },
+          child: const Icon(
+            Icons.battery_charging_full,
+            color: Colors.white,
+          ),
+        ),
+
         //*--- SEARCH BAR ---*//
         const SizedBox(height: 8),
         MemorySearchWidget(
@@ -97,7 +140,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                       ),
                     ),
                   ),
-                 key:capturePageKey,
+                  key: capturePageKey,
                   // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
                   direction: DismissDirection.startToEnd,
                   onDismissed: (direction) =>
@@ -115,8 +158,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                   ),
                 ),
               )
-            : 
-            CaptureCard(
+            : CaptureCard(
                 context: context,
                 hasTranscripts: widget.hasTranscripts,
                 wsConnectionState: widget.wsConnectionState,
@@ -178,41 +220,40 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         //   ),
         // ),
 
-if(_isNonDiscarded||_memoryBloc.state.memories.isNotEmpty)
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              onPressed: () {
-                setState(() {
-                  _isNonDiscarded = !_isNonDiscarded;
-                  _memoryBloc.add(
-                    DisplayedMemory(isNonDiscarded: _isNonDiscarded),
-                  );
-                });
-              },
-              label:Text(
-                _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
-                style: const TextStyle(
-                    color: Color.fromARGB(255, 212, 212, 212),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400),
-
+        if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _isNonDiscarded = !_isNonDiscarded;
+                    _memoryBloc.add(
+                      DisplayedMemory(isNonDiscarded: _isNonDiscarded),
+                    );
+                  });
+                },
+                label: Text(
+                  _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 212, 212, 212),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                ),
+                //  Icon(
+                //   _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
+                //   size: 16,
+                //   color: Colors.grey,
+                // ),
+                icon: Icon(
+                  _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
+                  size: 16,
+                  color: Colors.grey,
+                ),
               ),
-              //  Icon(
-              //   _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
-              //   size: 16,
-              //   color: Colors.grey,
-              // ),
-              icon:  Icon(
-                _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
-                size: 16,
-                color: Colors.grey,
-              ),
-              
             ),
-          ),),
+          ),
         //*--- MEMORY LIST ---*//
         BlocConsumer<MemoryBloc, MemoryState>(
           bloc: _memoryBloc,

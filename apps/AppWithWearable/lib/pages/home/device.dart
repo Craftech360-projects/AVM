@@ -3,6 +3,7 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
 import 'package:friend_private/utils/ble/connect.dart';
 import 'package:friend_private/widgets/device_widget.dart';
 // Update with the actual path to your CustomScaffold file
@@ -198,7 +199,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                   child: TextButton(
                       onPressed: () {
                         if (widget.device != null) {
-                          bleDisconnectDevice(widget.device!);
+                          BleConnectionDatasource().bleDisconnectDevice(widget.device!);
                         }
                         Navigator.of(context).pop();
                         SharedPreferencesUtil().deviceId = '';

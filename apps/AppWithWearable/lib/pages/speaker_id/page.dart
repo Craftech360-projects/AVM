@@ -8,6 +8,7 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/backend/schema/sample.dart';
 import 'package:friend_private/pages/home/page.dart';
+import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
 import 'package:friend_private/utils/ble/connected.dart';
 import 'package:friend_private/utils/ble/scan.dart';
 
@@ -30,7 +31,7 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
   StreamSubscription<OnConnectionStateChangedEvent>? _connectionStateListener;
 
   _init() async {
-    _device = await scanAndConnectDevice();
+    _device = await BleConnectionDatasource().scanAndConnectDevice();
     _samples = await getUserSamplesState(SharedPreferencesUtil().uid);
     _controller = TabController(length: 2 + _samples.length, vsync: this);
     _initiateConnectionListener();
@@ -39,7 +40,7 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
 
   _initiateConnectionListener() async {
     if (_connectionStateListener != null) return;
-    _connectionStateListener = getConnectionStateListener(
+    _connectionStateListener = BleConnectionDatasource().getConnectionStateListener(
         deviceId: _device!.id,
         onDisconnected: () => setState(() => _device = null),
         onConnected: ((d) => setState(() => _device = d)));

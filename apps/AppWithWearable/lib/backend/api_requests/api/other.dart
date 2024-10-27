@@ -7,7 +7,6 @@ import 'package:friend_private/backend/api_requests/api/shared.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
-import 'package:instabug_flutter/instabug_flutter.dart';
 
 Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
   debugPrint('deepgramTranscribe');
@@ -30,7 +29,8 @@ Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
   });
 
   DeepgramSttResult res = await deepgram.transcribeFromFile(file);
-  debugPrint('Deepgram took: ${DateTime.now().difference(startTime).inSeconds} seconds');
+  debugPrint(
+      'Deepgram took: ${DateTime.now().difference(startTime).inSeconds} seconds');
   var data = jsonDecode(res.json);
   if (data['results'] == null || data['results']['channels'] == null) {
     print('Deepgram error: ${data['error']}');
@@ -64,7 +64,8 @@ Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
   return segments;
 }
 
-Future<String> webhookOnMemoryCreatedCall(Memory? memory, {bool returnRawBody = false}) async {
+Future<String> webhookOnMemoryCreatedCall(Memory? memory,
+    {bool returnRawBody = false}) async {
   if (memory == null) return '';
   debugPrint('devModeWebhookCall: $memory');
   return triggerMemoryRequestAtEndpoint(
@@ -74,15 +75,18 @@ Future<String> webhookOnMemoryCreatedCall(Memory? memory, {bool returnRawBody = 
   );
 }
 
-Future<String> webhookOnTranscriptReceivedCall(List<TranscriptSegment> segments, String sessionId) async {
+Future<String> webhookOnTranscriptReceivedCall(
+    List<TranscriptSegment> segments, String sessionId) async {
   debugPrint('webhookOnTranscriptReceivedCall: $segments');
-  return triggerTranscriptSegmentsRequest(SharedPreferencesUtil().webhookOnTranscriptReceived, sessionId, segments);
+  return triggerTranscriptSegmentsRequest(
+      SharedPreferencesUtil().webhookOnTranscriptReceived, sessionId, segments);
 }
 
 Future<String> getPluginMarkdown(String pluginMarkdownPath) async {
   // https://raw.githubusercontent.com/BasedHardware/Friend/main/assets/external_plugins_instructions/notion-conversations-crm.md
   var response = await makeApiCall(
-    url: 'https://raw.githubusercontent.com/BasedHardware/Friend/main$pluginMarkdownPath',
+    url:
+        'https://raw.githubusercontent.com/BasedHardware/Friend/main$pluginMarkdownPath',
     method: 'GET',
     headers: {},
     body: '',
@@ -103,7 +107,8 @@ Future<bool> isPluginSetupCompleted(String? url) async {
   return data['is_setup_completed'] ?? false;
 }
 
-Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory, {bool returnRawBody = false}) async {
+Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory,
+    {bool returnRawBody = false}) async {
   if (url.isEmpty) return '';
   if (url.contains('?')) {
     url += '&uid=${SharedPreferencesUtil().uid}';
@@ -112,7 +117,8 @@ Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory, {bool r
   }
   debugPrint('triggerMemoryRequestAtEndpoint: $url');
   var data = memory.toJson();
-  data['recordingFileBase64'] = await wavToBase64(memory.recordingFilePath ?? '');
+  data['recordingFileBase64'] =
+      await wavToBase64(memory.recordingFilePath ?? '');
   try {
     var response = await makeApiCall(
       url: url,
@@ -121,7 +127,9 @@ Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory, {bool r
       method: 'POST',
     );
     debugPrint('response: ${response?.statusCode}');
-    if (returnRawBody) return jsonEncode({'statusCode': response?.statusCode, 'body': response?.body});
+    if (returnRawBody)
+      return jsonEncode(
+          {'statusCode': response?.statusCode, 'body': response?.body});
 
     var body = jsonDecode(response?.body ?? '{}');
     print(body);
@@ -135,7 +143,8 @@ Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory, {bool r
   }
 }
 
-Future<String> triggerTranscriptSegmentsRequest(String url, String sessionId, List<TranscriptSegment> segments) async {
+Future<String> triggerTranscriptSegmentsRequest(
+    String url, String sessionId, List<TranscriptSegment> segments) async {
   debugPrint('triggerMemoryRequestAtEndpoint: $url');
   if (url.isEmpty) return '';
   if (url.contains('?')) {

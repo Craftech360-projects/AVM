@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class BTDeviceStruct {
   String name;
   String id;
@@ -21,4 +22,9 @@ class BTDeviceStruct {
   }
 
   Map<String, dynamic> toJson() => {'id': id, 'name': name, 'rssi': rssi, 'fwver': fwver?.toList()};
+
+  @override
+  String toString() {
+    return 'BTDeviceStruct(name: $name, id: $id, rssi: $rssi, fwver: $fwver)';
+  }
 }

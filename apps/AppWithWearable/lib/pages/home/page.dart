@@ -666,6 +666,7 @@ import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
 import 'package:friend_private/pages/settings/page.dart';
 import 'package:friend_private/scripts.dart';
+import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
 import 'package:friend_private/utils/audio/foreground.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/ble/connected.dart';
@@ -805,7 +806,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     _migrationScripts();
     authenticateGCP();
     if (SharedPreferencesUtil().deviceId.isNotEmpty) {
-      scanAndConnectDevice().then(_onConnected);
+      BleConnectionDatasource().scanAndConnectDevice().then(_onConnected);
     }
 
     createNotification(
@@ -840,7 +841,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   _initiateConnectionListener() async {
     if (_connectionStateListener != null) return;
     // TODO: when disconnected manually need to remove this connection state listener
-    _connectionStateListener = getConnectionStateListener(
+    _connectionStateListener = BleConnectionDatasource().getConnectionStateListener(
         deviceId: _device!.id,
         onDisconnected: () {
           debugPrint('onDisconnected');
@@ -887,7 +888,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   _initiateBleBatteryListener() async {
     _bleBatteryLevelListener?.cancel();
-    _bleBatteryLevelListener = await getBleBatteryLevelListener(
+    _bleBatteryLevelListener = await BleConnectionDatasource().getBleBatteryLevelListener(
       _device!.id,
       onBatteryLevelChange: (int value) {
         setState(() {

@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/ble/connect.dart';
 import 'package:gradient_borders/gradient_borders.dart';
@@ -33,7 +34,7 @@ class _FoundDevicesState extends State<FoundDevices>
 
   Future<void> setBatteryPercentage(BTDeviceStruct btDevice) async {
     try {
-      var battery = await retrieveBatteryLevel(btDevice.id);
+      var battery = await BleConnectionDatasource().retrieveBatteryLevel(btDevice.id);
       setState(() {
         batteryPercentage = battery;
         _isConnected = true;
@@ -61,7 +62,7 @@ class _FoundDevicesState extends State<FoundDevices>
       _connectingToDeviceId =
           device.id; // Mark this device as being connected to
     });
-    await bleConnectDevice(device.id);
+    await BleConnectionDatasource().bleConnectDevice(device.id);
     deviceId = device.id;
     deviceName = device.name;
     setBatteryPercentage(device);
