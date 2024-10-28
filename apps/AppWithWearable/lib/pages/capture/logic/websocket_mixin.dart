@@ -272,13 +272,13 @@ mixin WebSocketMixin {
     );
   }
 
-  // void closeWebSocket() {
-  //   websocketChannel?.sink.close(1000);
-  //   _reconnectionTimer?.cancel();
-  //   _internetListener.cancel();
-  // }
+  void closeWebSocket() {
+    websocketChannel?.sink.close(1000);
+    _reconnectionTimer?.cancel();
+    _internetListener.cancel();
+  }
 
-  Future<void> closeWebSocket() async {
+  Future<void> closeWebSocket2() async {
     try {
       if (websocketChannel != null) {
         await websocketChannel!.sink.close(1000, 'Closed by user');

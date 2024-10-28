@@ -74,10 +74,9 @@ class _BackupButtonState extends State<BackupButton> {
         ListTile(
           title: const Text('Backups & Restore',
               style: TextStyle(color: Colors.white)),
-         
           trailing: Switch(
-            activeTrackColor: Colors.grey, 
-            inactiveTrackColor: Colors.white30, 
+            activeTrackColor: Colors.grey,
+            inactiveTrackColor: Colors.white30,
             activeColor: Colors.white,
             inactiveThumbColor: Colors.white,
             value: backupsEnabled,
@@ -102,13 +101,12 @@ class _BackupButtonState extends State<BackupButton> {
               color: backupsEnabled ? Colors.white : Colors.grey,
             ),
           ),
-    subtitle: backupsEnabled
-              ? const Text('Enabled')
-              : const Text('Disabled'),
-          trailing:  Icon(
+          subtitle:
+              backupsEnabled ? const Text('Enabled') : const Text('Disabled'),
+          trailing: Icon(
             Icons.backup,
             size: 20,
-               color: backupsEnabled ? Colors.white : Colors.grey,
+            color: backupsEnabled ? Colors.white : Colors.grey,
           ),
           onTap: backupsEnabled ? _manualBackup : null,
         ),
@@ -185,8 +183,10 @@ class _BackupButtonState extends State<BackupButton> {
     setState(() => isManualBackupInProgress = true);
 
     try {
+      var uid = SharedPreferencesUtil().uid;
       // Call your backup API or method here
-      await executeManualBackupWithUid(); // Replace this with your backup method
+      await executeManualBackupWithUid(
+          uid); // Replace this with your backup method
     } catch (error) {
       // Handle error (e.g., show a snackbar or alert)
       debugPrint('Manual backup failed: $error');

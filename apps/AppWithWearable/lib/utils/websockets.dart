@@ -98,17 +98,16 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // }
   //   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
-
-  String encoding = "linear16";
-  const String language = 'en-US';
-  const int sampleRate = 8000;
-  const String codec = 'pcm8';
-  const int channels = 1;
-  //   String encoding = "opus";
+  // String encoding = "linear16";
   // const String language = 'en-US';
-  // const int sampleRate = 48000;
-  // const String codec = 'opus';
+  // const int sampleRate = 8000;
+  // const String codec = 'pcm8';
   // const int channels = 1;
+  String encoding = "opus";
+  const String language = 'en-US';
+  const int sampleRate = 48000;
+  const String codec = 'opus';
+  const int channels = 1;
 
   String apiType = '';
   apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
@@ -120,7 +119,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
-
         'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
       );
       break;
@@ -130,14 +128,13 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
       );
       break;
     case 'Whisper':
-      uri = Uri.parse(
-        'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
-      );
       // uri = Uri.parse(
-      //   'ws://a492-124-40-247-18.ngrok-free.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
+      //   'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
       // );
+      uri = Uri.parse(
+        'ws://living-alien-polite.ngrok-free.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
+      );
 
-  
       break;
     default:
       'Deepgram';
@@ -283,7 +280,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   }
 }
 
-void closeWebSocket2(IOWebSocketChannel? channel, Timer? keepAliveTimer) {
+void closeWebSocket(IOWebSocketChannel? channel, Timer? keepAliveTimer) {
   if (channel != null) {
     try {
       // Close the WebSocket connection

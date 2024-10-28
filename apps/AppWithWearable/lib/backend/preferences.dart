@@ -60,20 +60,19 @@ class SharedPreferencesUtil {
   set gcpCredentials(String value) => saveString('gcpCredentials', value);
 
   String get gcpBucketName => getString('gcpBucketName') ?? '';
-set isRestoreSuccessful(bool value) => saveBool('isRestoreSuccessful', value);
+  set isRestoreSuccessful(bool value) => saveBool('isRestoreSuccessful', value);
 
-
-bool get isRestoreSuccessful => getBool('isRestoreSuccessful') ?? false;
+  bool get isRestoreSuccessful => getBool('isRestoreSuccessful') ?? false;
   set gcpBucketName(String value) => saveString('gcpBucketName', value);
 
   String get webhookOnMemoryCreated => getString('webhookUrl') ?? '';
 
   set webhookOnMemoryCreated(String value) => saveString('webhookUrl', value);
 // Getter for isPromptSaved
-bool get isPromptSaved => getBool('isPromptSaved') ?? false;
+  bool get isPromptSaved => getBool('isPromptSaved') ?? false;
 
 // Setter for isPromptSaved
-set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
+  set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
 
   String get webhookOnTranscriptReceived =>
       getString('transcriptServerUrl') ?? '';
@@ -93,9 +92,11 @@ set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
   bool get onboardingCompleted => getBool('onboardingCompleted') ?? false;
 
   set onboardingCompleted(bool value) => saveBool('onboardingCompleted', value);
-  bool get secondPageTutorialCompleted => getBool('secondPageTutorialCompleted') ?? false;
+  bool get secondPageTutorialCompleted =>
+      getBool('secondPageTutorialCompleted') ?? false;
 
-  set secondPageTutorialCompleted(bool value) => saveBool('secondPageTutorialCompleted', value);
+  set secondPageTutorialCompleted(bool value) =>
+      saveBool('secondPageTutorialCompleted', value);
 
   String get customWebsocketUrl => getString('customWebsocketUrl') ?? '';
 
@@ -232,9 +233,11 @@ set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
   bool? getBool(String key) {
     return _preferences?.getBool(key);
   }
+
   Future<bool> saveApiType(String key, String value) async {
     return await _preferences?.setString(key, value) ?? false;
   }
+
   String? getApiType(String key) {
     return _preferences?.getString(key);
   }
@@ -254,12 +257,14 @@ set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
   List<String>? getStringList(String key) {
     return _preferences?.getStringList(key);
   }
-Future<bool> saveSelectedPrompt(String key, String selectedValue) async {
-  return await _preferences?.setString(key, selectedValue) ?? false;
-}
-String? getSelectedPrompt(String key) {
-  return _preferences?.getString(key);
-}
+
+  Future<bool> saveSelectedPrompt(String key, String selectedValue) async {
+    return await _preferences?.setString(key, selectedValue) ?? false;
+  }
+
+  String? getSelectedPrompt(String key) {
+    return _preferences?.getString(key);
+  }
 
   Future<bool> remove(String key) async {
     return await _preferences?.remove(key) ?? false;

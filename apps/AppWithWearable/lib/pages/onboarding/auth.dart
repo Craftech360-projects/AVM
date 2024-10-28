@@ -8,6 +8,7 @@ import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -66,51 +67,29 @@ class _AuthComponentState extends State<AuthComponent> {
                           }
                         },
                 )
-
-              : SignInButton(
-                  Buttons.google,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
+              : SignInWithAppleButton(
+                  style: SignInWithAppleButtonStyle.whiteOutlined,
                   onPressed: loading
                       ? () {}
                       : () async {
-                          changeLoadingState();
                           try {
-                            await signInWithGoogle2();
-                            _signIn();
-                          } catch (e) {
-                            print("Google Sign-in failed: $e");
-                          } finally {
-
                             changeLoadingState();
+                            var userCred = await signInWithApple();
+
+                            if (userCred != null) {
+                              _signIn();
+                            } else {
+                              print("its null");
+                            }
+                          } catch (e) {
+                            print("Error during sign-in: $e");
+                          } finally {
+                            changeLoadingState(); // This will ensure loading state is reset in all cases.
                           }
                         },
+                  height: 52,
                 ),
           const SizedBox(height: 16),
-          SignInWithAppleButton(
-            style: SignInWithAppleButtonStyle.whiteOutlined,
-            onPressed: loading
-                ? () {}
-                : () async {
-                    try {
-                      changeLoadingState();
-                      var userCred = await signInWithApple();
-
-                      if (userCred != null) {
-                        _signIn();
-                      } else {
-                        print("its null");
-                      }
-                    } catch (e) {
-                      print("Error during sign-in: $e");
-                    } finally {
-                      changeLoadingState(); // This will ensure loading state is reset in all cases.
-                    }
-                  },
-            height: 52,
-          ),
           const SizedBox(height: 16),
           RichText(
             textAlign: TextAlign.center,
@@ -144,8 +123,15 @@ class _AuthComponentState extends State<AuthComponent> {
 
   void _signIn() async {
     String? token;
+    final prefs = await SharedPreferences.getInstance();
+
     try {
-      token = await getIdToken();
+      token = prefs.getString('firebase_token') ?? await getIdToken();
+      if (token != null) {
+        prefs.setString(
+            'firebase_token', token); // Save token to SharedPreferences
+      }
+      // token = await getIdToken();
     } catch (e, stackTrace) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Failed to retrieve firebase token, please try again.'),
@@ -193,6 +179,7 @@ class _AuthComponentState extends State<AuthComponent> {
           // );
         }
         SharedPreferencesUtil().uid = newUid;
+        prefs.setString('last_login_time', DateTime.now().toIso8601String());
       } else {
         // await retrieveBackup(newUid);
         SharedPreferencesUtil().uid = newUid;

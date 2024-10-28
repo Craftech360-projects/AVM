@@ -188,7 +188,7 @@ class CapturePageState extends State<CapturePage>
 
     await openGlassProcessing(
         btDevice!, (p) => setState(() {}), setHasTranscripts);
-    closeWebSocket();
+    //closeWebSocket();
   }
 
   void resetState(
@@ -208,7 +208,7 @@ class CapturePageState extends State<CapturePage>
   }
 
   void restartWebSocket() {
-    closeWebSocket();
+    closeWebSocket2();
     initiateWebsocket();
   }
 
@@ -361,7 +361,7 @@ class CapturePageState extends State<CapturePage>
     record.dispose(); // Make sure this method does not throw errors
     _bleBytesStream?.cancel();
     _memoryCreationTimer?.cancel();
-    closeWebSocket();
+    closeWebSocket2();
     _internetListener.cancel();
     _scrollController.dispose();
 
@@ -428,19 +428,19 @@ class CapturePageState extends State<CapturePage>
                 _createMemory();
                 setState(() {});
                 // if (segments.isNotEmpty) {
-    
+
                 //   final removedSegment = segments[0];
-    
+
                 //   setState(() {
                 //     segments.removeAt(0);
-    
+
                 //   });
-    
+
                 //   _createMemory().then((_) {
                 //     print('Memory created');
                 //   }).catchError((error) {
                 //     print('Error creating memory: $error');
-    
+
                 //     setState(() {
                 //       segments.insert(0, removedSegment);
                 //     });
@@ -483,7 +483,7 @@ class CapturePageState extends State<CapturePage>
           () async {
             Navigator.pop(context);
             setState(() => recordingState = RecordingState.initialising);
-            closeWebSocket();
+            closeWebSocket2();
             await initiateWebsocket(BleAudioCodec.pcm16, 16000);
             await startStreamRecording(wsConnectionState, websocketChannel);
           },
