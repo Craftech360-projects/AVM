@@ -10,6 +10,7 @@ import 'package:friend_private/features/memory/presentation/widgets/memory_searc
 import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript_bloc.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -79,6 +80,9 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
       children: [
         FloatingActionButton(
           onPressed: () async {
+            BlocProvider.of<LiveTranscriptBloc>(context).add(ScannedDevices());
+
+            //!
             // final batteryLevelStream = await BleConnectionDatasource()
             //     .getBleBatteryLevelListener('C4:E8:E3:9F:D2:AE');
 
@@ -105,16 +109,22 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
             //   }
             // });
             //!
-            final codecformat =
-                await BleConnectionDatasource().getAudioCodec('C4:E8:E3:9F:D2:AE');
-            print('codecic format ${codecformat}');
+            // final codecformat =
+            //     await BleConnectionDatasource().getAudioCodec('C4:E8:E3:9F:D2:AE');
+            // print('codecic format ${codecformat}');
           },
           child: const Icon(
             Icons.battery_charging_full,
             color: Colors.white,
           ),
         ),
-
+        BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
+          bloc: BlocProvider.of(context),
+          builder: (context, state) {
+            print('bluetooth state bloc ${state.toString()}');
+            return ListTile();
+          },
+        ),
         //*--- SEARCH BAR ---*//
         const SizedBox(height: 8),
         MemorySearchWidget(

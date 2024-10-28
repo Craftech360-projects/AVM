@@ -28,6 +28,7 @@ import 'package:friend_private/flavors.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/pages/onboarding/wrapper.dart';
 import 'package:friend_private/src/features/home/presentation/pages/home_page.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript_bloc.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/theme/theme.dart';
@@ -172,6 +173,7 @@ class _MyAppState extends State<MyApp> {
             MemoryProvider(),
           ),
         ),
+        BlocProvider(create: (context) => LiveTranscriptBloc()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
@@ -188,7 +190,7 @@ class _MyAppState extends State<MyApp> {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [Locale('en')],
-          theme: AVMTheme.darkTheme,
+          // theme: AVMTheme.darkTheme,
           // theme: ThemeData(
           //   useMaterial3: false,
           //   colorScheme: const ColorScheme.dark(
@@ -219,35 +221,25 @@ class _MyAppState extends State<MyApp> {
           // ),
           themeMode: ThemeMode.light,
           // home: const HasBackupPage(),
-          home: Stack(
-            children: [
-              Positioned.fill(
-                child: Image.asset(
-                  'assets/images/splash.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
+          home:
+          //  Stack(
+          //   children: [
+          //     Positioned.fill(
+          //       child: Image.asset(
+          //         'assets/images/splash.png',
+          //         fit: BoxFit.cover,
+          //       ),
+          //     ),
               SharedPreferencesUtil().onboardingCompleted && widget.isAuth
-                  // ? Scaffold(
-                  //     body: Container(
-                  //       decoration: const BoxDecoration(
-                  //         gradient: LinearGradient(
-                  //           colors: [
-                  //             Color(0xFFE6F5FA),
-                  //             Color(0xCEF2E4FF),
-                  //           ],
-                  //           stops: [0.1, 1.0],
-                  //           begin: Alignment.topCenter,
-                  //           end: Alignment.bottomCenter,
-                  //         ),
-                  //       ),
-                  //       child: const HomePage(),
-                  //     ),
-                  //   )
-                  ?HomePageWrapper()
+                  ? 
+                      const HomePage()
+                      
+                  
+                 
+                  // ? const HomePageWrapper()
                   : const OnboardingWrapper(),
-            ],
-          ),
+          //   ],
+          // ),
         ),
       ),
     );

@@ -4,4 +4,5 @@ class IconImage {
     static const String imagePlaceholder = 'assets/images/image_placeholder.png';
   /// Icons
     static const String gear = 'assets/images/setting_gear.svg';
+    static const String avmLogo = 'assets/images/AVM_logo.svg';
 }

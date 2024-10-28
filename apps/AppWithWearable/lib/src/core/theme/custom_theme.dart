@@ -10,12 +10,12 @@ class CustomTheme {
     listTileTheme: AvmListTileTheme.lightCardTheme,
     textTheme: AvmTextTheme.lightTextTheme,
     scaffoldBackgroundColor: Colors.transparent,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      shadowColor: Colors.transparent,
-      surfaceTintColor: Colors.transparent,
-    ),
+    // appBarTheme: const AppBarTheme(
+    //   backgroundColor: Colors.transparent,
+    //   elevation: 0,
+    //   scrolledUnderElevation: 0,
+    //   shadowColor: Colors.transparent,
+    //   surfaceTintColor: Colors.transparent,
+    // ),
   );
 }

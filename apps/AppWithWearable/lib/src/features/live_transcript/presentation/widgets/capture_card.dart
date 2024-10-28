@@ -28,16 +28,19 @@ class CaptureCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.h),
-            AnimatedTextKit(
-              animatedTexts: [
-                TyperAnimatedText(
-                  '👋Hi! Joe,\nChange is inevitable. '
-                  'Always strive for the next big thing.!',
-                  textStyle: textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w400),
-                ),
-              ],
-              isRepeatingAnimation: false,
+            SizedBox(
+              height: 80.h,
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  TyperAnimatedText(
+                    '👋Hi! Joe,\nChange is inevitable. '
+                    'Always strive for the next big thing.!',
+                    textStyle: textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w400),
+                  ),
+                ],
+                isRepeatingAnimation: false,
+              ),
             ),
             SizedBox(height: 8.h),
             Text(
