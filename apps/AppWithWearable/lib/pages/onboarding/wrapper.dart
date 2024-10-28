@@ -36,7 +36,7 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
     //   }
     // });
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if ( true && !SharedPreferencesUtil().onboardingCompleted) {
+      if (true && !SharedPreferencesUtil().onboardingCompleted) {
         _goNext();
       }
     });
@@ -142,7 +142,6 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
                             replace: true);
 
                         debugPrint('checking for app tour');
-                      
 
                         MixpanelManager().onboardingStepICompleted('Finalize');
                         MixpanelManager().onboardingCompleted();
