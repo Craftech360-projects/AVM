@@ -126,6 +126,9 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
       uri = Uri.parse(
         'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=${sampleRate}&codec=pcm8&channels=1',
       );
+      // uri = Uri.parse(
+      //   'ws://living-alien-polite.ngrok-free.app?service=service2&sample_rate=${sampleRate}&codec=pcm8&channels=1',
+      // );
       break;
     case 'Whisper':
       uri = Uri.parse(
@@ -170,7 +173,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
         try {
           await channel.ready; // Ensure the channel is ready
           final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
-          channel.sink.add(keepAliveMsg);
+//channel.sink.add(keepAliveMsg);
           // debugPrint('Sent KeepAlive message');
         } catch (e) {
           debugPrint('Error sending KeepAlive message: $e');

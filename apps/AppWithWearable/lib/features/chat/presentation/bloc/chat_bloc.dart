@@ -80,7 +80,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> _onInitializeDailySummary(
       InitializeDailySummary event, Emitter<ChatState> emit) async {
     _dailySummaryTimer =
-        Timer.periodic(const Duration(hours: 1), (timer) async {
+        Timer.periodic(const Duration(hours: 2), (timer) async {
       // Changed to run every minute
       var now = DateTime.now();
       log(timer.tick.toString());

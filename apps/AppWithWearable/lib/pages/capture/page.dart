@@ -65,7 +65,7 @@ class CapturePageState extends State<CapturePage>
 
   BTDeviceStruct? btDevice;
   bool _hasTranscripts = false;
-  static const quietSecondsForMemoryCreation = 60;
+  static const quietSecondsForMemoryCreation = 40;
 
   /// ----
   List<TranscriptSegment> segments = [];
