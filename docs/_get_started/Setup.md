@@ -22,58 +22,64 @@ Before starting, make sure you have the following installed:
 
 1. **Upgrade Flutter**:
    Before proceeding, make sure your Flutter SDK is up to date:
-    ```
-    flutter upgrade
-    ```
+
+   ```
+   flutter upgrade
+   ```
 
 2. **Get Flutter Dependencies**:
    From within `apps/AppWithWearable`, install flutter packages:
-    ```
-    flutter pub get
-    ```
+
+   ```
+   flutter pub get
+   ```
 
 3. **Install iOS Pods**:
    Navigate to the iOS directory and install the CocoaPods dependencies:
-    ```
-    cd ios
-    pod install
-    pod repo update
-    ```
+
+   ```
+   cd ios
+   pod install
+   pod repo update
+   ```
 
 4. **Environment Configuration**:
    Create `.env` using template `.env.template`
-    ```
-    cd ..
-    cat .env.template > .env
-    ```
+
+   ```
+   cd ..
+   cat .env.template > .env
+   ```
 
 5. **API Keys**:
    Add your API keys to the `.env` file. (Sentry is not needed)
 
 6. **Run Build Runner**:
    Generate necessary files with Build Runner:
-    ```
-    dart run build_runner build
-    ```
+
+   ```
+   dart run build_runner build
+   ```
 
 7. **Setup Firebase**:
+
    - Follow official [Firebase Docs](https://firebase.google.com/docs/flutter/setup) till Step 1
    - Run the following command to register the prod flavor of the app. The command will prompt you to select `configuration type`; under it, select `Target` and then `Runner`
 
-      ```
-      flutterfire config --out=lib/firebase_options_prod.dart --ios-bundle-id=com.craftech360.avm --android-app-id=com.craftech360.avm --android-out=android/app/src/prod/  --ios-out=ios/Config/Prod/
-      ```
+     ```
+     flutterfire config --out=lib/firebase_options_prod.dart --ios-bundle-id=com.craftech360.avm --android-app-id=com.craftech360.avm --android-out=android/app/src/prod/  --ios-out=ios/Config/Prod/
+     ```
+
    - Similarly for dev environment
 
-      ```
-      flutterfire config --out=lib/firebase_options_dev.dart --ios-bundle-id=com.craftech360.avm --android-app-id=com.craftech360.avm --android-out=android/app/src/dev/  --ios-out=ios/Config/Dev/
-      ```
+     ```
+     flutterfire config --out=lib/firebase_options_dev.dart --ios-bundle-id=com.craftech360.avm --android-app-id=com.craftech360.avm --android-out=android/app/src/dev/  --ios-out=ios/Config/Dev/
+     ```
+
    - Generate SHA1/SHA256 Keys for your Keystore and add them to Firebase. Follow the steps mentioned in this [StackOverflow answer](https://stackoverflow.com/a/56091158) or the [Official Docs](https://support.google.com/firebase/answer/9137403?hl=en). This is required for Firebase Auth through Google OAuth to work.
 
-
 8. **Run the App**:
-    - Select your target device in Xcode or Android Studio.
-    - Run the app.
-
+   - Select your target device in Xcode or Android Studio.
+   - Run the app.
 
 [Next Step: Buying Guide →](/assembly/Buying_Guide/){: .btn .btn-purple }

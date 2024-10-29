@@ -98,16 +98,16 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // }
   //   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
-  // String encoding = "linear16";
-  // const String language = 'en-US';
-  // const int sampleRate = 8000;
-  // const String codec = 'pcm8';
-  // const int channels = 1;
-  String encoding = "opus";
+  String encoding = "linear16";
   const String language = 'en-US';
-  const int sampleRate = 48000;
-  const String codec = 'opus';
+  const int sampleRate = 8000;
+  const String codec = 'pcm8';
   const int channels = 1;
+  // String encoding = "opus";
+  // const String language = 'en-US';
+  // const int sampleRate = 48000;
+  // const String codec = 'opus';
+  // const int channels = 1;
 
   String apiType = '';
   apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
@@ -128,12 +128,12 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
       );
       break;
     case 'Whisper':
-      // uri = Uri.parse(
-      //   'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
-      // );
       uri = Uri.parse(
-        'ws://living-alien-polite.ngrok-free.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
+        'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
       );
+      // uri = Uri.parse(
+      //   'ws://living-alien-polite.ngrok-free.app?service=service3&sample_rate=${sampleRate}&codec=pcm8&channels=1',
+      // );
 
       break;
     default:
@@ -162,7 +162,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     Timer? keepAliveTimer;
     const keepAliveInterval =
         Duration(seconds: 7); // Send KeepAlive every 7 seconds
-    const silenceTimeout = Duration(seconds: 30); // Silence timeout
+    const silenceTimeout = Duration(seconds: 40); // Silence timeout
     DateTime? lastAudioTime;
 
     void startKeepAlive() {
@@ -252,8 +252,10 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
               );
               debugPrint('websocket- json data ${segment.toString()}');
               onMessageReceived([segment]);
+              lastAudioTime = DateTime.now();
+              print("timer reset");
             }
-            lastAudioTime = DateTime.now();
+
             debugPrint('Transcript received from $speaker: $text');
           } else {
             debugPrint('Unknown event type: ${data['type']}');

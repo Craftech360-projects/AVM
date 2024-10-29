@@ -27,7 +27,7 @@ class _MemoryCardWidgetState extends State<MemoryCardWidget> {
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: widget._memoryBloc,
       builder: (context, state) {
-        print('state of memory ${state.memories}');
+        //  print('state of memory ${state.memories}');
         if (state.memories.isEmpty) {
           return const Center(
             child: Padding(

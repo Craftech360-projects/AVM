@@ -97,7 +97,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
       memoriesToConsider.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       List<Memory> mostRecentMemory =
           memoriesToConsider.isNotEmpty ? memoriesToConsider : [];
-      print("mostRecentMemory $mostRecentMemory");
+      //  print("mostRecentMemory $mostRecentMemory");
       emit(
         state.copyWith(
           status: MemoryStatus.success,
@@ -116,9 +116,9 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
 
   FutureOr<void> _searchMemory(SearchMemory event, Emitter<MemoryState> emit) {
     try {
-      print('search event triggered ${event.query}');
+      //  print('search event triggered ${event.query}');
       if (event.query.isEmpty) {
-        print('original runs1 ${state.memories}');
+        //print('original runs1 ${state.memories}');
 
         add(const DisplayedMemory());
       } else {

@@ -75,12 +75,11 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
 
   @override
   Widget build(BuildContext context) {
- 
     if (SharedPreferencesUtil().isRestoreSuccessful) {
       _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
     }
     SharedPreferencesUtil().isRestoreSuccessful = false;
-   
+
     return Column(
       children: [
         // FloatingActionButton(onPressed: () {
@@ -189,7 +188,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           //       currentState.memories.length;
           // },
           builder: (context, state) {
-            print('>>>-${state.toString()}');
+            //     print('>>>-${state.toString()}');
             if (state.status == MemoryStatus.loading) {
               return const Center(
                 child: CircularProgressIndicator(),
