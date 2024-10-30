@@ -4,6 +4,7 @@ import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/home/presentation/widgets/widgets.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/pages/ble_connection_page.dart';
+import 'package:friend_private/src/features/memories/presentation/pages/memory_detail_page.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/memory_shimmer.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,7 +29,6 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        
         actions: [
           CircleAvatar(
             backgroundColor: CustomColors.greyOffWhite,
@@ -51,11 +51,11 @@ class _HomePageState extends State<HomePage> {
             /// Capture Card
             const CaptureCard(),
             SizedBox(height: 8.h),
-    
+
             /// Filter
             const Text('Show Discarded'),
             SizedBox(height: 8.h),
-    
+
             /// Memory Cards
             Expanded(
               child: FutureBuilder<bool>(
@@ -72,7 +72,13 @@ class _HomePageState extends State<HomePage> {
                   } else {
                     return ListView.separated(
                       physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) => const MemoryCard(),
+                      itemBuilder: (context, index) => GestureDetector(
+                        child: const MemoryCard(),
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const MemoryDetailPage()));
+                        },
+                      ),
                       itemCount: 5,
                       separatorBuilder: (context, index) =>
                           SizedBox(height: 4.h),

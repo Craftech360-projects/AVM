@@ -113,6 +113,7 @@ dependencies:
   sign_in_with_apple: ^6.1.1
   smooth_page_indicator: 1.1.0
   swipe: ^0.0.1
+  timelines: ^0.1.0
   top_snackbar_flutter: ^3.1.0
   tuple: ^2.0.2
   upgrader: ^10.3.0
