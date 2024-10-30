@@ -53,7 +53,6 @@ class CaptureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
       onTap: () {
         if (segments!.isNotEmpty) {
@@ -63,7 +62,11 @@ class CaptureCard extends StatelessWidget {
             context: context,
             builder: (context) => Stack(
               children: [
-                Image.asset('assets/images/splash.png',fit: BoxFit.fill,width: double.maxFinite,),
+                Image.asset(
+                  'assets/images/splash.png',
+                  fit: BoxFit.fill,
+                  width: double.maxFinite,
+                ),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -210,7 +213,6 @@ class GetConnectionStateWidgets extends StatelessWidget {
               width: 100,
               child: Builder(
                 builder: (context) {
-             
                   if (isDeviceDisconnected) {
                     if (SharedPreferencesUtil().deviceId.isEmpty) {
                       return const Icon(
@@ -316,46 +318,47 @@ class GetConnectionStateWidgets extends StatelessWidget {
     ));
   }
 }
-  
+
 void checkBluetoothStatus(BuildContext context) async {
-    if (Platform.isAndroid) {
-      // Check for Bluetooth status on Android
-      if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
-        showTopSnackBar(
-          Overlay.of(context),
-          const CustomSnackBar.error(
-            message: "Bluetooth Disconnected",
-          ),
-        );
-      }
-      // else{
-      //    showTopSnackBar(
-      //     Overlay.of(context),
-      //     const CustomSnackBar.success(
-      //       message: "Bluetooth Connected",
-      //     ),
-      //   );
-      // }
-    } else if (Platform.isIOS) {
-      // Check for Bluetooth status on iOS
-      if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
-        showTopSnackBar(
-          Overlay.of(context),
-          const CustomSnackBar.error(
-            message: "Bluetooth Disconnected",
-          ),
-        );
-      }
-      // else{
-      //    showTopSnackBar(
-      //     Overlay.of(context),
-      //     const CustomSnackBar.success(
-      //       message: "Bluetooth Connected",
-      //     ),
-      //   );
-      // }
+  if (Platform.isAndroid) {
+    // Check for Bluetooth status on Android
+    if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
+      // showTopSnackBar(
+      //   Overlay.of(context),
+      //   const CustomSnackBar.error(
+      //     message: "Bluetooth Disconnected",
+      //   ),
+      // );
     }
+    // else{
+    //    showTopSnackBar(
+    //     Overlay.of(context),
+    //     const CustomSnackBar.success(
+    //       message: "Bluetooth Connected",
+    //     ),
+    //   );
+    // }
+  } else if (Platform.isIOS) {
+    // Check for Bluetooth status on iOS
+    if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
+      // showTopSnackBar(
+      //   Overlay.of(context),
+      //   const CustomSnackBar.error(
+      //     message: "Bluetooth Disconnected",
+      //   ),
+      // );
+    }
+    // else{
+    //    showTopSnackBar(
+    //     Overlay.of(context),
+    //     const CustomSnackBar.success(
+    //       message: "Bluetooth Connected",
+    //     ),
+    //   );
+    // }
   }
+}
+
 getConnectionStateWidgets(
     BuildContext context,
     bool hasTranscripts,

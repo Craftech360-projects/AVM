@@ -34,6 +34,10 @@ class _RestoreButtonState extends State<RestoreButton> {
           isRestoreInProgress = false;
         });
 
+        if (success) {
+          SharedPreferencesUtil().isRestoreSuccessful = true;
+        }
+
         // Optionally show a success/failure message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
