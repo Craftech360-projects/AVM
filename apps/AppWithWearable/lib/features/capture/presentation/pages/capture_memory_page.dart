@@ -55,13 +55,16 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   final TextEditingController _searchController = TextEditingController();
   GlobalKey searchTour = GlobalKey();
   GlobalKey captureTour = GlobalKey();
+
+  bool _isCaptureCardVisible = true;
+  List<TranscriptSegment>? segments;
   @override
   void initState() {
     super.initState();
     captureWalkThrough(capturekey: captureTour, searchKey: searchTour);
     _memoryBloc = BlocProvider.of<MemoryBloc>(context);
     _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
-
+   segments= widget.segments;
     _searchController.addListener(() {
       _memoryBloc.add(SearchMemory(query: _searchController.text));
     });
@@ -94,7 +97,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         ),
         const SizedBox(height: 8),
         //*-- Capture --//
-        widget.hasTranscripts
+        widget.hasTranscripts && _isCaptureCardVisible
             ? SizedBox(
                 height: 176,
                 child: Dismissible(
@@ -114,15 +117,26 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                   key: capturePageKey,
                   // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
                   direction: DismissDirection.startToEnd,
-                  onDismissed: (direction) =>
-                      widget.onDismissmissedCaptureMemory(direction),
+                  onDismissed: (direction) {
+                    // widget.onDismissmissedCaptureMemory(direction);
+                    widget.onDismissmissedCaptureMemory(direction);
+                    setState(() {
+                      _isCaptureCardVisible = false;
+                   segments = [];
+                    });
+                    Future.delayed(const Duration(seconds: 15), () {
+                      setState(() {
+                        _isCaptureCardVisible = true;
+                      });
+                    });
+                  },
                   child: CaptureCard(
                     context: context,
                     hasTranscripts: widget.hasTranscripts,
                     wsConnectionState: widget.wsConnectionState,
                     device: widget.device,
                     internetStatus: widget.internetStatus,
-                    segments: widget.segments,
+                    segments: segments,
                     memoryCreating: widget.memoryCreating,
                     photos: widget.photos,
                     scrollController: widget.scrollController,
@@ -136,7 +150,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                 wsConnectionState: widget.wsConnectionState,
                 device: widget.device,
                 internetStatus: widget.internetStatus,
-                segments: widget.segments,
+                segments: segments,
                 memoryCreating: widget.memoryCreating,
                 photos: widget.photos,
                 scrollController: widget.scrollController,
