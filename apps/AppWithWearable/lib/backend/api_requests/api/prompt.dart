@@ -597,7 +597,7 @@ Future<String> getInitialPluginPrompt(Plugin? plugin) async {
         Send an initial message to start the conversation, make sure this message reflects your personality, \
         humor, and characteristics.
        
-        Output your response in plain text, without markdown.
+        Output your response in plain text, without markdown, make it below 70 characters.
     ''';
   }
   return '''

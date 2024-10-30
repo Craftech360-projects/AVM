@@ -165,7 +165,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     Timer? keepAliveTimer;
     const keepAliveInterval =
         Duration(seconds: 7); // Send KeepAlive every 7 seconds
-    const silenceTimeout = Duration(seconds: 40); // Silence timeout
+    const silenceTimeout = Duration(seconds: 50); // Silence timeout
     DateTime? lastAudioTime;
 
     void startKeepAlive() {
