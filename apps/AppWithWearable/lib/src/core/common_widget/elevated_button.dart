@@ -6,20 +6,23 @@ class CustomElevatedButton extends StatelessWidget {
     super.key,
     required this.onPressed,
     this.backgroundColor = CustomColors.blackPrimary,
-    this.child,
+    required this.child,
+    this.icon,
   });
   final VoidCallback onPressed;
   final Color backgroundColor;
-  final Widget? child;
+  final Widget child;
+  final Widget? icon;
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return ElevatedButton.icon(
+      icon: icon,
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         elevation: 0,
       ),
-      child: child,
+      label: child,
     );
   }
 }

@@ -3,18 +3,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/home/presentation/widgets/widgets.dart';
-import 'package:friend_private/src/features/live_transcript/presentation/pages/ble_connection_page.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/widgets/battery_indicator.dart';
 import 'package:friend_private/src/features/memories/presentation/pages/memory_detail_page.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/memory_shimmer.dart';
+import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';
+import 'package:go_router/go_router.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
+class TranscriptMemoryPage extends StatefulWidget {
+  const TranscriptMemoryPage({
+    super.key,
+  });
+  static const String name = 'transcriptMemoryPage';
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<TranscriptMemoryPage> createState() => _TranscriptMemoryPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _TranscriptMemoryPageState extends State<TranscriptMemoryPage> {
   late Future<bool> _showMemoryCards;
 
   @override
@@ -28,16 +32,16 @@ class _HomePageState extends State<HomePage> {
     return CustomScaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color(0xFFE6F5FA),
+        leading: const BatteryIndicator(),
         actions: [
           CircleAvatar(
-            backgroundColor: CustomColors.greyOffWhite,
+            backgroundColor: CustomColors.greyLavender,
             child: CustomIconButton(
               size: 16.h,
               iconPath: IconImage.gear,
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const BleConnectionPage()));
+                context.pushNamed(SettingPage.name);
               },
             ),
           )
@@ -75,8 +79,7 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (context, index) => GestureDetector(
                         child: const MemoryCard(),
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const MemoryDetailPage()));
+                          context.pushNamed(MemoryDetailPage.name);
                         },
                       ),
                       itemCount: 5,
@@ -90,6 +93,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+
     );
   }
 }

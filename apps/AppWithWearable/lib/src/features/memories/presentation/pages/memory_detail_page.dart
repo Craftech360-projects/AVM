@@ -9,7 +9,7 @@ import 'package:friend_private/src/features/memories/presentation/widgets/transc
 
 class MemoryDetailPage extends StatefulWidget {
   const MemoryDetailPage({super.key});
-
+  static const String name = 'memoryDetailPage';
   @override
   State<MemoryDetailPage> createState() => _MemoryDetailPageState();
 }
@@ -36,7 +36,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     return CustomScaffold(
       appBar: AppBar(
         centerTitle: false,
-        backgroundColor: Colors.transparent,
+         backgroundColor: const Color(0xFFE6F5FA),
         title: Text(
           '21 Oct 2024 | 09:21 PM',
           style: textTheme.titleSmall?.copyWith(

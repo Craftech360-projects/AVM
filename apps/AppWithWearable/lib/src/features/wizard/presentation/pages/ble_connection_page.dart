@@ -4,11 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript_bloc.dart';
-import 'package:friend_private/src/features/live_transcript/presentation/widgets/ble_animation.dart';
+import 'package:friend_private/src/features/wizard/presentation/pages/finalize_page.dart';
+import 'package:friend_private/src/features/wizard/presentation/widgets/ble_animation.dart';
+import 'package:go_router/go_router.dart';
 
 class BleConnectionPage extends StatefulWidget {
   const BleConnectionPage({super.key});
-
+  static const String name = 'BleConnectionPage';
   @override
   State<BleConnectionPage> createState() => _BleConnectionPageState();
 }
@@ -28,7 +30,7 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
     final textTheme = Theme.of(context).textTheme;
     return CustomScaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+         backgroundColor: const Color(0xFFE6F5FA),
         title: Text(
           'Connect your AVM',
           style: textTheme.titleLarge?.copyWith(
@@ -58,7 +60,7 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
                 children: [
                   /// Logo
                   Image.asset(
-                    'assets/images/AVM_logo.png',
+                    IconImage.avmLogo,
                     height: 30.h,
                   ),
                   SizedBox(height: 150.h),
@@ -149,6 +151,7 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
                                 btDeviceStruct: state.connectedDevice!),
                           );
                         }
+                        context.goNamed(FinalizePage.name);
                       },
                       child: Text(
                         isConnected ? 'UnPair Device' : 'Pair Device',

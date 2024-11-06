@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:friend_private/src/features/home/presentation/pages/navbar.dart';
 
 class CustomScaffold extends StatelessWidget {
   const CustomScaffold({
     super.key,
     this.body,
-    this.appBar,
+    this.appBar, this.bottomNavigationBar,
   });
   final Widget? body;
   final PreferredSizeWidget? appBar;
+   final Widget? bottomNavigationBar;
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +17,8 @@ class CustomScaffold extends StatelessWidget {
       backgroundColor: const Color(0xFFE6F5FA),
       appBar: appBar,
       body: Container(
+        height: double.maxFinite,
+        width: double.maxFinite,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -27,7 +31,9 @@ class CustomScaffold extends StatelessWidget {
           ),
         ),
         child: body,
+        
       ),
+  
     );
   }
 }

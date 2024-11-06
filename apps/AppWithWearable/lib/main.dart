@@ -25,13 +25,12 @@ import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dar
 import 'package:friend_private/firebase_options_dev.dart' as dev;
 import 'package:friend_private/firebase_options_prod.dart' as prod;
 import 'package:friend_private/flavors.dart';
-import 'package:friend_private/pages/home/page.dart';
-import 'package:friend_private/pages/onboarding/wrapper.dart';
-import 'package:friend_private/src/features/home/presentation/pages/home_page.dart';
+import 'package:friend_private/src/core/config/app_loger.dart';
+import 'package:friend_private/src/core/config/simple_bloc_observer.dart';
+import 'package:friend_private/src/core/router/router.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript_bloc.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/notifications.dart';
-import 'package:friend_private/utils/theme/theme.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:opus_dart/opus_dart.dart';
@@ -61,6 +60,8 @@ void main() async {
   await SharedPreferencesUtil.init();
   await ObjectBoxUtil.init();
   await MixpanelManager.init();
+  AppLogger.init();
+  Bloc.observer = const SimpleBlocObserver();
 
   listenAuthTokenChanges();
   bool isAuth = false;
@@ -163,6 +164,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final appRouter = AppRouter();
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => MemoryBloc()),
@@ -173,23 +175,25 @@ class _MyAppState extends State<MyApp> {
             MemoryProvider(),
           ),
         ),
+        /// below is with new UI
         BlocProvider(create: (context) => LiveTranscriptBloc()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
         minTextAdapt: true,
         splitScreenMode: true,
-        child: MaterialApp(
-          navigatorObservers: [InstabugNavigatorObserver()],
+        child: MaterialApp.router(
+          routerConfig: appRouter.router,
+          // navigatorObservers: [InstabugNavigatorObserver()],
           debugShowCheckedModeBanner: F.env == Environment.dev,
           title: F.title,
-          navigatorKey: MyApp.navigatorKey,
-          localizationsDelegates: const [
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('en')],
+          // navigatorKey: MyApp.navigatorKey,
+          // localizationsDelegates: const [
+          //   GlobalMaterialLocalizations.delegate,
+          //   GlobalWidgetsLocalizations.delegate,
+          //   GlobalCupertinoLocalizations.delegate,
+          // ],
+          // supportedLocales: const [Locale('en')],
           // theme: AVMTheme.darkTheme,
           // theme: ThemeData(
           //   useMaterial3: false,
@@ -221,7 +225,7 @@ class _MyAppState extends State<MyApp> {
           // ),
           themeMode: ThemeMode.light,
           // home: const HasBackupPage(),
-          home:
+          // home:
           //  Stack(
           //   children: [
           //     Positioned.fill(
@@ -230,14 +234,13 @@ class _MyAppState extends State<MyApp> {
           //         fit: BoxFit.cover,
           //       ),
           //     ),
-              SharedPreferencesUtil().onboardingCompleted && widget.isAuth
-                  ? 
-                      const HomePage()
-                      
-                  
-                 
-                  // ? const HomePageWrapper()
-                  : const OnboardingWrapper(),
+          // SharedPreferencesUtil().onboardingCompleted && widget.isAuth
+          // ?
+          // const HomePage(searchText: '',)
+          // const SigninPage()
+
+          // ? const HomePageWrapper()
+          // : const OnboardingWrapper(),
           //   ],
           // ),
         ),
