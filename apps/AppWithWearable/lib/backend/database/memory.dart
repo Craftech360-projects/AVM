@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:friend_private/backend/database/geolocation.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
+import 'package:friend_private/utils/memories/shoppingsuggestion.dart';
 import 'package:objectbox/objectbox.dart';
 
 enum MemoryType { audio, image }
@@ -30,6 +31,7 @@ class Memory {
 
   final transcriptSegments = ToMany<TranscriptSegment>();
   final photos = ToMany<MemoryPhoto>();
+  //final List<ProductSuggestion> productSuggestions; // Add this field
 
   String? recordingFilePath;
 
@@ -52,6 +54,7 @@ class Memory {
     this.recordingFilePath,
     this.startedAt,
     this.finishedAt,
+    //  this.productSuggestions = const [],
   });
 
   void setStructured(Structured structured) {
@@ -84,7 +87,9 @@ class Memory {
     var memory = Memory(
       DateTime.parse(json['createdAt']),
       json['transcript'],
-       json['memoryImg'] != null ? Uint8List.fromList(List<int>.from(json['memoryImg'])) : null,
+      json['memoryImg'] != null
+          ? Uint8List.fromList(List<int>.from(json['memoryImg']))
+          : null,
       json['discarded'],
       recordingFilePath: json['recordingFilePath'],
       startedAt:
@@ -98,7 +103,7 @@ class Memory {
     if (json['structured'] != null) {
       memory.structured.target = Structured.fromJson(json['structured']);
     }
-    
+
     if (json['geolocation'] != null) {
       memory.geolocation.target = Geolocation.fromJson(json['geolocation']);
       if (memory.structured.target != null) {
@@ -155,7 +160,7 @@ class Memory {
       'id': id,
       'createdAt': createdAt.toIso8601String(),
       'startedAt': startedAt?.toIso8601String(),
-      'memoryImg': memoryImg ,
+      'memoryImg': memoryImg,
       // 'memoryImg': memoryImg != null ? 'True' : 'False',
       'finishedAt': finishedAt?.toIso8601String(),
       'transcript': transcript,

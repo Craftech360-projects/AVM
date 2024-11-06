@@ -5,6 +5,7 @@ import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dar
 import 'package:friend_private/features/memory/presentation/widgets/action_tab.dart';
 import 'package:friend_private/features/memory/presentation/widgets/custom_tag.dart';
 import 'package:friend_private/features/memory/presentation/widgets/event_tab.dart';
+import 'package:friend_private/features/memory/presentation/widgets/product_suggestion.dart';
 import 'package:friend_private/features/memory/presentation/widgets/summary_tab.dart';
 import 'package:friend_private/features/memory/presentation/widgets/transcript_tab.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
@@ -43,7 +44,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
         );
       },
       child: DefaultTabController(
-        length: 4,
+        length: 5,
         initialIndex: 1,
         child: CustomScaffold(
           backgroundColor: Colors.transparent,
@@ -79,7 +80,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
             bloc: widget.memoryBloc,
             builder: (context, state) {
               print('memory Details Page ${state.toString()}');
-          
+
               final selectedMemory = state.memories[state.memoryIndex];
 
               final structured = selectedMemory.structured.target!;
@@ -166,6 +167,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
                           Tab(text: 'Summary'),
                           Tab(text: 'Events'),
                           Tab(text: 'Transcript'),
+                          Tab(text: 'Market'), // New tab
                         ],
                       ),
                     ),
@@ -193,6 +195,12 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
                           memoryBloc: widget.memoryBloc,
                         ),
                         TranscriptTab(
+                          pageController: pageController,
+                          memoryAtIndex: state.memoryIndex,
+                          memoryBloc: widget.memoryBloc,
+                        ),
+                        ProductSuggestionsTab(
+                          // New TabView widget
                           pageController: pageController,
                           memoryAtIndex: state.memoryIndex,
                           memoryBloc: widget.memoryBloc,

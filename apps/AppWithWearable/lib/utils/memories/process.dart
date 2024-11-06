@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -21,6 +22,7 @@ import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:tuple/tuple.dart';
+import 'package:friend_private/utils/memories/shoppingsuggestion.dart';
 
 // Perform actions periodically
 Future<Memory?> processTranscriptContent(
@@ -99,11 +101,6 @@ Make sure each section of the transcription is labeled with the corresponding sp
       photos,
     );
 
-    // triggerIntegrations: triggerIntegrations,
-    // language: language,
-    // audioFile: audioFile,
-    // source: source,
-    // processingMemoryId: processingMemoryId,
     MemoryProvider().saveMemory(memory);
     triggerMemoryCreatedEvents(memory, sendMessageToChat: sendMessageToChat);
     return memory;
@@ -142,42 +139,6 @@ Future<SummaryResult?> _retrieveStructure(
         );
       }
 
-//       final String message = """
-// I have a transcription of a conversation that I would like to speaker diarization. Please assign different sections of the transcription to individual users, and label them as Speaker 1, Speaker 2, and so on.
-
-// Additionally, if the transcription contains any irrelevant background noise or speech (e.g., a YouTube video playing or any non-conversational audio), please eliminate that data from the output.
-
-// Here is the transcription:
-
-// "${transcript}"
-
-// Please return the diarized transcript in JSON format with the following structure:
-
-// {
-//   "diarized_transcript": [
-//     {
-//       "speaker": "Speaker 1",
-//       "text": "Section of transcript spoken by Speaker 1"
-//     },
-//     {
-//       "speaker": "Speaker 2",
-//       "text": "Section of transcript spoken by Speaker 2"
-//     },
-//     {
-//       "speaker": "Speaker N",
-//       "text": "Section of transcript spoken by Speaker N"
-//     }
-//   ],
-//   "irrelevant_data_removed": "true or false"
-// }
-
-// Make sure each section of the transcription is labeled with the corresponding speaker, and that any unwanted background noise or irrelevant content is removed.
-// """;
-//       final String finalTranscript =
-//           await executeSpeechDiarizationPrompt(message);
-//       print("Diarized Transcript: $finalTranscript");
-//       transcript = finalTranscript;
-//       print(">>>>>>>>>>gont to summarize");
       summary = await summarizeMemory(transcript, [],
           ignoreCache: ignoreCache, customPromptDetails: savedPrompt);
       debugPrint("its reached here ${summary.structured}");
@@ -236,24 +197,6 @@ Future<Memory> memoryCreationBlock(
             emoji: '😢', category: ['failed']), // Wrap 'failed' in a list
         [],
       );
-      // if (!retrievedFromCache) {
-      //   InstabugLog.logError('Unable to create memory structure.');
-      //   ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      //   showTopSnackBar(
-      //     Overlay.of(context),
-      //     const CustomSnackBar.error(
-      //       message:
-      //           'Unexpected error creating your memory. Please check your discarded memories.',
-      //     ),
-      //   );
-      //   // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      //   //   content: Text(
-      //   //     'Unexpected error creating your memory. Please check your discarded memories.',
-      //   //     style: TextStyle(color: Colors.white),
-      //   //   ),
-      //   //   duration: Duration(seconds: 4),
-      //   // ));
-      // }
     }
   } else {}
   Structured structured = summarizeResult.structured;
@@ -285,6 +228,7 @@ Future<Memory> memoryCreationBlock(
     structured.title.isEmpty,
     geolocation,
     photos,
+    // Pass the productSuggestions
   );
   debugPrint('Memory created: ${memory.id}');
 
@@ -301,13 +245,6 @@ Future<Memory> memoryCreationBlock(
               "Audio processing failed due to noise \n Please try again in a \n quieter place!",
         ),
       );
-      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      //   content: Text(
-      //     'Memory stored as discarded! Nothing useful. 😄',
-      //     style: TextStyle(color: Colors.white),
-      //   ),
-      //   duration: Duration(seconds: 4),
-      // ));
     } else if (structured.title.isNotEmpty) {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       showTopSnackBar(
@@ -316,11 +253,6 @@ Future<Memory> memoryCreationBlock(
           message: 'New memory created! 🚀',
         ),
       );
-      // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-      //   content: Text('New memory created! 🚀',
-      //       style: TextStyle(color: Colors.white)),
-      //   duration: Duration(seconds: 4),
-      // ));
     } else {
       showTopSnackBar(
         Overlay.of(context),
@@ -378,16 +310,6 @@ Future<Memory> finalizeMemoryRecord(
   // Assign structured data
   memory.structured.target = structured;
 
-  // Add plugin responses
-  // for (var r in pluginsResponse) {
-  //   memory.pluginsResponse.add(PluginResponse(r.item2, pluginId: r.item1.id));
-  // }
-
-  // // Add photos
-  // for (var image in photos) {
-  //   memory.photos.add(MemoryPhoto(image.item1, image.item2));
-  // }
-
   // Print the memory object before saving for debugging
   print(">>KKKKKK>>>>Final Memory Object: ${memoryToString(memory)}");
 
@@ -425,6 +347,7 @@ String memoryToString(Memory memory) {
     Geolocation: ${memory.geolocation.target != null ? 'Lat: ${memory.geolocation.target!.latitude}, Lon: ${memory.geolocation.target!.longitude}, Address: ${memory.geolocation.target!.address}' : 'No geolocation'}
     Transcript Segments Count: ${memory.transcriptSegments.length}
     Structured Title: ${memory.structured.target?.title ?? 'No title'}
+  
     
     ''';
 }
