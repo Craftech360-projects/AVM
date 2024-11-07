@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
+import 'package:friend_private/src/features/home/presentation/pages/navbar.dart';
 import 'package:friend_private/src/features/home/presentation/widgets/widgets.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/widgets/battery_indicator.dart';
 import 'package:friend_private/src/features/memories/presentation/pages/memory_detail_page.dart';
@@ -90,10 +91,13 @@ class _TranscriptMemoryPageState extends State<TranscriptMemoryPage> {
                 },
               ),
             ),
+            const Center(
+              child: CustomNavBar(isMemory: true,isChat: false,),
+            ),
+            SizedBox(height: 12.h),
           ],
         ),
       ),
-
     );
   }
 }

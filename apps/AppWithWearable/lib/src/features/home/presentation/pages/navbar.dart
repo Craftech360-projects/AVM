@@ -3,37 +3,49 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/chats/presentation/pages/chats_page.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/pages/transcript_memory_page.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomNavBar extends StatefulWidget {
-  const CustomNavBar({super.key});
-
+  const CustomNavBar({
+    super.key,
+    this.isChat = false,
+    this.isMemory = false,
+  });
+  final bool? isChat;
+  final bool? isMemory;
   @override
   State<CustomNavBar> createState() => _CustomNavBarState();
 }
 
 class _CustomNavBarState extends State<CustomNavBar> {
-  bool isSearchVisible = false;
-  bool isMessageVisible = false;
-  String hintText = 'Search for memories...';
+  late bool isMemoryVisible = false;
+  late bool isChatVisible = false;
+  // String hintText = 'Search for memories...';
+  @override
+  void initState() {
+    isMemoryVisible = widget.isMemory!;
+    isChatVisible = widget.isChat!;
+    super.initState();
+  }
 
   void toggleSearchVisibility() {
     setState(() {
-      isSearchVisible = !isSearchVisible;
-      isMessageVisible = false;
-      hintText = 'Search for memories...';
+      isMemoryVisible = !isMemoryVisible;
+      context.goNamed(TranscriptMemoryPage.name);
+      isChatVisible = false;
+      // hintText = 'Search for memories...';
     });
   }
 
   void toggleMessageVisibility() {
     setState(() {
-      isMessageVisible = !isMessageVisible;
-      isSearchVisible = false;
-      hintText = 'Type here...';
+      isChatVisible = !isChatVisible;
+      context.goNamed(ChatsPage.name);
+      isMemoryVisible = false;
+      // hintText = 'Type here...';
     });
-    // temp delete afterwords
-    const Duration(seconds: 1);
-    context.pushNamed(ChatsPage.name);
+    
   }
 
   @override
@@ -61,7 +73,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
         //  mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           // AVA Icon
-          isSearchVisible || isMessageVisible
+          isMemoryVisible || isChatVisible
               ? const SizedBox.shrink()
               : Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -70,7 +82,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     height: 13.h,
                   ),
                 ),
-          isSearchVisible || isMessageVisible
+          isMemoryVisible || isChatVisible
               ? const SizedBox.shrink()
               : VerticalDivider(
                   thickness: 0.5.w,
@@ -89,10 +101,10 @@ class _CustomNavBarState extends State<CustomNavBar> {
               onPressed: toggleSearchVisibility,
             ),
           ),
-          isSearchVisible || isMessageVisible
+          isMemoryVisible || isChatVisible
               ? Expanded(
                   child: Visibility(
-                    visible: isSearchVisible || isMessageVisible,
+                    visible: isMemoryVisible || isChatVisible,
                     child: Container(
                       height: 50.h,
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -108,13 +120,13 @@ class _CustomNavBarState extends State<CustomNavBar> {
                             isDense: true,
                             contentPadding:
                                 EdgeInsets.symmetric(vertical: 20.h),
-                            hintText: hintText,
+                            hintText:isChatVisible?'Type here...':'Search for memories...' ,
                             hintStyle: textTheme.bodyMedium
                                 ?.copyWith(color: CustomColors.greyLight),
                             border: InputBorder.none,
                           ),
                         ),
-                        trailing: isMessageVisible
+                        trailing: isChatVisible
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(8.h),
                                 child: Container(
@@ -134,7 +146,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
               : const SizedBox.shrink(),
 
           // Message Icon
-          isMessageVisible
+          isChatVisible
               ? const SizedBox.shrink()
               : Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.w),

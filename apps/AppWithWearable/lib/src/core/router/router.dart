@@ -18,7 +18,7 @@ const _routeTransitionDuration = 300;
 class AppRouter {
   GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: '/transcript-memory',
+    initialLocation: '/setting',
     // initialLocation: '/signin',
     routes: [
       GoRoute(

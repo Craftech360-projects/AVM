@@ -6,6 +6,7 @@ import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/core/utils/prompts/chat_prompt.dart';
 import 'package:friend_private/src/features/chats/presentation/widgets/avm_logo.dart';
+import 'package:friend_private/src/features/home/presentation/pages/navbar.dart';
 import 'package:lottie/lottie.dart';
 
 class ChatsPage extends StatefulWidget {
@@ -42,93 +43,109 @@ class _ChatsPageState extends State<ChatsPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFE6F5FA),
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "Today",
-                    style: textTheme.bodySmall?.copyWith(
-                      color: CustomColors.purpleBright,
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  const Expanded(
-                    child: Divider(
-                      color: CustomColors.purpleBright,
-                      thickness: 0.5,
-                    ),
-                  ),
-                ],
-              ),
-              ListView.separated(
-                padding: EdgeInsets.symmetric(vertical: 16.h),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return CustomCard(
-                    borderRadius: 16,
-                    padding: EdgeInsets.symmetric(horizontal: 12.w),
-                    child: CustomListTile(
-                      onTap: _startLoadingAndShowText,
-                      title: Text(
-                        chatPrompt[index],
-                        style: textTheme.bodyMedium,
-                      ),
-                    ),
-                  );
-                },
-                itemCount: chatPrompt.length,
-                separatorBuilder: (context, index) => SizedBox(height: 12.h),
-              ),
-              SizedBox(height: 12.h),
-              Row(
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 14.w),
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-               
                 children: [
-                  (_isLoading || _showAnimatedText)
-                      ? const AvmLogo()
-                      : const SizedBox.shrink(),
-                  SizedBox(width: 8.w),
-                  _isLoading
-                      ? Lottie.asset(
-                          'assets/lottie_animations/loading.json',
-                          width: 40.w,
-                          height: 40.h,
-                          reverse: true,
-                        )
-                      : _showAnimatedText
-                          ? Expanded(
-                              child: AnimatedTextKit(
-                                animatedTexts: [
-                                  TyperAnimatedText(
-                                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit, '
-                                    'sed do eiusmod tempor incididunt ut labore et dolore '
-                                    'magna aliqua. Ut enim ad minim veniam, quis nostrud '
-                                    'exercitation ullamco laboris nisi ut aliquip ex ea '
-                                    'officia deserunt mollit anim id est laborum.',
-                                    textStyle: textTheme.bodyMedium?.copyWith(
-                                      fontWeight: FontWeight.normal,
-                                      wordSpacing: 0.5,
-                                      letterSpacing: 0.5,
-                                    ),
-                                    speed: const Duration(milliseconds: 4),
-                                  ),
-                                ],
-                                isRepeatingAnimation: false,
-                              ),
-                            )
+                  Row(
+                    children: [
+                      Text(
+                        "Today",
+                        style: textTheme.bodySmall?.copyWith(
+                          color: CustomColors.purpleBright,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      const Expanded(
+                        child: Divider(
+                          color: CustomColors.purpleBright,
+                          thickness: 0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                  ListView.separated(
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return CustomCard(
+                        borderRadius: 16,
+                        padding: EdgeInsets.symmetric(horizontal: 12.w),
+                        child: CustomListTile(
+                          onTap: _startLoadingAndShowText,
+                          title: Text(
+                            chatPrompt[index],
+                            style: textTheme.bodyMedium,
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: chatPrompt.length,
+                    separatorBuilder: (context, index) =>
+                        SizedBox(height: 12.h),
+                  ),
+                  SizedBox(height: 12.h),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      (_isLoading || _showAnimatedText)
+                          ? const AvmLogo()
                           : const SizedBox.shrink(),
+                      SizedBox(width: 8.w),
+                      _isLoading
+                          ? Lottie.asset(
+                              'assets/lottie_animations/loading.json',
+                              width: 40.w,
+                              height: 40.h,
+                              reverse: true,
+                            )
+                          : _showAnimatedText
+                              ? Expanded(
+                                  child: AnimatedTextKit(
+                                    animatedTexts: [
+                                      TyperAnimatedText(
+                                        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, '
+                                        'sed do eiusmod tempor incididunt ut labore et dolore '
+                                        'magna aliqua. Ut enim ad minim veniam, quis nostrud '
+                                        'exercitation ullamco laboris nisi ut aliquip ex ea '
+                                        'officia deserunt mollit anim id est laborum.',
+                                        textStyle:
+                                            textTheme.bodyMedium?.copyWith(
+                                          fontWeight: FontWeight.normal,
+                                          wordSpacing: 0.5,
+                                          letterSpacing: 0.5,
+                                        ),
+                                        speed: const Duration(milliseconds: 4),
+                                      ),
+                                    ],
+                                    isRepeatingAnimation: false,
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
-        ),
+          const Spacer(),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 14.w),
+              child: const CustomNavBar(
+                isChat: true,
+                isMemory: false,
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h),
+        ],
       ),
     );
   }
