@@ -21,8 +21,6 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
-  
-  
   animated_text_kit: ^4.2.2
   archive: ^3.6.1
   auto_size_text: 3.0.0
@@ -40,7 +38,7 @@ dependencies:
   equatable: 2.0.5
   #  fonnx:
   #    git:
-  #      url: https://github.com/Telosnex/fonnx.git 
+  #      url: https://github.com/Telosnex/fonnx.git
   #      ref: main
   expandable_text: ^2.3.0
   file_picker: ^8.0.5
@@ -128,7 +126,6 @@ dependencies:
       url: https://github.com/fluttercommunity/flutter_workmanager.git
       ref: b783000
 
-
 dependency_overrides:
   http: ^1.2.1
   uuid: ^4.4.0
@@ -168,51 +165,47 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
   assets:
-  - assets/images/blob.png
+    - assets/images/blob.png
 
-
-  - assets/images/stars.png
-  - assets/images/herologo.png
-  - assets/images/backbutton.svg
-  - assets/fonts/
-  - assets/documents/
-  - assets/images/
-  - assets/videos/
-  - assets/audios/
-  - assets/lottie_animations/
-  - assets/rive_animations/
-  - assets/pdfs/
-  - assets/silero_vad.onnx
+    - assets/images/stars.png
+    - assets/images/herologo.png
+    - assets/images/backbutton.svg
+    - assets/fonts/
+    - assets/documents/
+    - assets/images/
+    - assets/videos/
+    - assets/audios/
+    - assets/lottie_animations/
+    - assets/rive_animations/
+    - assets/pdfs/
+    - assets/silero_vad.onnx
   fonts:
-  - family: "SF Pro Display"
-    fonts:
-    - asset: assets/fonts/SFPRODISPLAYTHINITALIC.OTF
-      weight: 100
-      style: italic
-    - asset: assets/fonts/SFPRODISPLAYLIGHTITALIC.OTF
-      weight: 300
-      style: italic
-    - asset: assets/fonts/SFPRODISPLAYREGULAR.OTF
-    - asset: assets/fonts/SFPRODISPLAYHEAVYITALIC.OTF
-      style: italic
-    - asset: assets/fonts/SFPRODISPLAYMEDIUM.OTF
-      weight: 500
-    - asset: assets/fonts/SFPRODISPLAYSEMIBOLDITALIC.OTF
-      weight: 600
-      style: italic
-    - asset: assets/fonts/SFPRODISPLAYBOLD.OTF
-      weight: 700
-    - asset: assets/fonts/SFPRODISPLAYBLACKITALIC.OTF
-      weight: 900
-      style: italic
+    - family: "SF Pro Display"
+      fonts:
+        - asset: assets/fonts/SFPRODISPLAYTHINITALIC.OTF
+          weight: 100
+          style: italic
+        - asset: assets/fonts/SFPRODISPLAYLIGHTITALIC.OTF
+          weight: 300
+          style: italic
+        - asset: assets/fonts/SFPRODISPLAYREGULAR.OTF
+        - asset: assets/fonts/SFPRODISPLAYHEAVYITALIC.OTF
+          style: italic
+        - asset: assets/fonts/SFPRODISPLAYMEDIUM.OTF
+          weight: 500
+        - asset: assets/fonts/SFPRODISPLAYSEMIBOLDITALIC.OTF
+          weight: 600
+          style: italic
+        - asset: assets/fonts/SFPRODISPLAYBOLD.OTF
+          weight: 700
+        - asset: assets/fonts/SFPRODISPLAYBLACKITALIC.OTF
+          weight: 900
+          style: italic
 
 flutter_native_splash:
-
-
   background_image: "assets/images/splash.png"
   image: assets/images/logo.png
   android_12:
-
     background_image: "assets/images/splash.png"
     image: assets/images/logo.png
 

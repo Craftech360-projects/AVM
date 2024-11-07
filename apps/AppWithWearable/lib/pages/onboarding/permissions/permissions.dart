@@ -21,19 +21,13 @@ class _PermissionsPageState extends State<PermissionsPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // Text(
-          //   'For a personalized experience, we need permissions to send you notifications and read your location information.',
-          //   style: TextStyle(color: Colors.grey.shade300, fontSize: 16),
-          //   textAlign: TextAlign.center,
-          // ),
-          // const SizedBox(height: 80),
           CheckboxListTile(
             value: switchValue,
             onChanged: (s) {
               setState(() {
                 switchValue = s!;
               });
-              requestNotificationPermissions();
+              //  await requestNotificationPermissions();
             },
             title: const Text(
               'Enable notification access for AVM\'s full experience.',
@@ -41,7 +35,8 @@ class _PermissionsPageState extends State<PermissionsPage> {
             ),
             contentPadding: const EdgeInsets.only(left: 8),
             // controlAffinity: ListTileControlAffinity.leading,
-            checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            checkboxShape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
           const SizedBox(height: 16),
           Row(
@@ -64,7 +59,8 @@ class _PermissionsPageState extends State<PermissionsPage> {
                         )
                       : null,
                   child: MaterialButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
                     onPressed: () {
                       // TODO: if toggle not on, show ignore
                       widget.goNext();
@@ -72,7 +68,9 @@ class _PermissionsPageState extends State<PermissionsPage> {
                     child: Text(
                       switchValue ? 'Continue' : 'Skip',
                       style: TextStyle(
-                        decoration: switchValue ? TextDecoration.none : TextDecoration.underline,
+                        decoration: switchValue
+                            ? TextDecoration.none
+                            : TextDecoration.underline,
                       ),
                     ),
                   ),
