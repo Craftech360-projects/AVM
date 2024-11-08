@@ -11,22 +11,26 @@ class CustomNavBar extends StatefulWidget {
     super.key,
     this.isChat = false,
     this.isMemory = false,
+    this.onSendMessage, // Make onSendMessage nullable
   });
   final bool? isChat;
   final bool? isMemory;
+  final Function(String)? onSendMessage; // Nullable callback
+
   @override
   State<CustomNavBar> createState() => _CustomNavBarState();
 }
 
 class _CustomNavBarState extends State<CustomNavBar> {
-  late bool isMemoryVisible = false;
-  late bool isChatVisible = false;
-  // String hintText = 'Search for memories...';
+  late bool isMemoryVisible;
+  late bool isChatVisible;
+  final TextEditingController _messageController = TextEditingController();
+
   @override
   void initState() {
+    super.initState();
     isMemoryVisible = widget.isMemory!;
     isChatVisible = widget.isChat!;
-    super.initState();
   }
 
   void toggleSearchVisibility() {
@@ -34,7 +38,6 @@ class _CustomNavBarState extends State<CustomNavBar> {
       isMemoryVisible = !isMemoryVisible;
       context.goNamed(TranscriptMemoryPage.name);
       isChatVisible = false;
-      // hintText = 'Search for memories...';
     });
   }
 
@@ -43,9 +46,17 @@ class _CustomNavBarState extends State<CustomNavBar> {
       isChatVisible = !isChatVisible;
       context.goNamed(ChatsPage.name);
       isMemoryVisible = false;
-      // hintText = 'Type here...';
     });
-    
+  }
+
+  // Function to handle sending a message
+  void _handleSendMessage() {
+    final message = _messageController.text.trim();
+    if (message.isNotEmpty && widget.onSendMessage != null) {
+      widget.onSendMessage!(
+          message); // Use the callback to send message if not null
+      _messageController.clear(); // Clear the text field after sending
+    }
   }
 
   @override
@@ -55,22 +66,22 @@ class _CustomNavBarState extends State<CustomNavBar> {
       height: 64.h,
       padding: EdgeInsets.symmetric(horizontal: 6.w),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.h),
-          border: Border.all(
-            color: CustomColors.white,
-            width: 1.w,
+        borderRadius: BorderRadius.circular(20.h),
+        border: Border.all(
+          color: CustomColors.white,
+          width: 1.w,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            blurRadius: 4,
+            offset: const Offset(0, 5),
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              blurRadius: 4,
-              offset: const Offset(0, 5),
-            ),
-          ],
-          color: CustomColors.greyLavender),
+        ],
+        color: CustomColors.greyLavender,
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        //  mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           // AVA Icon
           isMemoryVisible || isChatVisible
@@ -116,11 +127,14 @@ class _CustomNavBarState extends State<CustomNavBar> {
                         minVerticalPadding: 0,
                         contentPadding: EdgeInsets.zero,
                         title: TextField(
+                          controller: _messageController, // Attach controller
                           decoration: InputDecoration(
                             isDense: true,
                             contentPadding:
                                 EdgeInsets.symmetric(vertical: 20.h),
-                            hintText:isChatVisible?'Type here...':'Search for memories...' ,
+                            hintText: isChatVisible
+                                ? 'Type here...'
+                                : 'Search for memories...',
                             hintStyle: textTheme.bodyMedium
                                 ?.copyWith(color: CustomColors.greyLight),
                             border: InputBorder.none,
@@ -133,9 +147,11 @@ class _CustomNavBarState extends State<CustomNavBar> {
                                   color: CustomColors.greyLavender,
                                   padding: EdgeInsets.all(4.h),
                                   child: CustomIconButton(
-                                      size: 22.h,
-                                      iconPath: IconImage.send,
-                                      onPressed: () {}),
+                                    size: 22.h,
+                                    iconPath: IconImage.send,
+                                    onPressed:
+                                        _handleSendMessage, // Trigger send
+                                  ),
                                 ),
                               )
                             : null,
@@ -159,5 +175,11 @@ class _CustomNavBarState extends State<CustomNavBar> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose(); // Dispose controller when widget is disposed
+    super.dispose();
   }
 }

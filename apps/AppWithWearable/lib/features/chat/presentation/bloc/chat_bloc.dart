@@ -47,7 +47,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             ragContext,
             await MessageProvider().retrieveMostRecentMessages(limit: 10),
           );
-
+          //  MessageProvider().updateMessage(aiMessage);
+          add(LoadInitialChat());
           // Stream the AI response and update the AI message
           await streamApiResponse(
             prompt,
@@ -74,6 +75,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       SendInitialPluginMessage event, Emitter<ChatState> emit) async {
     emit(state.copyWith(status: ChatStatus.loading));
     try {
+      print("hereeee");
       var ai = Message(DateTime.now(), '', 'ai', pluginId: event.plugin?.id);
       await messageProvider.saveMessage(ai);
 
@@ -113,6 +115,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       print('Total number of messages: $messageCount');
       if (messageCount == 0) {
         sendInitialPluginMessage(null);
+      } else {
+        print(messages.toString());
       }
     } catch (error) {
       emit(state.copyWith(
@@ -204,6 +208,7 @@ _prepareStreaming(String text) {
   );
   MessageProvider().saveMessage(human);
   MessageProvider().saveMessage(ai);
+
   // widget.messages.add(human);
   // widget.messages.add(ai);
   // _moveListToBottom(extra: widget.textFieldFocusNode.hasFocus ? 148 : 200);
