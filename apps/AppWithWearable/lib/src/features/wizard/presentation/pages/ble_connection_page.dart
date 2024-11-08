@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
-import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript_bloc.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
 import 'package:friend_private/src/features/wizard/presentation/widgets/ble_animation.dart';
 
 class BleConnectionPage extends StatefulWidget {

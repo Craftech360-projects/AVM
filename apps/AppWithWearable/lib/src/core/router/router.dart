@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/src/features/chats/presentation/pages/chats_page.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/pages/transcript_memory_page.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/pages/ws_testpage.dart';
 import 'package:friend_private/src/features/memories/presentation/pages/memory_detail_page.dart';
 import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/src/features/wizard/presentation/pages/ble_connection_page.dart';
@@ -18,7 +19,9 @@ const _routeTransitionDuration = 300;
 class AppRouter {
   GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
+    // initialLocation: '/wsPage',
     initialLocation: '/transcript-memory',
+
     // initialLocation: '/signin',
     routes: [
       GoRoute(
@@ -120,6 +123,19 @@ class AppRouter {
         parentNavigatorKey: _rootNavigatorKey,
         pageBuilder: (context, state) => CustomTransitionPage(
           child: const ChatsPage(),
+          transitionDuration: const Duration(
+            milliseconds: _routeTransitionDuration,
+          ),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        ),
+      ),
+      GoRoute(
+        path: '/wsPage',
+        name: WebSocketTestPage.name,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child:  WebSocketTestPage(),
           transitionDuration: const Duration(
             milliseconds: _routeTransitionDuration,
           ),

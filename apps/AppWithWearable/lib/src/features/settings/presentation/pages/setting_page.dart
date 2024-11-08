@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
-import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript_bloc.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
 import 'package:friend_private/src/features/settings/presentation/widgets/add_ons.dart';
 import 'package:friend_private/src/features/settings/presentation/widgets/language_dropdown.dart';
 import 'package:friend_private/src/features/wizard/presentation/pages/ble_connection_page.dart';
