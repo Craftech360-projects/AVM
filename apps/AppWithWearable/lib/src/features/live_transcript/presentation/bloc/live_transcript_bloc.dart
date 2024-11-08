@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
@@ -11,159 +9,213 @@ import 'package:friend_private/utils/ble/gatt_utils.dart';
 part 'live_transcript_event.dart';
 part 'live_transcript_state.dart';
 
+enum BleAudioCodec { pcm16, pcm8, mulaw16, mulaw8, opus, unknown }
+
 class LiveTranscriptBloc
     extends Bloc<LiveTranscriptEvent, LiveTranscriptState> {
-  StreamSubscription<List<ScanResult>>? scanSubscription;
-  StreamSubscription<List<int>>? batteryLevelListener;
+  StreamSubscription<BluetoothAdapterState>? _bleAdapterSubscription;
+  StreamSubscription<List<ScanResult>>? _scanSubscription;
+  StreamSubscription<BluetoothConnectionState>? _connectionSubscription;
+  StreamSubscription<List<int>>? _audioDataSubscription;
+  StreamSubscription<List<int>>? _batteryLevelSubscription;
+
   LiveTranscriptBloc() : super(LiveTranscriptState.initial()) {
-    on<ScannedDevices>(
-      (event, emit) async {
-        List<BTDeviceStruct> devices = [];
-        emit(state.copyWith(bleConnectionStatus: BleConnectionStatus.loading));
-        // try {
-        if ((await FlutterBluePlus.isSupported) == false) {
-          LiveTranscriptState.initial();
-        }
-
-        // Listen to scan results
-        scanSubscription = FlutterBluePlus.scanResults.listen(
-          (results) {
-            List<ScanResult> scannedDevices =
-                results.where((r) => r.device.platformName.isNotEmpty).toList();
-            scannedDevices.sort((a, b) => b.rssi.compareTo(a.rssi));
-
-            devices = scannedDevices.map((deviceResult) {
-              return BTDeviceStruct(
-                name: deviceResult.device.platformName,
-                id: deviceResult.device.remoteId.str,
-                rssi: deviceResult.rssi,
-              );
-            }).toList();
-          },
-          onError: (e) {
-            print('bleFindDevices error: $e');
-            emit(
-              state.copyWith(
-                errorMessage: e.toString(),
-                bleConnectionStatus: BleConnectionStatus.failure,
-              ),
-            );
-          },
-        );
-
-        // Start scanning if not already scanning
-        // Only look for devices that implement Friend main service
-        if (!FlutterBluePlus.isScanningNow) {
-          await FlutterBluePlus.startScan(
-            timeout: const Duration(seconds: 5),
-            withServices: [Guid("19b10000-e8f2-537e-4f6c-d104768a1214")],
-          );
-        }
-        // }
-        // finally {
-        //   // Cancel subscription to avoid memory leaks
-        //   // await scanSubscription?.cancel();
-        // }
-
-        emit(
-          state.copyWith(
-            bleConnectionStatus: BleConnectionStatus.scanning,
-            visibleDevices: devices,
-          ),
-        );
-      },
-    );
-    on<SelectedDevice>(
-      (event, emit) async {
-        final String deviceId = event.deviceId;
-        final bool autoConnect = event.autoConnect;
-        final device = BluetoothDevice.fromId(deviceId);
-        try {
-          emit(
-              state.copyWith(bleConnectionStatus: BleConnectionStatus.loading));
-          // TODO: for android seems like the reconnect or resetState is not working
-          if (!autoConnect)
-            return await device.connect(autoConnect: false, mtu: null);
-
-          // Step 1: Connect with autoConnect
-          await device.connect(autoConnect: true, mtu: null);
-          // Step 2: Listen to the connection state to ensure the device is connected
-          await device.connectionState
-              .where((state) => state == BluetoothConnectionState.connected)
-              .first;
-
-          // Step 3: Request the desired MTU size if the platform is Android
-          if (Platform.isAndroid) await device.requestMtu(512);
-          print('ble devices list');
-          final batteryService =
-              await getServiceByUuid(deviceId, batteryServiceUuid);
-          if (batteryService == null) {
-            // logServiceNotFoundError('Battery', deviceId);
-            return;
-          }
-
-          BluetoothCharacteristic? batteryLevelCharacteristic =
-              getCharacteristicByUuid(
-                  batteryService, batteryLevelCharacteristicUuid);
-
-          try {
-            await batteryLevelCharacteristic?.setNotifyValue(true);
-          } catch (e, stackTrace) {
-            // logSubscribeError('Battery level', deviceId, e, stackTrace);
-            return;
-          }
-
-          batteryLevelListener =
-              batteryLevelCharacteristic?.lastValueStream.listen((value) {
-            if (value.isNotEmpty) {
-              state.copyWith(
-                bleConnectionStatus: BleConnectionStatus.connected,
-                bleBatteryLevel: value[0],
-              );
-              // onBatteryLevelChange?.call(value[0]);
-            }
-          });
-
-          // return listener;
-          emit(
-            state.copyWith(
-                bleConnectionStatus: BleConnectionStatus.connected,
-                connectedDevice: BTDeviceStruct(
-                  id: event.deviceId,
-                  name: 'Friend',
-                )),
-          );
-        } catch (e) {
-          emit(
-            state.copyWith(
-              bleConnectionStatus: BleConnectionStatus.failure,
-              errorMessage: e.toString(),
-            ),
-          );
-        }
-      },
-    );
-    on<DisconnectDevice>(
-      (event, emit) async {
-        final device = BluetoothDevice.fromId(event.btDeviceStruct.id);
-        try {
-          await device.disconnect();
-          LiveTranscriptState.initial();
-        } catch (e) {
-          debugPrint('bleDisconnectDevice failed: $e');
-          emit(
-            state.copyWith(
-              bleConnectionStatus: BleConnectionStatus.failure,
-              errorMessage: e.toString(),
-            ),
-          );
-        }
-      },
-    );
+    on<ScannedDevices>((event, emit) => _startListeningAdapterState());
+    on<_AdapterListener>((event, emit) => _handleAdapterState(event, emit));
+    on<_ScanListener>((event, emit) => _emitScanResults(event, emit));
+    on<SelectedDevice>((event, emit) => _connectToDevice(event, emit));
+    on<_BleConnectionListener>(
+        (event, emit) => _handleConnectionState(event, emit));
+    on<_AudioListener>((event, emit) => _handleAudioData(event, emit));
+    on<_BatteryListener>((event, emit) => _emitBatteryLevel(event, emit));
+    on<DisconnectDevice>((event, emit) => _disconnectDevice(event, emit));
   }
+
+  /// Start listening for Bluetooth adapter state changes
+  void _startListeningAdapterState() {
+    _bleAdapterSubscription?.cancel();
+    _bleAdapterSubscription = FlutterBluePlus.adapterState.listen((state) {
+      add(_AdapterListener(bleAdapterState: state));
+    });
+  }
+
+  /// Handle Bluetooth adapter state changes
+  Future<void> _handleAdapterState(
+      _AdapterListener event, Emitter<LiveTranscriptState> emit) async {
+    if (event.bleAdapterState == BluetoothAdapterState.on) {
+      await FlutterBluePlus.startScan(
+        timeout: const Duration(seconds: 5),
+        withServices: [Guid("19b10000-e8f2-537e-4f6c-d104768a1214")],
+        androidScanMode: AndroidScanMode.lowLatency,
+      );
+
+      _scanSubscription?.cancel();
+      _scanSubscription = FlutterBluePlus.scanResults.listen((results) {
+        add(_ScanListener(devices: results));
+      });
+    }
+  }
+
+  /// Emit scan results as state
+  void _emitScanResults(
+      _ScanListener event, Emitter<LiveTranscriptState> emit) {
+    final visibleDevices = event.devices.map((result) {
+      return BTDeviceStruct(
+        id: result.device.remoteId.toString(),
+        name: result.device.platformName,
+        rssi: result.rssi,
+      );
+    }).toList();
+
+    emit(state.copyWith(
+      bleConnectionStatus: BluetoothDeviceStatus.searching,
+      visibleDevices: visibleDevices,
+    ));
+  }
+
+  /// Handle device connection logic
+  Future<void> _connectToDevice(
+      SelectedDevice event, Emitter<LiveTranscriptState> emit) async {
+    final device = BluetoothDevice.fromId(event.connectedDevice.id);
+    emit(state.copyWith(bleConnectionStatus: BluetoothDeviceStatus.processing));
+    await device.connect(mtu: null, autoConnect: true);
+
+    emit(state.copyWith(
+      bleConnectionStatus: BluetoothDeviceStatus.connected,
+      connectedDevice: event.connectedDevice,
+    ));
+
+    _connectionSubscription?.cancel();
+    _connectionSubscription = device.connectionState.listen((connectionState) {
+      add(_BleConnectionListener(bleListener: connectionState));
+    });
+  }
+
+  /// Handle BLE connection state changes
+  Future<void> _handleConnectionState(
+      _BleConnectionListener event, Emitter<LiveTranscriptState> emit) async {
+    if (event.bleListener == BluetoothConnectionState.connected) {
+      await _initiateBatteryListener();
+      await _initiateAudioListener();
+      await _fetchAudioCodec();
+    } else {
+      emit(state.copyWith(bleConnectionStatus: BluetoothDeviceStatus.disconnected));
+    }
+  }
+
+  Future<void> _fetchAudioCodec() async {
+    final audioCodecService =
+        await getServiceByUuid(state.connectedDevice!.id, friendServiceUuid);
+    if (audioCodecService == null) return;
+
+    var audioCodecCharacteristic = getCharacteristicByUuid(
+        audioCodecService, audioCodecCharacteristicUuid);
+    if (audioCodecCharacteristic == null) return;
+
+    List<int> codecValue = await audioCodecCharacteristic.read();
+    if (codecValue.isNotEmpty) {
+      final codecId = codecValue.first;
+      final codec = _mapCodecIdToEnum(codecId);
+      print('Codec details: $codecId, codec: $codec');
+      emit(
+        state.copyWith(
+          bleConnectionStatus: BluetoothDeviceStatus.connected,
+          codec: codec,
+        ),
+      );
+    }
+  }
+
+  BleAudioCodec _mapCodecIdToEnum(int codecId) {
+    switch (codecId) {
+      case 0:
+        return BleAudioCodec.pcm16;
+      case 1:
+        return BleAudioCodec.pcm8;
+      case 20:
+        return BleAudioCodec.opus;
+      default:
+        return BleAudioCodec.unknown;
+    }
+  }
+
+  Future<void> _initiateAudioListener() async {
+    final friendService =
+        await getServiceByUuid(state.connectedDevice!.id, friendServiceUuid);
+    if (friendService == null) return;
+
+    var audioDataCharacteristic = getCharacteristicByUuid(
+        friendService, audioDataStreamCharacteristicUuid);
+    if (audioDataCharacteristic == null) return;
+
+    await audioDataCharacteristic.setNotifyValue(true);
+    print('Subscribed to audioBytes stream from AVM Device');
+
+    _audioDataSubscription?.cancel();
+    _audioDataSubscription =
+        audioDataCharacteristic.lastValueStream.listen((rawAudio) {
+      add(_AudioListener(rawAudio: rawAudio));
+    });
+  }
+
+  Future<void> _initiateBatteryListener() async {
+    final batteryService =
+        await getServiceByUuid(state.connectedDevice!.id, batteryServiceUuid);
+    if (batteryService == null) return;
+
+    var batteryLevelCharacteristic =
+        getCharacteristicByUuid(batteryService, batteryLevelCharacteristicUuid);
+    if (batteryLevelCharacteristic == null) return;
+
+    await batteryLevelCharacteristic.setNotifyValue(true);
+    _batteryLevelSubscription?.cancel();
+    _batteryLevelSubscription =
+        batteryLevelCharacteristic.lastValueStream.listen((value) {
+      add(_BatteryListener(value: value));
+    });
+  }
+
+  /// Emit battery level updates to the state
+  void _emitBatteryLevel(
+      _BatteryListener event, Emitter<LiveTranscriptState> emit) {
+    if (event.value.isNotEmpty) {
+      emit(state.copyWith(
+        bleBatteryLevel: event.value[0],
+        bleConnectionStatus: BluetoothDeviceStatus.connected,
+      ));
+    }
+  }
+
+  /// Handle received audio data
+  void _handleAudioData(
+      _AudioListener event, Emitter<LiveTranscriptState> emit) {
+    print('Received Raw Audio: ${event.rawAudio}');
+    // Additional audio processing can be added here
+  }
+
+  /// Handle device disconnection
+  Future<void> _disconnectDevice(
+      DisconnectDevice event, Emitter<LiveTranscriptState> emit) async {
+    final device = BluetoothDevice.fromId(event.btDeviceStruct.id);
+    await device.disconnect();
+    _cleanupSubscriptions();
+
+    emit(LiveTranscriptState.initial());
+    add(ScannedDevices());
+  }
+
+  /// Cleanup all active subscriptions
+  void _cleanupSubscriptions() {
+    _bleAdapterSubscription?.cancel();
+    _scanSubscription?.cancel();
+    _connectionSubscription?.cancel();
+    _audioDataSubscription?.cancel();
+    _batteryLevelSubscription?.cancel();
+  }
+
   @override
-  Future<void> close() async {
-    await scanSubscription?.cancel();
+  Future<void> close() {
+    _cleanupSubscriptions();
     return super.close();
   }
 }

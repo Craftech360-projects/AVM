@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript_bloc.dart';
 import 'package:friend_private/src/features/settings/presentation/widgets/add_ons.dart';
 import 'package:friend_private/src/features/settings/presentation/widgets/language_dropdown.dart';
 import 'package:friend_private/src/features/wizard/presentation/pages/ble_connection_page.dart';
@@ -45,10 +47,16 @@ class _SettingPageState extends State<SettingPage> {
             onTap: () {
               context.pushNamed(BleConnectionPage.name);
             },
-            title: Text(
-              'Device Battery - 66%',
+            title:  BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
+          bloc: context.read<LiveTranscriptBloc>(),
+          builder: (context, state) {
+            
+            return Text(
+              'Battery Level: ${state.bleBatteryLevel}%',
               style: textTheme.bodyLarge,
-            ),
+            );
+          },
+        ),
             trailing: const CircleAvatar(
               backgroundColor: CustomColors.greyLavender,
               child: Icon(Icons.bluetooth_searching),
@@ -79,18 +87,18 @@ class _SettingPageState extends State<SettingPage> {
             title: 'Developer Option',
             onPressed: () {},
           ),
-          const FloatingActionButton(
-            onPressed: scanBleDevice,
-            child: Text('Scan Device'),
-          ),
-          FloatingActionButton(
-            onPressed: () => selectBleDevice(remoteId: 'C4:E8:E3:9F:D2:AE'),
-            child: const Text('Select Device'),
-          ),
-          FloatingActionButton(
-            onPressed: () => disconnectBleDevice(remoteId: 'C4:E8:E3:9F:D2:AE'),
-            child: const Text('Disconnect Device'),
-          ),
+          // const FloatingActionButton(
+          //   onPressed: scanBleDevice,
+          //   child: Text('Scan Device'),
+          // ),
+          // FloatingActionButton(
+          //   onPressed: () => selectBleDevice(remoteId: 'C4:E8:E3:9F:D2:AE'),
+          //   child: const Text('Select Device'),
+          // ),
+          // FloatingActionButton(
+          //   onPressed: () => disconnectBleDevice(remoteId: 'C4:E8:E3:9F:D2:AE'),
+          //   child: const Text('Disconnect Device'),
+          // ),
         ],
       ),
     );
@@ -200,7 +208,7 @@ void selectBleDevice({required String remoteId}) async {
       //! GET AUDIO CODEC
       // Default codec is PCM8
       late int codecId;
-       BleAudioCodec codec ;
+      BleAudioCodec codec;
       final getAudioCodec = await getServiceByUuid(remoteId, friendServiceUuid);
       if (getAudioCodec == null) {
         codec = BleAudioCodec.unknown;
@@ -284,3 +292,151 @@ void disconnectBleDevice({required String remoteId}) async {
 }
 
 enum BleAudioCodec { pcm16, pcm8, mulaw16, mulaw8, opus, unknown }
+
+
+// class BluetoothManager {
+//   bool isScanning = false;
+//   final List<String> detectedDevices = [];
+//   BluetoothDevice? connectedDevice;
+//   String? lastConnectedDeviceId;
+
+//   StreamSubscription<BluetoothAdapterState>? adapterStateSubscription;
+//   StreamSubscription<List<ScanResult>>? scanResultsSubscription;
+//   StreamSubscription<BluetoothConnectionState>? connectionStateSubscription;
+//   StreamSubscription<List<int>>? batteryLevelListener;
+//   StreamSubscription<List<int>>? audioDataListener;
+  
+//   BleAudioCodec codec = BleAudioCodec.unknown;
+//   BluetoothAdapterState? currentAdapterState;
+
+//   void scanBleDevice() {
+//     // Listen to Bluetooth adapter state changes
+//     adapterStateSubscription = FlutterBluePlus.adapterState.listen((state) async {
+//       currentAdapterState = state; // Update current state
+      
+//       print('Bluetooth Adapter State: $state');
+
+//       if (state == BluetoothAdapterState.on && !isScanning) {
+//         startScanning();
+//       } else if (state == BluetoothAdapterState.off) {
+//         stopScanning();
+//         print("Bluetooth is off. Please enable Bluetooth.");
+//       }
+//     });
+//   }
+
+//   void startScanning() async {
+//     isScanning = true;
+//     await FlutterBluePlus.startScan(
+//       timeout: const Duration(seconds: 5),
+//       withServices: [Guid("19b10000-e8f2-537e-4f6c-d104768a1214")],
+//     );
+
+//     scanResultsSubscription = FlutterBluePlus.scanResults.listen((results) {
+//       for (ScanResult result in results) {
+//         String deviceId = result.device.remoteId.toString();
+//         if (!detectedDevices.contains(deviceId)) {
+//           detectedDevices.add(deviceId);
+//           print('${result.device.remoteId}: "${result.advertisementData.advName}" found!');
+//         }
+
+//         // Attempt reconnection if this is the last known device
+//         if (lastConnectedDeviceId == deviceId) {
+//           selectBleDevice(remoteId: deviceId);
+//         }
+//       }
+//     }, onError: (error) {
+//       print("Scan error: $error");
+//       stopScanning();
+//     });
+//   }
+
+//   void stopScanning() async {
+//     if (isScanning) {
+//       await FlutterBluePlus.stopScan();
+//       isScanning = false;
+//     }
+//     scanResultsSubscription?.cancel();
+//   }
+
+//   Future<void> selectBleDevice({required String remoteId}) async {
+//     final device = BluetoothDevice.fromId(remoteId);
+//     connectedDevice = device;
+//     lastConnectedDeviceId = remoteId;
+
+//     await device.connect(mtu: null, autoConnect: true);
+
+//     connectionStateSubscription = device.connectionState.listen((state) {
+//       if (state == BluetoothConnectionState.connected) {
+//         print('Connected to the device!');
+//         setupBatteryListener(remoteId);
+//         setupAudioListener(remoteId);
+//       } else if (state == BluetoothConnectionState.disconnected) {
+//         print('Disconnected from the device!');
+//         cleanupListeners();
+
+//         // Attempt reconnection if Bluetooth is on
+//         if (currentAdapterState == BluetoothAdapterState.on) {
+//           selectBleDevice(remoteId: remoteId);
+//         }
+//       }
+//     });
+//   }
+
+//   Future<void> setupBatteryListener(String remoteId) async {
+//     final batteryService = await getServiceByUuid(remoteId, batteryServiceUuid);
+//     if (batteryService == null) {
+//       print("Battery service not found!");
+//       return;
+//     }
+
+//     final batteryLevelCharacteristic = getCharacteristicByUuid(batteryService, batteryLevelCharacteristicUuid);
+//     if (batteryLevelCharacteristic == null) {
+//       print("Battery level characteristic not found!");
+//       return;
+//     }
+
+//     await batteryLevelCharacteristic.setNotifyValue(true);
+//     batteryLevelListener = batteryLevelCharacteristic.lastValueStream.listen((value) {
+//       if (value.isNotEmpty) {
+//         print('Battery Level: ${value[0]}%');
+//       }
+//     });
+//   }
+
+//   Future<void> setupAudioListener(String remoteId) async {
+//     final friendService = await getServiceByUuid(remoteId, friendServiceUuid);
+//     if (friendService == null) {
+//       print("Friend service not found!");
+//       return;
+//     }
+
+//     final audioDataStreamCharacteristic = getCharacteristicByUuid(friendService, audioDataStreamCharacteristicUuid);
+//     if (audioDataStreamCharacteristic == null) {
+//       print("Audio data stream characteristic not found!");
+//       return;
+//     }
+
+//     await audioDataStreamCharacteristic.setNotifyValue(true);
+//     audioDataListener = audioDataStreamCharacteristic.lastValueStream.listen((value) {
+//       if (value.isNotEmpty) {
+//         print('Raw audio received: $value');
+//       }
+//     });
+
+//     if (Platform.isAndroid) {
+//       await connectedDevice?.requestMtu(512);
+//     }
+//   }
+
+//   void cleanupListeners() {
+//     batteryLevelListener?.cancel();
+//     audioDataListener?.cancel();
+//   }
+
+//   Future<void> disconnectBleDevice() async {
+//     cleanupListeners();
+//     await connectedDevice?.disconnect();
+//     connectionStateSubscription?.cancel();
+//   }
+// }

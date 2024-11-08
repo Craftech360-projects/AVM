@@ -1,8 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript_bloc.dart';
 
 class CaptureCard extends StatelessWidget {
   const CaptureCard({super.key});
@@ -44,27 +46,33 @@ class CaptureCard extends StatelessWidget {
             ),
             SizedBox(height: 8.h),
             Text(
-              "Check AVM Device",
+              "AVM Status",
               style:
                   textTheme.bodySmall?.copyWith(color: CustomColors.greyLight),
             ),
-            Row(
-              children: [
-                Container(
-                  width: 8.h,
-                  height: 8.w,
-                  decoration: const BoxDecoration(
-                    color: CustomColors.yellowAccent,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                SizedBox(width: 4.h),
-                Text(
-                  "Disconnected",
-                  style: textTheme.bodySmall
-                      ?.copyWith(color: CustomColors.greyLight, fontSize: 10.h),
-                ),
-              ],
+            BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
+              bloc: context.read<LiveTranscriptBloc>(),
+              builder: (context, state) {
+              final bool avmDisconnected=state.bluetoothDeviceStatus==BluetoothDeviceStatus.disconnected;
+                return Row(
+                  children: [
+                    Container(
+                      width: 8.h,
+                      height: 8.w,
+                      decoration:  BoxDecoration(
+                        color:avmDisconnected? CustomColors.yellowAccent:CustomColors.red,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    SizedBox(width: 4.h),
+                    Text(
+                     avmDisconnected?"Disconnected":"Connected" ,
+                      style: textTheme.bodySmall?.copyWith(
+                          color: CustomColors.greyLight, fontSize: 10.h),
+                    ),
+                  ],
+                );
+              },
             ),
             SizedBox(height: 8.h),
           ],

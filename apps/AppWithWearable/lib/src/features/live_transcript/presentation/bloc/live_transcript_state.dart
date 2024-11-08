@@ -1,55 +1,60 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'live_transcript_bloc.dart';
 
-enum BleConnectionStatus {
+enum BluetoothDeviceStatus {
   initial,
-  scanning,
-  loading,
+  searching,
   connected,
-  failure,
+  disconnected,
+  processing,
 }
 
 class LiveTranscriptState extends Equatable {
-  final BleConnectionStatus bleConnectionStatus;
+  final BluetoothDeviceStatus bluetoothDeviceStatus;
   final List<BTDeviceStruct> visibleDevices;
   final BTDeviceStruct? connectedDevice;
+ final BleAudioCodec? codec;
   final int bleBatteryLevel;
   final String? errorMessage;
   const LiveTranscriptState({
-    required this.bleConnectionStatus,
+    required this.bluetoothDeviceStatus,
     this.visibleDevices = const [],
     this.bleBatteryLevel = 0,
     this.errorMessage = '',
     this.connectedDevice,
+    this.codec=BleAudioCodec.unknown,
   });
 
   factory LiveTranscriptState.initial() => const LiveTranscriptState(
-        bleConnectionStatus: BleConnectionStatus.initial,
+        bluetoothDeviceStatus: BluetoothDeviceStatus.initial,
       );
 
   LiveTranscriptState copyWith({
-    BleConnectionStatus? bleConnectionStatus,
+    BluetoothDeviceStatus? bleConnectionStatus,
     List<BTDeviceStruct>? visibleDevices,
     int? bleBatteryLevel,
     BTDeviceStruct? connectedDevice,
     String? errorMessage,
+    BleAudioCodec? codec,
   }) {
     return LiveTranscriptState(
-      bleConnectionStatus: bleConnectionStatus ?? this.bleConnectionStatus,
+      bluetoothDeviceStatus: bleConnectionStatus ?? bluetoothDeviceStatus,
       visibleDevices: visibleDevices ?? this.visibleDevices,
       bleBatteryLevel: bleBatteryLevel ?? this.bleBatteryLevel,
-      connectedDevice: connectedDevice?? this.connectedDevice,
+      connectedDevice: connectedDevice ?? this.connectedDevice,
       errorMessage: errorMessage ?? this.errorMessage,
+      codec:codec??this.codec,
     );
   }
 
   @override
   List<Object?> get props => [
-        bleConnectionStatus,
+        bluetoothDeviceStatus,
         visibleDevices,
         bleBatteryLevel,
         connectedDevice,
         errorMessage,
+        codec,
       ];
 
   @override

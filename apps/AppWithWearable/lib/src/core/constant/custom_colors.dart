@@ -19,4 +19,5 @@ class CustomColors {
   static const Color purpleBright = Color(0xFF9600FF);
 
   static const Color yellowAccent = Color(0xFFFFE500);
+  static const Color red = Color(0xFFFF0000);
 }
