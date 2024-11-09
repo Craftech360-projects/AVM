@@ -37,11 +37,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           // Retrieve the RAG context
           final ragInfo = await retrieveRAGContext(event.message);
           print('raginfo $ragInfo');
-
+          //after rag ne to update ui, to show user message
           String ragContext = ragInfo[0];
           List<Memory> memories = ragInfo[1].cast<Memory>();
           print('RAG Context: $ragContext memories: ${memories.length}');
-
+//
           // Use the RAG context to create a prompt
           var prompt = qaRagPrompt(
             ragContext,
@@ -49,6 +49,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           );
           //  MessageProvider().updateMessage(aiMessage);
           add(LoadInitialChat());
+
           // Stream the AI response and update the AI message
           await streamApiResponse(
             prompt,

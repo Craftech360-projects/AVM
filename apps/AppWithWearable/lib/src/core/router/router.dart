@@ -20,7 +20,7 @@ class AppRouter {
     navigatorKey: _rootNavigatorKey,
     //initialLocation: '/setting',
     // initialLocation: '/signin',
-    initialLocation: '/chats',
+    initialLocation: '/setting',
     routes: [
       GoRoute(
         path: '/signin',

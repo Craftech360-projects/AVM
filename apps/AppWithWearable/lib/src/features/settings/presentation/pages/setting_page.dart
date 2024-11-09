@@ -200,7 +200,7 @@ void selectBleDevice({required String remoteId}) async {
       //! GET AUDIO CODEC
       // Default codec is PCM8
       late int codecId;
-       BleAudioCodec codec ;
+      BleAudioCodec codec;
       final getAudioCodec = await getServiceByUuid(remoteId, friendServiceUuid);
       if (getAudioCodec == null) {
         codec = BleAudioCodec.unknown;
