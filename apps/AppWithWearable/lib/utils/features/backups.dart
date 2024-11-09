@@ -111,6 +111,11 @@ Future<List<Memory>> restoreFromBackup(
     // Convert JSON to Memory objects
     List<Memory> memoriesToRestore = decodedData.map((json) {
       try {
+        // Check and convert memoryImg if it's a List<dynamic>
+        if (json['memoryImg'] is List<dynamic>) {
+          json['memoryImg'] =
+              Uint8List.fromList(List<int>.from(json['memoryImg']));
+        }
         return Memory.fromJson(json);
       } catch (e) {
         print('Error converting json to memory: $e');
@@ -144,6 +149,8 @@ Future<bool> retrieveBackup(String? uid) async {
       // Attempt to restore from backup
       var memories = await restoreFromBackup(uid: uid, backupData: backupData);
       if (memories.isNotEmpty) {
+        print("here,sucesss");
+        print(memories);
         // Store the memories only if we successfully restored them
         MemoryProvider().storeMemories(memories);
         print("Backup restored successfully");

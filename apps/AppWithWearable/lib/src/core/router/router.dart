@@ -21,7 +21,8 @@ class AppRouter {
     navigatorKey: _rootNavigatorKey,
     //initialLocation: '/setting',
     // initialLocation: '/signin',
-    initialLocation: '/profile',
+    // initialLocation: '/transcript-memory',
+    initialLocation: '/transcript-memory',
     routes: [
       GoRoute(
         path: '/signin',

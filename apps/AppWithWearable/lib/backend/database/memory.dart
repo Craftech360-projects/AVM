@@ -199,6 +199,8 @@ class Structured {
   Structured(this.title, this.overview,
       {this.id = 0, this.emoji = '', this.category = const []});
 
+  get chapters => null;
+
   getEmoji() {
     try {
       if (emoji.isNotEmpty) return utf8.decode(emoji.toString().codeUnits);

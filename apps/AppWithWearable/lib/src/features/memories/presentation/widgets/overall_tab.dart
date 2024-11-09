@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/src/core/common_widget/expandable_text.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 
 class OverallTab extends StatelessWidget {
-  const OverallTab({super.key});
+  final Structured
+      target; // Replace `Memory` with the actual data type you have
+
+  const OverallTab({super.key, required this.target});
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final events = target?.events ?? [];
+    final actionItems = target?.actionItems ??
+        []; // Replace `actionItems` with the correct field in `target`
+    print(target);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,18 +35,11 @@ class OverallTab extends StatelessWidget {
               style: textTheme.titleMedium,
             ),
           ),
-           ExpandableText(
-            text: 'The project partners discussed progress '
-                'and address any concerns on a project that is nearing the point.'
-                'The project partners discussed progress and address'
-                'any concerns on a project that is nearing the point.'
-                'The project partners discussed progress '
-                'and address any concerns on a project that is nearing the point.'
-                'The project partners discussed progress and address'
-                'any concerns on a project that is nearing the point.',
-                  style: textTheme.bodyLarge?.copyWith(
-                color: CustomColors.grey,
-              ),
+          ExpandableText(
+            text: target.overview,
+            style: textTheme.bodyLarge?.copyWith(
+              color: CustomColors.grey,
+            ),
           ),
           SizedBox(height: 12.h),
 
@@ -49,8 +50,39 @@ class OverallTab extends StatelessWidget {
               height: 18.h,
               width: 18.w,
             ),
-            title: Text('Chapters', style: textTheme.titleMedium),
+            title: Text('Events', style: textTheme.titleMedium),
           ),
+
+          if (events.isEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.h),
+              child: Text(
+                'No events found',
+                style: textTheme.bodyLarge?.copyWith(
+                  color: CustomColors.grey,
+                ),
+              ),
+            )
+          else
+            ...events.asMap().entries.map((entry) {
+              int index = entry.key + 1;
+              var event = entry.value;
+
+              return CustomListTile(
+                leading: Text(
+                  '$index.',
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: CustomColors.grey,
+                  ),
+                ),
+                title: Text(
+                  event, // Replace this with the correct event property if needed
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: CustomColors.grey,
+                  ),
+                ),
+              );
+            }),
           CustomListTile(
             leading: Text(
               '1.',
@@ -67,7 +99,7 @@ class OverallTab extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
 
-          /// Action Items
+          /// Action Items Section
           CustomListTile(
             leading: SvgPicture.asset(
               IconImage.action,
@@ -79,29 +111,65 @@ class OverallTab extends StatelessWidget {
               style: textTheme.titleMedium,
             ),
           ),
-          CustomListTile(
-            minLeadingWidth: 0.w,
-            onTap: () {
-              // Add event to save the action
-            },
-            leading: Container(
-              width: 6.h,
-              height: 6.w,
-              decoration: const BoxDecoration(
-                color: CustomColors.grey,
-                shape: BoxShape.circle,
+          if (actionItems.isEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.h),
+              child: Text(
+                'No action items found',
+                style: textTheme.bodyLarge?.copyWith(
+                  color: CustomColors.grey,
+                ),
               ),
-            ),
-            title: Text(
-              'The development team should continue working on '
-              'resolving any outstanding issues identified in testing.',
-              style: textTheme.bodyLarge?.copyWith(
-                color: CustomColors.grey,
-                decoration: TextDecoration.lineThrough,
-                 decorationColor: CustomColors.greyLight,
-              ),
-            ),
-          ),
+            )
+          else
+            ...actionItems.map((actionItem) {
+              return CustomListTile(
+                minLeadingWidth: 0.w,
+                onTap: () {
+                  // Add event to save the action, if necessary
+                },
+                leading: Container(
+                  width: 6.h,
+                  height: 6.w,
+                  decoration: const BoxDecoration(
+                    color: CustomColors.grey,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                title: Text(
+                  actionItem, // Replace with the correct action item property
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: CustomColors.grey,
+                    decoration: TextDecoration.lineThrough,
+                    decorationColor: CustomColors.greyLight,
+                  ),
+                ),
+              );
+            }).toList(),
+
+          // CustomListTile(
+          //   minLeadingWidth: 0.w,
+          //   onTap: () {
+          //     // Add event to save the action
+          //   },
+          //   leading: Container(
+          //     width: 6.h,
+          //     height: 6.w,
+          //     decoration: const BoxDecoration(
+          //       color: CustomColors.grey,
+          //       shape: BoxShape.circle,
+          //     ),
+          //   ),
+          //   title: Text(
+          //     'The development team should continue working on '
+          //     'resolving any outstanding issues identified in testing.',
+          //     style: textTheme.bodyLarge?.copyWith(
+          //       color: CustomColors.grey,
+          //       decoration: TextDecoration.lineThrough,
+          //       decorationColor: CustomColors.greyLight,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
