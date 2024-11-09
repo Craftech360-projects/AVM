@@ -175,6 +175,7 @@ class _MyAppState extends State<MyApp> {
             MemoryProvider(),
           ),
         ),
+
         /// below is with new UI
         BlocProvider(create: (context) => LiveTranscriptBloc()),
       ],
