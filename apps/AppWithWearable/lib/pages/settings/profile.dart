@@ -5,6 +5,8 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/onboarding/wrapper.dart';
+import 'package:friend_private/pages/settings/BackupButton.dart';
+import 'package:friend_private/pages/settings/RestoreButton.dart';
 import 'package:friend_private/pages/settings/widgets/change_name_widget.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
@@ -220,6 +222,13 @@ class _ProfilePageState extends State<ProfilePage> {
             // ),
             const SizedBox(height: 24),
             Divider(color: Colors.grey.shade300, height: 1),
+            const SizedBox(height: 16),
+            const BackupButton(),
+            const SizedBox(height: 16),
+            const RestoreButton(),
+
+            const SizedBox(height: 24),
+            Divider(color: Colors.grey.shade300, height: 1),
             const SizedBox(height: 24),
             ListTile(
               contentPadding: const EdgeInsets.fromLTRB(4, 0, 24, 0),
@@ -237,10 +246,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       return getDialog(
                         context,
                         () => Navigator.of(context).pop(),
-                        () => launchUrl(Uri.parse(
-                            'mailto:team@basedhardware.com?subject=Delete%20My%20Account')),
+                        () => launchUrl(
+                            Uri.parse('mailto:craftechapps@gmail.com')),
                         'Deleting Account?',
-                        'Please send us an email at team@basedhardware.com',
+                        'Please send us an email at craftechapps@gmail.com',
                         okButtonText: 'Open Email',
                         singleButton: false,
                       );

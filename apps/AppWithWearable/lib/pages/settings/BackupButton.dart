@@ -104,7 +104,6 @@ class _BackupButtonState extends State<BackupButton> {
             icon: const Icon(Icons.backup),
             label: const Text('Manual Backup'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
               textStyle: const TextStyle(color: Colors.white),
             ),
             onPressed: backupsEnabled
@@ -166,7 +165,8 @@ class _BackupButtonState extends State<BackupButton> {
 
     try {
       // Call your backup API or method here
-      //  await executeManualBackupWithUid(); // Replace this with your backup method
+      await executeManualBackupWithUid(
+          uid); // Replace this with your backup method
     } catch (error) {
       // Handle error (e.g., show a snackbar or alert)
       print('Manual backup failed: $error');
