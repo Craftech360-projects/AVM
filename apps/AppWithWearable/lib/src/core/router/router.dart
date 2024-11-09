@@ -20,7 +20,7 @@ class AppRouter {
   GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     // initialLocation: '/wsPage',
-    initialLocation: '/transcript-memory',
+    initialLocation: '/setting',
 
     // initialLocation: '/signin',
     routes: [

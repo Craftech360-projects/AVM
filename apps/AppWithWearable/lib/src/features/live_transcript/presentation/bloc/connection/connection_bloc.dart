@@ -66,7 +66,7 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
           .add(event.message); 
     } else {
       _messageQueue.add(event.message); 
-      print("WebSocket is not connected. Queuing message.");
+      print('WebSocket is not connected. Queuing message.');
     }
   }
 
@@ -98,11 +98,11 @@ class WebSocketBloc extends Bloc<WebSocketEvent, WebSocketState> {
     _channel!.stream.listen(
       (message) => _messageController.add(message),
       onDone: () {
-        print("WebSocket connection closed");
+        print('WebSocket connection closed');
         _channel = null;
       },
       onError: (error) {
-        print("WebSocket error: $error");
+        print('WebSocket error: $error');
         _channel = null;
       },
 

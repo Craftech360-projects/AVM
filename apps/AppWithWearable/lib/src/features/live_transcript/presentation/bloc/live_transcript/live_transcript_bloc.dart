@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -95,11 +97,14 @@ class LiveTranscriptBloc
   Future<void> _handleConnectionState(
       _BleConnectionListener event, Emitter<LiveTranscriptState> emit) async {
     if (event.bleListener == BluetoothConnectionState.connected) {
+      emit(
+          state.copyWith(bleConnectionStatus: BluetoothDeviceStatus.connected));
       await _initiateBatteryListener();
-      await _initiateAudioListener();
       await _fetchAudioCodec();
+      await _initiateAudioListener();
     } else {
-      emit(state.copyWith(bleConnectionStatus: BluetoothDeviceStatus.disconnected));
+      emit(state.copyWith(
+          bleConnectionStatus: BluetoothDeviceStatus.disconnected));
     }
   }
 
@@ -119,7 +124,7 @@ class LiveTranscriptBloc
       print('Codec details: $codecId, codec: $codec');
       emit(
         state.copyWith(
-          bleConnectionStatus: BluetoothDeviceStatus.connected,
+          // bleConnectionStatus: BluetoothDeviceStatus.connected,
           codec: codec,
         ),
       );
@@ -140,8 +145,14 @@ class LiveTranscriptBloc
   }
 
   Future<void> _initiateAudioListener() async {
+    final device = BluetoothDevice.fromId(state.connectedDevice!.id);
+    if (Platform.isAndroid) {
+      await device.requestMtu(512);
+    }
     final friendService =
         await getServiceByUuid(state.connectedDevice!.id, friendServiceUuid);
+    print(
+        'remote id received ${state.connectedDevice!.id}: $friendServiceUuid');
     if (friendService == null) return;
 
     var audioDataCharacteristic = getCharacteristicByUuid(
@@ -154,9 +165,15 @@ class LiveTranscriptBloc
     _audioDataSubscription?.cancel();
     _audioDataSubscription =
         audioDataCharacteristic.lastValueStream.listen((rawAudio) {
+      // log('is raw data received in bloc $rawAudio');
       add(_AudioListener(rawAudio: rawAudio));
     });
+  
+
+     device.cancelWhenDisconnected(_audioDataSubscription!);
+    
   }
+
 
   Future<void> _initiateBatteryListener() async {
     final batteryService =
