@@ -1,27 +1,31 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
+import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:friend_private/backend/api_requests/api/server.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
-
-import 'package:path_provider/path_provider.dart';
-import 'dart:io'; // For file system
-// For getting directories
-import 'package:permission_handler/permission_handler.dart'; // For requesting permissions
+import 'package:friend_private/utils/features/googledrive.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis_auth/googleapis_auth.dart';
+import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:googleapis_auth/auth_io.dart'; // For `clientViaAccessCredentials`
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 String encodeJson(List<dynamic> jsonObj, String password) {
   String jsonString = json.encode(jsonObj);
   final key = encrypt.Key.fromUtf8(
       sha256.convert(utf8.encode(password)).toString().substring(0, 32));
-  final iv = encrypt.IV.fromSecureRandom(16); // Generate a random IV
+  final iv = encrypt.IV.fromSecureRandom(16);
   final encrypter = encrypt.Encrypter(encrypt.AES(key));
   final encrypted = encrypter.encrypt(jsonString, iv: iv);
-  // Return the encrypted string with the IV prepended
   return '${iv.base64}:${encrypted.base64}';
 }
 
@@ -40,23 +44,6 @@ List<dynamic> decodeJson(String encryptedJson, String password) {
   return json.decode(decrypted);
 }
 
-// Future<String> getEncodedMemories() async {
-//   var password = SharedPreferencesUtil().backupPassword;
-//   if (password.isEmpty) return '';
-//   var memories = MemoryProvider().getMemories();
-//   return encodeJson(memories.map((e) => e.toJson()).toList(), password);
-// }
-
-// Future<bool> executeBackup() async {
-//   if (!SharedPreferencesUtil().backupsEnabled) return false;
-//   var result = await getEncodedMemories();
-//   if (result == '') return false;
-//   await getDecodedMemories(result, SharedPreferencesUtil().backupPassword);
-//   SharedPreferencesUtil().lastBackupDate = DateTime.now().toIso8601String();
-//   await uploadBackupApi(result);
-//   return true;
-// }
-
 Future<bool> executeBackupWithUid({String? uid}) async {
   if (!SharedPreferencesUtil().backupsEnabled) return false;
   print('executeBackupWithUid: $uid');
@@ -65,62 +52,12 @@ Future<bool> executeBackupWithUid({String? uid}) async {
   if (memories.isEmpty) return true;
   var encoded = encodeJson(memories.map((e) => e.toJson()).toList(),
       uid ?? SharedPreferencesUtil().uid);
-  // SharedPreferencesUtil().lastBackupDate = DateTime.now().toIso8601String();
+
   await uploadBackupApi(encoded);
   return true;
 }
-// import 'package:permission_handler/permission_handler.dart';
-// import 'package:flutter/material.dart';
-// import 'dart:io';
 
-// Future<bool> executeManualBackupWithUid({String? uid}) async {
-//   // Check if backups are enabled
-//   if (!SharedPreferencesUtil().backupsEnabled) return false;
-
-//   print('executeBackupWithUid: $uid');
-
-//   // Get the memories (data) that needs to be backed up
-//   var memories = MemoryProvider().getMemories();
-
-//   // If there's no data to back up, return true (no need to proceed)
-//   if (memories.isEmpty) return true;
-
-//   // Encode the memories to JSON format and include the uid if provided or use the stored one
-//   var encoded = encodeJson(
-//     memories.map((e) => e.toJson()).toList(),
-//     uid ?? SharedPreferencesUtil().uid,
-//   );
-//   try {
-//     // Get the application documents directory
-//     final directory = await getApplicationDocumentsDirectory();
-//     final file = File(
-//         '${directory.path}/backup_${DateTime.now().millisecondsSinceEpoch}.json');
-
-//     // Write the encoded data to the file
-//     await file.writeAsString(encoded);
-
-//     print('Backup saved to: ${file.path}');
-
-//     // Update the last backup date
-//     // SharedPreferencesUtil().lastBackupDate = DateTime.now().toIso8601String();
-
-//     return true;
-//   } catch (e) {
-//     print('Error saving backup: $e');
-//     return false;
-//   }
-//   // Uncomment the following line to upload the backup data via an API call
-//   // await uploadBackupApi(encoded);
-
-//   // Optionally, update the last backup date
-//   // SharedPreferencesUtil().lastBackupDate = DateTime.now().toIso8601String();
-
-//   return true;
-// }
-
-// For external storage
-
-Future<bool> executeManualBackupWithUid({String? uid}) async {
+Future<bool> executeManualBackupWithUid(uid) async {
   if (!SharedPreferencesUtil().backupsEnabled) return false;
 
   print('executeBackupWithUid: $uid');
@@ -129,37 +66,97 @@ Future<bool> executeManualBackupWithUid({String? uid}) async {
 
   if (memories.isEmpty) return true;
 
-  // var encoded = encodeJson(
-  //   memories.map((e) => e.toJson()).toList(),
-  //   uid ?? SharedPreferencesUtil().uid,
-  // );
-  var rawData = memories.map((e) => e.toJson()).toList();
+  var rawData =
+      memories.map((e) => e.toJson() as Map<String, dynamic>).toList();
 
   try {
-    // Save to external storage (accessible directory)
-    final directory =
-        await getExternalStorageDirectory(); // Modified to use external storage
-    print(directory);
-    final file = File(
-        '${directory!.path}/backup_${DateTime.now().millisecondsSinceEpoch}.json');
-
-    await file.writeAsString(jsonEncode(rawData));
-
-    print('Backup saved to: ${file.path}');
-    return true;
+    print("start backup");
+    //uploadBackupToGoogleDrive(rawData);
+    final googleDriveService = GoogleDriveService();
+    print(googleDriveService);
+    return await googleDriveService.uploadBackupToGoogleDrive(rawData);
   } catch (e) {
     print('Error saving backup: $e');
     return false;
   }
 }
 
-Future<List<Memory>> retrieveBackup(String uid) async {
+Future<List<Memory>> restoreFromBackup(
+    {String? uid, dynamic backupData}) async {
+  if (backupData == null) return [];
+  print('Retrieving backup for uid: $uid');
+
+  try {
+    List<Map<String, dynamic>> decodedData;
+
+    // Check if the backup is encrypted (string) or raw (List<Map>)
+    if (backupData is String) {
+      // Handle encrypted backup
+      try {
+        final currentUid = uid ?? SharedPreferencesUtil().uid;
+        decodedData =
+            List<Map<String, dynamic>>.from(decodeJson(backupData, currentUid));
+      } catch (e) {
+        print('Error decoding backup: $e');
+        return [];
+      }
+    } else if (backupData is List) {
+      // Handle raw backup data
+      decodedData = List<Map<String, dynamic>>.from(backupData);
+    } else {
+      print('Invalid backup data format');
+      return [];
+    }
+
+    // Convert JSON to Memory objects
+    List<Memory> memoriesToRestore = decodedData.map((json) {
+      try {
+        return Memory.fromJson(json);
+      } catch (e) {
+        print('Error converting json to memory: $e');
+        rethrow;
+      }
+    }).toList();
+
+    return memoriesToRestore;
+  } catch (e) {
+    print('Error in restore process: $e');
+    return [];
+  }
+}
+
+Future<bool> retrieveBackup(String? uid) async {
   print('retrieveBackup: $uid');
-  var retrieved = await downloadBackupApi(uid);
-  if (retrieved == '') return [];
-  var memories = await getDecodedMemories(retrieved, uid);
-  MemoryProvider().storeMemories(memories);
-  return memories;
+
+  try {
+    final googleDriveService = GoogleDriveService();
+    final backupData = await googleDriveService.restoreFromGoogleDrive();
+
+    // Check for null or empty backup data
+    if (backupData == null || backupData.isEmpty) {
+      print('No backup found on Google Drive');
+      return false;
+    }
+
+    debugPrint("backup>>>>>>>> ${backupData.toString()}");
+
+    try {
+      // Attempt to restore from backup
+      var memories = await restoreFromBackup(uid: uid, backupData: backupData);
+      if (memories.isNotEmpty) {
+        // Store the memories only if we successfully restored them
+        MemoryProvider().storeMemories(memories);
+        print("Backup restored successfully");
+      }
+      return true;
+    } catch (e) {
+      print("Error restoring backup: ${e.toString()}");
+      return false;
+    }
+  } catch (e) {
+    print("Error in retrieving backup: ${e.toString()}");
+    return false;
+  }
 }
 
 Future<List<Memory>> getDecodedMemories(

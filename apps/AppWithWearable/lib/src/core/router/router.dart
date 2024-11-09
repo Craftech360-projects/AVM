@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/src/features/chats/presentation/pages/chats_page.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/pages/transcript_memory_page.dart';
 import 'package:friend_private/src/features/memories/presentation/pages/memory_detail_page.dart';
@@ -20,7 +21,7 @@ class AppRouter {
     navigatorKey: _rootNavigatorKey,
     //initialLocation: '/setting',
     // initialLocation: '/signin',
-    initialLocation: '/setting',
+    initialLocation: '/profile',
     routes: [
       GoRoute(
         path: '/signin',
@@ -121,6 +122,19 @@ class AppRouter {
         parentNavigatorKey: _rootNavigatorKey,
         pageBuilder: (context, state) => CustomTransitionPage(
           child: const ChatsPage(),
+          transitionDuration: const Duration(
+            milliseconds: _routeTransitionDuration,
+          ),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        ),
+      ),
+      GoRoute(
+        path: '/profile',
+        //  name: ChatsPage.name,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const ProfilePage(),
           transitionDuration: const Duration(
             milliseconds: _routeTransitionDuration,
           ),

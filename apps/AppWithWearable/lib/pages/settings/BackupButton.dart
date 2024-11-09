@@ -166,7 +166,7 @@ class _BackupButtonState extends State<BackupButton> {
 
     try {
       // Call your backup API or method here
-      await executeManualBackupWithUid(); // Replace this with your backup method
+      //  await executeManualBackupWithUid(); // Replace this with your backup method
     } catch (error) {
       // Handle error (e.g., show a snackbar or alert)
       print('Manual backup failed: $error');
