@@ -3,10 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
-import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript_bloc.dart';
-import 'package:friend_private/src/features/wizard/presentation/pages/finalize_page.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
 import 'package:friend_private/src/features/wizard/presentation/widgets/ble_animation.dart';
-import 'package:go_router/go_router.dart';
 
 class BleConnectionPage extends StatefulWidget {
   const BleConnectionPage({super.key});
@@ -30,7 +28,7 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
     final textTheme = Theme.of(context).textTheme;
     return CustomScaffold(
       appBar: AppBar(
-         backgroundColor: const Color(0xFFE6F5FA),
+        backgroundColor: const Color(0xFFE6F5FA),
         title: Text(
           'Connect your AVM',
           style: textTheme.titleLarge?.copyWith(
@@ -50,39 +48,50 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
           child: BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
             bloc: _liveTranscriptBloc,
             builder: (context, state) {
-              final isConnected =
-                  state.bleConnectionStatus == BleConnectionStatus.connected;
-              final isLoading =
-                  state.bleConnectionStatus == BleConnectionStatus.loading;
+              final isSearching = state.bluetoothDeviceStatus ==
+                  BluetoothDeviceStatus.searching;
+              final isConnected = state.bluetoothDeviceStatus ==
+                  BluetoothDeviceStatus.connected;
+              final isDisconnected = state.bluetoothDeviceStatus ==
+                  BluetoothDeviceStatus.disconnected;
+              final isLoading = state.bluetoothDeviceStatus ==
+                  BluetoothDeviceStatus.processing;
               final hasDevicesNearby = state.visibleDevices.isNotEmpty;
 
               return Column(
                 children: [
                   /// Logo
+
                   Image.asset(
                     IconImage.avmLogo,
                     height: 30.h,
                   ),
+
                   SizedBox(height: 150.h),
 
                   /// Bluetooth Animation
-                  BleAnimation(
-                    minRadius: 40.h,
-                    ripplesCount: 6,
-                    duration: const Duration(milliseconds: 3000),
-                    repeat: true,
-                    child: Icon(
-                      Icons.bluetooth_searching,
-                      color: Colors.white,
-                      size: 30.h,
+                  if (isSearching)
+                    BleAnimation(
+                      minRadius: 40.h,
+                      ripplesCount: 6,
+                      duration: const Duration(milliseconds: 3000),
+                      repeat: true,
+                      child: Icon(
+                        Icons.bluetooth_searching,
+                        color: Colors.white,
+                        size: 30.h,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 140.h),
+                  if (isSearching) SizedBox(height: 140.h),
 
                   /// Connection Status Text
                   if (isConnected)
                     Text(
-                      '${state.connectedDevice?.name} (${state.connectedDevice?.id})\nConnected',
+                      'Device Name: ${state.connectedDevice?.name}\n'
+                      'DeviceId: ${state.connectedDevice?.id}\n'
+                      'Status: Connected\n'
+                      'Battery: ${state.bleBatteryLevel}%\n'
+                      'Codec: ${state.codec}\n',
                       style: textTheme.titleSmall,
                     )
                   else
@@ -98,7 +107,7 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
                   const Spacer(),
 
                   /// List of Devices
-                  if (!isConnected)
+                  if (isSearching)
                     ListView.builder(
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
@@ -109,7 +118,7 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
                           backgroundColor: CustomColors.white,
                           onPressed: () {
                             _liveTranscriptBloc
-                                .add(SelectedDevice(deviceId: device.id));
+                                .add(SelectedDevice(connectedDevice: device));
                           },
                           child: ListTile(
                             visualDensity: const VisualDensity(vertical: -3),
@@ -151,7 +160,8 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
                                 btDeviceStruct: state.connectedDevice!),
                           );
                         }
-                        context.goNamed(FinalizePage.name);
+
+                        // context.goNamed(FinalizePage.name);
                       },
                       child: Text(
                         isConnected ? 'UnPair Device' : 'Pair Device',

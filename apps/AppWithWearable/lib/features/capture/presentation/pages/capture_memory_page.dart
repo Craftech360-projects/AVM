@@ -10,7 +10,7 @@ import 'package:friend_private/features/memory/presentation/widgets/memory_searc
 import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
-import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript_bloc.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
