@@ -9,7 +9,7 @@ abstract class WebSocketEvent extends Equatable {
 class ConnectWebSocket extends WebSocketEvent {}
 
 class SendMessageWebSocket extends WebSocketEvent {
-  final String message;
+  final List<int> message;
   SendMessageWebSocket(this.message);
     @override
   List<Object> get props => [message];

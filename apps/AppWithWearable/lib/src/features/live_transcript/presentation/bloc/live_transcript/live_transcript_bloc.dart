@@ -6,12 +6,15 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/gatt_utils.dart';
+import 'package:friend_private/utils/websockets.dart';
 
 part 'live_transcript_event.dart';
 part 'live_transcript_state.dart';
 
-enum BleAudioCodec { pcm16, pcm8, mulaw16, mulaw8, opus, unknown }
+// enum BleAudioCodec { pcm16, pcm8, mulaw16, mulaw8, opus, unknown }
 
 class LiveTranscriptBloc
     extends Bloc<LiveTranscriptEvent, LiveTranscriptState> {
@@ -168,12 +171,9 @@ class LiveTranscriptBloc
       // log('is raw data received in bloc $rawAudio');
       add(_AudioListener(rawAudio: rawAudio));
     });
-  
 
-     device.cancelWhenDisconnected(_audioDataSubscription!);
-    
+    device.cancelWhenDisconnected(_audioDataSubscription!);
   }
-
 
   Future<void> _initiateBatteryListener() async {
     final batteryService =
@@ -206,8 +206,15 @@ class LiveTranscriptBloc
   /// Handle received audio data
   void _handleAudioData(
       _AudioListener event, Emitter<LiveTranscriptState> emit) {
-    print('Received Raw Audio: ${event.rawAudio}');
-    // Additional audio processing can be added here
+    List<int> rawAudio = event.rawAudio;
+    print('Received Raw Audio (Before Trimming): ${rawAudio}');
+   final codec= state.codec;
+    WavBytesUtil audioStorage = WavBytesUtil(codec: codec??BleAudioCodec.unknown);
+    audioStorage.storeFramePacket(rawAudio);
+
+    rawAudio.removeRange(0, 3);
+
+    print('Processed Audio (After Trimming): ${rawAudio}');
   }
 
   /// Handle device disconnection
