@@ -1,28 +1,35 @@
 import 'dart:async';
-import 'dart:developer';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:friend_private/pages/capture/logic/websocket_mixin.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/gatt_utils.dart';
 import 'package:friend_private/utils/websockets.dart';
+import 'package:web_socket_channel/io.dart';
 
 part 'live_transcript_event.dart';
 part 'live_transcript_state.dart';
 
 // enum BleAudioCodec { pcm16, pcm8, mulaw16, mulaw8, opus, unknown }
 
-class LiveTranscriptBloc
-    extends Bloc<LiveTranscriptEvent, LiveTranscriptState> {
+class LiveTranscriptBloc extends Bloc<LiveTranscriptEvent, LiveTranscriptState>
+    with WebSocketMixin {
   StreamSubscription<BluetoothAdapterState>? _bleAdapterSubscription;
   StreamSubscription<List<ScanResult>>? _scanSubscription;
   StreamSubscription<BluetoothConnectionState>? _connectionSubscription;
   StreamSubscription<List<int>>? _audioDataSubscription;
   StreamSubscription<List<int>>? _batteryLevelSubscription;
+  Timer? _keepAliveTimer;
+  IOWebSocketChannel? _channel;
 
   LiveTranscriptBloc() : super(LiveTranscriptState.initial()) {
     on<ScannedDevices>((event, emit) => _startListeningAdapterState());
@@ -205,16 +212,35 @@ class LiveTranscriptBloc
 
   /// Handle received audio data
   void _handleAudioData(
-      _AudioListener event, Emitter<LiveTranscriptState> emit) {
+      _AudioListener event, Emitter<LiveTranscriptState> emit) async {
     List<int> rawAudio = event.rawAudio;
-    print('Received Raw Audio (Before Trimming): ${rawAudio}');
-   final codec= state.codec;
-    WavBytesUtil audioStorage = WavBytesUtil(codec: codec??BleAudioCodec.unknown);
-    audioStorage.storeFramePacket(rawAudio);
+    // print('Received Raw Audio (Before Trimming): ${rawAudio}');
+    emit(state.copyWith(rawAudio: rawAudio));
+    // final codec = state.codec;
+    // WavBytesUtil audioStorage =
+    //     WavBytesUtil(codec: codec ?? BleAudioCodec.unknown);
+    // audioStorage.storeFramePacket(rawAudio);
 
-    rawAudio.removeRange(0, 3);
+    // rawAudio.removeRange(0, 3);
 
-    print('Processed Audio (After Trimming): ${rawAudio}');
+    // // print('Processed Audio (After Trimming): ${rawAudio}');
+    // if (wsConnectionState == WebsocketConnectionStatus.connected) {
+    //   //    debugPrint("Adding audio>>>>>>>>>>>>>,$value");
+    //   websocketChannel?.sink.add(rawAudio);
+    //   _channel = await streamingTranscript(
+    //     onWebsocketConnectionSuccess: () {
+    //        _startKeepAlive();
+    //     },
+    //     onWebsocketConnectionFailed: (error) {},
+    //     onWebsocketConnectionClosed: (int? code, String? reason) {},
+    //     onWebsocketConnectionError: (error) {},
+    //     onMessageReceived: (List<TranscriptSegment> segments) {
+    //       print('live transcript in bloc ${segments.toString()}');
+    //     },
+    //     codec: codec ?? BleAudioCodec.unknown,
+    //     sampleRate: 8000,
+    //   );
+    // }
   }
 
   /// Handle device disconnection
@@ -241,5 +267,26 @@ class LiveTranscriptBloc
   Future<void> close() {
     _cleanupSubscriptions();
     return super.close();
+  }
+
+  void _startKeepAlive() {
+    _keepAliveTimer?.cancel(); // Cancel any existing timer
+
+    // Send a KeepAlive message every 7 seconds
+    _keepAliveTimer = Timer.periodic(const Duration(seconds: 7), (timer) {
+      if (_channel != null) {
+        final keepAliveMsg =
+            Uint8List.fromList(utf8.encode(jsonEncode({'type': 'KeepAlive'})));
+        _channel!.sink.add(keepAliveMsg);
+        print('Sent KeepAlive message');
+      } else {
+        timer.cancel(); // Stop the timer if the WebSocket is disconnected
+      }
+    });
+  }
+
+  void _stopKeepAlive() {
+    _keepAliveTimer?.cancel();
+    _keepAliveTimer = null;
   }
 }

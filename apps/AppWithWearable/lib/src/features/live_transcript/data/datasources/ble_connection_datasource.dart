@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/utils/ble/errors.dart';
 import 'package:friend_private/utils/ble/gatt_utils.dart';
 
-enum BleAudioCodec { pcm16, pcm8, mulaw16, mulaw8, opus, unknown }
+// enum BleAudioCodec { pcm16, pcm8, mulaw16, mulaw8, opus, unknown }
 
 class BleConnectionDatasource {
   Future<List<BTDeviceStruct>> bleFindDevices() async {

@@ -6,6 +6,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:intl/intl.dart';

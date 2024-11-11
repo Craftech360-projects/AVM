@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:web_socket_channel/io.dart';
@@ -136,7 +137,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     IOWebSocketChannel channel = IOWebSocketChannel.connect(
       uri,
       headers: {
-        'Authorization': 'Token $deepgramapikey',
+        'Authorization': 'Token e19942922008143bf76a75cb75b92853faa0b0da',
         'Content-Type': 'audio/raw',
       },
     );
@@ -184,7 +185,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
         try {
           final data = jsonDecode(event);
-          print('websocket data satyam $event');
+          print('websocket data satyam $data');
           if (data['type'] == 'Metadata') {
             // Handle metadata event
           } else if (data['type'] == 'Results') {

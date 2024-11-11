@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/pages/capture/logic/websocket_mixin.dart';
+import 'package:friend_private/pages/capture/phone_recorder_mixin.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
@@ -24,7 +26,8 @@ class SettingPage extends StatefulWidget {
   State<SettingPage> createState() => _SettingPageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _SettingPageState extends State<SettingPage>
+    with WebSocketMixin, PhoneRecorderMixin {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -98,10 +101,39 @@ class _SettingPageState extends State<SettingPage> {
             onPressed: () => disconnectBleDevice(remoteId: 'C4:E8:E3:9F:D2:AE'),
             child: const Text('Disconnect Device'),
           ),
+          // getPhoneMicRecordingButton(_recordingToggled, recordingState)
         ],
       ),
     );
   }
+  // _recordingToggled() async {
+  //   if (recordingState == RecordingState.record) {
+  //     await stopStreamRecording(wsConnectionState, websocketChannel);
+  //     setState(() => recordingState = RecordingState.stop);
+  //     _memoryCreationTimer?.cancel();
+  //     _createMemory();
+  //   } else if (recordingState == RecordingState.initialising) {
+  //     debugPrint('initialising, have to wait');
+  //   } else {
+  //     showDialog(
+  //       context: context,
+  //       builder: (c) => getDialog(
+  //         context,
+  //         () => Navigator.pop(context),
+  //         () async {
+  //           Navigator.pop(context);
+  //           setState(() => recordingState = RecordingState.initialising);
+  //           closeWebSocket();
+  //           await initiateWebsocket(BleAudioCodec.pcm16, 16000);
+  //           await startStreamRecording(wsConnectionState, websocketChannel);
+  //         },
+  //         'Limited Capabilities',
+  //         'Recording with your phone microphone has a few limitations, including but not limited to: speaker profiles, background reliability.',
+  //         okButtonText: 'Ok, I understand',
+  //       ),
+  //     );
+  //   }
+  // }
 }
 
 // void scanBleDevice() async {
@@ -243,7 +275,7 @@ void selectBleDevice({required String remoteId}) async {
       //! AUDIO LISTENER
       // Get the "Friend" service by UUID
       final friendService = await getServiceByUuid(remoteId, friendServiceUuid);
-      print('setting page audio byte ${remoteId}:$friendServiceUuid');
+      print('setting page audio byte $remoteId:$friendServiceUuid');
       if (friendService == null) {
         return;
       }
@@ -260,7 +292,7 @@ void selectBleDevice({required String remoteId}) async {
       await audioDataStreamCharacteristic.setNotifyValue(true);
 
       debugPrint('Subscribed to audioBytes stream from AVM Device');
-   if (Platform.isAndroid) {
+      if (Platform.isAndroid) {
         await device.requestMtu(512);
       }
       // Listen to the audio data stream characteristic

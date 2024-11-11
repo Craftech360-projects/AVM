@@ -18,6 +18,7 @@ import 'package:friend_private/pages/capture/location_service.dart';
 import 'package:friend_private/pages/capture/logic/openglass_mixin.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/enums.dart';
@@ -462,7 +463,7 @@ class CapturePageState extends State<CapturePage>
             const SizedBox(height: 16)
           ],
         ),
-        // getPhoneMicRecordingButton(_recordingToggled, recordingState)
+        getPhoneMicRecordingButton(_recordingToggled, recordingState)
       ],
     );
   }
