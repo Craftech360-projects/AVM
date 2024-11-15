@@ -28,6 +28,7 @@ import 'package:friend_private/flavors.dart';
 import 'package:friend_private/src/core/config/app_loger.dart';
 import 'package:friend_private/src/core/config/simple_bloc_observer.dart';
 import 'package:friend_private/src/core/router/router.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/connection/connection_bloc.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/notifications.dart';
@@ -175,8 +176,11 @@ class _MyAppState extends State<MyApp> {
             MemoryProvider(),
           ),
         ),
-        /// below is with new UI
+
+        //  / below is with new UI
+
         BlocProvider(create: (context) => LiveTranscriptBloc()),
+        BlocProvider(create: (context) => WebSocketBloc()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),

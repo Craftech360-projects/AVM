@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
@@ -133,129 +134,129 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   debugPrint('Connecting to WebSocket URI:$apiType $uri');
 
   try {
-    IOWebSocketChannel channel = IOWebSocketChannel.connect(
-      uri,
-      headers: {
-        'Authorization': 'Token $deepgramapikey',
-        'Content-Type': 'audio/raw',
-      },
-    );
+    // IOWebSocketChannel channel = IOWebSocketChannel.connect(
+    //   uri,
+    //   headers: {
+    //     'Authorization': 'Token $deepgramapikey',
+    //     'Content-Type': 'audio/raw',
+    //   },
+    // );
 
-    await channel.ready;
+    // await channel.ready;
+    // // DateTime? lastAudioTime;
+    // await channel.ready;
+
+    // // KeepAlive mechanism
+    // Timer? keepAliveTimer;
+    // const keepAliveInterval =
+    //     Duration(seconds: 7); // Send KeepAlive every 7 seconds
+    // const silenceTimeout = Duration(seconds: 30); // Silence timeout
     // DateTime? lastAudioTime;
-    await channel.ready;
 
-    // KeepAlive mechanism
-    Timer? keepAliveTimer;
-    const keepAliveInterval =
-        Duration(seconds: 7); // Send KeepAlive every 7 seconds
-    const silenceTimeout = Duration(seconds: 30); // Silence timeout
-    DateTime? lastAudioTime;
+    // void startKeepAlive() {
+    //   keepAliveTimer = Timer.periodic(keepAliveInterval, (timer) async {
+    //     try {
+    //       await channel.ready; // Ensure the channel is ready
+    //       final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
+    //       channel.sink.add(keepAliveMsg);
+    //       // debugPrint('Sent KeepAlive message');
+    //     } catch (e) {
+    //       debugPrint('Error sending KeepAlive message: $e');
+    //     }
+    //   });
+    // }
 
-    void startKeepAlive() {
-      keepAliveTimer = Timer.periodic(keepAliveInterval, (timer) async {
-        try {
-          await channel.ready; // Ensure the channel is ready
-          final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
-          channel.sink.add(keepAliveMsg);
-          // debugPrint('Sent KeepAlive message');
-        } catch (e) {
-          debugPrint('Error sending KeepAlive message: $e');
-        }
-      });
-    }
+    // void stopKeepAlive() {
+    //   keepAliveTimer?.cancel();
+    // }
 
-    void stopKeepAlive() {
-      keepAliveTimer?.cancel();
-    }
+    // void checkSilence() {
+    //   if (lastAudioTime != null &&
+    //       DateTime.now().difference(lastAudioTime!) > silenceTimeout) {
+    //     // debugPrint(
+    //     //     'Silence detected for more than 30 seconds. Stopping KeepAlive.');
+    //     stopKeepAlive();
+    //   }
+    // }
 
-    void checkSilence() {
-      if (lastAudioTime != null &&
-          DateTime.now().difference(lastAudioTime!) > silenceTimeout) {
-        // debugPrint(
-        //     'Silence detected for more than 30 seconds. Stopping KeepAlive.');
-        stopKeepAlive();
-      }
-    }
+    // channel.stream.listen(
+    //   (event) {
+    //     if (event == 'ping') return;
 
-    channel.stream.listen(
-      (event) {
-        if (event == 'ping') return;
+    //     try {
+    //       final data = jsonDecode(event);
+    //       print('websocket data satyam $event');
+    //       if (data['type'] == 'Metadata') {
+    //         // Handle metadata event
+    //       } else if (data['type'] == 'Results') {
+    //         print('deepgram sever selected');
+    //         // Handle results event
+    //         final alternatives = data['channel']['alternatives'];
+    //         if (alternatives is List && alternatives.isNotEmpty) {
+    //           final transcript = alternatives[0]['transcript'];
+    //           if (transcript is String && transcript.isNotEmpty) {
+    //             final segment = TranscriptSegment(
+    //               text: transcript,
+    //               // speaker: 'SPEAKER_00',
+    //               speaker: '1',
 
-        try {
-          final data = jsonDecode(event);
-          print('websocket data satyam $event');
-          if (data['type'] == 'Metadata') {
-            // Handle metadata event
-          } else if (data['type'] == 'Results') {
-            print('deepgram sever selected');
-            // Handle results event
-            final alternatives = data['channel']['alternatives'];
-            if (alternatives is List && alternatives.isNotEmpty) {
-              final transcript = alternatives[0]['transcript'];
-              if (transcript is String && transcript.isNotEmpty) {
-                final segment = TranscriptSegment(
-                  text: transcript,
-                  // speaker: 'SPEAKER_00',
-                  speaker: '1',
+    //               isUser: false,
+    //               start: (data['start'] as double?) ?? 0.0,
+    //               end: ((data['start'] as double?) ?? 0.0) +
+    //                   ((data['duration'] as double?) ?? 0.0),
+    //             );
+    //             onMessageReceived([segment]);
+    //             lastAudioTime = DateTime.now();
+    //             debugPrint('updated lastAudioTime: $lastAudioTime');
+    //           } else {
+    //             debugPrint('Empty or invalid transcript');
+    //           }
+    //         } else {
+    //           debugPrint('No alternatives found in the result');
+    //         }
+    //       } else if (data['type'] == 'transcript') {
+    //         // Handle transcript event
+    //         final segmentData = data['segment'];
+    //         debugPrint('websocket json data $segmentData');
 
-                  isUser: false,
-                  start: (data['start'] as double?) ?? 0.0,
-                  end: ((data['start'] as double?) ?? 0.0) +
-                      ((data['duration'] as double?) ?? 0.0),
-                );
-                onMessageReceived([segment]);
-                lastAudioTime = DateTime.now();
-                debugPrint('updated lastAudioTime: $lastAudioTime');
-              } else {
-                debugPrint('Empty or invalid transcript');
-              }
-            } else {
-              debugPrint('No alternatives found in the result');
-            }
-          } else if (data['type'] == 'transcript') {
-            // Handle transcript event
-            final segmentData = data['segment'];
-            debugPrint('websocket json data $segmentData');
+    //         // Ensure speaker is a string
+    //         final speaker =
+    //             segmentData['speaker']?.toString() ?? 'SPEAKER_UNKNOWN';
+    //         debugPrint('websocket json data $speaker');
 
-            // Ensure speaker is a string
-            final speaker =
-                segmentData['speaker']?.toString() ?? 'SPEAKER_UNKNOWN';
-            debugPrint('websocket json data $speaker');
+    //         // Ensure text is a string
+    //         final text = segmentData['text']?.toString() ?? '';
+    //         debugPrint('websocket json data $text');
 
-            // Ensure text is a string
-            final text = segmentData['text']?.toString() ?? '';
-            debugPrint('websocket json data $text');
+    //         // Check if text is not empty
+    //         if (text.isNotEmpty) {
+    //           final segment = TranscriptSegment(
+    //             text: text,
+    //             speaker: speaker,
+    //             isUser: false, // Adjust as needed
+    //             start:
+    //                 0.0, // You might want to add a start/end time if available
+    //             end: 0.0,
+    //           );
+    //           debugPrint('websocket- json data ${segment.toString()}');
+    //           onMessageReceived([segment]);
+    //         }
+    //         lastAudioTime = DateTime.now();
+    //         debugPrint('Transcript received from $speaker: $text');
+    //       } else {
+    //         debugPrint('Unknown event type: ${data['type']}');
+    //       }
+    //     } catch (e) {
+    //       debugPrint('Error processing event: $e');
+    //       debugPrint('Raw event: $event');
+    //     }
+    //   },
+    // );
 
-            // Check if text is not empty
-            if (text.isNotEmpty) {
-              final segment = TranscriptSegment(
-                text: text,
-                speaker: speaker,
-                isUser: false, // Adjust as needed
-                start:
-                    0.0, // You might want to add a start/end time if available
-                end: 0.0,
-              );
-              debugPrint('websocket- json data ${segment.toString()}');
-              onMessageReceived([segment]);
-            }
-            lastAudioTime = DateTime.now();
-            debugPrint('Transcript received from $speaker: $text');
-          } else {
-            debugPrint('Unknown event type: ${data['type']}');
-          }
-        } catch (e) {
-          debugPrint('Error processing event: $e');
-          debugPrint('Raw event: $event');
-        }
-      },
-    );
-
-    await channel.ready;
-    debugPrint('Websocket Opened');
-    onWebsocketConnectionSuccess();
-    return channel;
+    // await channel.ready;
+    // debugPrint('Websocket Opened');
+    // onWebsocketConnectionSuccess();
+    // return channel;
   } catch (err, stackTrace) {
     onWebsocketConnectionFailed(err);
     CrashReporting.reportHandledCrash(

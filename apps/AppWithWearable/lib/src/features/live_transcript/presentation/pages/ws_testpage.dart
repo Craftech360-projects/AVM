@@ -239,6 +239,13 @@ class WebSocketContent extends StatelessWidget {
             },
             child: const Text('Send Message'),
           ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
+              webSocketBloc.add(ConnectWebSocket());
+            },
+            child: const Text('Retry WebSocket Connection'),
+          ),
         ],
       ),
     );

@@ -4,7 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/pages/ws_testpage.dart';
 import 'package:friend_private/src/features/wizard/presentation/widgets/ble_animation.dart';
+import 'package:go_router/go_router.dart';
 
 class BleConnectionPage extends StatefulWidget {
   const BleConnectionPage({super.key});
@@ -57,7 +59,20 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
               final isLoading = state.bluetoothDeviceStatus ==
                   BluetoothDeviceStatus.processing;
               final hasDevicesNearby = state.visibleDevices.isNotEmpty;
-
+              if (isConnected) {
+                // Check if the widget is still mounted before navigating
+                Future.microtask(() {
+                  if (mounted) {
+                    context.goNamed(WebSocketTestPage.name);
+                    ;
+                  } else {
+                    print("widget is not mounted in tree ");
+                  }
+                });
+                print("<<<<");
+              } else {
+                print(">>>>>>>>>>");
+              }
               return Column(
                 children: [
                   /// Logo
@@ -119,6 +134,8 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
                           onPressed: () {
                             _liveTranscriptBloc
                                 .add(SelectedDevice(connectedDevice: device));
+
+                            //  Navigator.pushReplacementNamed(context, "/wsPage");
                           },
                           child: ListTile(
                             visualDensity: const VisualDensity(vertical: -3),
@@ -144,6 +161,14 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
                       },
                     ),
                   SizedBox(height: 10.h),
+                  ElevatedButton(
+                    onPressed: () {
+                      print("pressed");
+                      // Use GoRouter's pushNamed method to navigate
+                      context.goNamed(WebSocketTestPage.name);
+                    },
+                    child: Text('Go to WS Page'),
+                  ),
 
                   /// Pairing/Unpairing Button
                   SizedBox(
@@ -159,6 +184,8 @@ class _BleConnectionPageState extends State<BleConnectionPage> {
                             DisconnectDevice(
                                 btDeviceStruct: state.connectedDevice!),
                           );
+
+                          //Navigator.pushReplacementNamed(context, "/wsPage");
                         }
 
                         // context.goNamed(FinalizePage.name);

@@ -16,7 +16,8 @@ import 'package:tuple/tuple.dart';
 class WavBytesUtil {
   BleAudioCodec codec;
   List<List<int>> frames = [];
-  final SimpleOpusDecoder opusDecoder = SimpleOpusDecoder(sampleRate: 16000, channels: 1);
+  final SimpleOpusDecoder opusDecoder =
+      SimpleOpusDecoder(sampleRate: 16000, channels: 1);
 
   WavBytesUtil({this.codec = BleAudioCodec.pcm8});
   final List<int> _audioBytes = [];
@@ -25,10 +26,11 @@ class WavBytesUtil {
   int lastFrameId = -1;
   List<int> pending = [];
   int lost = 0;
-    List<int> get audioBytes => _audioBytes;
+  List<int> get audioBytes => _audioBytes;
   void addAudioBytes(List<int> bytes) {
     _audioBytes.addAll(bytes);
   }
+
   void storeFramePacket(value) {
     int index = value[0] + (value[1] << 8);
     int internal = value[2];
@@ -45,7 +47,8 @@ class WavBytesUtil {
     if (lastPacketIndex == -1) return;
 
     // Lost frame - reset state
-    if (index != lastPacketIndex + 1 || (internal != 0 && internal != lastFrameId + 1)) {
+    if (index != lastPacketIndex + 1 ||
+        (internal != 0 && internal != lastFrameId + 1)) {
       debugPrint('Lost frame');
       lastPacketIndex = -1;
       pending = [];
@@ -123,14 +126,19 @@ class WavBytesUtil {
     return fileName;
   }
 
-  Future<Tuple2<File, List<List<int>>>> createWavFile({String? filename, int removeLastNSeconds = 0}) async {
+  Future<Tuple2<File, List<List<int>>>> createWavFile(
+      {String? filename, int removeLastNSeconds = 0}) async {
     // debugPrint('First frame size: ${frames[0].length} && Last frame size: ${frames.last.length}');
     List<List<int>> framesCopy;
     if (removeLastNSeconds > 0) {
-      removeFramesRange(fromSecond: (frames.length ~/ 100) - removeLastNSeconds, toSecond: frames.length ~/ 100);
-      framesCopy = List<List<int>>.from(frames); // after trimming, copy the frames
+      removeFramesRange(
+          fromSecond: (frames.length ~/ 100) - removeLastNSeconds,
+          toSecond: frames.length ~/ 100);
+      framesCopy =
+          List<List<int>>.from(frames); // after trimming, copy the frames
     } else {
-      framesCopy = List<List<int>>.from(frames); // copy the frames before clearing all
+      framesCopy =
+          List<List<int>>.from(frames); // copy the frames before clearing all
       clearAudioBytes();
     }
     File file = await createWavByCodec(framesCopy, filename: filename);
@@ -139,20 +147,24 @@ class WavBytesUtil {
 
   /// OPUS
 
-  Future<File> createWavByCodec(List<List<int>> frames, {String? filename}) async {
+  Future<File> createWavByCodec(List<List<int>> frames,
+      {String? filename}) async {
     Uint8List wavBytes;
     if (codec == BleAudioCodec.pcm8 || codec == BleAudioCodec.pcm16) {
       Int16List samples = getPcmSamples(frames);
       // TODO: try pcm16
-      wavBytes = getUInt8ListBytes(samples, codec == BleAudioCodec.pcm8 ? 8000 : 16000);
-    } else if (codec == BleAudioCodec.mulaw8 || codec == BleAudioCodec.mulaw16) {
+      wavBytes = getUInt8ListBytes(
+          samples, codec == BleAudioCodec.pcm8 ? 8000 : 16000);
+    } else if (codec == BleAudioCodec.mulaw8 ||
+        codec == BleAudioCodec.mulaw16) {
       throw UnimplementedError('mulaw codec not implemented');
       // Int16List samples = getMulawSamples(frames);
       // wavBytes = getUInt8ListBytes(samples, codec == BleAudioCodec.mulaw8 ? 8000 : 16000);
     } else if (codec == BleAudioCodec.opus) {
       List<int> decodedSamples = [];
       for (var frame in frames) {
-        decodedSamples.addAll(opusDecoder.decode(input: Uint8List.fromList(frame)));
+        decodedSamples
+            .addAll(opusDecoder.decode(input: Uint8List.fromList(frame)));
       }
       wavBytes = getUInt8ListBytes(decodedSamples, 16000);
     } else {
@@ -179,7 +191,8 @@ class WavBytesUtil {
     // https://discord.com/channels/1192313062041067520/1231903583717425153/1256187110554341386
     // https://github.com/BasedHardware/Friend/blob/main/docs/_developer/Protocol.md
     Uint8List wavHeader = getWavHeader(audioBytes.length * 2, sampleRate);
-    return Uint8List.fromList(wavHeader + WavBytesUtil.convertToLittleEndianBytes(audioBytes));
+    return Uint8List.fromList(
+        wavHeader + WavBytesUtil.convertToLittleEndianBytes(audioBytes));
   }
 
   // Utility to convert audio data to little-endian format
@@ -191,7 +204,8 @@ class WavBytesUtil {
     return byteData.buffer.asUint8List();
   }
 
-  static Uint8List getWavHeader(int dataLength, int sampleRate, {int sampleWidth = 2, int channelCount = 1}) {
+  static Uint8List getWavHeader(int dataLength, int sampleRate,
+      {int sampleWidth = 2, int channelCount = 1}) {
     final byteData = ByteData(44);
     final size = dataLength + 36;
 
@@ -215,7 +229,8 @@ class WavBytesUtil {
     byteData.setUint16(20, 1, Endian.little); // Audio format (1 = PCM)
     byteData.setUint16(22, channelCount, Endian.little);
     byteData.setUint32(24, sampleRate, Endian.little);
-    byteData.setUint32(28, sampleRate * channelCount * sampleWidth, Endian.little);
+    byteData.setUint32(
+        28, sampleRate * channelCount * sampleWidth, Endian.little);
     byteData.setUint16(32, channelCount * sampleWidth, Endian.little);
     byteData.setUint16(34, sampleWidth * 8, Endian.little);
 
@@ -307,7 +322,8 @@ class ImageBytesUtil {
     try {
       Uint8List bytes = base64Decode(base64Str.split(',')[1]);
       final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/image_${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final file = File(
+          '${directory.path}/image_${DateTime.now().millisecondsSinceEpoch}.jpg');
       await file.writeAsBytes(bytes);
       return file;
     } catch (e) {
@@ -319,7 +335,8 @@ class ImageBytesUtil {
   static Future<File?> uint8ListToFile(Uint8List uint8list) async {
     try {
       final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/image_${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final file = File(
+          '${tempDir.path}/image_${DateTime.now().millisecondsSinceEpoch}.jpg');
       await file.writeAsBytes(uint8list);
       return file;
     } catch (e) {

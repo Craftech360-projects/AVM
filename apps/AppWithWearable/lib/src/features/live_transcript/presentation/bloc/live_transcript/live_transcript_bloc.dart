@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/connection/connection_bloc.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/gatt_utils.dart';
 import 'package:friend_private/utils/websockets.dart';
@@ -124,7 +125,7 @@ class LiveTranscriptBloc
     if (codecValue.isNotEmpty) {
       final codecId = codecValue.first;
       final codec = _mapCodecIdToEnum(codecId);
-      print('Codec details: $codecId, codec: $codec');
+      // print('Codec details: $codecId, codec: $codec');
       emit(
         state.copyWith(
           // bleConnectionStatus: BluetoothDeviceStatus.connected,
@@ -154,8 +155,8 @@ class LiveTranscriptBloc
     }
     final friendService =
         await getServiceByUuid(state.connectedDevice!.id, friendServiceUuid);
-    print(
-        'remote id received ${state.connectedDevice!.id}: $friendServiceUuid');
+    //  // print(
+    //       'remote id received ${state.connectedDevice!.id}: $friendServiceUuid');
     if (friendService == null) return;
 
     var audioDataCharacteristic = getCharacteristicByUuid(
@@ -163,7 +164,7 @@ class LiveTranscriptBloc
     if (audioDataCharacteristic == null) return;
 
     await audioDataCharacteristic.setNotifyValue(true);
-    print('Subscribed to audioBytes stream from AVM Device');
+    // print('Subscribed to audioBytes stream from AVM Device');
 
     _audioDataSubscription?.cancel();
     _audioDataSubscription =
@@ -207,14 +208,43 @@ class LiveTranscriptBloc
   void _handleAudioData(
       _AudioListener event, Emitter<LiveTranscriptState> emit) {
     List<int> rawAudio = event.rawAudio;
-    print('Received Raw Audio (Before Trimming): ${rawAudio}');
-   final codec= state.codec;
-    WavBytesUtil audioStorage = WavBytesUtil(codec: codec??BleAudioCodec.unknown);
-    audioStorage.storeFramePacket(rawAudio);
 
-    rawAudio.removeRange(0, 3);
+    if (rawAudio.isEmpty) {
+      log('Audio data is empty. Skipping processing.');
+      return;
+    }
+    //print('Received Raw Audio (Before Trimming): ${rawAudio}');
+    final codec = state.codec;
+    //  print(codec);
+    WavBytesUtil audioStorage =
+        WavBytesUtil(codec: codec ?? BleAudioCodec.unknown);
+    // rawAudio.removeRange(0, 3);
 
-    print('Processed Audio (After Trimming): ${rawAudio}');
+    // audioStorage.storeFramePacket(rawAudio);
+
+    // if (state.wsConnectionState == WebsocketConnectionStatus.connected) {
+    //   try {
+    //     websocketChannel?.sink
+    //         .add(rawAudio); // Send the raw audio data to WebSocket
+    //     log('Audio data sent to WebSocket: ${rawAudio.length} bytes');
+    //   } catch (e) {
+    //     log('Failed to send audio data to WebSocket: $e');
+    //   }
+    // } else {
+    //   log('WebSocket is not connected. Cannot send audio data.');
+    // }
+
+    // print('Processed Audio (After Trimming): ${rawAudio}');
+
+    // Instead of storing, you can directly send the raw audio
+    if (rawAudio.isNotEmpty) {
+      //   // Assuming context is available for accessing the WebSocketBloc
+      final websocketBloc = WebSocketBloc();
+      websocketBloc.add(SendMessageWebSocket(rawAudio));
+      log('Audio data sent to WebSocket: ${rawAudio.length} bytes');
+    } else {
+      // log('Processed audio is empty, nothing to send.');
+    }
   }
 
   /// Handle device disconnection

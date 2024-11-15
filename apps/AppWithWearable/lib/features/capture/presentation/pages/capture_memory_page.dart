@@ -49,8 +49,8 @@ class CaptureMemoryPage extends StatefulWidget {
 class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   late MemoryBloc _memoryBloc;
   bool _isNonDiscarded = true;
-  final GlobalKey<CapturePageState> capturePageKey =
-      GlobalKey<CapturePageState>();
+  // final GlobalKey<CapturePageState> capturePageKey =
+  //     GlobalKey<CapturePageState>();
   // final List<FilterItem> _filters = [
   //   FilterItem(filterType: 'Show All', filterStatus: false),
   //   FilterItem(filterType: 'Technology', filterStatus: false),
@@ -133,52 +133,52 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         ),
         const SizedBox(height: 8),
         //*-- Capture --//
-        widget.hasTranscripts
-            ? SizedBox(
-                height: 176,
-                child: Dismissible(
-                  background: Shimmer.fromColors(
-                    baseColor: Colors.grey,
-                    highlightColor: Colors.white,
-                    child: const Center(
-                      child: Text(
-                        'Please Wait!..\nMemory Creating',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  key: capturePageKey,
-                  // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
-                  direction: DismissDirection.startToEnd,
-                  onDismissed: (direction) =>
-                      widget.onDismissmissedCaptureMemory(direction),
-                  child: CaptureCard(
-                    context: context,
-                    hasTranscripts: widget.hasTranscripts,
-                    wsConnectionState: widget.wsConnectionState,
-                    device: widget.device,
-                    internetStatus: widget.internetStatus,
-                    segments: widget.segments,
-                    memoryCreating: widget.memoryCreating,
-                    photos: widget.photos,
-                    scrollController: widget.scrollController,
-                  ),
-                ),
-              )
-            : CaptureCard(
-                context: context,
-                hasTranscripts: widget.hasTranscripts,
-                wsConnectionState: widget.wsConnectionState,
-                device: widget.device,
-                internetStatus: widget.internetStatus,
-                segments: widget.segments,
-                memoryCreating: widget.memoryCreating,
-                photos: widget.photos,
-                scrollController: widget.scrollController,
-              ),
+        // widget.hasTranscripts
+        //     ? SizedBox(
+        //         height: 176,
+        //         child: Dismissible(
+        //           background: Shimmer.fromColors(
+        //             baseColor: Colors.grey,
+        //             highlightColor: Colors.white,
+        //             child: const Center(
+        //               child: Text(
+        //                 'Please Wait!..\nMemory Creating',
+        //                 style: TextStyle(
+        //                   fontSize: 18.0,
+        //                   fontWeight: FontWeight.bold,
+        //                 ),
+        //               ),
+        //             ),
+        //           ),
+        //           key: capturePageKey,
+        //           // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
+        //           direction: DismissDirection.startToEnd,
+        //           onDismissed: (direction) =>
+        //               widget.onDismissmissedCaptureMemory(direction),
+        //           child: CaptureCard(
+        //             context: context,
+        //             hasTranscripts: widget.hasTranscripts,
+        //             wsConnectionState: widget.wsConnectionState,
+        //             device: widget.device,
+        //             internetStatus: widget.internetStatus,
+        //             segments: widget.segments,
+        //             memoryCreating: widget.memoryCreating,
+        //             photos: widget.photos,
+        //             scrollController: widget.scrollController,
+        //           ),
+        //         ),
+        //       )
+        //     : CaptureCard(
+        //         context: context,
+        //         hasTranscripts: widget.hasTranscripts,
+        //         wsConnectionState: widget.wsConnectionState,
+        //         device: widget.device,
+        //         internetStatus: widget.internetStatus,
+        //         segments: widget.segments,
+        //         memoryCreating: widget.memoryCreating,
+        //         photos: widget.photos,
+        //         scrollController: widget.scrollController,
+        //       ),
 
         //*--- Filter Button ---*//
         // Padding(

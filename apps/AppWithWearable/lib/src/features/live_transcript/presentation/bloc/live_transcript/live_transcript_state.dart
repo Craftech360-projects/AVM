@@ -13,7 +13,7 @@ class LiveTranscriptState extends Equatable {
   final BluetoothDeviceStatus bluetoothDeviceStatus;
   final List<BTDeviceStruct> visibleDevices;
   final BTDeviceStruct? connectedDevice;
- final BleAudioCodec? codec;
+  final BleAudioCodec? codec;
   final int bleBatteryLevel;
   final String? errorMessage;
   const LiveTranscriptState({
@@ -22,7 +22,7 @@ class LiveTranscriptState extends Equatable {
     this.bleBatteryLevel = 0,
     this.errorMessage = '',
     this.connectedDevice,
-    this.codec=BleAudioCodec.unknown,
+    this.codec = BleAudioCodec.unknown,
   });
 
   factory LiveTranscriptState.initial() => const LiveTranscriptState(
@@ -43,7 +43,7 @@ class LiveTranscriptState extends Equatable {
       bleBatteryLevel: bleBatteryLevel ?? this.bleBatteryLevel,
       connectedDevice: connectedDevice ?? this.connectedDevice,
       errorMessage: errorMessage ?? this.errorMessage,
-      codec:codec??this.codec,
+      codec: codec ?? this.codec,
     );
   }
 

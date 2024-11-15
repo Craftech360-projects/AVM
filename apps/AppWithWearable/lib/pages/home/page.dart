@@ -702,7 +702,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   FocusNode chatTextFieldFocusNode = FocusNode(canRequestFocus: true);
   FocusNode memoriesTextFieldFocusNode = FocusNode(canRequestFocus: true);
 
-  GlobalKey<CapturePageState> capturePageKey = GlobalKey();
+  // GlobalKey<CapturePageState> capturePageKey = GlobalKey();
   // GlobalKey<ChatPageState> chatPageKey = GlobalKey();
   StreamSubscription<OnConnectionStateChangedEvent>? _connectionStateListener;
   StreamSubscription<List<int>>? _bleBatteryLevelListener;
@@ -841,25 +841,26 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   _initiateConnectionListener() async {
     if (_connectionStateListener != null) return;
     // TODO: when disconnected manually need to remove this connection state listener
-    _connectionStateListener = BleConnectionDatasource().getConnectionStateListener(
-        deviceId: _device!.id,
-        onDisconnected: () {
-          debugPrint('onDisconnected');
-          capturePageKey.currentState
-              ?.resetState(restartBytesProcessing: false);
-          setState(() => _device = null);
-          InstabugLog.logInfo('AVM Device Disconnected');
-          if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
-            createNotification(
-              title: 'AVM Device Disconnected',
-              body: 'Please reconnect to continue using your AVM.',
-            );
-          }
-          MixpanelManager().deviceDisconnected();
-          foregroundUtil.stopForegroundTask();
-        },
-        onConnected: ((d) =>
-            _onConnected(d, initiateConnectionListener: false)));
+    _connectionStateListener = BleConnectionDatasource()
+        .getConnectionStateListener(
+            deviceId: _device!.id,
+            onDisconnected: () {
+              debugPrint('onDisconnected');
+              // capturePageKey.currentState
+              //     ?.resetState(restartBytesProcessing: false);
+              setState(() => _device = null);
+              InstabugLog.logInfo('AVM Device Disconnected');
+              if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
+                createNotification(
+                  title: 'AVM Device Disconnected',
+                  body: 'Please reconnect to continue using your AVM.',
+                );
+              }
+              MixpanelManager().deviceDisconnected();
+              foregroundUtil.stopForegroundTask();
+            },
+            onConnected: ((d) =>
+                _onConnected(d, initiateConnectionListener: false)));
   }
 
   _startForeground() async {
@@ -877,8 +878,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     _device = connectedDevice;
     if (initiateConnectionListener) _initiateConnectionListener();
     _initiateBleBatteryListener();
-    capturePageKey.currentState
-        ?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
+    // capturePageKey.currentState
+    //     ?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
     MixpanelManager().deviceConnected();
     SharedPreferencesUtil().deviceId = _device!.id;
     SharedPreferencesUtil().deviceName = _device!.name;
@@ -888,7 +889,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   _initiateBleBatteryListener() async {
     _bleBatteryLevelListener?.cancel();
-    _bleBatteryLevelListener = await BleConnectionDatasource().getBleBatteryLevelListener(
+    _bleBatteryLevelListener =
+        await BleConnectionDatasource().getBleBatteryLevelListener(
       _device!.id,
       onBatteryLevelChange: (int value) {
         setState(() {
@@ -937,12 +939,12 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   //   memories: memories,
                   // ),
 
-                  CapturePage(
-                    key: capturePageKey,
-                    device: _device,
-                    refreshMemories: _initiateMemories,
-                    refreshMessages: _refreshMessages,
-                  ),
+                  // CapturePage(
+                  //   key: capturePageKey,
+                  //   device: _device,
+                  //   refreshMemories: _initiateMemories,
+                  //   refreshMessages: _refreshMessages,
+                  // ),
                   // ChatPage(
                   //   key: chatPageKey,
                   //   textFieldFocusNode: chatTextFieldFocusNode,
@@ -1075,7 +1077,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                         ],
                       )),
                 ),
-             
             ],
           ),
         ),
