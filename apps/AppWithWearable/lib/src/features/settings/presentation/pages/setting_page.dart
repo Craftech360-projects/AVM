@@ -6,6 +6,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/features/chat/presentation/pages/chat_page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
+import 'package:friend_private/pages/settings/developer_page.dart';
 import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
@@ -92,7 +93,9 @@ class _SettingPageState extends State<SettingPage> {
           ),
           AddOns(
             title: 'Developer Option',
-            onPressed: () {},
+            onPressed: () {
+              context.pushNamed(DeveloperPage.name);
+            },
           ),
           const FloatingActionButton(
             onPressed: scanBleDevice,

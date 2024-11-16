@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
+import 'package:friend_private/pages/settings/custom_prompt_page.dart';
 import 'package:friend_private/pages/settings/developer.dart';
 import 'package:friend_private/pages/settings/developer_page.dart';
 import 'package:friend_private/pages/settings/profile.dart';
@@ -25,7 +26,8 @@ class AppRouter {
   GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     //initialLocation: '/setting',
-    initialLocation: '/developer',
+    //initialLocation: '/developer',
+    initialLocation: '/prompt',
     // initialLocation: '/signin',
     // initialLocation: '/transcript-memory',
     //initialLocation: '/calenderPage',
@@ -182,6 +184,19 @@ class AppRouter {
         parentNavigatorKey: _rootNavigatorKey,
         pageBuilder: (context, state) => CustomTransitionPage(
           child: const DeveloperPage(),
+          transitionDuration: const Duration(
+            milliseconds: _routeTransitionDuration,
+          ),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        ),
+      ),
+      GoRoute(
+        path: '/prompt',
+        name: CustomPromptPage.name,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const CustomPromptPage(),
           transitionDuration: const Duration(
             milliseconds: _routeTransitionDuration,
           ),

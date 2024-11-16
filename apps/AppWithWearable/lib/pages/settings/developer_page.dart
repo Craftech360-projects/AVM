@@ -1,12 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/custom_prompt_page.dart';
 import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
+import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';
+import 'package:go_router/go_router.dart';
 import 'package:restart_app/restart_app.dart';
 
 class DeveloperPage extends StatefulWidget {
@@ -27,128 +31,159 @@ class _DeveloperPageState extends State<DeveloperPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return CustomScaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('Developer\'s Option'),
-      ),
-      body: ListView(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(8),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: SizedBox(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Row(
-                    children: [
-                      Icon(Icons.people),
-                      SizedBox(width: 16),
-                      Text(
-                        'Enable Developer',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Switch(
-                    value: developerEnabled,
-                    onChanged: _onSwitchChanged,
-                  ),
-                ],
-              ),
+        backgroundColor: const Color(0xFFE6F5FA),
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: const Color(0xFFE6F5FA),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.pushNamed(
+                  SettingPage.name); // Go back to the previous screen
+            },
+          ),
+          title: Text(
+            'Developer\'s Option',
+            style: textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+              fontSize: 20.h,
             ),
           ),
-          if (!developerEnabled)
-            const Text(
-              'By Enabling Developer Mode\nYou can customize prompt\'s & Transcript Services',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-          if (!developerEnabled) const SizedBox(height: 24),
-          if (developerEnabled)
-            Visibility(
-              visible: developerEnabled,
-              child: ListView(
-                shrinkWrap: true,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                children: [
-                  CustomExpansionTile(
-                    title: 'Transcript Service',
-                    subtitle:
-                        SharedPreferencesUtil().getApiType('NewApiKey') ?? '',
-                    children: [
-                      ListTile(
-                        title: const Text('Deepgram'),
-                        onTap: () {
-                          developerModeSelected(modeSelected: 'Deepgram');
-                        },
-                      ),
-                      ListTile(
-                        title: const Text('Sarvam'),
-                        onTap: () {
-                          developerModeSelected(modeSelected: 'Sarvam');
-                        },
-                      ),
-                      Visibility(
-                        visible: false,
-                        child: ListTile(
-                          title: const Text('Wisper'),
-                          onTap: () {
-                            developerModeSelected(modeSelected: 'Wisper');
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  CustomExpansionTile(
-                    title: 'Prompt',
-                    children: [
-                      ListTile(
-                        title: const Text('Default'),
-                        onTap: () {
-                          // final customPromptDetails = CustomPrompt(
-                          //   prompt: null,
-                          //   title: null,
-                          //   overview: null,
-                          //   actionItems: null,
-                          //   category: null,
-                          //   calendar: null,
-                          // );
-
-                          summarizeMemory(
-                            '',
-                            [],
-                            customPromptDetails: null,
-                          );
-                        },
-                      ),
-                      ListTile(
-                        title: const Text('Customize Prompt'),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const CustomPromptPage(),
+        ),
+        body: Container(
+          color:
+              const Color(0xFFE6F5FA), // Set your desired background color here
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 4, 16),
+            child: ListView(
+              children: [
+                Container(
+                  margin: const EdgeInsets.all(8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const CircleAvatar(
+                              backgroundColor: CustomColors.greyLavender,
+                              child: Icon(Icons.people),
                             ),
-                          );
-                        },
-                      ),
-                    ],
+                            // Icon(Icons.people),
+                            SizedBox(width: 16),
+                            Text(
+                              'Enable Developer',
+                              style: TextStyle(
+                                color: CustomColors.blackPrimary,
+                                fontSize: 16.h,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Switch(
+                          value: developerEnabled,
+                          onChanged: _onSwitchChanged,
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+                if (!developerEnabled)
+                  const Text(
+                    'By Enabling Developer Mode\nYou can customize prompt\'s & Transcript Services',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                if (!developerEnabled) const SizedBox(height: 24),
+                if (developerEnabled)
+                  Visibility(
+                    visible: developerEnabled,
+                    child: ListView(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      children: [
+                        CustomExpansionTile(
+                          title: 'Transcript Service',
+                          subtitle:
+                              SharedPreferencesUtil().getApiType('NewApiKey') ??
+                                  '',
+                          children: [
+                            ListTile(
+                              title: const Text(
+                                'Deepgram',
+                              ),
+                              onTap: () {
+                                developerModeSelected(modeSelected: 'Deepgram');
+                              },
+                            ),
+                            ListTile(
+                              title: const Text('Sarvam'),
+                              onTap: () {
+                                developerModeSelected(modeSelected: 'Sarvam');
+                              },
+                            ),
+                            ListTile(
+                              title: const Text('Whisper'),
+                              onTap: () {
+                                developerModeSelected(modeSelected: 'Whisper');
+                              },
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        const Divider(
+                            color: CustomColors.purpleBright, height: 1),
+                        const SizedBox(height: 12),
+                        CustomExpansionTile(
+                          title: 'Prompt',
+                          children: [
+                            ListTile(
+                              title: const Text('Default'),
+                              onTap: () {
+                                // final customPromptDetails = CustomPrompt(
+                                //   prompt: null,
+                                //   title: null,
+                                //   overview: null,
+                                //   actionItems: null,
+                                //   category: null,
+                                //   calendar: null,
+                                // );
+
+                                summarizeMemory(
+                                  '',
+                                  [],
+                                  customPromptDetails: null,
+                                );
+                              },
+                            ),
+                            ListTile(
+                              title: const Text('Customize Prompt'),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CustomPromptPage(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
             ),
-        ],
-      ),
-    );
+          ),
+        ));
   }
 
   void _onSwitchChanged(bool value) {
@@ -158,12 +193,12 @@ class _DeveloperPageState extends State<DeveloperPage> {
       PromptProvider().removeAllPrompts();
       SharedPreferencesUtil().isPromptSaved = false;
 
-      if (Platform.isAndroid) Restart.restartApp();
+      // if (Platform.isAndroid) Restart.restartApp();
 
-      Restart.restartApp(
-          // notificationTitle: 'Restarting App',
-          // notificationBody: 'Please tap here to open the app again.',
-          );
+      // Restart.restartApp(
+      //     // notificationTitle: 'Restarting App',
+      //     // notificationBody: 'Please tap here to open the app again.',
+      //     );
       print('developer option not true');
     }
     setState(() {
@@ -179,11 +214,11 @@ class _DeveloperPageState extends State<DeveloperPage> {
       content: Text('To Reflect selected Changes\nApp Restarting...'),
     );
     Future.delayed(const Duration(seconds: 3));
-    if (Platform.isAndroid) Restart.restartApp();
+    // if (Platform.isAndroid) Restart.restartApp();
 
-    Restart.restartApp(
-        // notificationTitle: 'Restarting App',
-        // notificationBody: 'Please tap here to open the app again.',
-        );
+    // Restart.restartApp(
+    // notificationTitle: 'Restarting App',
+    // notificationBody: 'Please tap here to open the app again.',
+    //     );
   }
 }

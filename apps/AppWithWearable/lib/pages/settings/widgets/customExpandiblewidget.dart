@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 
 class CustomExpansionTile extends StatefulWidget {
   final String title;
@@ -16,10 +17,10 @@ class CustomExpansionTile extends StatefulWidget {
     super.key,
     required this.title,
     required this.children,
-     this.subtitle='',
+    this.subtitle = '',
     this.collapsedColor = const Color(0x22FFFFFF),
     this.expandedColor = const Color(0x22FFFFFF),
-    this.textColor = const Color.fromARGB(255, 150, 150, 150),
+    this.textColor = CustomColors.blackPrimary,
     this.borderRadius = const BorderRadius.all(Radius.circular(10)),
     this.tilePadding = const EdgeInsets.symmetric(horizontal: 16),
     this.childrenPadding = const EdgeInsets.symmetric(horizontal: 16),
@@ -61,15 +62,15 @@ class _CustomExpansionTileState extends State<CustomExpansionTile> {
                     color: widget.textColor,
                   ),
                 ),
-                   subtitle: (widget.subtitle != null && widget.subtitle!.isNotEmpty)
-                    ? 
-                    Text(
-                        widget.subtitle ?? '',
-                        style: TextStyle(
-                          color: widget.textColor,
-                        ),
-                      )
-                    : null, // No subtitle if it's empty
+                subtitle:
+                    (widget.subtitle != null && widget.subtitle!.isNotEmpty)
+                        ? Text(
+                            widget.subtitle ?? '',
+                            style: TextStyle(
+                              color: widget.textColor,
+                            ),
+                          )
+                        : null, // No subtitle if it's empty
                 trailing: RotationTransition(
                   turns: AlwaysStoppedAnimation(_isExpanded ? 90 / 360 : 0),
                   child: widget.trailingIcon,
