@@ -27,7 +27,7 @@ class AppRouter {
     navigatorKey: _rootNavigatorKey,
     //initialLocation: '/setting',
     //initialLocation: '/developer',
-    initialLocation: '/prompt',
+    initialLocation: '/chats',
     // initialLocation: '/signin',
     // initialLocation: '/transcript-memory',
     //initialLocation: '/calenderPage',
