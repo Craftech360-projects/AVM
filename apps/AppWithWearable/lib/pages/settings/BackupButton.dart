@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/api_requests/api/server.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/utils/features/backups.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -73,10 +75,10 @@ class _BackupButtonState extends State<BackupButton> {
         // Automatic Backup Switch
         ListTile(
           title: const Text('Backups & Restore',
-              style: TextStyle(color: Colors.white)),
+              style: TextStyle(color: CustomColors.blackPrimary)),
           trailing: Switch(
-            activeTrackColor: Colors.grey,
-            inactiveTrackColor: Colors.white30,
+            activeTrackColor: CustomColors.purpleDark,
+            inactiveTrackColor: CustomColors.grey,
             activeColor: Colors.white,
             inactiveThumbColor: Colors.white,
             value: backupsEnabled,
@@ -98,16 +100,31 @@ class _BackupButtonState extends State<BackupButton> {
           title: Text(
             'Manual Backup',
             style: TextStyle(
-              color: backupsEnabled ? Colors.white : Colors.grey,
+              color: backupsEnabled
+                  ? CustomColors.blackPrimary
+                  : CustomColors.greyLight,
             ),
           ),
           subtitle:
               backupsEnabled ? const Text('Enabled') : const Text('Disabled'),
-          trailing: Icon(
-            Icons.backup,
-            size: 20,
-            color: backupsEnabled ? Colors.white : Colors.grey,
+          trailing: CircleAvatar(
+            backgroundColor: backupsEnabled
+                ? CustomColors.greyLavender
+                : CustomColors.greyLight,
+            child: Icon(
+                color: backupsEnabled
+                    ? CustomColors.blackPrimary
+                    : CustomColors.greyMedium,
+                Icons.backup,
+                size: 22.h),
           ),
+          //  Icon(
+          //   Icons.backup,
+          //   size: 22.h,
+          //   color: backupsEnabled
+          //       ? CustomColors.blackPrimary
+          //       : CustomColors.greyLight,
+          // ),
           onTap: backupsEnabled ? _manualBackup : null,
         ),
         // Padding(
@@ -129,7 +146,7 @@ class _BackupButtonState extends State<BackupButton> {
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text('Manual Backup in progress...',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: CustomColors.grey)),
           ),
       ],
     );
@@ -147,7 +164,7 @@ class _BackupButtonState extends State<BackupButton> {
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Cancel',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: CustomColors.purpleBright,
                 )),
           ),
           TextButton(
@@ -162,7 +179,7 @@ class _BackupButtonState extends State<BackupButton> {
             },
             child: const Text('Disable',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: CustomColors.grey,
                 )),
           ),
         ],

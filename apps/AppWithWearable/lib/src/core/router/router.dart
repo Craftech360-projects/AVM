@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:friend_private/pages/capture/connect.dart';
+import 'package:friend_private/pages/capture/page.dart';
+import 'package:friend_private/pages/settings/calendar.dart';
+import 'package:friend_private/pages/settings/developer.dart';
+import 'package:friend_private/pages/settings/developer_page.dart';
 import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/src/features/chats/presentation/pages/chats_page.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/pages/transcript_memory_page.dart';
@@ -20,9 +25,11 @@ class AppRouter {
   GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
     //initialLocation: '/setting',
+    initialLocation: '/developer',
     // initialLocation: '/signin',
     // initialLocation: '/transcript-memory',
-    initialLocation: '/transcript-memory',
+    //initialLocation: '/calenderPage',
+    //initialLocation: '/connect',
     routes: [
       GoRoute(
         path: '/signin',
@@ -43,6 +50,19 @@ class AppRouter {
         parentNavigatorKey: _rootNavigatorKey,
         pageBuilder: (context, state) => CustomTransitionPage(
           child: const OnboardingPage(),
+          transitionDuration: const Duration(
+            milliseconds: _routeTransitionDuration,
+          ),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        ),
+      ),
+      GoRoute(
+        path: '/connect',
+        name: ConnectDevicePage.name,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const ConnectDevicePage(),
           transitionDuration: const Duration(
             milliseconds: _routeTransitionDuration,
           ),
@@ -132,10 +152,36 @@ class AppRouter {
       ),
       GoRoute(
         path: '/profile',
-        //  name: ChatsPage.name,
+        name: ProfilePage.name,
         parentNavigatorKey: _rootNavigatorKey,
         pageBuilder: (context, state) => CustomTransitionPage(
           child: const ProfilePage(),
+          transitionDuration: const Duration(
+            milliseconds: _routeTransitionDuration,
+          ),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        ),
+      ),
+      GoRoute(
+        path: '/calenderPage',
+        name: CalendarPage.name,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const CalendarPage(),
+          transitionDuration: const Duration(
+            milliseconds: _routeTransitionDuration,
+          ),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        ),
+      ),
+      GoRoute(
+        path: '/developer',
+        name: DeveloperPage.name,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const DeveloperPage(),
           transitionDuration: const Duration(
             milliseconds: _routeTransitionDuration,
           ),

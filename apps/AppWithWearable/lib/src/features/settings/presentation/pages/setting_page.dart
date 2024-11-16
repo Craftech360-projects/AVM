@@ -4,9 +4,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/features/chat/presentation/pages/chat_page.dart';
+import 'package:friend_private/pages/settings/calendar.dart';
+import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
+import 'package:friend_private/src/features/chats/presentation/pages/chats_page.dart';
 import 'package:friend_private/src/features/settings/presentation/widgets/add_ons.dart';
 import 'package:friend_private/src/features/settings/presentation/widgets/language_dropdown.dart';
 import 'package:friend_private/src/features/wizard/presentation/pages/ble_connection_page.dart';
@@ -29,7 +33,14 @@ class _SettingPageState extends State<SettingPage> {
     return CustomScaffold(
       appBar: AppBar(
         centerTitle: true,
+        // backgroundColor: const Color(0xFFE6F5FA),
         backgroundColor: const Color(0xFFE6F5FA),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.pushNamed(ChatsPage.name); // Go back to the previous screen
+          },
+        ),
         title: Text(
           'Settings',
           style: textTheme.titleLarge?.copyWith(
@@ -69,11 +80,15 @@ class _SettingPageState extends State<SettingPage> {
           SizedBox(height: 16.h),
           AddOns(
             title: 'Profile',
-            onPressed: () {},
+            onPressed: () {
+              context.goNamed(ProfilePage.name);
+            },
           ),
           AddOns(
             title: 'Calender Integration',
-            onPressed: () {},
+            onPressed: () {
+              context.pushNamed(CalendarPage.name);
+            },
           ),
           AddOns(
             title: 'Developer Option',

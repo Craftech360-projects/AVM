@@ -12,6 +12,7 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/utils/other/string_utils.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
+//import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:tuple/tuple.dart';
 
 class SummaryResult {
@@ -193,13 +194,13 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
         return Tuple2(
             plugin, response.replaceAll('```', '').replaceAll('""', '').trim());
       } catch (e, stacktrace) {
-        // CrashReporting.reportHandledCrash(e, stacktrace,
-        //     level: NonFatalExceptionLevel.critical,
-        //     userAttributes: {
-        //       'plugin': plugin.id,
-        //       'plugins_count': pluginsEnabled.length.toString(),
-        //       'transcript_length': transcript.length.toString(),
-        //     });
+        CrashReporting.reportHandledCrash(e, stacktrace,
+            level: NonFatalExceptionLevel.critical,
+            userAttributes: {
+              'plugin': plugin.id,
+              'plugins_count': pluginsEnabled.length.toString(),
+              'transcript_length': transcript.length.toString(),
+            });
         debugPrint('Error executing plugin ${plugin.id}');
         return Tuple2(plugin, '');
       }
@@ -212,12 +213,12 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
     var responses = await allPluginResponses;
     return responses.where((e) => e.item2.length > 5).toList();
   } catch (e, stacktrace) {
-    // CrashReporting.reportHandledCrash(e, stacktrace,
-    //     level: NonFatalExceptionLevel.critical,
-    //     userAttributes: {
-    //       'plugins_count': pluginsEnabled.length.toString(),
-    //       'transcript_length': transcript.length.toString(),
-    //     });
+    CrashReporting.reportHandledCrash(e, stacktrace,
+        level: NonFatalExceptionLevel.critical,
+        userAttributes: {
+          'plugins_count': pluginsEnabled.length.toString(),
+          'transcript_length': transcript.length.toString(),
+        });
     return [];
   }
 }

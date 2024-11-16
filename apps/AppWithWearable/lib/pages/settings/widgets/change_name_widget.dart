@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/core/snackbar_util.dart';
-
+import 'package:friend_private/src/core/constant/constant.dart';
 
 class ChangeNameWidget extends StatefulWidget {
   const ChangeNameWidget({super.key});
@@ -39,30 +39,33 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
               const SizedBox(height: 8),
               CupertinoTextField(
                 controller: nameController,
-                placeholderStyle: const TextStyle(color: Colors.white54),
-                style: const TextStyle(color: Colors.white),
+                placeholderStyle:
+                    const TextStyle(color: CustomColors.blackPrimary),
+                style: const TextStyle(color: CustomColors.blackPrimary),
               ),
             ],
           ),
         ),
         actions: <Widget>[
           CupertinoDialogAction(
-            textStyle: const TextStyle(color: Colors.white),
+            textStyle: const TextStyle(color: CustomColors.blackPrimary),
             onPressed: () {
               Navigator.of(context).pop();
             },
             child: const Text('Cancel'),
           ),
           CupertinoDialogAction(
-            textStyle: const TextStyle(color: Colors.white),
+            textStyle: const TextStyle(color: CustomColors.blackPrimary),
             onPressed: () {
-              if (nameController.text.isEmpty || nameController.text.trim().isEmpty) {
-              showSnackBar(message: 'Name cannot be empty',context: context);
+              if (nameController.text.isEmpty ||
+                  nameController.text.trim().isEmpty) {
+                showSnackBar(message: 'Name cannot be empty', context: context);
                 return;
               }
               SharedPreferencesUtil().givenName = nameController.text;
               updateGivenName(nameController.text);
-             showSnackBar(message: 'Name updated successfully!',context: context);
+              showSnackBar(
+                  message: 'Name updated successfully!', context: context);
               Navigator.of(context).pop();
             },
             child: const Text('Save'),
@@ -80,7 +83,7 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
               const SizedBox(height: 8),
               TextField(
                 controller: nameController,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: CustomColors.blackPrimary),
               ),
             ],
           ),
@@ -92,23 +95,25 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
             },
             child: const Text(
               'Cancel',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: CustomColors.blackPrimary),
             ),
           ),
           TextButton(
             onPressed: () {
-              if (nameController.text.isEmpty || nameController.text.trim().isEmpty) {
-             showSnackBar(message: 'Name cannot be empty',context: context);
+              if (nameController.text.isEmpty ||
+                  nameController.text.trim().isEmpty) {
+                showSnackBar(message: 'Name cannot be empty', context: context);
                 return;
               }
               SharedPreferencesUtil().givenName = nameController.text;
               updateGivenName(nameController.text);
-            showSnackBar(message: 'Name updated successfully!',context: context);
+              showSnackBar(
+                  message: 'Name updated successfully!', context: context);
               Navigator.of(context).pop();
             },
             child: const Text(
               'Save',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: CustomColors.purpleBright),
             ),
           ),
         ],

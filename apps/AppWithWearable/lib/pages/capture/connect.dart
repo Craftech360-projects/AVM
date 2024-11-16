@@ -7,7 +7,7 @@ import 'package:friend_private/pages/onboarding/find_device/page.dart';
 
 class ConnectDevicePage extends StatefulWidget {
   const ConnectDevicePage({super.key});
-
+  static const name = 'connectPage';
   @override
   State<ConnectDevicePage> createState() => _ConnectDevicePageState();
 }

@@ -11,7 +11,7 @@ import 'package:restart_app/restart_app.dart';
 
 class DeveloperPage extends StatefulWidget {
   const DeveloperPage({super.key});
-
+  static const name = "developer";
   @override
   State<DeveloperPage> createState() => _DeveloperPageState();
 }

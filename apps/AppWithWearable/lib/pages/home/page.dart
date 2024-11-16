@@ -841,25 +841,26 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   _initiateConnectionListener() async {
     if (_connectionStateListener != null) return;
     // TODO: when disconnected manually need to remove this connection state listener
-    _connectionStateListener = BleConnectionDatasource().getConnectionStateListener(
-        deviceId: _device!.id,
-        onDisconnected: () {
-          debugPrint('onDisconnected');
-          capturePageKey.currentState
-              ?.resetState(restartBytesProcessing: false);
-          setState(() => _device = null);
-          InstabugLog.logInfo('AVM Device Disconnected');
-          if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
-            createNotification(
-              title: 'AVM Device Disconnected',
-              body: 'Please reconnect to continue using your AVM.',
-            );
-          }
-          MixpanelManager().deviceDisconnected();
-          foregroundUtil.stopForegroundTask();
-        },
-        onConnected: ((d) =>
-            _onConnected(d, initiateConnectionListener: false)));
+    _connectionStateListener = BleConnectionDatasource()
+        .getConnectionStateListener(
+            deviceId: _device!.id,
+            onDisconnected: () {
+              debugPrint('onDisconnected');
+              capturePageKey.currentState
+                  ?.resetState(restartBytesProcessing: false);
+              setState(() => _device = null);
+              InstabugLog.logInfo('AVM Device Disconnected');
+              if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
+                createNotification(
+                  title: 'AVM Device Disconnected',
+                  body: 'Please reconnect to continue using your AVM.',
+                );
+              }
+              MixpanelManager().deviceDisconnected();
+              foregroundUtil.stopForegroundTask();
+            },
+            onConnected: ((d) =>
+                _onConnected(d, initiateConnectionListener: false)));
   }
 
   _startForeground() async {
@@ -888,7 +889,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   _initiateBleBatteryListener() async {
     _bleBatteryLevelListener?.cancel();
-    _bleBatteryLevelListener = await BleConnectionDatasource().getBleBatteryLevelListener(
+    _bleBatteryLevelListener =
+        await BleConnectionDatasource().getBleBatteryLevelListener(
       _device!.id,
       onBatteryLevelChange: (int value) {
         setState(() {
@@ -1075,7 +1077,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                         ],
                       )),
                 ),
-             
             ],
           ),
         ),

@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/utils/features/backups.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -67,7 +69,7 @@ class _RestoreButtonState extends State<RestoreButton> {
           contentPadding: const EdgeInsets.fromLTRB(4, 0, 24, 0),
           title: const Text(
             'Restore Latest Backup',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: CustomColors.blackPrimary),
           ),
           trailing: isRestoreInProgress
               ? const SizedBox(
@@ -77,17 +79,21 @@ class _RestoreButtonState extends State<RestoreButton> {
                     strokeWidth: 2,
                   ),
                 )
-              : const Icon(
-                  Icons.restore,
-                  size: 20,
+              : CircleAvatar(
+                  backgroundColor: CustomColors.greyLavender,
+                  child: Icon(Icons.restore, size: 22.h),
                 ),
+          // const Icon(
+          //     Icons.restore,
+          //     size: 22.h,
+          //   ),
           onTap: isRestoreInProgress ? null : _handleRestore,
         ),
         if (isRestoreInProgress)
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text('Restoring backup...',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: CustomColors.grey)),
           ),
       ],
     );
