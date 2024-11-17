@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 
 class DeviceAnimationWidget extends StatefulWidget {
   final bool animatedBackground;
@@ -37,17 +38,18 @@ class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget>
 
   @override
   Widget build(BuildContext context) {
+  
     return Center(
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Image.asset(
-            "assets/images/stars.png",
-          ),
-    
+          // Image.asset(
+          //   "assets/images/stars.png",
+          // ),
+
           // Image.asset("assets/images/blob.png"),
           Image.asset(
-            "assets/images/herologo.png",
+            IconImage.avmLogo,
             height: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160),
             width: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160),
           )

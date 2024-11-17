@@ -5,7 +5,6 @@ import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
-import 'package:friend_private/pages/home/home_page_wrapper.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/pages/onboarding/auth.dart';
 import 'package:friend_private/pages/onboarding/complete/complete.dart';
@@ -44,10 +43,12 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
     super.dispose();
   }
 
+  
   _goNext() => _controller!.animateTo(_controller!.index + 1);
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: CustomScaffold(
@@ -62,11 +63,15 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
                 _controller!.index == _controller!.length - 1
                     ? 'You are all set  🎉'
                     : '',
-                style: TextStyle(
-                    color: Colors.grey.shade200,
-                    fontSize:
-                        _controller!.index == _controller!.length - 1 ? 28 : 40,
-                    fontWeight: FontWeight.w500),
+                // style: TextStyle(
+                //     color: Colors.grey.shade200,
+                //     fontSize:
+                //         _controller!.index == _controller!.length - 1 ? 28 : 40,
+                //     fontWeight: FontWeight.w500),
+                style: textTheme.displaySmall?.copyWith(
+                  fontSize:
+                      _controller!.index == _controller!.length - 1 ? 28 : 40,
+                ),
               ),
             ),
             const SizedBox(height: 24),
@@ -80,8 +85,8 @@ class _OnboardingWrapperState extends State<OnboardingWrapper>
                       _controller!.index == _controller!.length - 1
                           ? 'Your personal growth journey with AI that listens to your every word.'
                           : 'Your personal growth journey with AI that listens to your every word.',
-                      style:
-                          TextStyle(color: Colors.grey.shade300, fontSize: 16),
+                      style:textTheme.bodyLarge,
+                          // TextStyle(color: Colors.grey.shade300, fontSize: 16),
                       textAlign: TextAlign.center,
                     ),
                   ),

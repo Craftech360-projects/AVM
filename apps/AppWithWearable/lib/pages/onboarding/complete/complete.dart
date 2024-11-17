@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:friend_private/src/core/common_widget/common_widget.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 class CompletePage extends StatefulWidget {
@@ -13,6 +15,7 @@ class CompletePage extends StatefulWidget {
 class _CompletePageState extends State<CompletePage> {
   @override
   Widget build(BuildContext context) {
+        final textTheme = Theme.of(context).textTheme;
     return Column(
       // TODO: improve UI on smaller devices
       mainAxisAlignment: MainAxisAlignment.end,
@@ -52,24 +55,24 @@ class _CompletePageState extends State<CompletePage> {
             children: [
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(
-                    border: const GradientBoxBorder(
-                      gradient: LinearGradient(colors: [
-                        Color.fromARGB(127, 208, 208, 208),
-                        Color.fromARGB(127, 188, 99, 121),
-                        Color.fromARGB(127, 86, 101, 182),
-                        Color.fromARGB(127, 126, 190, 236)
-                      ]),
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: MaterialButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                  // decoration: BoxDecoration(
+                  //   border: const GradientBoxBorder(
+                  //     gradient: LinearGradient(colors: [
+                  //       Color.fromARGB(127, 208, 208, 208),
+                  //       Color.fromARGB(127, 188, 99, 121),
+                  //       Color.fromARGB(127, 86, 101, 182),
+                  //       Color.fromARGB(127, 126, 190, 236)
+                  //     ]),
+                  //     width: 2,
+                  //   ),
+                  //   borderRadius: BorderRadius.circular(12),
+                  // ),
+                  child: CustomElevatedButton(
+                    // padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                     onPressed: widget.goNext,
-                    child: const Text(
+                    child:  Text(
                       'Get Started',
-                      style: TextStyle(fontSize: 16),
+                      style:textTheme.titleMedium?.copyWith(color: CustomColors.white),
                     ),
                   ),
                 ),

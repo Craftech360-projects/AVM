@@ -209,12 +209,12 @@ flutter:
 flutter_native_splash:
 
 
-  background_image: "assets/images/splash.png"
-  image: assets/images/logo.png
+  background_image: "assets/images/bg_image.png"
+  image: assets/images/AVM_logo.png
   android_12:
 
-    background_image: "assets/images/splash.png"
-    image: assets/images/logo.png
+    background_image: "assets/images/bg_image.png"
+    image: assets/images/AVM_logo.png
 
   android: true
   ios: true

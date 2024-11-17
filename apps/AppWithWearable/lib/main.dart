@@ -25,9 +25,11 @@ import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dar
 import 'package:friend_private/firebase_options_dev.dart' as dev;
 import 'package:friend_private/firebase_options_prod.dart' as prod;
 import 'package:friend_private/flavors.dart';
+import 'package:friend_private/pages/home/page.dart';
+import 'package:friend_private/pages/onboarding/wrapper.dart';
 import 'package:friend_private/src/core/config/app_loger.dart';
 import 'package:friend_private/src/core/config/simple_bloc_observer.dart';
-import 'package:friend_private/src/core/router/router.dart';
+import 'package:friend_private/src/core/theme/custom_theme.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/notifications.dart';
@@ -164,7 +166,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final appRouter = AppRouter();
+    // final appRouter = AppRouter();
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => MemoryBloc()),
@@ -175,73 +177,70 @@ class _MyAppState extends State<MyApp> {
             MemoryProvider(),
           ),
         ),
+
         /// below is with new UI
         BlocProvider(create: (context) => LiveTranscriptBloc()),
       ],
-      child: ScreenUtilInit(
-        designSize: const Size(375, 812),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        child: MaterialApp.router(
-          routerConfig: appRouter.router,
-          // navigatorObservers: [InstabugNavigatorObserver()],
-          debugShowCheckedModeBanner: F.env == Environment.dev,
-          title: F.title,
-          // navigatorKey: MyApp.navigatorKey,
-          // localizationsDelegates: const [
-          //   GlobalMaterialLocalizations.delegate,
-          //   GlobalWidgetsLocalizations.delegate,
-          //   GlobalCupertinoLocalizations.delegate,
-          // ],
-          // supportedLocales: const [Locale('en')],
-          // theme: AVMTheme.darkTheme,
-          // theme: ThemeData(
-          //   useMaterial3: false,
-          //   colorScheme: const ColorScheme.dark(
-          //     primary: Colors.black,
-          //     secondary: Colors.deepPurple,
-          //     surface: Colors.black38,
-          //   ),
-          //   // dialogTheme: const DialogTheme(
-          //   //   backgroundColor: Colors.black,
-          //   //   titleTextStyle: TextStyle(fontSize: 18, color: Colors.white),
-          //   //   contentTextStyle: TextStyle(fontSize: 16, color: Colors.white),
-          //   // ),
-          //   snackBarTheme: SnackBarThemeData(
-          //     backgroundColor: Colors.grey.shade900,
-          //     contentTextStyle: const TextStyle(
-          //         fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
-          //   ),
-          //   textTheme: TextTheme(
-          //     titleLarge: const TextStyle(fontSize: 18, color: Colors.white),
-          //     titleMedium: const TextStyle(fontSize: 16, color: Colors.white),
-          //     bodyMedium: const TextStyle(fontSize: 14, color: Colors.white),
-          //     labelMedium: TextStyle(fontSize: 12, color: Colors.grey.shade200),
-          //   ),
-          //   textSelectionTheme: const TextSelectionThemeData(
-          //     cursorColor: Colors.white,
-          //     selectionColor: Colors.deepPurple,
-          //   ),
-          // ),
-          themeMode: ThemeMode.light,
-          // home: const HasBackupPage(),
-          // home:
-          //  Stack(
-          //   children: [
-          //     Positioned.fill(
-          //       child: Image.asset(
-          //         'assets/images/splash.png',
-          //         fit: BoxFit.cover,
-          //       ),
-          //     ),
-          // SharedPreferencesUtil().onboardingCompleted && widget.isAuth
-          // ?
-          // const HomePage(searchText: '',)
-          // const SigninPage()
-
-          // ? const HomePageWrapper()
-          // : const OnboardingWrapper(),
-          //   ],
+      child: MaterialApp(
+        navigatorObservers: [InstabugNavigatorObserver()],
+        debugShowCheckedModeBanner: F.env == Environment.dev,
+        title: F.title,
+        navigatorKey: MyApp.navigatorKey,
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('en')],
+        themeMode: ThemeMode.light,
+        // theme: AVMTheme.darkTheme,
+        theme: CustomTheme.lightTheme,
+        // theme: ThemeData(
+        //   useMaterial3: false,
+        //   colorScheme: const ColorScheme.dark(
+        //     primary: Colors.black,
+        //     secondary: Colors.deepPurple,
+        //     surface: Colors.black38,
+        //   ),
+        //   // dialogTheme: const DialogTheme(
+        //   //   backgroundColor: Colors.black,
+        //   //   titleTextStyle: TextStyle(fontSize: 18, color: Colors.white),
+        //   //   contentTextStyle: TextStyle(fontSize: 16, color: Colors.white),
+        //   // ),
+        //   snackBarTheme: SnackBarThemeData(
+        //     backgroundColor: Colors.grey.shade900,
+        //     contentTextStyle: const TextStyle(
+        //         fontSize: 16, color: Colors.white, fontWeight: FontWeight.w500),
+        //   ),
+        //   textTheme: TextTheme(
+        //     titleLarge: const TextStyle(fontSize: 18, color: Colors.white),
+        //     titleMedium: const TextStyle(fontSize: 16, color: Colors.white),
+        //     bodyMedium: const TextStyle(fontSize: 14, color: Colors.white),
+        //     labelMedium: TextStyle(fontSize: 12, color: Colors.grey.shade200),
+        //   ),
+        //   textSelectionTheme: const TextSelectionThemeData(
+        //     cursorColor: Colors.white,
+        //     selectionColor: Colors.deepPurple,
+        //   ),
+        // ),
+      
+        // home: const HasBackupPage(),
+        home: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/bg_image.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            SharedPreferencesUtil().onboardingCompleted && widget.isAuth
+                // ?
+                // const HomePage(searchText: '',)
+                // const SigninPage()
+      
+          ? const HomePageWrapper()
+          : const OnboardingWrapper(),
+            ],
           // ),
         ),
       ),

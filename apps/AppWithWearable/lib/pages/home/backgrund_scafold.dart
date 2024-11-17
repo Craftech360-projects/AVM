@@ -57,7 +57,7 @@ class CustomScaffold extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/images/splash.png',
+              'assets/images/bg_image.png',
               fit: BoxFit.cover,
             ),
           ),

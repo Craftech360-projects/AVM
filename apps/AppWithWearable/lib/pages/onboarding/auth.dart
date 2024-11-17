@@ -13,6 +13,8 @@ import 'package:sign_in_button/sign_in_button.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../src/core/constant/constant.dart';
+
 class AuthComponent extends StatefulWidget {
   final VoidCallback onSignIn;
 
@@ -29,6 +31,7 @@ class _AuthComponentState extends State<AuthComponent> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -98,7 +101,7 @@ class _AuthComponentState extends State<AuthComponent> {
                       var userCred = await signInWithApple();
 
                       if (userCred != null) {
-                        _signIn();
+                      _signIn();
                       } else {
                         print("its null");
                       }
@@ -114,7 +117,8 @@ class _AuthComponentState extends State<AuthComponent> {
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
-              style: const TextStyle(color: Colors.white, fontSize: 12),
+              // style: const TextStyle(color: Colors.white, fontSize: 12),
+              style: textTheme.bodySmall?.copyWith(color: CustomColors.grey),
               children: [
                 const TextSpan(text: 'By Signing in, you agree to our\n'),
                 TextSpan(
