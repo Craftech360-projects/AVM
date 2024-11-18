@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/pages/settings/calendar.dart';
+import 'package:friend_private/pages/settings/developer_page.dart';
+import 'package:friend_private/pages/settings/profile.dart';
+import 'package:friend_private/pages/settings/widgets.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
@@ -13,6 +17,7 @@ import 'package:friend_private/src/features/settings/presentation/widgets/add_on
 import 'package:friend_private/src/features/settings/presentation/widgets/language_dropdown.dart';
 import 'package:friend_private/src/features/wizard/presentation/pages/ble_connection_page.dart';
 import 'package:friend_private/utils/ble/gatt_utils.dart';
+import 'package:friend_private/utils/other/temp.dart';
 import 'package:go_router/go_router.dart';
 
 class SettingPage extends StatefulWidget {
@@ -74,29 +79,51 @@ class _SettingPageState extends State<SettingPage> {
             style: textTheme.titleMedium?.copyWith(fontSize: 20.h),
           ),
           SizedBox(height: 16.h),
-          AddOns(
-            title: 'Profile',
-            onPressed: () {},
-          ),
-          AddOns(
-            title: 'Calender Integration',
-            onPressed: () {},
-          ),
-          AddOns(
-            title: 'Developer Option',
-            onPressed: () {},
-          ),
+          // AddOns(
+          //   title: 'Profile',
+          //   onPressed: () {},
+          // ),
+          // AddOns(
+          //   title: 'Calender Integration',
+          //   onPressed: () {},
+          // ),
+          // AddOns(
+          //   title: 'Developer Option',
+          //   onPressed: () {},
+          // ),
+
+          getItemAddOn('Profile', () {
+            routeToPage(context, const ProfilePage());
+          }, icon: Icons.person),
+          getItemAddOn('Calendar Integration', () {
+            routeToPage(context, const CalendarPage());
+          }, icon: Icons.calendar_month),
+          getItemAddOn('Developers Option', () {
+            routeToPage(context, const DeveloperPage());
+          }, icon: Icons.settings_suggest),
           // const FloatingActionButton(
           //   onPressed: scanBleDevice,
           //   child: Text('Scan Device'),
           // ),
-          FloatingActionButton(
-            onPressed: () => selectBleDevice(remoteId: 'C4:E8:E3:9F:D2:AE'),
-            child: const Text('Select Device'),
-          ),
-          FloatingActionButton(
-            onPressed: () => disconnectBleDevice(remoteId: 'C4:E8:E3:9F:D2:AE'),
-            child: const Text('Disconnect Device'),
+          // FloatingActionButton(
+          //   onPressed: () => selectBleDevice(remoteId: 'C4:E8:E3:9F:D2:AE'),
+          //   child: const Text('Select Device'),
+          // ),
+          // FloatingActionButton(
+          //   onPressed: () => disconnectBleDevice(remoteId: 'C4:E8:E3:9F:D2:AE'),
+          //   child: const Text('Disconnect Device'),
+          // ),
+          const SizedBox(height: 80),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Align(
+              alignment: Alignment.center,
+              child: const Text(
+                'Version:', //  $version+$buildVersion',
+                style: TextStyle(
+                    color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+              ),
+            ),
           ),
         ],
       ),

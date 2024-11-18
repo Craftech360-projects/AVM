@@ -31,6 +31,7 @@ import 'package:friend_private/src/core/config/app_loger.dart';
 import 'package:friend_private/src/core/config/simple_bloc_observer.dart';
 import 'package:friend_private/src/core/theme/custom_theme.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
+import 'package:friend_private/src/features/wizard/presentation/pages/signin_page.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
@@ -205,7 +206,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 SharedPreferencesUtil().onboardingCompleted && widget.isAuth
                     ? const HomePageWrapper()
-                    : const OnboardingWrapper(),
+                    : const SigninPage(),
               ],
             ),
           ),
