@@ -11,6 +11,7 @@ import 'package:friend_private/pages/settings/RestoreButton.dart';
 import 'package:friend_private/pages/settings/widgets/change_name_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';
+import 'package:friend_private/src/features/wizard/presentation/pages/signin_page.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:go_router/go_router.dart';
@@ -59,8 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   }, () {
                     signOut(context);
                     Navigator.of(context).pop();
-                    routeToPage(context, const OnboardingWrapper(),
-                        replace: true);
+                    routeToPage(context, const SigninPage(), replace: true);
                   }, "Sign Out?", "Are you sure you want to sign out?");
                 },
               );

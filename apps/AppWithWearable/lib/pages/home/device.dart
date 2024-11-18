@@ -108,7 +108,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                   Text(
                     '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, 6)})',
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 16.0,
                       fontWeight: FontWeight.w500,
                       height: 1.5,
@@ -122,7 +122,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                         Text(
                           '${snapshot.data?.modelNumber}, firmware ${snapshot.data?.firmwareRevision}',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 10.0,
                             fontWeight: FontWeight.w500,
                             height: 1,
@@ -133,7 +133,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                         Text(
                           'by ${snapshot.data?.manufacturerName}',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 10.0,
                             fontWeight: FontWeight.w500,
                             height: 1,
@@ -146,7 +146,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                   widget.device != null
                       ? Container(
                           decoration: BoxDecoration(
-                            color: Colors.transparent,
+                            color: Colors.black,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Row(
@@ -168,7 +168,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                               Text(
                                 '${widget.batteryLevel.toString()}% Battery',
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -199,7 +199,8 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                   child: TextButton(
                       onPressed: () {
                         if (widget.device != null) {
-                          BleConnectionDatasource().bleDisconnectDevice(widget.device!);
+                          BleConnectionDatasource()
+                              .bleDisconnectDevice(widget.device!);
                         }
                         Navigator.of(context).pop();
                         SharedPreferencesUtil().deviceId = '';

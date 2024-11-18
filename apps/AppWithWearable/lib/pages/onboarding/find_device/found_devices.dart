@@ -7,6 +7,7 @@ import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/src/features/wizard/presentation/pages/finalize_page.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/ble/connect.dart';
 import 'package:gradient_borders/gradient_borders.dart';
@@ -47,7 +48,16 @@ class _FoundDevicesState extends State<FoundDevices>
       await Future.delayed(const Duration(seconds: 2));
       SharedPreferencesUtil().deviceId = btDevice.id;
       SharedPreferencesUtil().deviceName = btDevice.name;
-      widget.goNext();
+      await Future.delayed(const Duration(seconds: 1));
+      if (mounted) {
+        SharedPreferencesUtil().onboardingCompleted = true;
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) =>
+                const FinalizePage(), // Replace with your next page widget
+          ),
+        );
+      }
     } catch (e) {
       print("Error fetching battery level: $e");
       setState(() {

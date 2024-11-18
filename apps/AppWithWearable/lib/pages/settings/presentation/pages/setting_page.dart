@@ -19,6 +19,7 @@ import 'package:friend_private/src/features/wizard/presentation/pages/ble_connec
 import 'package:friend_private/utils/ble/gatt_utils.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:go_router/go_router.dart';
+import 'package:friend_private/pages/home/device.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({
@@ -50,7 +51,13 @@ class _SettingPageState extends State<SettingPage> {
         children: [
           CustomListTile(
             onTap: () {
-              context.pushNamed(BleConnectionPage.name);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const ConnectedDevice(device: null, batteryLevel: 0),
+                ),
+              );
             },
             title: BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
               bloc: context.read<LiveTranscriptBloc>(),
