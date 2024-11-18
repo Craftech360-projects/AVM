@@ -8,6 +8,7 @@ import 'package:friend_private/src/features/wizard/presentation/widgets/ble_anim
 
 class BleConnectionPage extends StatefulWidget {
   const BleConnectionPage({super.key});
+  static const String routeName = '/onboarding';
   static const String name = 'BleConnectionPage';
   @override
   State<BleConnectionPage> createState() => _BleConnectionPageState();

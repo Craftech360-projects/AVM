@@ -19,7 +19,7 @@ const _routeTransitionDuration = 300;
 class AppRouter {
   GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: '/wsPage',
+    // initialLocation: '/wsPage',
     // initialLocation: '/setting',
 
     // initialLocation: '/signin',
@@ -135,7 +135,7 @@ class AppRouter {
         name: WebSocketTestPage.name,
         parentNavigatorKey: _rootNavigatorKey,
         pageBuilder: (context, state) => CustomTransitionPage(
-          child:  WebSocketTestPage(),
+          child: WebSocketTestPage(),
           transitionDuration: const Duration(
             milliseconds: _routeTransitionDuration,
           ),
