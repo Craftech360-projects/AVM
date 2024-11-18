@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class DeveloperSettingsPage extends StatefulWidget {
   const DeveloperSettingsPage({super.key});
+  //static const name = 'developer';
 
   @override
   State<DeveloperSettingsPage> createState() => _DeveloperSettingsPageState();
