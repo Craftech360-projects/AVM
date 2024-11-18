@@ -1,13 +1,9 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/api_requests/api/server.dart';
-import 'package:friend_private/backend/database/memory.dart';
-import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/utils/features/backups.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -36,19 +32,19 @@ void _showPermissionDeniedDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text("Permission Required"),
-        content: Text(
+        title: const Text("Permission Required"),
+        content: const Text(
             "Storage permission is required to access files. Please enable it in the app settings."),
         actions: <Widget>[
           TextButton(
-            child: Text("Settings"),
+            child: const Text("Settings"),
             onPressed: () {
               openAppSettings(); // Redirect to app settings
               Navigator.of(context).pop(); // Close the dialog
             },
           ),
           TextButton(
-            child: Text("Cancel"),
+            child: const Text("Cancel"),
             onPressed: () {
               Navigator.of(context).pop(); // Close the dialog
             },
@@ -60,10 +56,10 @@ void _showPermissionDeniedDialog(BuildContext context) {
 }
 
 class BackupButton extends StatefulWidget {
-  const BackupButton({Key? key}) : super(key: key);
+  const BackupButton({super.key});
 
   @override
-  _BackupButtonState createState() => _BackupButtonState();
+  State<BackupButton> createState() => _BackupButtonState();
 }
 
 class _BackupButtonState extends State<BackupButton> {
@@ -78,12 +74,13 @@ class _BackupButtonState extends State<BackupButton> {
       children: [
         // Automatic Backup Switch
         ListTile(
-          title: const Text('Automatic Backups',
-              style: TextStyle(color: Colors.white)),
-          subtitle: backupsEnabled
-              ? const Text('Backups are enabled')
-              : const Text('Backups are disabled'),
+          title: const Text('Backups & Restore',
+              style: TextStyle(color: CustomColors.blackPrimary)),
           trailing: Switch(
+            activeTrackColor: CustomColors.purpleDark,
+            inactiveTrackColor: CustomColors.grey,
+            activeColor: Colors.white,
+            inactiveThumbColor: Colors.white,
             value: backupsEnabled,
             onChanged: (bool value) {
               setState(() {
@@ -98,26 +95,58 @@ class _BackupButtonState extends State<BackupButton> {
         ),
 
         // Manual Backup Button
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: ElevatedButton.icon(
-            icon: const Icon(Icons.backup),
-            label: const Text('Manual Backup'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              textStyle: const TextStyle(color: Colors.white),
+        ListTile(
+          contentPadding: const EdgeInsets.fromLTRB(4, 0, 24, 0),
+          title: Text(
+            'Manual Backup',
+            style: TextStyle(
+              color: backupsEnabled
+                  ? CustomColors.blackPrimary
+                  : CustomColors.greyLight,
             ),
-            onPressed: backupsEnabled
-                ? _manualBackup
-                : null, // Disable button if backups are disabled
           ),
+          subtitle:
+              backupsEnabled ? const Text('Enabled') : const Text('Disabled'),
+          trailing: CircleAvatar(
+            backgroundColor: backupsEnabled
+                ? CustomColors.greyLavender
+                : CustomColors.greyLight,
+            child: Icon(
+                color: backupsEnabled
+                    ? CustomColors.blackPrimary
+                    : CustomColors.greyMedium,
+                Icons.backup,
+                size: 22.h),
+          ),
+          //  Icon(
+          //   Icons.backup,
+          //   size: 22.h,
+          //   color: backupsEnabled
+          //       ? CustomColors.blackPrimary
+          //       : CustomColors.greyLight,
+          // ),
+          onTap: backupsEnabled ? _manualBackup : null,
         ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+        //   child: ElevatedButton.icon(
+        //     icon: const Icon(Icons.backup),
+        //     label: const Text('Manual Backup'),
+        //     style: ElevatedButton.styleFrom(
+        //       backgroundColor: Colors.blue,
+        //       textStyle: const TextStyle(color: Colors.white),
+        //     ),
+        //     onPressed: backupsEnabled
+        //         ? _manualBackup
+        //         : null, // Disable button if backups are disabled
+        //   ),
+        // ),
 
         if (isManualBackupInProgress)
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text('Manual Backup in progress...',
-                style: TextStyle(color: Colors.grey)),
+                style: TextStyle(color: CustomColors.grey)),
           ),
       ],
     );
@@ -133,7 +162,10 @@ class _BackupButtonState extends State<BackupButton> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: const Text('Cancel',
+                style: TextStyle(
+                  color: CustomColors.purpleBright,
+                )),
           ),
           TextButton(
             onPressed: () {
@@ -145,7 +177,10 @@ class _BackupButtonState extends State<BackupButton> {
               });
               Navigator.of(context).pop();
             },
-            child: const Text('Disable'),
+            child: const Text('Disable',
+                style: TextStyle(
+                  color: CustomColors.grey,
+                )),
           ),
         ],
       ),
@@ -165,11 +200,13 @@ class _BackupButtonState extends State<BackupButton> {
     setState(() => isManualBackupInProgress = true);
 
     try {
+      var uid = SharedPreferencesUtil().uid;
       // Call your backup API or method here
-      await executeManualBackupWithUid(); // Replace this with your backup method
+      await executeManualBackupWithUid(
+          uid); // Replace this with your backup method
     } catch (error) {
       // Handle error (e.g., show a snackbar or alert)
-      print('Manual backup failed: $error');
+      debugPrint('Manual backup failed: $error');
     } finally {
       setState(() => isManualBackupInProgress = false);
     }
