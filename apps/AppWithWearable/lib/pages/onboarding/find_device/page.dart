@@ -4,12 +4,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
 import 'package:friend_private/utils/ble/find.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'package:friend_private/src/features/wizard/presentation/widgets/ble_animation.dart';
 
 import 'found_devices.dart';
 
@@ -19,7 +23,7 @@ class FindDevicesPage extends StatefulWidget {
 
   const FindDevicesPage(
       {super.key, required this.goNext, this.includeSkip = true});
-
+  static const String routeName = '/FindDevicesPage';
   @override
   _FindDevicesPageState createState() => _FindDevicesPageState();
 }
@@ -83,7 +87,8 @@ class _FindDevicesPageState extends State<FindDevicesPage>
 
     _findDevicesTimer =
         Timer.periodic(const Duration(seconds: 2), (timer) async {
-      List<BTDeviceStruct> foundDevices = await BleConnectionDatasource().bleFindDevices();
+      List<BTDeviceStruct> foundDevices =
+          await BleConnectionDatasource().bleFindDevices();
 
       // Update foundDevicesMap with new devices and remove the ones not found anymore
       Map<String, BTDeviceStruct> updatedDevicesMap = {};
@@ -114,54 +119,92 @@ class _FindDevicesPageState extends State<FindDevicesPage>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        FoundDevices(deviceList: deviceList, goNext: widget.goNext),
-        if (deviceList.isEmpty && enableInstructions)
-          const SizedBox(height: 48),
-        if (deviceList.isEmpty && enableInstructions)
-          ElevatedButton(
-            onPressed: () =>
-                launchUrl(Uri.parse('mailto:craftechapps@gmail.com')),
-            child: Container(
-              width: double.infinity,
-              height: 45,
-              alignment: Alignment.center,
-              child: const Text(
-                'Contact Support?',
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                  color: Colors.white,
-                  decoration: TextDecoration.underline,
-                ),
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(
+          255, 212, 218, 219), // Set the background to white
+      body: Stack(children: [
+        /// Background Image
+        Positioned.fill(
+          child: Image.asset(
+            'assets/images/bg_image.png',
+            fit: BoxFit.cover, // Ensure the image covers the entire background
+          ),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              IconImage.avmLogo,
+              height: 30.h,
+            ),
+            SizedBox(height: 150.h),
+
+            /// Bluetooth Animation
+            BleAnimation(
+              minRadius: 40.h,
+              ripplesCount: 6,
+              duration: const Duration(milliseconds: 3000),
+              repeat: true,
+              child: Icon(
+                Icons.bluetooth_searching,
+                color: Colors.white,
+                size: 30.h,
               ),
             ),
-          ),
-        if (widget.includeSkip && deviceList.isEmpty)
-          ElevatedButton(
-            onPressed: () {
-              widget.goNext();
-              MixpanelManager().useWithoutDeviceOnboardingFindDevices();
-            },
-            child: Container(
-              width: double.infinity,
-              height: 45,
-              alignment: Alignment.center,
-              child: const Text(
-                'Connect Later',
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 16,
-                  color: Colors.white,
-                  // decoration: TextDecoration.underline,
+            SizedBox(height: 140.h),
+
+            FoundDevices(deviceList: deviceList, goNext: widget.goNext),
+            if (deviceList.isEmpty && enableInstructions)
+              const SizedBox(height: 48),
+            if (deviceList.isEmpty && enableInstructions)
+              ElevatedButton(
+                onPressed: () =>
+                    launchUrl(Uri.parse('mailto:craftechapps@gmail.com')),
+                child: Container(
+                  width: double.infinity,
+                  height: 45,
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Contact Support?',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: CustomColors.blackPrimary,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-      ],
+          ],
+        ),
+      ]),
     );
   }
 }
+
+
+
+
+
+ // if (widget.includeSkip && deviceList.isEmpty)
+        //   ElevatedButton(
+        //     onPressed: () {
+        //       widget.goNext();
+        //       MixpanelManager().useWithoutDeviceOnboardingFindDevices();
+        //     },
+        //     child: Container(
+        //       width: double.infinity,
+        //       height: 45,
+        //       alignment: Alignment.center,
+        //       child: const Text(
+        //         'Connect Later',
+        //         style: TextStyle(
+        //           fontWeight: FontWeight.w400,
+        //           fontSize: 16,
+        //           color: Colors.white,
+        //           // decoration: TextDecoration.underline,
+        //         ),
+        //       ),
+        //     ),
+        //   ),

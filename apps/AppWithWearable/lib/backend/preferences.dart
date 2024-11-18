@@ -28,6 +28,24 @@ class SharedPreferencesUtil {
 
   String get deviceId => getString('deviceId') ?? '';
 
+  // Notification Permission Tracking
+  set notificationPermissionRequested(bool value) =>
+      saveBool('notificationPermissionRequested', value);
+  bool get notificationPermissionRequested =>
+      getBool('notificationPermissionRequested') ?? false;
+
+  // Location Permission Tracking
+  set locationPermissionRequested(bool value) =>
+      saveBool('locationPermissionRequested', value);
+  bool get locationPermissionRequested =>
+      getBool('locationPermissionRequested') ?? false;
+
+  // Bluetooth Permission Tracking
+  set bluetoothPermissionRequested(bool value) =>
+      saveBool('bluetoothPermissionRequested', value);
+  bool get bluetoothPermissionRequested =>
+      getBool('bluetoothPermissionRequested') ?? false;
+
   set deviceName(String value) => saveString('deviceName', value);
 
   String get deviceName => getString('deviceName') ?? '';
@@ -67,10 +85,10 @@ class SharedPreferencesUtil {
 
   set webhookOnMemoryCreated(String value) => saveString('webhookUrl', value);
 // Getter for isPromptSaved
-bool get isPromptSaved => getBool('isPromptSaved') ?? false;
+  bool get isPromptSaved => getBool('isPromptSaved') ?? false;
 
 // Setter for isPromptSaved
-set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
+  set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
 
   String get webhookOnTranscriptReceived =>
       getString('transcriptServerUrl') ?? '';
@@ -226,9 +244,11 @@ set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
   bool? getBool(String key) {
     return _preferences?.getBool(key);
   }
+
   Future<bool> saveApiType(String key, String value) async {
     return await _preferences?.setString(key, value) ?? false;
   }
+
   String? getApiType(String key) {
     return _preferences?.getString(key);
   }
@@ -248,12 +268,14 @@ set isPromptSaved(bool value) => saveBool('isPromptSaved', value);
   List<String>? getStringList(String key) {
     return _preferences?.getStringList(key);
   }
-Future<bool> saveSelectedPrompt(String key, String selectedValue) async {
-  return await _preferences?.setString(key, selectedValue) ?? false;
-}
-String? getSelectedPrompt(String key) {
-  return _preferences?.getString(key);
-}
+
+  Future<bool> saveSelectedPrompt(String key, String selectedValue) async {
+    return await _preferences?.setString(key, selectedValue) ?? false;
+  }
+
+  String? getSelectedPrompt(String key) {
+    return _preferences?.getString(key);
+  }
 
   Future<bool> remove(String key) async {
     return await _preferences?.remove(key) ?? false;
@@ -337,11 +359,11 @@ String? getSelectedPrompt(String key) {
 //
 // set userName(String value) => saveString('userName', value);
 
-  set locationPermissionRequested(bool value) =>
-      saveBool('locationPermissionRequested', value);
+  // set locationPermissionRequested(bool value) =>
+  //     saveBool('locationPermissionRequested', value);
 
-  bool get locationPermissionRequested =>
-      getBool('locationPermissionRequested') ?? false;
+  // bool get locationPermissionRequested =>
+  //     getBool('locationPermissionRequested') ?? false;
 }
 
 String getOpenAIApiKeyForUsage() => SharedPreferencesUtil().openAIApiKey.isEmpty

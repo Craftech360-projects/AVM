@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:friend_private/pages/onboarding/find_device/page.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/utils/permissions/PermissionsService.dart';
 import 'package:friend_private/src/features/wizard/presentation/bloc/wizard_bloc.dart';
@@ -91,7 +92,15 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
               buttonText: 'Connect my AVM',
               onSkip: _nextPage,
               onPressed: () {
-                context.goNamed(BleConnectionPage.name);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FindDevicesPage(
+                      goNext: () {},
+                    ),
+                  ),
+                );
+                // context.goNamed(BleConnectionPage.name);
               },
             ),
           ],
