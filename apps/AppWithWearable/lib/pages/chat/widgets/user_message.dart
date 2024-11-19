@@ -17,19 +17,18 @@ class HumanMessage extends StatelessWidget {
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  // Color.fromARGB(108, 255, 255, 255),
-                  // Color.fromARGB(80, 0, 0, 0),
-                  // Color.fromARGB(101, 255, 255, 255)
-                       Color.fromARGB(127, 208, 208, 208),
-                  Color.fromARGB(127, 188, 99, 121),
-                  Color.fromARGB(127, 86, 101, 182),
-                  Color.fromARGB(127, 126, 190, 236)
-                ],
-                begin: Alignment.topLeft,
-                end: FractionalOffset.bottomRight,
-                transform: GradientRotation(90)
-              ),
+                  colors: [
+                    // Color.fromARGB(108, 255, 255, 255),
+                    // Color.fromARGB(80, 0, 0, 0),
+                    // Color.fromARGB(101, 255, 255, 255)
+                    Color.fromARGB(127, 208, 208, 208),
+                    Color.fromARGB(127, 188, 99, 121),
+                    Color.fromARGB(127, 86, 101, 182),
+                    Color.fromARGB(127, 126, 190, 236)
+                  ],
+                  begin: Alignment.topLeft,
+                  end: FractionalOffset.bottomRight,
+                  transform: GradientRotation(90)),
               // color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.all(Radius.circular(16.0)),
             ),

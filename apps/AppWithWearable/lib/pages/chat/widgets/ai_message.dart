@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/mixpanel.dart';
@@ -9,6 +10,8 @@ import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/pages/memory_detail_page.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
+import 'package:friend_private/src/features/chats/presentation/widgets/avm_logo.dart';
 import 'package:friend_private/utils/other/temp.dart';
 
 class AIMessage extends StatelessWidget {
@@ -50,21 +53,30 @@ class AIMessage extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(16.0)),
                 ),
-                height: 32,
-                width: 32,
+                height: 32.h,
+                width: 32.w,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Image.asset(
-                      "assets/images/herologo.png",
-                      height: 24,
-                      width: 24,
-                    ),
+                    // Image.asset(
+                    //   "assets/images/herologo.png",
+                    //   height: 24,
+                    //   width: 24,
+                    //),
+                    const AvmLogo(),
+                    SizedBox(width: 8.w),
                   ],
                 ),
               ),
         const SizedBox(width: 16.0),
         Expanded(
+            child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            color: CustomColors.greyLavender, // Add background color
+            borderRadius:
+                BorderRadius.circular(12), // Optional: add border radius
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +88,7 @@ class AIMessage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        color: Colors.grey.shade300,
+                        color: CustomColors.blackPrimary,
                         decoration: TextDecoration.underline,
                       ),
                     )
@@ -95,7 +107,7 @@ class AIMessage extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 15.0,
                     fontWeight: FontWeight.w500,
-                    color: Colors.grey.shade300),
+                    color: CustomColors.blackPrimary),
               )),
               // if (isMemoriesEmpty) ..._getInitialOptions(context),
               if (message.id != 1) _getCopyButton(context),
@@ -113,8 +125,9 @@ class AIMessage extends StatelessWidget {
                     child: GestureDetector(
                       onTap: () async {
                         MixpanelManager().chatMessageMemoryClicked(memory);
-                        int memoryIndex = memories.reversed.toList().indexOf(memory);
-                        // print('chat memory index clicked $memoryIndex');
+                        int memoryIndex =
+                            memories.reversed.toList().indexOf(memory);
+                        print('chat memory index clicked $memoryIndex');
                         // BlocProvider.of<MemoryBloc>(context)
                         //     .add(MemoryIndexChanged(memoryIndex: memoryIndex));
                         // await Navigator.of(context).push(MaterialPageRoute(
@@ -122,23 +135,24 @@ class AIMessage extends StatelessWidget {
                         //           memoryBloc: context.read<MemoryBloc>(),
                         //           memoryAtIndex: memoryIndex,
                         //         )));
-                         BlocProvider.of<MemoryBloc>(context).add(MemoryIndexChanged(memoryIndex: memoryIndex));
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CustomMemoryDetailPage(
-                          memoryBloc: BlocProvider.of<MemoryBloc>(context),
-                          memoryAtIndex: memoryIndex,
-                        ),
-                      ),
-                    );
+                        BlocProvider.of<MemoryBloc>(context)
+                            .add(MemoryIndexChanged(memoryIndex: memoryIndex));
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CustomMemoryDetailPage(
+                              memoryBloc: BlocProvider.of<MemoryBloc>(context),
+                              memoryAtIndex: memoryIndex,
+                            ),
+                          ),
+                        );
                         // TODO: maybe refresh memories here too
                       },
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 8),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 12.w, vertical: 8.h),
                         width: double.maxFinite,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade900,
+                          color: CustomColors.greyOffWhite,
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: Row(
@@ -162,7 +176,7 @@ class AIMessage extends StatelessWidget {
               ],
             ],
           ),
-        ),
+        )),
       ],
     );
   }
@@ -217,7 +231,7 @@ class AIMessage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
         width: double.maxFinite,
         decoration: BoxDecoration(
-          color: Colors.grey.shade900,
+          color: Colors.grey.shade200,
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Text(optionText, style: Theme.of(context).textTheme.bodyMedium),

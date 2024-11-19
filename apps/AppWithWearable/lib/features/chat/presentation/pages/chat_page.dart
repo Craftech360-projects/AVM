@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/features/chat/presentation/bloc/chat_bloc.dart';
@@ -8,6 +9,8 @@ import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dar
 import 'package:friend_private/pages/chat/widgets/ai_message.dart';
 import 'package:friend_private/pages/chat/widgets/user_message.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+
+import '../../../../src/core/common_widget/card.dart';
 
 class ChatPageTest extends StatefulWidget {
   final FocusNode textFieldFocusNode;
@@ -67,6 +70,7 @@ class _ChatPageTestState extends State<ChatPageTest>
 
   @override
   Widget build(BuildContext context) {
+    // final textTheme:Theme.of(context).textTheme
     return Stack(
       children: [
         BlocBuilder<ChatBloc, ChatState>(
@@ -81,33 +85,55 @@ class _ChatPageTestState extends State<ChatPageTest>
                 },
               );
               //*-- Messages --*//
+
               return ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.only(
                   left: 20,
                   right: 20,
                   bottom: 130,
+                  top: 20,
                 ),
                 itemCount: state.messages?.length ?? 0,
                 itemBuilder: (context, index) {
                   final message = state.messages?[index];
-              //  message!.memories.map((f)=>print('messages at chatpage ${f.structured.target!.title}'));
+
+                  // Add a SizedBox to create space between messages (adjust height as needed)
+                  const SizedBox(
+                      height: 10.0); // Adjust height to the space you want
+
                   if (message?.senderEnum == MessageSender.ai) {
-                    return AIMessage(
-                      message: message!,
-                      sendMessage: (msg) {
-                        // print('send Message ${message.text}');
-                        // context.read<ChatBloc>().add(SendMessage(msg));
-                      },
-                      displayOptions: state.messages!.length <= 1,
-                      memories: message.memories,
-                      // memories: message.memories,
-                      pluginSender: SharedPreferencesUtil()
-                          .pluginsList
-                          .firstWhereOrNull((e) => e.id == message.pluginId),
+                    return Column(
+                      children: [
+                        AIMessage(
+                          message: message!,
+                          sendMessage: (msg) {
+                            // Handle send message
+                          },
+                          displayOptions: state.messages!.length <= 1,
+                          memories: message.memories,
+                          pluginSender: SharedPreferencesUtil()
+                              .pluginsList
+                              .firstWhereOrNull(
+                                  (e) => e.id == message.pluginId),
+                        ),
+                        SizedBox(
+                            height:
+                                10.0), // Space between this message and the next one
+                      ],
                     );
                   } else {
-                    return HumanMessage(message: message!);
+                    return Column(
+                      children: [
+                        UserCard(
+                          message: message,
+                          // Additional configuration for UserCard if necessary
+                        ),
+                        SizedBox(
+                            height:
+                                10.0), // Space between this message and the next one
+                      ],
+                    );
                   }
                 },
               );
