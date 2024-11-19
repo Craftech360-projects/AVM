@@ -8,6 +8,7 @@ import 'package:friend_private/features/memory/presentation/pages/memory_detail_
 import 'package:friend_private/features/memory/presentation/widgets/custom_tag.dart';
 import 'package:friend_private/pages/memories/widgets/empty_memories.dart';
 import 'package:friend_private/src/features/home/presentation/widgets/widgets.dart';
+import 'package:friend_private/src/features/memories/presentation/pages/memory_detail_page.dart';
 import 'package:intl/intl.dart';
 
 class MemoryCardWidget extends StatelessWidget {
@@ -97,7 +98,7 @@ class MemoryCardWidget extends StatelessWidget {
                     _memoryBloc.add(MemoryIndexChanged(memoryIndex: index));
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => CustomMemoryDetailPage(
+                        builder: (context) => MemoryDetailPage(
                           memoryBloc: _memoryBloc,
                           memoryAtIndex: index,
                         ),

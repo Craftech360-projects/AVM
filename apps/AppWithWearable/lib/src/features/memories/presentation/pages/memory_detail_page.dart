@@ -1,15 +1,36 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/backend/database/memory.dart';
+import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/category_chip.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/overall_tab.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/tab_bar.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/transcript_tab.dart';
+import 'package:intl/intl.dart';
+
+// class MemoryDetailPage extends StatefulWidget {
+//   const MemoryDetailPage({super.key});
+//   static const String name = 'memoryDetailPage';
+//   @override
+//   State<MemoryDetailPage> createState() => _MemoryDetailPageState();
+// }
 
 class MemoryDetailPage extends StatefulWidget {
-  const MemoryDetailPage({super.key});
+  final MemoryBloc memoryBloc;
+  final int memoryAtIndex;
+
+  const MemoryDetailPage({
+    super.key,
+    required this.memoryBloc, // Add memoryBloc if necessary
+    required this.memoryAtIndex, // Add the index of the memory
+  });
+
   static const String name = 'memoryDetailPage';
+
   @override
   State<MemoryDetailPage> createState() => _MemoryDetailPageState();
 }
@@ -17,11 +38,13 @@ class MemoryDetailPage extends StatefulWidget {
 class _MemoryDetailPageState extends State<MemoryDetailPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-
+  late Memory selectedMemory;
+  //log(selectedMemory);
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    selectedMemory = widget.memoryBloc.state.memories[widget.memoryAtIndex];
   }
 
   @override
@@ -30,15 +53,80 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     super.dispose();
   }
 
+  List<String> _getCategories(dynamic category) {
+    if (category == null) return [];
+
+    if (category is List) {
+      return category.map((e) => e.toString()).toList();
+    } else if (category is String) {
+      // If it's a string, check if it's a bracketed list
+      if (category.startsWith('[') && category.endsWith(']')) {
+        // Remove brackets and split by comma
+        return category
+            .substring(1, category.length - 1)
+            .split(',')
+            .map((e) => e.trim())
+            .toList();
+      }
+      return [category];
+    }
+
+    return [];
+  }
+
+  // Convert the transcript data to the required format
+  List<Map<String, String>> _getFormattedTranscript(Object? transcript) {
+    //   log("BBJHB, $transcript"); // Log the original transcript before processing
+
+    if (transcript == null) return [];
+
+    if (transcript is List) {
+      List<Map<String, String>> formattedTranscript = transcript.map((item) {
+        // Log the keys of the item to check if they are correct
+        //    log("Transcript Item: $item");
+
+        // Ensure 'speaker' and 'text' keys are present and are of type String
+        final speaker =
+            item['speaker']?.toString() ?? ''; // cast to String, fallback to ''
+        final text =
+            item['text']?.toString() ?? ''; // cast to String, fallback to ''
+
+        // Log the formatted speaker and text
+        // log("Formatted Item: speaker=$speaker, text=$text");
+
+        return {
+          'speaker': speaker,
+          'text': text,
+        };
+      }).toList();
+
+      // Log the final list after formatting
+      //log("Formatted Transcript: $formattedTranscript");
+
+      return formattedTranscript;
+    }
+    // print("null");
+    return [];
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    // log(selectedMemory.toString());
+    final categories =
+        _getCategories(selectedMemory.structured.target?.category);
+    final formattedTranscript =
+        _getFormattedTranscript(selectedMemory.transcript);
+
     return CustomScaffold(
       appBar: AppBar(
         centerTitle: false,
-         backgroundColor: const Color(0xFFE6F5FA),
+        backgroundColor: const Color(0xFFE6F5FA),
         title: Text(
-          '21 Oct 2024 | 09:21 PM',
+          selectedMemory.createdAt != null
+              ? '${DateFormat('d MMM').format(selectedMemory.createdAt!)}   '
+                  '${DateFormat('h:mm a').format(selectedMemory.createdAt!)}'
+              : 'No Date',
           style: textTheme.titleSmall?.copyWith(
             color: CustomColors.greyLight,
           ),
@@ -64,29 +152,40 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Embracing the change and growth in Technology',
+              selectedMemory.createdAt != null
+                  ? '${selectedMemory.structured.target?.title}'
+                  : "Not title",
               style: textTheme.labelLarge?.copyWith(fontSize: 20.h),
             ),
             SizedBox(height: 12.h),
-            Wrap(
-              spacing: 8.0,
-              children: List.generate(
-                5,
-                (index) => const CategoryChip(
-                  tagName: 'Technology',
-                ),
+            if (categories.isNotEmpty)
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                children: categories
+                    .map(
+                      (category) => CategoryChip(
+                        tagName: category,
+                      ),
+                    )
+                    .toList(),
               ),
-            ),
             SizedBox(height: 12.h),
-            const Expanded(
+            Expanded(
               child: CustomTabBar(
                 tabs: [
                   Tab(text: 'Overall'),
                   Tab(text: 'Transcript'),
                 ],
                 children: [
-                  OverallTab(),
-                  TranscriptTab(),
+                  OverallTab(target: selectedMemory.structured.target!),
+                  //  TranscriptTab(target: selectedMemory.transcript!),
+                  TranscriptTab(
+                    memoryBloc: widget.memoryBloc,
+                    memoryAtIndex: widget.memoryAtIndex, // Add this
+                    // pageController: widget
+                    //     .pageController, // Add this// Pass the formatted transcript
+                  ),
                 ],
               ),
             ),

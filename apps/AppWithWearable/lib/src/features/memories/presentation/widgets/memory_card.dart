@@ -13,7 +13,7 @@ class MemoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(">>>>>>1, ${memory}");
+    // print(">>>>>>1, ${memory}");
     final textTheme = Theme.of(context).textTheme;
     return CustomCard(
       borderRadius: 30.h + 12.h,

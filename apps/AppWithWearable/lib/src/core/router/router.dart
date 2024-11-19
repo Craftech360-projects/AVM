@@ -88,21 +88,21 @@ class AppRouter {
           transitionsBuilder: (_, a, __, c) =>
               FadeTransition(opacity: a, child: c),
         ),
-        routes: [
-          GoRoute(
-            path: '/memory-detail',
-            name: MemoryDetailPage.name,
-            parentNavigatorKey: _rootNavigatorKey,
-            pageBuilder: (context, state) => CustomTransitionPage(
-              child: const MemoryDetailPage(),
-              transitionDuration: const Duration(
-                milliseconds: _routeTransitionDuration,
-              ),
-              transitionsBuilder: (_, a, __, c) =>
-                  FadeTransition(opacity: a, child: c),
-            ),
-          )
-        ],
+        // routes: [
+        //   GoRoute(
+        //     path: '/memory-detail',
+        //     name: MemoryDetailPage.name,
+        //     parentNavigatorKey: _rootNavigatorKey,
+        //     pageBuilder: (context, state) => CustomTransitionPage(
+        //       child: const MemoryDetailPage(),
+        //       transitionDuration: const Duration(
+        //         milliseconds: _routeTransitionDuration,
+        //       ),
+        //       transitionsBuilder: (_, a, __, c) =>
+        //           FadeTransition(opacity: a, child: c),
+        //     ),
+        //   )
+        // ],
       ),
       GoRoute(
         path: '/setting',

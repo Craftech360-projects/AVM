@@ -29,19 +29,6 @@ class _TranscriptTabState extends State<TranscriptTab> {
     // widget.pageController.addListener(_onPageChanged);
   }
 
-  // void _onPageChanged() {
-  //   final currentPage = widget.pageController.page?.round();
-  //   if (currentPage != null) {
-  //     widget.memoryBloc.add(MemoryIndexChanged(memoryIndex: currentPage));
-  //   }
-  // }
-
-  // @override
-  // void dispose() {
-  //   widget.pageController.removeListener(_onPageChanged);
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MemoryBloc, MemoryState>(

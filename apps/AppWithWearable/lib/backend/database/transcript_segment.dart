@@ -28,16 +28,16 @@ class TranscriptSegment {
   }) {
     // speakerId = speaker != null ? int.parse(speaker!.split('_')[1]) : 0;
     // // createdAt ??= DateTime.now(); // TODO: -30 seconds + start time ? max(now, (now-30)
- try {
-  if (speaker != null && speaker!.contains('_')) {
-    speakerId = int.tryParse(speaker!.split('_')[1]) ?? 0;
-  } else {
-    speakerId = 0; // Default value if parsing fails
-  }
-} catch (e) {
-  speakerId = 0; // Default value in case of an error
-  print('Error parsing speaker: $e');
-}
+    try {
+      if (speaker != null && speaker!.contains('_')) {
+        speakerId = int.tryParse(speaker!.split('_')[1]) ?? 0;
+      } else {
+        speakerId = 0; // Default value if parsing fails
+      }
+    } catch (e) {
+      speakerId = 0; // Default value in case of an error
+      print('Error parsing speaker: $e');
+    }
   }
 
   @override
@@ -55,15 +55,17 @@ class TranscriptSegment {
   factory TranscriptSegment.fromJson(Map<String, dynamic> json) {
     return TranscriptSegment(
       text: json['text'] as String,
-    speaker: (json['speaker']?.toString() ?? 'SPEAKER_00'),
+      speaker: (json['speaker']?.toString() ?? 'SPEAKER_00'),
 
       // speaker: (json['speaker'] ?? 'SPEAKER_00') as String,
       isUser: (json['is_user'] ?? false) as bool,
-      start: json['start'] as double??0.0,
-      end: json['end'] as double??0.0,
+      start: json['start'] as double ?? 0.0,
+      end: json['end'] as double ?? 0.0,
       // createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
     );
   }
+
+  get timestamp => null;
 
   // Method to convert a Message instance into a map
   Map<String, dynamic> toJson() {
@@ -83,7 +85,13 @@ class TranscriptSegment {
   }
 
   static cleanSegments(List<TranscriptSegment> segments) {
-    var hallucinations = ['Thank you.', 'I don\'t know what to do,', 'I\'m', 'It was the worst case.', 'and,'];
+    var hallucinations = [
+      'Thank you.',
+      'I don\'t know what to do,',
+      'I\'m',
+      'It was the worst case.',
+      'and,'
+    ];
     // TODO: do this with any words that gets repeated twice
     // - Replicate apparently has much more hallucinations
     for (var i = 0; i < segments.length; i++) {
@@ -153,15 +161,19 @@ class TranscriptSegment {
   }) {
     String transcript = '';
     var userName = SharedPreferencesUtil().givenName;
-    includeTimestamps = includeTimestamps && TranscriptSegment.canDisplaySeconds(segments);
+    includeTimestamps =
+        includeTimestamps && TranscriptSegment.canDisplaySeconds(segments);
     for (var segment in segments) {
       // TODO: maybe store TranscriptSegment directly as utf8 decoded
       var segmentText = utf8.decode(segment.text.trim().codeUnits);
-      var timestampStr = includeTimestamps ? '[${segment.getTimestampString()}]' : '';
+      var timestampStr =
+          includeTimestamps ? '[${segment.getTimestampString()}]' : '';
       if (segment.isUser) {
-        transcript += '$timestampStr ${userName.isEmpty ? 'User' : userName}: $segmentText ';
+        transcript +=
+            '$timestampStr ${userName.isEmpty ? 'User' : userName}: $segmentText ';
       } else {
-        transcript += '$timestampStr Speaker ${segment.speakerId}: $segmentText ';
+        transcript +=
+            '$timestampStr Speaker ${segment.speakerId}: $segmentText ';
       }
       transcript += '\n\n';
     }
@@ -171,7 +183,8 @@ class TranscriptSegment {
   static bool canDisplaySeconds(List<TranscriptSegment> segments) {
     for (var i = 0; i < segments.length; i++) {
       for (var j = i + 1; j < segments.length; j++) {
-        if (segments[i].start > segments[j].end || segments[i].end > segments[j].start) {
+        if (segments[i].start > segments[j].end ||
+            segments[i].end > segments[j].start) {
           return false;
         }
       }
