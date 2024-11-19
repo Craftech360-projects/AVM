@@ -8,6 +8,7 @@ import 'package:friend_private/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/pages/chat/widgets/ai_message.dart';
 import 'package:friend_private/pages/chat/widgets/user_message.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 import '../../../../src/core/common_widget/card.dart';
@@ -71,6 +72,7 @@ class _ChatPageTestState extends State<ChatPageTest>
   @override
   Widget build(BuildContext context) {
     // final textTheme:Theme.of(context).textTheme
+    final textTheme = Theme.of(context).textTheme;
     return Stack(
       children: [
         BlocBuilder<ChatBloc, ChatState>(
@@ -84,58 +86,90 @@ class _ChatPageTestState extends State<ChatPageTest>
                   _scrollToEnd();
                 },
               );
+
               //*-- Messages --*//
-
-              return ListView.builder(
-                controller: _scrollController,
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  bottom: 130,
-                  top: 20,
-                ),
-                itemCount: state.messages?.length ?? 0,
-                itemBuilder: (context, index) {
-                  final message = state.messages?[index];
-
-                  // Add a SizedBox to create space between messages (adjust height as needed)
-                  const SizedBox(
-                      height: 10.0); // Adjust height to the space you want
-
-                  if (message?.senderEnum == MessageSender.ai) {
-                    return Column(
+              return Column(
+                children: [
+                  // Row for "Today"
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 10), // Adjust spacing as needed
+                    child: Row(
                       children: [
-                        AIMessage(
-                          message: message!,
-                          sendMessage: (msg) {
-                            // Handle send message
-                          },
-                          displayOptions: state.messages!.length <= 1,
-                          memories: message.memories,
-                          pluginSender: SharedPreferencesUtil()
-                              .pluginsList
-                              .firstWhereOrNull(
-                                  (e) => e.id == message.pluginId),
+                        Text(
+                          "Today",
+                          style: textTheme.bodySmall?.copyWith(
+                            color: CustomColors.purpleBright,
+                          ),
                         ),
-                        SizedBox(
-                            height:
-                                10.0), // Space between this message and the next one
-                      ],
-                    );
-                  } else {
-                    return Column(
-                      children: [
-                        UserCard(
-                          message: message,
-                          // Additional configuration for UserCard if necessary
+                        SizedBox(width: 8.w),
+                        const Expanded(
+                          child: Divider(
+                            color: CustomColors.purpleBright,
+                            thickness: 0.5,
+                          ),
                         ),
-                        SizedBox(
-                            height:
-                                10.0), // Space between this message and the next one
                       ],
-                    );
-                  }
-                },
+                    ),
+                  ),
+
+                  // ListView for messages
+                  Expanded(
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        bottom: 130,
+                        top: 20,
+                      ),
+                      itemCount: state.messages?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final message = state.messages?[index];
+
+                        // Add a SizedBox to create space between messages (adjust height as needed)
+                        const SizedBox(
+                            height:
+                                10.0); // Adjust height to the space you want
+
+                        if (message?.senderEnum == MessageSender.ai) {
+                          return Column(
+                            children: [
+                              AIMessage(
+                                message: message!,
+                                sendMessage: (msg) {
+                                  // Handle send message
+                                },
+                                displayOptions: state.messages!.length <= 1,
+                                memories: message.memories,
+                                pluginSender: SharedPreferencesUtil()
+                                    .pluginsList
+                                    .firstWhereOrNull(
+                                        (e) => e.id == message.pluginId),
+                              ),
+                              SizedBox(
+                                  height:
+                                      10.0), // Space between this message and the next one
+                            ],
+                          );
+                        } else {
+                          return Column(
+                            children: [
+                              UserCard(
+                                message: message,
+                                // Additional configuration for UserCard if necessary
+                              ),
+                              SizedBox(
+                                  height:
+                                      10.0), // Space between this message and the next one
+                            ],
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
               );
             }
             return const SizedBox.shrink();
@@ -390,3 +424,26 @@ class _ChatPageTestState extends State<ChatPageTest>
   //     ],
   //   );
   // }
+
+
+
+  ///linr
+  ///
+  
+  //  Row(
+  //                 children: [
+  //                   Text(
+  //                     "Today",
+  //                     style: textTheme.bodySmall?.copyWith(
+  //                       color: CustomColors.purpleBright,
+  //                     ),
+  //                   ),
+  //                   SizedBox(width: 8.w),
+  //                   const Expanded(
+  //                     child: Divider(
+  //                       color: CustomColors.purpleBright,
+  //                       thickness: 0.5,
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
