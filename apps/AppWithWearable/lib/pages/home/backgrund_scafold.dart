@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/pages/settings/presentation/pages/setting_page.dart';
+import 'package:friend_private/src/core/common_widget/common_widget.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/widgets/battery_indicator.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomScaffold extends StatelessWidget {
   final Widget body;
@@ -52,7 +58,24 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
+      // appBar: appBar,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color(0xFFE6F5FA),
+        leading: const BatteryIndicator(),
+        actions: [
+          CircleAvatar(
+            backgroundColor: CustomColors.greyLavender,
+            child: CustomIconButton(
+              size: 16.h,
+              iconPath: IconImage.gear,
+              onPressed: () {
+                context.pushNamed(SettingPage.name);
+              },
+            ),
+          )
+        ],
+      ),
       body: Stack(
         children: [
           Positioned.fill(

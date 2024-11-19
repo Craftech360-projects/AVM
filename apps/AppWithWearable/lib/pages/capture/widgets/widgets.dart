@@ -27,147 +27,147 @@ import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CaptureCard extends StatelessWidget {
-  const CaptureCard({
-    super.key,
-    required this.context,
-    required this.hasTranscripts,
-    this.device,
-    required this.wsConnectionState,
-    this.internetStatus,
-    this.segments,
-    this.memoryCreating = false,
-    this.photos = const [],
-    this.scrollController,
-  });
+// class CaptureCard extends StatelessWidget {
+//   const CaptureCard({
+//     super.key,
+//     required this.context,
+//     required this.hasTranscripts,
+//     this.device,
+//     required this.wsConnectionState,
+//     this.internetStatus,
+//     this.segments,
+//     this.memoryCreating = false,
+//     this.photos = const [],
+//     this.scrollController,
+//   });
 
-  final BuildContext context;
-  final bool hasTranscripts;
-  final BTDeviceStruct? device;
-  final WebsocketConnectionStatus wsConnectionState;
-  final InternetStatus? internetStatus;
-  final List<TranscriptSegment>? segments;
-  final bool memoryCreating;
-  final List<Tuple2<String, String>> photos;
-  final ScrollController? scrollController;
+//   final BuildContext context;
+//   final bool hasTranscripts;
+//   final BTDeviceStruct? device;
+//   final WebsocketConnectionStatus wsConnectionState;
+//   final InternetStatus? internetStatus;
+//   final List<TranscriptSegment>? segments;
+//   final bool memoryCreating;
+//   final List<Tuple2<String, String>> photos;
+//   final ScrollController? scrollController;
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        if (segments!.isNotEmpty) {
-          showModalBottomSheet(
-            useSafeArea: true,
-            isScrollControlled: true,
-            context: context,
-            builder: (context) => Stack(
-              children: [
-                Image.asset(
-                  'assets/images/splash.png',
-                  fit: BoxFit.fill,
-                  width: double.maxFinite,
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.close),
-                      ),
-                    ),
-                    Expanded(
-                        child: SingleChildScrollView(
-                      child: getTranscriptWidget(
-                        memoryCreating,
-                        segments ?? [],
-                        photos,
-                        device,
-                      ),
-                    ))
-                  ],
-                ),
-              ],
-            ),
-          );
-        }
-      },
-      child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: SizedBox(
-                  height: 140,
-                  child: segments == null || segments!.isEmpty
-                      ? Text(
-                          '👋🏻 Hi! ${SharedPreferencesUtil().givenName},\nReady to hear what awesome task you’ve got for me today!',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        )
-                      : ListView.builder(
-                          padding: EdgeInsets.zero,
-                          itemCount: segments!.length,
-                          controller: scrollController,
-                          itemBuilder: (context, index) {
-                            TranscriptSegment segment = segments![index];
-                            String speakerName = segment.speaker == '0'
-                                ? '${SharedPreferencesUtil().givenName}(You)'
-                                : 'Speaker: ${segment.speaker}';
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  // segment.isUser
-                                  //     ? SharedPreferencesUtil()
-                                  //             .givenName
-                                  //             .isNotEmpty
-                                  //         ? SharedPreferencesUtil().givenName
-                                  //         : 'You'
-                                  //     : 'Speaker ${segment.speaker}',
-                                  speakerName,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  utf8.decode(segment.text.toString().codeUnits,
-                                      allowMalformed: true),
-                                  style: const TextStyle(
-                                      letterSpacing: 0.0, color: Colors.grey),
-                                  textAlign: TextAlign.left,
-                                ),
-                                // const SizedBox(height: 10),
-                              ],
-                            );
-                          },
-                        ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              GetConnectionStateWidgets(
-                context: context,
-                hasTranscripts: hasTranscripts,
-                wsConnectionState: wsConnectionState,
-                device: device,
-                internetStatus: internetStatus,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: () {
+//         if (segments!.isNotEmpty) {
+//           showModalBottomSheet(
+//             useSafeArea: true,
+//             isScrollControlled: true,
+//             context: context,
+//             builder: (context) => Stack(
+//               children: [
+//                 Image.asset(
+//                   'assets/images/splash.png',
+//                   fit: BoxFit.fill,
+//                   width: double.maxFinite,
+//                 ),
+//                 Column(
+//                   mainAxisSize: MainAxisSize.min,
+//                   children: [
+//                     Align(
+//                       alignment: Alignment.centerRight,
+//                       child: IconButton(
+//                         onPressed: () {
+//                           Navigator.pop(context);
+//                         },
+//                         icon: const Icon(Icons.close),
+//                       ),
+//                     ),
+//                     Expanded(
+//                         child: SingleChildScrollView(
+//                       child: getTranscriptWidget(
+//                         memoryCreating,
+//                         segments ?? [],
+//                         photos,
+//                         device,
+//                       ),
+//                     ))
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           );
+//         }
+//       },
+//       child: Card(
+//         margin: const EdgeInsets.symmetric(horizontal: 16),
+//         child: Padding(
+//           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+//           child: Row(
+//             mainAxisAlignment: MainAxisAlignment.start,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Expanded(
+//                 child: SizedBox(
+//                   height: 140,
+//                   child: segments == null || segments!.isEmpty
+//                       ? Text(
+//                           '👋🏻 Hi! ${SharedPreferencesUtil().givenName},\nReady to hear what awesome task you’ve got for me today!',
+//                           style: const TextStyle(
+//                             fontSize: 16,
+//                             color: Colors.grey,
+//                           ),
+//                         )
+//                       : ListView.builder(
+//                           padding: EdgeInsets.zero,
+//                           itemCount: segments!.length,
+//                           controller: scrollController,
+//                           itemBuilder: (context, index) {
+//                             TranscriptSegment segment = segments![index];
+//                             String speakerName = segment.speaker == '0'
+//                                 ? '${SharedPreferencesUtil().givenName}(You)'
+//                                 : 'Speaker: ${segment.speaker}';
+//                             return Column(
+//                               crossAxisAlignment: CrossAxisAlignment.start,
+//                               children: [
+//                                 Text(
+//                                   // segment.isUser
+//                                   //     ? SharedPreferencesUtil()
+//                                   //             .givenName
+//                                   //             .isNotEmpty
+//                                   //         ? SharedPreferencesUtil().givenName
+//                                   //         : 'You'
+//                                   //     : 'Speaker ${segment.speaker}',
+//                                   speakerName,
+//                                   style: const TextStyle(
+//                                       fontWeight: FontWeight.bold),
+//                                 ),
+//                                 const SizedBox(height: 10),
+//                                 Text(
+//                                   utf8.decode(segment.text.toString().codeUnits,
+//                                       allowMalformed: true),
+//                                   style: const TextStyle(
+//                                       letterSpacing: 0.0, color: Colors.grey),
+//                                   textAlign: TextAlign.left,
+//                                 ),
+//                                 // const SizedBox(height: 10),
+//                               ],
+//                             );
+//                           },
+//                         ),
+//                 ),
+//               ),
+//               const SizedBox(width: 12),
+//               GetConnectionStateWidgets(
+//                 context: context,
+//                 hasTranscripts: hasTranscripts,
+//                 wsConnectionState: wsConnectionState,
+//                 device: device,
+//                 internetStatus: internetStatus,
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 class GetConnectionStateWidgets extends StatelessWidget {
   const GetConnectionStateWidgets({
@@ -321,14 +321,14 @@ class GetConnectionStateWidgets extends StatelessWidget {
   void checkBluetoothStatus(BuildContext context) async {
     if (Platform.isAndroid) {
       // Check for Bluetooth status on Android
-      if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
-        showTopSnackBar(
-          Overlay.of(context),
-          const CustomSnackBar.error(
-            message: "Bluetooth Disconnected",
-          ),
-        );
-      }
+      // if (await FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
+      //   showTopSnackBar(
+      //     Overlay.of(context),
+      //     const CustomSnackBar.error(
+      //       message: "Bluetooth Disconnected",
+      //     ),
+      //   );
+      // }
       // else{
       //    showTopSnackBar(
       //     Overlay.of(context),

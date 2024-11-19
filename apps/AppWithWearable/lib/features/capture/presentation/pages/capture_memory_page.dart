@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:friend_private/features/capture/widgets/capture_card.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/widgets/memory_card.dart';
 import 'package:friend_private/features/memory/presentation/widgets/memory_search.dart';
@@ -78,46 +79,16 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     // _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
     return Column(
       children: [
-        FloatingActionButton(
-          onPressed: () async {
-            BlocProvider.of<LiveTranscriptBloc>(context).add(ScannedDevices());
+        // FloatingActionButton(
+        //   onPressed: () async {
+        //     BlocProvider.of<LiveTranscriptBloc>(context).add(ScannedDevices());
 
-            //!
-            // final batteryLevelStream = await BleConnectionDatasource()
-            //     .getBleBatteryLevelListener('C4:E8:E3:9F:D2:AE');
-
-            // if (batteryLevelStream != null) {
-            //   batteryLevelStream.onData(
-            //     (data) => print('datat received ${data.first.toString()}'),
-            //   );
-            //   print(
-            //       'Connected to BLE device. Listening for battery level updates...');
-            // }
-            //!
-            // final wavBytesUtil = WavBytesUtil();
-            // StreamSubscription? stream = await BleConnectionDatasource()
-            //     .getBleAudioBytesListener('C4:E8:E3:9F:D2:AE',
-            //         onAudioBytesReceived: (List<int> value) {
-            //   print('audio values printed $value');
-            //   if (value.isEmpty) return;
-            //   value.removeRange(0, 3);
-            //   for (int i = 0; i < value.length; i += 2) {
-            //     int byte1 = value[i];
-            //     int byte2 = value[i + 1];
-            //     int int16Value = (byte2 << 8) | byte1;
-            //     wavBytesUtil.addAudioBytes([int16Value]);
-            //   }
-            // });
-            //!
-            // final codecformat =
-            //     await BleConnectionDatasource().getAudioCodec('C4:E8:E3:9F:D2:AE');
-            // print('codecic format ${codecformat}');
-          },
-          child: const Icon(
-            Icons.battery_charging_full,
-            color: Colors.white,
-          ),
-        ),
+        //   },
+        //   child: const Icon(
+        //     Icons.battery_charging_full,
+        //     color: Colors.white,
+        //   ),
+        // ),
         BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
           bloc: BlocProvider.of(context),
           builder: (context, state) {
@@ -127,11 +98,11 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         ),
         //*--- SEARCH BAR ---*//
         const SizedBox(height: 8),
-        MemorySearchWidget(
-          searchController: _searchController,
-          memoryBloc: _memoryBloc,
-        ),
-        const SizedBox(height: 8),
+        // MemorySearchWidget(
+        //   searchController: _searchController,
+        //   memoryBloc: _memoryBloc,
+        // ),
+        // const SizedBox(height: 8),
         //*-- Capture --//
         widget.hasTranscripts
             ? SizedBox(
@@ -249,7 +220,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                   style: const TextStyle(
                       color: Color.fromARGB(255, 212, 212, 212),
                       fontSize: 14,
-                      fontWeight: FontWeight.w400),
+                      fontWeight: FontWeight.w500),
                 ),
                 //  Icon(
                 //   _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
@@ -265,6 +236,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
             ),
           ),
         //*--- MEMORY LIST ---*//
+
         BlocConsumer<MemoryBloc, MemoryState>(
           bloc: _memoryBloc,
           // buildWhen: (previousState, currentState) {
@@ -304,3 +276,36 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     );
   }
 }
+
+
+
+            //!
+            // final batteryLevelStream = await BleConnectionDatasource()
+            //     .getBleBatteryLevelListener('C4:E8:E3:9F:D2:AE');
+
+            // if (batteryLevelStream != null) {
+            //   batteryLevelStream.onData(
+            //     (data) => print('datat received ${data.first.toString()}'),
+            //   );
+            //   print(
+            //       'Connected to BLE device. Listening for battery level updates...');
+            // }
+            //!
+            // final wavBytesUtil = WavBytesUtil();
+            // StreamSubscription? stream = await BleConnectionDatasource()
+            //     .getBleAudioBytesListener('C4:E8:E3:9F:D2:AE',
+            //         onAudioBytesReceived: (List<int> value) {
+            //   print('audio values printed $value');
+            //   if (value.isEmpty) return;
+            //   value.removeRange(0, 3);
+            //   for (int i = 0; i < value.length; i += 2) {
+            //     int byte1 = value[i];
+            //     int byte2 = value[i + 1];
+            //     int int16Value = (byte2 << 8) | byte1;
+            //     wavBytesUtil.addAudioBytes([int16Value]);
+            //   }
+            // });
+            //!
+            // final codecformat =
+            //     await BleConnectionDatasource().getAudioCodec('C4:E8:E3:9F:D2:AE');
+            // print('codecic format ${codecformat}');

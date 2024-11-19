@@ -78,7 +78,7 @@ class _TranscriptMemoryPageState extends State<TranscriptMemoryPage> {
                     return ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) => GestureDetector(
-                        child: const MemoryCard(),
+                        //   child: const MemoryCard(),
                         onTap: () {
                           context.pushNamed(MemoryDetailPage.name);
                         },
@@ -92,7 +92,10 @@ class _TranscriptMemoryPageState extends State<TranscriptMemoryPage> {
               ),
             ),
             const Center(
-              child: CustomNavBar(isMemory: true,isChat: false,),
+              child: CustomNavBar(
+                isMemory: true,
+                isChat: false,
+              ),
             ),
             SizedBox(height: 12.h),
           ],

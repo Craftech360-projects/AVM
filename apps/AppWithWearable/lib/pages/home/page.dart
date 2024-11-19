@@ -969,18 +969,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                       // margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       decoration: const BoxDecoration(
                         color: Colors.black,
-                        // borderRadius: const BorderRadius.all(Radius.circular(16)),
-                        // border: Border.all(color: Colors.grey),
-                        // border: GradientBoxBorder(
-                        //   gradient: LinearGradient(colors: [
-                        //     Color.fromARGB(127, 208, 208, 208),
-                        //     Color.fromARGB(127, 188, 99, 121),
-                        //     Color.fromARGB(127, 86, 101, 182),
-                        //     Color.fromARGB(127, 126, 190, 236)
-                        //   ]),
-                        //   width: 2,
-                        // ),
-                        // shape: BoxShape.rectangle,Fcustom
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1088,77 +1076,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              //* AVM page navigating
-              // _device != null && batteryLevel != -1
-              //     ? GestureDetector(
-              //         onTap: _device == null
-              //             ? null
-              //             : () {
-              //                 Navigator.of(context).push(MaterialPageRoute(
-              //                     builder: (c) => ConnectedDevice(
-              //                           device: _device!,
-              //                           batteryLevel: batteryLevel,
-              //                         )));
-              //                 MixpanelManager().batteryIndicatorClicked();
-              //               },
-              //         child: Container(
-              //             padding: const EdgeInsets.symmetric(
-              //                 horizontal: 14, vertical: 10),
-              //             decoration: BoxDecoration(
-              //               color: Colors.transparent,
-              //               borderRadius: BorderRadius.circular(10),
-              //               border: Border.all(
-              //                 color: Colors.grey,
-              //                 width: 1,
-              //               ),
-              //             ),
-              //             child: Row(
-              //               mainAxisSize: MainAxisSize.min,
-              //               children: [
-              //                 Container(
-              //                   width: 10,
-              //                   height: 10,
-              //                   decoration: BoxDecoration(
-              //                     color: batteryLevel > 75
-              //                         ? const Color.fromARGB(255, 0, 255, 8)
-              //                         : batteryLevel > 20
-              //                             ? Colors.yellow.shade700
-              //                             : Colors.red,
-              //                     shape: BoxShape.circle,
-              //                   ),
-              //                 ),
-              //                 const SizedBox(width: 8.0),
-              //                 Text(
-              //                   '${batteryLevel.toString()}%',
-              //                   style: const TextStyle(
-              //                     color: Colors.white,
-              //                     fontSize: 12,
-              //                     fontWeight: FontWeight.bold,
-              //                   ),
-              //                 ),
-              //               ],
-              //             )),
-              //       )
-              //     :
               TextButton(
-                onPressed: () async {
-                  // if (SharedPreferencesUtil().deviceId.isEmpty) {
-                  //   routeToPage(context, const ConnectDevicePage());
-                  //   MixpanelManager().connectFriendClicked();
-                  // } else {
-                  //   await routeToPage(context,
-                  //       const ConnectedDevice(device: null, batteryLevel: 0));
-                  // }
-                  // setState(() {});
-                },
-                // style: TextButton.styleFrom(
-                //   padding: EdgeInsets.zero,
-                //   backgroundColor: Colors.transparent,
-                //   shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(10),
-                //     side: const BorderSide(color: Colors.white, width: 1),
-                //   ),
-                // ),
+                onPressed: () async {},
                 child: Image.asset(
                   'assets/images/herologo.png',
                   width: 50,
@@ -1166,58 +1085,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                 ),
               ),
               //*-- Chat Plugin --*//
-              // _controller!.index == 1
-              //     ? Padding(
-              //         padding: const EdgeInsets.only(left: 0),
-              //         child: Container(
-              //           // decoration: BoxDecoration(
-              //           //   border: Border.all(color: Colors.grey),
-              //           //   borderRadius: BorderRadius.circular(30),
-              //           // ),
-              //           padding: const EdgeInsets.symmetric(horizontal: 16),
-              //           child: DropdownButton<String>(
-              //             menuMaxHeight: 350,
-              //             value: SharedPreferencesUtil().selectedChatPluginId,
-              //             onChanged: (s) async {
-              //               if ((s == 'no_selected' &&
-              //                       SharedPreferencesUtil()
-              //                           .pluginsEnabled
-              //                           .isEmpty) ||
-              //                   s == 'enable') {
-              //                 await routeToPage(context,
-              //                     const PluginsPage(filterChatOnly: true));
-              //                 setState(() {});
-              //                 return;
-              //               }
-              //               print(
-              //                   'Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
-              //               if (s == null ||
-              //                   s ==
-              //                       SharedPreferencesUtil()
-              //                           .selectedChatPluginId) return;
 
-              //               SharedPreferencesUtil().selectedChatPluginId = s;
-              //               var plugin =
-              //                   plugins.firstWhereOrNull((p) => p.id == s);
-              //               // chatPageKey.currentState
-              //               //     ?.sendInitialPluginMessage(plugin);
-              //               setState(() {});
-              //             },
-              //             icon: Container(),
-              //             alignment: Alignment.center,
-              //             dropdownColor: Colors.black,
-              //             style: const TextStyle(
-              //                 color: Colors.white, fontSize: 16),
-              //             underline:
-              //                 Container(height: 0, color: Colors.transparent),
-              //             isExpanded: false,
-              //             itemHeight: 48,
-              //             padding: EdgeInsets.zero,
-              //             items: _getPluginsDropdownItems(context),
-              //           ),
-              //         ),
-              //       )
-              //     : const SizedBox(width: 16),
               //* AVM Battery indecator
               _device != null && batteryLevel != -1
                   ? GestureDetector(
@@ -1296,27 +1164,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                           },
                           child: const ScanningUI()),
                     )
-              // IconButton(
-              //   icon: const Icon(
-              //     Icons.settings,
-              //     color: Colors.white,
-              //     size: 30,
-              //   ),
-              //   onPressed: () async {
-              //     MixpanelManager().settingsOpened();
-              //     String language = SharedPreferencesUtil().recordingsLanguage;
-              //     bool hasSpeech = SharedPreferencesUtil().hasSpeakerProfile;
-              //     await routeToPage(context, const SettingsPage());
-              //     // TODO: this fails like 10 times, connects reconnects, until it finally works.
-              //     if (GrowthbookUtil().hasStreamingTranscriptFeatureOn() &&
-              //         (language != SharedPreferencesUtil().recordingsLanguage ||
-              //             hasSpeech !=
-              //                 SharedPreferencesUtil().hasSpeakerProfile)) {
-              //       capturePageKey.currentState?.restartWebSocket();
-              //     }
-              //     setState(() {});
-              //   },
-              // )
             ],
           ),
           elevation: 0,
@@ -1412,3 +1259,78 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     super.dispose();
   }
 }
+  // IconButton(
+              //   icon: const Icon(
+              //     Icons.settings,
+              //     color: Colors.white,
+              //     size: 30,
+              //   ),
+              //   onPressed: () async {
+              //     MixpanelManager().settingsOpened();
+              //     String language = SharedPreferencesUtil().recordingsLanguage;
+              //     bool hasSpeech = SharedPreferencesUtil().hasSpeakerProfile;
+              //     await routeToPage(context, const SettingsPage());
+              //     // TODO: this fails like 10 times, connects reconnects, until it finally works.
+              //     if (GrowthbookUtil().hasStreamingTranscriptFeatureOn() &&
+              //         (language != SharedPreferencesUtil().recordingsLanguage ||
+              //             hasSpeech !=
+              //                 SharedPreferencesUtil().hasSpeakerProfile)) {
+              //       capturePageKey.currentState?.restartWebSocket();
+              //     }
+              //     setState(() {});
+              //   },
+              // )
+
+
+               // _controller!.index == 1
+              //     ? Padding(
+              //         padding: const EdgeInsets.only(left: 0),
+              //         child: Container(
+              //           // decoration: BoxDecoration(
+              //           //   border: Border.all(color: Colors.grey),
+              //           //   borderRadius: BorderRadius.circular(30),
+              //           // ),
+              //           padding: const EdgeInsets.symmetric(horizontal: 16),
+              //           child: DropdownButton<String>(
+              //             menuMaxHeight: 350,
+              //             value: SharedPreferencesUtil().selectedChatPluginId,
+              //             onChanged: (s) async {
+              //               if ((s == 'no_selected' &&
+              //                       SharedPreferencesUtil()
+              //                           .pluginsEnabled
+              //                           .isEmpty) ||
+              //                   s == 'enable') {
+              //                 await routeToPage(context,
+              //                     const PluginsPage(filterChatOnly: true));
+              //                 setState(() {});
+              //                 return;
+              //               }
+              //               print(
+              //                   'Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
+              //               if (s == null ||
+              //                   s ==
+              //                       SharedPreferencesUtil()
+              //                           .selectedChatPluginId) return;
+
+              //               SharedPreferencesUtil().selectedChatPluginId = s;
+              //               var plugin =
+              //                   plugins.firstWhereOrNull((p) => p.id == s);
+              //               // chatPageKey.currentState
+              //               //     ?.sendInitialPluginMessage(plugin);
+              //               setState(() {});
+              //             },
+              //             icon: Container(),
+              //             alignment: Alignment.center,
+              //             dropdownColor: Colors.black,
+              //             style: const TextStyle(
+              //                 color: Colors.white, fontSize: 16),
+              //             underline:
+              //                 Container(height: 0, color: Colors.transparent),
+              //             isExpanded: false,
+              //             itemHeight: 48,
+              //             padding: EdgeInsets.zero,
+              //             items: _getPluginsDropdownItems(context),
+              //           ),
+              //         ),
+              //       )
+              //     : const SizedBox(width: 16),
