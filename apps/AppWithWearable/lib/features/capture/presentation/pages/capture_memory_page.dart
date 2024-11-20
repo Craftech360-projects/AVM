@@ -97,12 +97,12 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           },
         ),
         //*--- SEARCH BAR ---*//
-        const SizedBox(height: 8),
-        MemorySearchWidget(
-          searchController: _searchController,
-          memoryBloc: _memoryBloc,
-        ),
-        const SizedBox(height: 8),
+        // const SizedBox(height: 8),
+        // MemorySearchWidget(
+        //   searchController: _searchController,
+        //   memoryBloc: _memoryBloc,
+        // ),
+        // const SizedBox(height: 8),
         //*-- Capture --//
         widget.hasTranscripts
             ? SizedBox(

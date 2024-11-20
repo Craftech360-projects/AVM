@@ -104,15 +104,15 @@ class _CustomNavBarState extends State<CustomNavBar> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return GestureDetector(
-      onTap: () {
-        if (!isExpanded) {
-          setState(() {
-            isExpanded = true;
-          });
-        }
-      },
+      // onTap: () {
+      //   if (!isExpanded) {
+      //     setState(() {
+      //       isExpanded = true;
+      //     });
+      //   }
+      // },
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 600),
         height: 64.h,
         padding: EdgeInsets.symmetric(horizontal: 6.w),
         decoration: BoxDecoration(
@@ -170,10 +170,15 @@ class _CustomNavBarState extends State<CustomNavBar> {
                         isChatVisible = false;
                       });
                     } else {
+                      setState(() {
+                        isExpanded = true;
+                        // isMemoryVisible = false;
+                        // isChatVisible = false;
+                      });
                       // Navigate to tab 0 when not expanded
-                      if (widget.onTabChange != null) {
-                        widget.onTabChange!(0); // Navigate to Tab 0
-                      }
+                      // if (widget.onTabChange != null) {
+                      //   widget.onTabChange!(0); // Navigate to Tab 0
+                      // }
                     }
                   },
                   child: Image.asset(
