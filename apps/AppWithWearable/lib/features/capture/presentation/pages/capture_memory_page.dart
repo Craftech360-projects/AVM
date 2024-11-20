@@ -89,13 +89,13 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         //     color: Colors.white,
         //   ),
         // ),
-        BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
-          bloc: BlocProvider.of(context),
-          builder: (context, state) {
-            print('bluetooth state bloc ${state.toString()}');
-            return ListTile();
-          },
-        ),
+        // BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
+        //   bloc: BlocProvider.of(context),
+        //   builder: (context, state) {
+        //     print('bluetooth state bloc ${state.toString()}');
+        //     return ListTile();
+        //   },
+        // ),
         //*--- SEARCH BAR ---*//
         // const SizedBox(height: 8),
         // MemorySearchWidget(
@@ -126,29 +126,36 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                   direction: DismissDirection.startToEnd,
                   onDismissed: (direction) =>
                       widget.onDismissmissedCaptureMemory(direction),
-                  child: CaptureCard(
-                    context: context,
-                    hasTranscripts: widget.hasTranscripts,
-                    wsConnectionState: widget.wsConnectionState,
-                    device: widget.device,
-                    internetStatus: widget.internetStatus,
-                    segments: widget.segments,
-                    memoryCreating: widget.memoryCreating,
-                    photos: widget.photos,
-                    scrollController: widget.scrollController,
+                  child: Padding(
+                    // Add margin using Padding
+                    padding: const EdgeInsets.all(8.0),
+                    child: CaptureCard(
+                      context: context,
+                      hasTranscripts: widget.hasTranscripts,
+                      wsConnectionState: widget.wsConnectionState,
+                      device: widget.device,
+                      internetStatus: widget.internetStatus,
+                      segments: widget.segments,
+                      memoryCreating: widget.memoryCreating,
+                      photos: widget.photos,
+                      scrollController: widget.scrollController,
+                    ),
                   ),
+                ))
+            : Padding(
+                // Add margin using Padding
+                padding: const EdgeInsets.all(8.0),
+                child: CaptureCard(
+                  context: context,
+                  hasTranscripts: widget.hasTranscripts,
+                  wsConnectionState: widget.wsConnectionState,
+                  device: widget.device,
+                  internetStatus: widget.internetStatus,
+                  segments: widget.segments,
+                  memoryCreating: widget.memoryCreating,
+                  photos: widget.photos,
+                  scrollController: widget.scrollController,
                 ),
-              )
-            : CaptureCard(
-                context: context,
-                hasTranscripts: widget.hasTranscripts,
-                wsConnectionState: widget.wsConnectionState,
-                device: widget.device,
-                internetStatus: widget.internetStatus,
-                segments: widget.segments,
-                memoryCreating: widget.memoryCreating,
-                photos: widget.photos,
-                scrollController: widget.scrollController,
               ),
 
         //*--- Filter Button ---*//

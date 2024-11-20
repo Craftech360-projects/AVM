@@ -208,8 +208,9 @@ class LiveTranscriptBloc
       _AudioListener event, Emitter<LiveTranscriptState> emit) {
     List<int> rawAudio = event.rawAudio;
     print('Received Raw Audio (Before Trimming): ${rawAudio}');
-   final codec= state.codec;
-    WavBytesUtil audioStorage = WavBytesUtil(codec: codec??BleAudioCodec.unknown);
+    final codec = state.codec;
+    WavBytesUtil audioStorage =
+        WavBytesUtil(codec: codec ?? BleAudioCodec.unknown);
     audioStorage.storeFramePacket(rawAudio);
 
     rawAudio.removeRange(0, 3);

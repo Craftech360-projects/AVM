@@ -112,65 +112,87 @@ class CaptureCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return CustomCard(
-      borderRadius: 40.h + 12.h,
-      padding: EdgeInsets.all(12.h),
-      child: Expanded(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(40.h),
-              child: Image.asset(
-                IconImage.avmdevice,
-                height: 150.h,
-                width: double.infinity,
-                fit: BoxFit.fitWidth,
-              ),
+      borderRadius: 12.h + 12.h,
+      padding: EdgeInsets.all(16.h),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.asset(
+              IconImage.user,
+              height: 40,
+              width: 40,
             ),
-            SizedBox(height: 8.h),
-            SizedBox(
-              height: 80.h,
-              child: AnimatedTextKit(
-                animatedTexts: [
-                  TyperAnimatedText(
-                    '👋Hi! Joe,\nChange is inevitable. '
-                    'Always strive for the next big thing!',
-                    textStyle: textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w400),
-                  ),
-                ],
-                isRepeatingAnimation: false,
-              ),
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              "Check AVM Device",
-              style:
-                  textTheme.bodySmall?.copyWith(color: CustomColors.greyLight),
-            ),
-            Row(
+          ),
+          SizedBox(width: 8.h), // Horizontal spacing for Row
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 8.h,
-                  height: 8.w,
-                  decoration: const BoxDecoration(
-                    color: CustomColors.yellowAccent,
-                    shape: BoxShape.circle,
+                SizedBox(
+                  height: 80.h,
+                  child: AnimatedTextKit(
+                    animatedTexts: [
+                      TyperAnimatedText(
+                        '👋 Hi! Joe,\nChange is inevitable. '
+                        'Always strive for the next big thing!',
+                        textStyle: textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w400),
+                      ),
+                    ],
+                    isRepeatingAnimation: false,
                   ),
                 ),
-                SizedBox(width: 4.h),
-                Text(
-                  wsConnectionState == 'connected'
-                      ? "Connected"
-                      : "Disconnected",
-                  style: textTheme.bodySmall
-                      ?.copyWith(color: CustomColors.greyLight, fontSize: 10.h),
+                SizedBox(height: 8.h),
+                Divider(color: CustomColors.greyLight),
+                Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  // Divider between sections
+                  SizedBox(height: 8.h),
+                  Text(
+                    "Check AVM Device",
+                    style: textTheme.bodySmall
+                        ?.copyWith(color: CustomColors.greyLight),
+                  ),
+                  SizedBox(height: 8.h),
+                ]),
+                SizedBox(height: 8.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      width: 8.h,
+                      height: 8.w,
+                      decoration: const BoxDecoration(
+                        color: CustomColors.yellowAccent,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    SizedBox(width: 4.h),
+                    Text(
+                      wsConnectionState == 'connected'
+                          ? "Connected"
+                          : "Disconnected",
+                      style: textTheme.bodySmall?.copyWith(
+                        color: CustomColors.greyLight,
+                        fontSize: 10.h,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            SizedBox(height: 8.h),
-            // Display dynamic data from incoming parameters like device or internet status
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+  // Display dynamic data from incoming parameters like device or internet status
             // Text(
             //   "Device: $device",
             //   style:
@@ -220,9 +242,3 @@ class CaptureCard extends StatelessWidget {
             //         ),
             //       )
             // : SizedBox.shrink(),
-          ],
-        ),
-      ),
-    );
-  }
-}

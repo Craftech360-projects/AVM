@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/pages/onboarding/find_device/page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/developer_page.dart';
 import 'package:friend_private/pages/settings/profile.dart';
@@ -50,12 +51,24 @@ class _SettingPageState extends State<SettingPage> {
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
         children: [
           CustomListTile(
+            // onTap: () {
+            //   Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) => ConnectedDevice(
+            //         device: null,
+            //         batteryLevel: 0,
+            //       ),
+            //     ),
+            //   );
+            // },
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      const ConnectedDevice(device: null, batteryLevel: 0),
+                  builder: (context) => FindDevicesPage(
+                    goNext: () {},
+                  ),
                 ),
               );
             },

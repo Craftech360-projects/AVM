@@ -120,7 +120,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
         'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=${sampleRate}&codec=pcm8&channels=1',
       );
       break;
-    case 'Wisper':
+    case 'Whisper':
       print('No api for this');
       break;
     default:
@@ -136,7 +136,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     IOWebSocketChannel channel = IOWebSocketChannel.connect(
       uri,
       headers: {
-        'Authorization': 'Token $deepgramapikey',
+        'Authorization': 'Token e19942922008143bf76a75cb75b92853faa0b0da',
         'Content-Type': 'audio/raw',
       },
     );

@@ -18,4 +18,5 @@ class IconImage {
   static const String message = 'assets/images/message.svg';
   static const String send = 'assets/images/send.svg';
   static const String search = 'assets/images/search.svg';
+  static const String user = 'assets/images/user.png';
 }

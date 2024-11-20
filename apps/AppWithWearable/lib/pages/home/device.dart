@@ -84,8 +84,8 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
 
   @override
   Widget build(BuildContext context) {
-    var deviceId = widget.device?.id ?? SharedPreferencesUtil().deviceId;
-    var deviceName = widget.device?.name ?? SharedPreferencesUtil().deviceName;
+    var deviceId = SharedPreferencesUtil().deviceId;
+    var deviceName = SharedPreferencesUtil().deviceName;
     var deviceConnected = widget.device != null;
 
     return CustomScaffold(
@@ -185,15 +185,6 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(83, 158, 158, 158),
                     border: Border.all(color: Colors.grey),
-                    // border: const GradientBoxBorder(
-                    //   gradient: LinearGradient(colors: [
-                    //     Color.fromARGB(127, 208, 208, 208),
-                    //     Color.fromARGB(127, 188, 99, 121),
-                    //     Color.fromARGB(127, 86, 101, 182),
-                    //     Color.fromARGB(127, 126, 190, 236)
-                    //   ]),
-                    //   width: 2,
-                    // ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextButton(

@@ -34,11 +34,11 @@ class DisconnectDevice extends LiveTranscriptEvent {
 }
 
 class _AudioListener extends LiveTranscriptEvent {
- final List<int> rawAudio;
- const _AudioListener({
+  final List<int> rawAudio;
+  const _AudioListener({
     required this.rawAudio,
   });
-    @override
+  @override
   List<Object> get props => [rawAudio];
 }
 

@@ -130,19 +130,19 @@ class AppRouter {
               FadeTransition(opacity: a, child: c),
         ),
       ),
-      GoRoute(
-        path: '/wsPage',
-        name: WebSocketTestPage.name,
-        parentNavigatorKey: _rootNavigatorKey,
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: WebSocketTestPage(),
-          transitionDuration: const Duration(
-            milliseconds: _routeTransitionDuration,
-          ),
-          transitionsBuilder: (_, a, __, c) =>
-              FadeTransition(opacity: a, child: c),
-        ),
-      ),
+      // GoRoute(
+      //   path: '/wsPage',
+      //   name: WebSocketTestPage.name,
+      //   parentNavigatorKey: _rootNavigatorKey,
+      //   pageBuilder: (context, state) => CustomTransitionPage(
+      //     child: WebSocketTestPage(),
+      //     transitionDuration: const Duration(
+      //       milliseconds: _routeTransitionDuration,
+      //     ),
+      //     transitionsBuilder: (_, a, __, c) =>
+      //         FadeTransition(opacity: a, child: c),
+      //   ),
+      // ),
     ],
     debugLogDiagnostics: true,
   );

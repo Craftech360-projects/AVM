@@ -181,7 +181,7 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             // Add more BLoCs as needed here
-            BlocProvider(create: (context) => LiveTranscriptBloc()),
+            // BlocProvider(create: (context) => LiveTranscriptBloc()),
           ],
           child: MaterialApp(
             navigatorObservers: [InstabugNavigatorObserver()],
@@ -206,8 +206,8 @@ class _MyAppState extends State<MyApp> {
                 ),
                 SharedPreferencesUtil().onboardingCompleted && widget.isAuth
                     ? const HomePageWrapper()
-                    : const HomePageWrapper()
-                // : const SigninPage(),
+                    //    : const HomePageWrapper()
+                    : const SigninPage(),
                 //: const OnboardingWrapper(),
               ],
             ),

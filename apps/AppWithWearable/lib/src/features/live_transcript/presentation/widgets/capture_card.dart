@@ -20,16 +20,16 @@ class CaptureCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(40.h),
-              child: Image.asset(
-                IconImage.avmdevice,
-                height: 150.h,
-                width: double.infinity,
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-            SizedBox(height: 8.h),
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(40.h),
+            //   child: Image.asset(
+            //     IconImage.avmdevice,
+            //     height: 150.h,
+            //     width: double.infinity,
+            //     fit: BoxFit.fitWidth,
+            //   ),
+            // ),
+            // SizedBox(height: 8.h),
             SizedBox(
               height: 80.h,
               child: AnimatedTextKit(
@@ -53,20 +53,23 @@ class CaptureCard extends StatelessWidget {
             BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
               bloc: context.read<LiveTranscriptBloc>(),
               builder: (context, state) {
-              final bool avmDisconnected=state.bluetoothDeviceStatus==BluetoothDeviceStatus.disconnected;
+                final bool avmDisconnected = state.bluetoothDeviceStatus ==
+                    BluetoothDeviceStatus.disconnected;
                 return Row(
                   children: [
                     Container(
                       width: 8.h,
                       height: 8.w,
-                      decoration:  BoxDecoration(
-                        color:avmDisconnected? CustomColors.yellowAccent:CustomColors.red,
+                      decoration: BoxDecoration(
+                        color: avmDisconnected
+                            ? CustomColors.yellowAccent
+                            : CustomColors.red,
                         shape: BoxShape.circle,
                       ),
                     ),
                     SizedBox(width: 4.h),
                     Text(
-                     avmDisconnected?"Disconnected":"Connected" ,
+                      avmDisconnected ? "Disconnected" : "Connected",
                       style: textTheme.bodySmall?.copyWith(
                           color: CustomColors.greyLight, fontSize: 10.h),
                     ),

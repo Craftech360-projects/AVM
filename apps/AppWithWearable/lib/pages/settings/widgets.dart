@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/utils.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 
 getNotificationsWidgets(
   StateSetter setState,
@@ -331,7 +333,8 @@ getItemAddOn(String title, VoidCallback onTap,
         padding: const EdgeInsets.fromLTRB(0, 12, 8, 0),
         child: Container(
           decoration: BoxDecoration(
-            color: const Color(0x22FFFFFF), // Replace with your desired color
+            color: const Color.fromARGB(
+                0, 255, 255, 255), // Replace with your desired color
             borderRadius: BorderRadius.circular(
                 10.0), // Adjust for desired rounded corners
           ),
@@ -342,14 +345,14 @@ getItemAddOn(String title, VoidCallback onTap,
                 Text(
                   title,
                   style: const TextStyle(
-                      color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
+                      color: CustomColors.blackPrimary, fontSize: 16),
                 ),
                 const SizedBox(width: 16),
-                Icon(icon, color: Colors.white, size: 16),
+                Icon(icon, color: CustomColors.grey, size: 16.h),
                 const Spacer(),
                 const Icon(
                   Icons.arrow_forward_ios,
-                  color: Colors.white,
+                  color: CustomColors.grey,
                   size: 16,
                 ),
               ],
