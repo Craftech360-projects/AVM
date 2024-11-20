@@ -166,7 +166,8 @@ class CapturePageState extends State<CapturePage>
 
   Future<void> initiateBytesStreamingProcessing() async {
     if (btDevice == null) return;
-    BleAudioCodec codec = await BleConnectionDatasource().getAudioCodec(btDevice!.id);
+    BleAudioCodec codec =
+        await BleConnectionDatasource().getAudioCodec(btDevice!.id);
     audioStorage = WavBytesUtil(codec: codec);
     _bleBytesStream = await BleConnectionDatasource().getBleAudioBytesListener(
       btDevice!.id,

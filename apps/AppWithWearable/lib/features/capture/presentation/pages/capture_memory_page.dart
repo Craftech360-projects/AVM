@@ -98,11 +98,11 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         ),
         //*--- SEARCH BAR ---*//
         const SizedBox(height: 8),
-        // MemorySearchWidget(
-        //   searchController: _searchController,
-        //   memoryBloc: _memoryBloc,
-        // ),
-        // const SizedBox(height: 8),
+        MemorySearchWidget(
+          searchController: _searchController,
+          memoryBloc: _memoryBloc,
+        ),
+        const SizedBox(height: 8),
         //*-- Capture --//
         widget.hasTranscripts
             ? SizedBox(
@@ -152,54 +152,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
               ),
 
         //*--- Filter Button ---*//
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        //   child: Align(
-        //     alignment: Alignment.centerRight,
-        //     child: PopupMenuButton<FilterItem>(
-        //       icon: const Icon(
-        //         Icons.filter_alt_sharp,
-        //         size: 16,
-        //         color: Colors.grey,
-        //       ),
-        //       onSelected: (filterItem) {
-        //         print(
-        //             'filteredItem ${filterItem.filterStatus},${filterItem.filterType}');
-        //         _memoryBloc.add(FilterMemory(filterItem: filterItem));
-        //         // setState(() {
-        //         //   filterItem.filterStatus = !filterItem.filterStatus;
-
-        //         //   if (filterItem.filterType == 'Show All') {
-        //         //     _memoryBloc.add(DisplayedMemory(
-        //         //         isNonDiscarded: filterItem.filterStatus));
-        //         //   }
-
-        //         //   print(
-        //         //       'Selected filter: ${filterItem.filterType}, Status: ${filterItem.filterStatus}');
-        //         // });
-        //       },
-        //       itemBuilder: (context) => _filters.map((filterItem) {
-        //         return PopupMenuItem<FilterItem>(
-        //           value: filterItem,
-        //           child: Row(
-        //             children: [
-        //               filterItem.filterStatus
-        //                   ? const Icon(
-        //                       Icons.check,
-        //                       color: Colors.green,
-        //                     )
-        //                   : const Icon(
-        //                       Icons.check,
-        //                       color: Colors.grey,
-        //                     ),
-        //               Text(filterItem.filterType),
-        //             ],
-        //           ),
-        //         );
-        //       }).toList(),
-        //     ),
-        //   ),
-        // ),
 
         if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
           Padding(
@@ -309,3 +261,54 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
             // final codecformat =
             //     await BleConnectionDatasource().getAudioCodec('C4:E8:E3:9F:D2:AE');
             // print('codecic format ${codecformat}');
+
+
+
+              // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        //   child: Align(
+        //     alignment: Alignment.centerRight,
+        //     child: PopupMenuButton<FilterItem>(
+        //       icon: const Icon(
+        //         Icons.filter_alt_sharp,
+        //         size: 16,
+        //         color: Colors.grey,
+        //       ),
+        //       onSelected: (filterItem) {
+        //         print(
+        //             'filteredItem ${filterItem.filterStatus},${filterItem.filterType}');
+        //         _memoryBloc.add(FilterMemory(filterItem: filterItem));
+        //         // setState(() {
+        //         //   filterItem.filterStatus = !filterItem.filterStatus;
+
+        //         //   if (filterItem.filterType == 'Show All') {
+        //         //     _memoryBloc.add(DisplayedMemory(
+        //         //         isNonDiscarded: filterItem.filterStatus));
+        //         //   }
+
+        //         //   print(
+        //         //       'Selected filter: ${filterItem.filterType}, Status: ${filterItem.filterStatus}');
+        //         // });
+        //       },
+        //       itemBuilder: (context) => _filters.map((filterItem) {
+        //         return PopupMenuItem<FilterItem>(
+        //           value: filterItem,
+        //           child: Row(
+        //             children: [
+        //               filterItem.filterStatus
+        //                   ? const Icon(
+        //                       Icons.check,
+        //                       color: Colors.green,
+        //                     )
+        //                   : const Icon(
+        //                       Icons.check,
+        //                       color: Colors.grey,
+        //                     ),
+        //               Text(filterItem.filterType),
+        //             ],
+        //           ),
+        //         );
+        //       }).toList(),
+        //     ),
+        //   ),
+        // ),
