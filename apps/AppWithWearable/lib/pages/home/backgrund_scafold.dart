@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/pages/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
@@ -31,7 +32,9 @@ class CustomScaffold extends StatelessWidget {
   final bool drawerEnableOpenDragGesture;
   final bool endDrawerEnableOpenDragGesture;
   final String? restorationId;
-
+  final BTDeviceStruct? device; // Optional parameter
+  final int batteryLevel; // Optional with default value
+// Add batteryLevel parameter
   const CustomScaffold({
     Key? key,
     required this.body,
@@ -55,6 +58,8 @@ class CustomScaffold extends StatelessWidget {
     this.drawerEnableOpenDragGesture = true,
     this.endDrawerEnableOpenDragGesture = true,
     this.restorationId,
+    this.device,
+    this.batteryLevel = -1,
   }) : super(key: key);
 
   @override
@@ -64,7 +69,7 @@ class CustomScaffold extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: const Color(0xFFE6F5FA),
-        leading: const BatteryIndicator(),
+        // leading: const BatteryIndicator(),
         actions: [
           CircleAvatar(
             backgroundColor: CustomColors.greyLavender,
@@ -76,7 +81,8 @@ class CustomScaffold extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SettingPage(),
+                    builder: (context) =>
+                        SettingPage(device: device, batteryLevel: batteryLevel),
                   ),
                 );
               },

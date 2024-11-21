@@ -18,6 +18,7 @@ import 'package:friend_private/pages/capture/location_service.dart';
 import 'package:friend_private/pages/capture/logic/openglass_mixin.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/enums.dart';
@@ -40,16 +41,13 @@ class CapturePage extends StatefulWidget {
   final Function refreshMemories;
   final Function refreshMessages;
   final BTDeviceStruct? device;
-  // final Function restartWebSocket;
-  // final Function initiateWebsocket;
-
+  final int batteryLevel;
   const CapturePage({
     super.key,
     required this.device,
     required this.refreshMemories,
     required this.refreshMessages,
-    // required this.restartWebSocket,
-    // required this.initiateWebsocket,
+    this.batteryLevel = -1,
   });
 
   @override
@@ -407,64 +405,96 @@ class CapturePageState extends State<CapturePage>
     }
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   super.build(context);
+  //   return Stack(
+  //     children: [
+  //       Column(
+  //         // physics: const NeverScrollableScrollPhysics(),
+  //         children: [
+  //           // speechProfileWidget(context, setState, widget.restartWebSocket),
+  //           CaptureMemoryPage(
+  //             context: context,
+  //             hasTranscripts: _hasTranscripts,
+  //             wsConnectionState: wsConnectionState,
+  //             device: widget.device,
+  //             internetStatus: _internetStatus,
+  //             segments: segments,
+  //             memoryCreating: memoryCreating,
+  //             photos: photos,
+  //             scrollController: _scrollController,
+  //             onDismissmissedCaptureMemory: (direction) {
+  //               _createMemory();
+  //               setState(() {});
+  //               // if (segments.isNotEmpty) {
+
+  //               //   final removedSegment = segments[0];
+
+  //               //   setState(() {
+  //               //     segments.removeAt(0);
+
+  //               //   });
+
+  //               //   _createMemory().then((_) {
+  //               //     print('Memory created');
+  //               //   }).catchError((error) {
+  //               //     print('Error creating memory: $error');
+
+  //               //     setState(() {
+  //               //       segments.insert(0, removedSegment);
+  //               //     });
+  //               //   });
+  //               // }
+  //             },
+  //           ),
+  //           // ...getConnectionStateWidgets(
+  //           //   context,
+  //           //   _hasTranscripts,
+  //           //   widget.device,
+  //           //   wsConnectionState,
+  //           //   _internetStatus,
+  //           // ),
+  //           // getTranscriptWidget(memoryCreating, segments, photos, widget.device),
+  //           ...connectionStatusWidgets(
+  //               context, segments, wsConnectionState, _internetStatus),
+  //           const SizedBox(height: 16)
+  //         ],
+  //       ),
+  //       // getPhoneMicRecordingButton(_recordingToggled, recordingState)
+  //     ],
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    return Stack(
-      children: [
-        Column(
-          // physics: const NeverScrollableScrollPhysics(),
+    return BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
+      builder: (context, state) {
+        return Stack(
           children: [
-            // speechProfileWidget(context, setState, widget.restartWebSocket),
-            CaptureMemoryPage(
-              context: context,
-              hasTranscripts: _hasTranscripts,
-              wsConnectionState: wsConnectionState,
-              device: widget.device,
-              internetStatus: _internetStatus,
-              segments: segments,
-              memoryCreating: memoryCreating,
-              photos: photos,
-              scrollController: _scrollController,
-              onDismissmissedCaptureMemory: (direction) {
-                _createMemory();
-                setState(() {});
-                // if (segments.isNotEmpty) {
-
-                //   final removedSegment = segments[0];
-
-                //   setState(() {
-                //     segments.removeAt(0);
-
-                //   });
-
-                //   _createMemory().then((_) {
-                //     print('Memory created');
-                //   }).catchError((error) {
-                //     print('Error creating memory: $error');
-
-                //     setState(() {
-                //       segments.insert(0, removedSegment);
-                //     });
-                //   });
-                // }
-              },
+            Column(
+              children: [
+                CaptureMemoryPage(
+                  context: context,
+                  hasTranscripts: _hasTranscripts,
+                  wsConnectionState: wsConnectionState,
+                  device: state.connectedDevice, // Dynamic device details
+                  internetStatus: _internetStatus,
+                  segments: segments,
+                  memoryCreating: memoryCreating,
+                  photos: photos,
+                  scrollController: _scrollController,
+                  onDismissmissedCaptureMemory: (direction) {
+                    _createMemory();
+                    setState(() {});
+                  },
+                ),
+                const SizedBox(height: 16),
+              ],
             ),
-            // ...getConnectionStateWidgets(
-            //   context,
-            //   _hasTranscripts,
-            //   widget.device,
-            //   wsConnectionState,
-            //   _internetStatus,
-            // ),
-            // getTranscriptWidget(memoryCreating, segments, photos, widget.device),
-            ...connectionStatusWidgets(
-                context, segments, wsConnectionState, _internetStatus),
-            const SizedBox(height: 16)
           ],
-        ),
-        // getPhoneMicRecordingButton(_recordingToggled, recordingState)
-      ],
+        );
+      },
     );
   }
 

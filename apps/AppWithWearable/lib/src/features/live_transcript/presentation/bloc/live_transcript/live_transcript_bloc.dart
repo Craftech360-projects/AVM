@@ -83,6 +83,7 @@ class LiveTranscriptBloc
       SelectedDevice event, Emitter<LiveTranscriptState> emit) async {
     final device = BluetoothDevice.fromId(event.connectedDevice.id);
     emit(state.copyWith(bleConnectionStatus: BluetoothDeviceStatus.processing));
+
     await device.connect(mtu: null, autoConnect: true);
 
     emit(state.copyWith(
@@ -94,11 +95,20 @@ class LiveTranscriptBloc
     _connectionSubscription = device.connectionState.listen((connectionState) {
       add(_BleConnectionListener(bleListener: connectionState));
     });
+
+    // Start monitoring battery level and audio after successful connection
+    await _initiateBatteryListener();
+    await _fetchAudioCodec();
+    await _initiateAudioListener();
   }
 
   /// Handle BLE connection state changes
   Future<void> _handleConnectionState(
-      _BleConnectionListener event, Emitter<LiveTranscriptState> emit) async {
+      // ignore: use_function_type_syntax_for_parameters
+
+      _BleConnectionListener event,
+      Emitter<LiveTranscriptState> emit) async {
+    print("state chage>>>>>>>>>>>>>>>>>>>");
     if (event.bleListener == BluetoothConnectionState.connected) {
       emit(
           state.copyWith(bleConnectionStatus: BluetoothDeviceStatus.connected));
@@ -197,7 +207,7 @@ class LiveTranscriptBloc
       _BatteryListener event, Emitter<LiveTranscriptState> emit) {
     if (event.value.isNotEmpty) {
       emit(state.copyWith(
-        bleBatteryLevel: event.value[0],
+        bleBatteryLevel: event.value[0], // Updates battery level
         bleConnectionStatus: BluetoothDeviceStatus.connected,
       ));
     }

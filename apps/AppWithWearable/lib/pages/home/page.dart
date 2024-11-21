@@ -246,7 +246,9 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     SharedPreferencesUtil().deviceId = _device!.id;
     SharedPreferencesUtil().deviceName = _device!.name;
     _startForeground();
-    setState(() {});
+    setState(() {
+      _device = connectedDevice;
+    });
   }
 
   _initiateBleBatteryListener() async {
@@ -279,6 +281,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           ? UpgradeDialogStyle.cupertino
           : UpgradeDialogStyle.material,
       child: CustomScaffold(
+        device: _device, // Replace with your device instance
+        batteryLevel: batteryLevel, // Replace with your battery level
         backgroundColor: Theme.of(context).colorScheme.primary,
         body: GestureDetector(
           onTap: () {
@@ -292,9 +296,11 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                 physics: const NeverScrollableScrollPhysics(),
                 controller: _controller,
                 children: [
+                  // const SettingPage(),
                   CapturePage(
                     key: capturePageKey,
                     device: _device,
+                    batteryLevel: batteryLevel,
                     refreshMemories: _initiateMemories,
                     refreshMessages: _refreshMessages,
                   ),

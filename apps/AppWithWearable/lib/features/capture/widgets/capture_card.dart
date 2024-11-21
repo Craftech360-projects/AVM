@@ -73,13 +73,16 @@
 //     );
 //   }
 // }
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
+import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tuple/tuple.dart';
@@ -136,8 +139,11 @@ class CaptureCard extends StatelessWidget {
                   child: AnimatedTextKit(
                     animatedTexts: [
                       TyperAnimatedText(
-                        '👋 Hi! Joe,\nChange is inevitable. '
-                        'Always strive for the next big thing!',
+                        device?.name != null
+                            ? '👋 Hi! ${device!.name},\nChange is inevitable. '
+                                'Always strive for the next big thing!'
+                            : '👋 Hi! Guest,\nChange is inevitable. '
+                                'Always strive for the next big thing!',
                         textStyle: textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w400),
                       ),
@@ -158,28 +164,59 @@ class CaptureCard extends StatelessWidget {
                   SizedBox(height: 8.h),
                 ]),
                 SizedBox(height: 8.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: 8.h,
-                      height: 8.w,
-                      decoration: const BoxDecoration(
-                        color: CustomColors.yellowAccent,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    SizedBox(width: 4.h),
-                    Text(
-                      wsConnectionState == 'connected'
-                          ? "Connected"
-                          : "Disconnected",
-                      style: textTheme.bodySmall?.copyWith(
-                        color: CustomColors.greyLight,
-                        fontSize: 10.h,
-                      ),
-                    ),
-                  ],
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     Container(
+                //       width: 8.h,
+                //       height: 8.w,
+                //       decoration: const BoxDecoration(
+                //         color: CustomColors.yellowAccent,
+                //         shape: BoxShape.circle,
+                //       ),
+                //     ),
+                //     SizedBox(width: 4.h),
+                //     Text(
+                //       wsConnectionState == 'connected'
+                //           ? "Connected"
+                //           : "Disconnected",
+                //       style: textTheme.bodySmall?.copyWith(
+                //         color: CustomColors.greyLight,
+                //         fontSize: 10.h,
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
+                  bloc: context.read<LiveTranscriptBloc>(),
+                  builder: (context, state) {
+                    final bool isDisconnected = state.bluetoothDeviceStatus ==
+                        BluetoothDeviceStatus.disconnected;
+                    print("isDisconnected, $isDisconnected");
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: 8.h,
+                          height: 8.h,
+                          decoration: BoxDecoration(
+                            color: isDisconnected
+                                ? CustomColors.yellowAccent
+                                : Colors.green,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        SizedBox(width: 4.h),
+                        Text(
+                          isDisconnected ? "Disconnected" : "Connected",
+                          style: textTheme.bodySmall?.copyWith(
+                            color: CustomColors.greyLight,
+                            fontSize: 10.h,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),

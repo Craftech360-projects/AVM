@@ -181,7 +181,7 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             // Add more BLoCs as needed here
-            // BlocProvider(create: (context) => LiveTranscriptBloc()),
+            BlocProvider(create: (context) => LiveTranscriptBloc()),
           ],
           child: MaterialApp(
             navigatorObservers: [InstabugNavigatorObserver()],

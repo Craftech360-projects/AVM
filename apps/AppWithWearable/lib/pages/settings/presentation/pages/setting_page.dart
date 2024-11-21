@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/pages/onboarding/find_device/page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/developer_page.dart';
@@ -21,20 +22,45 @@ import 'package:friend_private/utils/ble/gatt_utils.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:go_router/go_router.dart';
 import 'package:friend_private/pages/home/device.dart';
+import 'package:friend_private/backend/preferences.dart';
 
 class SettingPage extends StatefulWidget {
+  final BTDeviceStruct? device;
+  final int batteryLevel;
+
   const SettingPage({
+    this.device,
+    this.batteryLevel = -1,
     super.key,
   });
+
   static const String name = 'settingPage';
+
   @override
   State<SettingPage> createState() => _SettingPageState();
 }
 
 class _SettingPageState extends State<SettingPage> {
   @override
+  void initState() {
+    super.initState();
+
+    // Print the incoming battery level
+    print('Incoming battery level: ${widget.batteryLevel}');
+
+    // Print the connected device details if available
+    if (widget.device != null) {
+      print(
+          'Connected device: ${widget.device!.name} (ID: ${widget.device!.id})');
+    } else {
+      print('No connected device provided.');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+
     return CustomScaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -51,34 +77,37 @@ class _SettingPageState extends State<SettingPage> {
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
         children: [
           CustomListTile(
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (context) => ConnectedDevice(
-            //         device: null,
-            //         batteryLevel: 0,
-            //       ),
-            //     ),
-            //   );
-            // },
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => FindDevicesPage(
-                    goNext: () {},
+              if (widget.device != null) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ConnectedDevice(
+                      device: widget.device,
+                      batteryLevel: widget.batteryLevel,
+                    ),
                   ),
-                ),
-              );
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FindDevicesPage(
+                      goNext: () {},
+                    ),
+                  ),
+                );
+              }
             },
             title: BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
-              bloc: context.read<LiveTranscriptBloc>(),
               builder: (context, state) {
-                return Text(
-                  'Battery Level: ${state.bleBatteryLevel}%',
-                  style: textTheme.bodyLarge,
-                );
+                if (state.bleBatteryLevel != null) {
+                  return Text('Battery Level: ${widget.batteryLevel}%',
+                      style: TextStyle(fontSize: 16));
+                } else {
+                  return Text('Battery Level: Unknown',
+                      style: TextStyle(fontSize: 16));
+                }
               },
             ),
             trailing: const CircleAvatar(
