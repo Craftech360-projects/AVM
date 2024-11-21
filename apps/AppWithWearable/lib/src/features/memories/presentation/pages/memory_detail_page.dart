@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
+import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/category_chip.dart';

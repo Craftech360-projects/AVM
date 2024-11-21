@@ -217,16 +217,11 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/onboarding/find_device/page.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
-import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
-
-import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
 import 'package:friend_private/utils/ble/connect.dart';
 import 'package:friend_private/widgets/device_widget.dart';
 
@@ -248,143 +243,134 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
     var deviceConnected = widget.device != null;
 
     return CustomScaffold(
-      appBar: AppBar(
-        title: Text(deviceConnected ? 'Connected Device' : 'Paired Device'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-      backgroundColor: const Color(0xFFE6F5FA),
-      body: BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
-        builder: (context, state) {
-          final batteryLevel = state.bleBatteryLevel ?? -1;
-
-          return Column(
-            children: [
-              const SizedBox(height: 32),
-              const DeviceAnimationWidget(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, deviceId.replaceAll(':', '').split('-').last.length > 6 ? 6 : deviceId.replaceAll(':', '').split('-').last.length)})',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
-                      height: 1.5,
-                    ),
-                    textAlign: TextAlign.center,
+        appBar: AppBar(
+          title: Text(deviceConnected ? 'Connected Device' : 'Paired Device'),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+        ),
+        backgroundColor: const Color(0xFFE6F5FA),
+        body: Column(
+          children: [
+            const SizedBox(height: 32),
+            const DeviceAnimationWidget(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, deviceId.replaceAll(':', '').split('-').last.length > 6 ? 6 : deviceId.replaceAll(':', '').split('-').last.length)})',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                    height: 1.5,
                   ),
-                  const SizedBox(height: 12),
-                  if (state.connectedDevice != null)
-                    Column(
-                      children: [
-                        Text(
-                          '${state.connectedDevice?.name}, firmware ${state.codec ?? "N/A"}',
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.w500,
-                            height: 1,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 12),
-                        Text(
-                          "Craftech 360",
-                          // 'by ${state.connectedDevice?.manufacturerName ?? "N/A"}',
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.w500,
-                            height: 1,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                    ),
-                  widget.device != null
-                      ? Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              // Container(
-                              //   width: 10,
-                              //   height: 10,
-                              //   decoration: BoxDecoration(
-                              //     color: batteryLevel > 75
-                              //         ? const Color.fromARGB(255, 0, 255, 8)
-                              //         : batteryLevel > 20
-                              //             ? Colors.yellow.shade700
-                              //             : Colors.red,
-                              //     shape: BoxShape.circle,
-                              //   ),
-                              // ),
-                              // const SizedBox(width: 8.0),
-                              // Text(
-                              //   batteryLevel != -1
-                              //       ? '$batteryLevel% Battery'
-                              //       : 'Battery Level Unknown',
-                              //   style: const TextStyle(
-                              //     color: Colors.black,
-                              //     fontSize: 14,
-                              //     fontWeight: FontWeight.w600,
-                              //   ),
-                              // ),
-                            ],
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              ),
-              const SizedBox(height: 32),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                decoration: BoxDecoration(
-                  color: CustomColors.greyLavender,
-                  // border: Border.all(color: CustomColors.purpleBright),
-                  borderRadius: BorderRadius.circular(24),
+                  textAlign: TextAlign.center,
                 ),
-                child: TextButton(
-                  onPressed: () {
-                    if (widget.device != null) {
-                      BleConnectionDatasource()
-                          .bleDisconnectDevice(widget.device!);
-                    }
-                    Navigator.of(context).pop();
-                    SharedPreferencesUtil().deviceId = '';
-                    SharedPreferencesUtil().deviceName = '';
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                          'Your AVM is ${widget.device == null ? "unpaired" : "disconnected"}   😔'),
-                    ));
-                    // MixpanelManager().disconnectFriendClicked();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FindDevicesPage(
-                          goNext: () {},
-                        ),
+                const SizedBox(height: 12),
+                const Column(
+                  children: [
+                    Text(
+                      '',
+                      // '${state.connectedDevice?.name}, firmware ${state.codec ?? "N/A"}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.w500,
+                        height: 1,
                       ),
-                    );
-                  },
-                  child: Text(
-                    widget.device == null ? "Unpair" : "Disconnect",
-                    style: const TextStyle(
-                        color: CustomColors.blackPrimary, fontSize: 16),
-                  ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      "Craftech 360",
+                      // 'by ${state.connectedDevice?.manufacturerName ?? "N/A"}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 10.0,
+                        fontWeight: FontWeight.w500,
+                        height: 1,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 12),
+                  ],
+                ),
+                widget.device != null
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Container(
+                            //   width: 10,
+                            //   height: 10,
+                            //   decoration: BoxDecoration(
+                            //     color: batteryLevel > 75
+                            //         ? const Color.fromARGB(255, 0, 255, 8)
+                            //         : batteryLevel > 20
+                            //             ? Colors.yellow.shade700
+                            //             : Colors.red,
+                            //     shape: BoxShape.circle,
+                            //   ),
+                            // ),
+                            // const SizedBox(width: 8.0),
+                            // Text(
+                            //   batteryLevel != -1
+                            //       ? '$batteryLevel% Battery'
+                            //       : 'Battery Level Unknown',
+                            //   style: const TextStyle(
+                            //     color: Colors.black,
+                            //     fontSize: 14,
+                            //     fontWeight: FontWeight.w600,
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ],
+            ),
+            const SizedBox(height: 32),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+              decoration: BoxDecoration(
+                color: CustomColors.greyLavender,
+                // border: Border.all(color: CustomColors.purpleBright),
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  if (widget.device != null) {
+                    bleDisconnectDevice(widget.device!);
+                  }
+                  Navigator.of(context).pop();
+                  SharedPreferencesUtil().deviceId = '';
+                  SharedPreferencesUtil().deviceName = '';
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        'Your AVM is ${widget.device == null ? "unpaired" : "disconnected"}   😔'),
+                  ));
+                  // MixpanelManager().disconnectFriendClicked();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FindDevicesPage(
+                        goNext: () {},
+                      ),
+                    ),
+                  );
+                },
+                child: Text(
+                  widget.device == null ? "Unpair" : "Disconnect",
+                  style: const TextStyle(
+                      color: CustomColors.blackPrimary, fontSize: 16),
                 ),
               ),
-            ],
-          );
-        },
-      ),
-    );
+            ),
+          ],
+        ));
   }
 }

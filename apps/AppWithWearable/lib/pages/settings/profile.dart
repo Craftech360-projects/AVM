@@ -8,6 +8,7 @@ import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/onboarding/wrapper.dart';
 import 'package:friend_private/pages/settings/BackupButton.dart';
 import 'package:friend_private/pages/settings/RestoreButton.dart';
+import 'package:friend_private/pages/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/pages/settings/widgets/change_name_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';

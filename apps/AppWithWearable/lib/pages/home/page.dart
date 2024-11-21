@@ -25,10 +25,8 @@ import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
 import 'package:friend_private/pages/settings/page.dart';
-import 'package:friend_private/pages/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/scripts.dart';
 import 'package:friend_private/src/features/home/presentation/pages/navbar.dart';
-import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
 import 'package:friend_private/utils/audio/foreground.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/ble/connected.dart';
@@ -39,8 +37,6 @@ import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/scanning_ui.dart';
 import 'package:friend_private/widgets/upgrade_alert.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:upgrader/upgrader.dart';
 
 class HomePageWrapper extends StatefulWidget {
@@ -168,7 +164,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     _migrationScripts();
     authenticateGCP();
     if (SharedPreferencesUtil().deviceId.isNotEmpty) {
-      BleConnectionDatasource().scanAndConnectDevice().then(_onConnected);
+      scanAndConnectDevice().then(_onConnected);
     }
 
     createNotification(
@@ -203,26 +199,25 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   _initiateConnectionListener() async {
     if (_connectionStateListener != null) return;
     // TODO: when disconnected manually need to remove this connection state listener
-    _connectionStateListener = BleConnectionDatasource()
-        .getConnectionStateListener(
-            deviceId: _device!.id,
-            onDisconnected: () {
-              debugPrint('onDisconnected');
-              capturePageKey.currentState
-                  ?.resetState(restartBytesProcessing: false);
-              setState(() => _device = null);
-              InstabugLog.logInfo('AVM Device Disconnected');
-              if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
-                createNotification(
-                  title: 'AVM Device Disconnected',
-                  body: 'Please reconnect to continue using your AVM.',
-                );
-              }
-              MixpanelManager().deviceDisconnected();
-              foregroundUtil.stopForegroundTask();
-            },
-            onConnected: ((d) =>
-                _onConnected(d, initiateConnectionListener: false)));
+    _connectionStateListener = getConnectionStateListener(
+        deviceId: _device!.id,
+        onDisconnected: () {
+          debugPrint('onDisconnected');
+          capturePageKey.currentState
+              ?.resetState(restartBytesProcessing: false);
+          setState(() => _device = null);
+          InstabugLog.logInfo('AVM Device Disconnected');
+          if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
+            createNotification(
+              title: 'AVM Device Disconnected',
+              body: 'Please reconnect to continue using your AVM.',
+            );
+          }
+          MixpanelManager().deviceDisconnected();
+          foregroundUtil.stopForegroundTask();
+        },
+        onConnected: ((d) =>
+            _onConnected(d, initiateConnectionListener: false)));
   }
 
   _startForeground() async {
@@ -253,8 +248,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   _initiateBleBatteryListener() async {
     _bleBatteryLevelListener?.cancel();
-    _bleBatteryLevelListener =
-        await BleConnectionDatasource().getBleBatteryLevelListener(
+    _bleBatteryLevelListener = await getBleBatteryLevelListener(
       _device!.id,
       onBatteryLevelChange: (int value) {
         setState(() {
@@ -274,6 +268,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   @override
   Widget build(BuildContext context) {
+    print('batter level in homePage wrapper $batteryLevel');
     return WithForegroundTask(
         child: MyUpgradeAlert(
       upgrader: _upgrader,
@@ -307,7 +302,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   ChatPageTest(
                     textFieldFocusNode: chatTextFieldFocusNode,
                   ),
-                  const SettingPage(),
+                  // const SettingPage(),
                 ],
               ),
               if (chatTextFieldFocusNode.hasFocus ||
@@ -342,106 +337,107 @@ class _HomePageWrapperState extends State<HomePageWrapper>
             ],
           ),
         ),
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () async {},
-                child: Image.asset(
-                  'assets/images/herologo.png',
-                  width: 50,
-                  height: 20,
-                ),
-              ),
-              //*-- Chat Plugin --*//
+        // appBar: AppBar(
+        //   automaticallyImplyLeading: false,
+        //   backgroundColor: Theme.of(context).colorScheme.surface,
+        //   title: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: [
+        //       TextButton(
+        //         onPressed: () async {},
+        //         child: Image.asset(
+        //           'assets/images/herologo.png',
+        //           width: 50,
+        //           height: 20,
+        //         ),
+        //       ),
+        //       //*-- Chat Plugin --*//
 
-              //* AVM Battery indecator
-              _device != null && batteryLevel != -1
-                  ? GestureDetector(
-                      onTap: _device == null
-                          ? null
-                          : () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (c) => ConnectedDevice(
-                                        device: _device!,
-                                        batteryLevel: batteryLevel,
-                                      )));
-                              MixpanelManager().batteryIndicatorClicked();
-                            },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            color: Colors.grey,
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.bolt,
-                              color: batteryLevel > 75
-                                  ? const Color.fromARGB(255, 0, 255, 8)
-                                  : batteryLevel > 20
-                                      ? Colors.yellow.shade700
-                                      : Colors.red,
-                              size: 12,
-                            ),
-                            // Container(
-                            //   width: 10,
-                            //   height: 10,
-                            //   decoration: BoxDecoration(
-                            //     color: batteryLevel > 75
-                            //         ? const Color.fromARGB(255, 0, 255, 8)
-                            //         : batteryLevel > 20
-                            //             ? Colors.yellow.shade700
-                            //             : Colors.red,
-                            //     shape: BoxShape.circle,
-                            //   ),
-                            // ),
-                            // const SizedBox(width: 8.0),
-                            Text(
-                              '${batteryLevel.toString()}%',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: GestureDetector(
-                          onTap: () async {
-                            if (SharedPreferencesUtil().deviceId.isEmpty) {
-                              routeToPage(context, const ConnectDevicePage());
-                              MixpanelManager().connectFriendClicked();
-                            } else {
-                              await routeToPage(
-                                  context,
-                                  const ConnectedDevice(
-                                      device: null, batteryLevel: 0));
-                            }
-                            setState(() {});
-                          },
-                          child: const ScanningUI()),
-                    )
-            ],
-          ),
-          elevation: 0,
-          centerTitle: true,
-        ),
+        //       //* AVM Battery indecator
+        //       _device != null && batteryLevel != -1
+        //           ? GestureDetector(
+        //               onTap: _device == null
+        //                   ? null
+        //                   : () {
+        //                       Navigator.of(context).push(MaterialPageRoute(
+        //                           builder: (c) => ConnectedDevice(
+        //                                 device: _device!,
+        //                                 batteryLevel: batteryLevel,
+        //                               )));
+        //                       MixpanelManager().batteryIndicatorClicked();
+        //                     },
+        //               child: Container(
+        //                 padding: const EdgeInsets.symmetric(
+        //                     horizontal: 8, vertical: 8),
+        //                 decoration: BoxDecoration(
+        //                   color: Colors.transparent,
+        //                   borderRadius: BorderRadius.circular(10),
+        //                   border: Border.all(
+        //                     color: Colors.grey,
+        //                     width: 1,
+        //                   ),
+        //                 ),
+        //                 child: Row(
+        //                   mainAxisSize: MainAxisSize.min,
+        //                   children: [
+        //                     Icon(
+        //                       Icons.bolt,
+        //                       color: batteryLevel > 75
+        //                           ? const Color.fromARGB(255, 0, 255, 8)
+        //                           : batteryLevel > 20
+        //                               ? Colors.yellow.shade700
+        //                               : Colors.red,
+        //                       size: 12,
+        //                     ),
+        //                     // Container(
+        //                     //   width: 10,
+        //                     //   height: 10,
+        //                     //   decoration: BoxDecoration(
+        //                     //     color: batteryLevel > 75
+        //                     //         ? const Color.fromARGB(255, 0, 255, 8)
+        //                     //         : batteryLevel > 20
+        //                     //             ? Colors.yellow.shade700
+        //                     //             : Colors.red,
+        //                     //     shape: BoxShape.circle,
+        //                     //   ),
+        //                     // ),
+        //                     // const SizedBox(width: 8.0),
+        //                     Text(
+        //                       '${batteryLevel.toString()}%',
+        //                       style: const TextStyle(
+        //                         color: Colors.white,
+        //                         fontSize: 12,
+        //                         fontWeight: FontWeight.w300,
+        //                       ),
+        //                     ),
+        //                   ],
+        //                 ),
+        //               ),
+        //             )
+        //           : Padding(
+        //               padding: const EdgeInsets.only(right: 10),
+        //               child: GestureDetector(
+        //                 onTap: () async {
+        //                   if (SharedPreferencesUtil().deviceId.isEmpty) {
+        //                     routeToPage(context, const ConnectDevicePage());
+        //                     MixpanelManager().connectFriendClicked();
+        //                   } else {
+        //                     await routeToPage(
+        //                         context,
+        //                         const ConnectedDevice(
+        //                             device: null, batteryLevel: 0));
+        //                   }
+        //                   setState(() {});
+        //                 },
+        //                 child: const ScanningUI(),
+        //               ),
+        //             )
+        //     ],
+        //   ),
+        //   elevation: 0,
+        //   centerTitle: true,
+        // ),
       ),
     ));
   }

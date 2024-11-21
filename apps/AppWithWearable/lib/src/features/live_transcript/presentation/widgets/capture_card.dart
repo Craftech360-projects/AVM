@@ -50,33 +50,33 @@ class CaptureCard extends StatelessWidget {
               style:
                   textTheme.bodySmall?.copyWith(color: CustomColors.greyLight),
             ),
-            BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
-              bloc: context.read<LiveTranscriptBloc>(),
-              builder: (context, state) {
-                final bool avmDisconnected = state.bluetoothDeviceStatus ==
-                    BluetoothDeviceStatus.disconnected;
-                return Row(
-                  children: [
-                    Container(
-                      width: 8.h,
-                      height: 8.w,
-                      decoration: BoxDecoration(
-                        color: avmDisconnected
-                            ? CustomColors.yellowAccent
-                            : CustomColors.red,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    SizedBox(width: 4.h),
-                    Text(
-                      avmDisconnected ? "Disconnected" : "Connected",
-                      style: textTheme.bodySmall?.copyWith(
-                          color: CustomColors.greyLight, fontSize: 10.h),
-                    ),
-                  ],
-                );
-              },
-            ),
+            // BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
+            //   bloc: context.read<LiveTranscriptBloc>(),
+            //   builder: (context, state) {
+            //     final bool avmDisconnected = state.bluetoothDeviceStatus ==
+            //         BluetoothDeviceStatus.disconnected;
+            //     return Row(
+            //       children: [
+            //         Container(
+            //           width: 8.h,
+            //           height: 8.w,
+            //           decoration: BoxDecoration(
+            //             color: avmDisconnected
+            //                 ? CustomColors.yellowAccent
+            //                 : CustomColors.red,
+            //             shape: BoxShape.circle,
+            //           ),
+            //         ),
+            //         SizedBox(width: 4.h),
+            //         Text(
+            //           avmDisconnected ? "Disconnected" : "Connected",
+            //           style: textTheme.bodySmall?.copyWith(
+            //               color: CustomColors.greyLight, fontSize: 10.h),
+            //         ),
+            //       ],
+            //     );
+            //   },
+            // ),
             SizedBox(height: 8.h),
           ],
         ),

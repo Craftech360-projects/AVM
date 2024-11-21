@@ -5,15 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
-import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
+import 'package:friend_private/src/features/wizard/presentation/widgets/ble_animation.dart';
 import 'package:friend_private/utils/ble/find.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:friend_private/src/features/wizard/presentation/widgets/ble_animation.dart';
 
 import 'found_devices.dart';
 
@@ -87,8 +84,7 @@ class _FindDevicesPageState extends State<FindDevicesPage>
 
     _findDevicesTimer =
         Timer.periodic(const Duration(seconds: 2), (timer) async {
-      List<BTDeviceStruct> foundDevices =
-          await BleConnectionDatasource().bleFindDevices();
+      List<BTDeviceStruct> foundDevices = await bleFindDevices();
 
       // Update foundDevicesMap with new devices and remove the ones not found anymore
       Map<String, BTDeviceStruct> updatedDevicesMap = {};

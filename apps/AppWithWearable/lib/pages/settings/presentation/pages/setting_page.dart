@@ -2,27 +2,21 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/pages/home/device.dart';
 import 'package:friend_private/pages/onboarding/find_device/page.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/pages/settings/developer_page.dart';
 import 'package:friend_private/pages/settings/profile.dart';
 import 'package:friend_private/pages/settings/widgets.dart';
-import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
-import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
-import 'package:friend_private/src/features/settings/presentation/widgets/add_ons.dart';
 import 'package:friend_private/src/features/settings/presentation/widgets/language_dropdown.dart';
-import 'package:friend_private/src/features/wizard/presentation/pages/ble_connection_page.dart';
 import 'package:friend_private/utils/ble/gatt_utils.dart';
 import 'package:friend_private/utils/other/temp.dart';
-import 'package:go_router/go_router.dart';
-import 'package:friend_private/pages/home/device.dart';
-import 'package:friend_private/backend/preferences.dart';
 
 class SettingPage extends StatefulWidget {
   final BTDeviceStruct? device;
@@ -105,17 +99,18 @@ class _SettingPageState extends State<SettingPage> {
                 // );
               }
             },
-            title: BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
-              builder: (context, state) {
-                if (state.bleBatteryLevel != null) {
-                  return Text('Battery Level: ${widget.batteryLevel}%',
-                      style: TextStyle(fontSize: 16));
-                } else {
-                  return Text('Battery Level: Unknown',
-                      style: TextStyle(fontSize: 16));
-                }
-              },
-            ),
+            title: Text('Battery Level: ${widget.batteryLevel}%'),
+            // title: BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
+            //   builder: (context, state) {
+            //     if (state.bleBatteryLevel != null) {
+            //       return Text('Battery Level: ${widget.batteryLevel}%',
+            //           style: TextStyle(fontSize: 16));
+            //     } else {
+            //       return Text('Battery Level: Unknown',
+            //           style: TextStyle(fontSize: 16));
+            //     }
+            //   },
+            // ),
             trailing: const CircleAvatar(
               backgroundColor: CustomColors.greyLavender,
               child: Icon(Icons.bluetooth_searching),
@@ -173,7 +168,7 @@ class _SettingPageState extends State<SettingPage> {
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: Align(
               alignment: Alignment.center,
-              child: const Text(
+              child: Text(
                 'Version:', //  $version+$buildVersion',
                 style: TextStyle(
                     color: Color.fromARGB(255, 150, 150, 150), fontSize: 16),
@@ -200,7 +195,7 @@ void selectBleDevice({required String remoteId}) async {
       //! AUDIO LISTENER
       // Get the "Friend" service by UUID
       final friendService = await getServiceByUuid(remoteId, friendServiceUuid);
-      print('setting page audio byte ${remoteId}:$friendServiceUuid');
+      print('setting page audio byte $remoteId:$friendServiceUuid');
       if (friendService == null) {
         return;
       }

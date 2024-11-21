@@ -56,7 +56,7 @@ class _RecordSampleTabState extends State<RecordSampleTab>
     if (widget.btDevice == null) return;
     WavBytesUtil wavBytesUtil = WavBytesUtil();
 
-    StreamSubscription? stream = await BleConnectionDatasource().getBleAudioBytesListener(
+    StreamSubscription? stream = await getBleAudioBytesListener(
         widget.btDevice!.id, onAudioBytesReceived: (List<int> value) {
       if (value.isEmpty) return;
       value.removeRange(0, 3);

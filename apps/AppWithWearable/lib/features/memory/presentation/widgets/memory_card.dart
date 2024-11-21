@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/memory.dart';
-import 'package:friend_private/features/capture/widgets/battery_indicator.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
-import 'package:friend_private/features/memory/presentation/pages/memory_detail_page.dart';
-import 'package:friend_private/features/memory/presentation/widgets/custom_tag.dart';
 import 'package:friend_private/pages/memories/widgets/empty_memories.dart';
 import 'package:friend_private/src/features/home/presentation/widgets/widgets.dart';
 import 'package:friend_private/src/features/memories/presentation/pages/memory_detail_page.dart';
-import 'package:intl/intl.dart';
 
 class MemoryCardWidget extends StatelessWidget {
   const MemoryCardWidget({
@@ -35,7 +30,7 @@ class MemoryCardWidget extends StatelessWidget {
           );
         }
         return SizedBox(
-          height: (height - 5) * 0.4,
+          height: (height - 5) * 0.45,
           child: ListView.separated(
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 0),
             shrinkWrap: true,

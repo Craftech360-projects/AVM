@@ -95,7 +95,7 @@ mixin AudioChunksMixin {
     // }
 
     WavBytesUtil toProcessBytes2 = WavBytesUtil(codec: deviceCodec);
-    return await BleConnectionDatasource().getBleAudioBytesListener(
+    return await getBleAudioBytesListener(
       deviceId,
       onAudioBytesReceived: (List<int> value) async {
         if (value.isEmpty) return;

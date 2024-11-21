@@ -50,19 +50,19 @@ class AppRouter {
               FadeTransition(opacity: a, child: c),
         ),
       ),
-      GoRoute(
-        path: '/ble-connection',
-        name: BleConnectionPage.name,
-        parentNavigatorKey: _rootNavigatorKey,
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: const BleConnectionPage(),
-          transitionDuration: const Duration(
-            milliseconds: _routeTransitionDuration,
-          ),
-          transitionsBuilder: (_, a, __, c) =>
-              FadeTransition(opacity: a, child: c),
-        ),
-      ),
+      // GoRoute(
+      //   path: '/ble-connection',
+      //   name: BleConnectionPage.name,
+      //   parentNavigatorKey: _rootNavigatorKey,
+      //   pageBuilder: (context, state) => CustomTransitionPage(
+      //     child: const BleConnectionPage(),
+      //     transitionDuration: const Duration(
+      //       milliseconds: _routeTransitionDuration,
+      //     ),
+      //     transitionsBuilder: (_, a, __, c) =>
+      //         FadeTransition(opacity: a, child: c),
+      //   ),
+      // ),
       GoRoute(
         path: '/finalize-onboarding',
         name: FinalizePage.name,
@@ -104,19 +104,19 @@ class AppRouter {
         //   )
         // ],
       ),
-      GoRoute(
-        path: '/setting',
-        name: SettingPage.name,
-        parentNavigatorKey: _rootNavigatorKey,
-        pageBuilder: (context, state) => CustomTransitionPage(
-          child: const SettingPage(),
-          transitionDuration: const Duration(
-            milliseconds: _routeTransitionDuration,
-          ),
-          transitionsBuilder: (_, a, __, c) =>
-              FadeTransition(opacity: a, child: c),
-        ),
-      ),
+      // GoRoute(
+      //   path: '/setting',
+      //   name: SettingPage.name,
+      //   parentNavigatorKey: _rootNavigatorKey,
+      //   pageBuilder: (context, state) => CustomTransitionPage(
+      //     child: const SettingPage(),
+      //     transitionDuration: const Duration(
+      //       milliseconds: _routeTransitionDuration,
+      //     ),
+      //     transitionsBuilder: (_, a, __, c) =>
+      //         FadeTransition(opacity: a, child: c),
+      //   ),
+      // ),
       GoRoute(
         path: '/chats',
         name: ChatsPage.name,

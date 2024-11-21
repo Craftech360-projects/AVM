@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/pages/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/home/presentation/pages/navbar.dart';
@@ -55,6 +57,7 @@ class _TranscriptMemoryPageState extends State<TranscriptMemoryPage> {
           children: [
             /// Capture Card
             const CaptureCard(),
+            
             SizedBox(height: 8.h),
 
             /// Filter

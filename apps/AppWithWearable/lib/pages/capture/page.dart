@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/message.dart';
@@ -16,12 +15,8 @@ import 'package:friend_private/features/capture/presentation/pages/capture_memor
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/pages/capture/location_service.dart';
 import 'package:friend_private/pages/capture/logic/openglass_mixin.dart';
-import 'package:friend_private/pages/capture/widgets/widgets.dart';
-import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
-import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/communication.dart';
-import 'package:friend_private/utils/enums.dart';
 import 'package:friend_private/utils/features/backups.dart';
 import 'package:friend_private/utils/memories/integrations.dart';
 import 'package:friend_private/utils/memories/process.dart';
@@ -30,8 +25,6 @@ import 'package:friend_private/utils/websockets.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:location/location.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:uuid/uuid.dart';
 
 import 'logic/websocket_mixin.dart';
@@ -98,7 +91,7 @@ class CapturePageState extends State<CapturePage>
     BleAudioCodec codec = audioCodec ??
         (btDevice?.id == null
             ? BleAudioCodec.pcm8
-            : await BleConnectionDatasource().getAudioCodec(btDevice!.id));
+            : await getAudioCodec(btDevice!.id));
     await initWebSocket(
       codec: codec,
       sampleRate: sampleRate,
@@ -164,10 +157,9 @@ class CapturePageState extends State<CapturePage>
 
   Future<void> initiateBytesStreamingProcessing() async {
     if (btDevice == null) return;
-    BleAudioCodec codec =
-        await BleConnectionDatasource().getAudioCodec(btDevice!.id);
+    BleAudioCodec codec = await getAudioCodec(btDevice!.id);
     audioStorage = WavBytesUtil(codec: codec);
-    _bleBytesStream = await BleConnectionDatasource().getBleAudioBytesListener(
+    _bleBytesStream = await getBleAudioBytesListener(
       btDevice!.id,
       onAudioBytesReceived: (List<int> value) {
         if (value.isEmpty) return;
@@ -468,62 +460,59 @@ class CapturePageState extends State<CapturePage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
-      builder: (context, state) {
-        return Stack(
+    return Stack(
+      children: [
+        Column(
           children: [
-            Column(
-              children: [
-                CaptureMemoryPage(
-                  context: context,
-                  hasTranscripts: _hasTranscripts,
-                  wsConnectionState: wsConnectionState,
-                  device: state.connectedDevice, // Dynamic device details
-                  internetStatus: _internetStatus,
-                  segments: segments,
-                  memoryCreating: memoryCreating,
-                  photos: photos,
-                  scrollController: _scrollController,
-                  onDismissmissedCaptureMemory: (direction) {
-                    _createMemory();
-                    setState(() {});
-                  },
-                ),
-                const SizedBox(height: 16),
-              ],
+            CaptureMemoryPage(
+              context: context,
+              hasTranscripts: _hasTranscripts,
+              wsConnectionState: wsConnectionState,
+              device: widget.device, // Dynamic device details
+              internetStatus: _internetStatus,
+              segments: segments,
+              memoryCreating: memoryCreating,
+              photos: photos,
+              scrollController: _scrollController,
+              onDismissmissedCaptureMemory: (direction) {
+                _createMemory();
+                setState(() {});
+              },
             ),
+            const SizedBox(height: 16),
           ],
-        );
-      },
+        ),
+      ],
     );
   }
-
-  _recordingToggled() async {
-    if (recordingState == RecordingState.record) {
-      await stopStreamRecording(wsConnectionState, websocketChannel);
-      setState(() => recordingState = RecordingState.stop);
-      _memoryCreationTimer?.cancel();
-      _createMemory();
-    } else if (recordingState == RecordingState.initialising) {
-      debugPrint('initialising, have to wait');
-    } else {
-      showDialog(
-        context: context,
-        builder: (c) => getDialog(
-          context,
-          () => Navigator.pop(context),
-          () async {
-            Navigator.pop(context);
-            setState(() => recordingState = RecordingState.initialising);
-            closeWebSocket();
-            await initiateWebsocket(BleAudioCodec.pcm16, 16000);
-            await startStreamRecording(wsConnectionState, websocketChannel);
-          },
-          'Limited Capabilities',
-          'Recording with your phone microphone has a few limitations, including but not limited to: speaker profiles, background reliability.',
-          okButtonText: 'Ok, I understand',
-        ),
-      );
-    }
-  }
 }
+
+  // _recordingToggled() async {
+  //   if (recordingState == RecordingState.record) {
+  //     await stopStreamRecording(wsConnectionState, websocketChannel);
+  //     setState(() => recordingState = RecordingState.stop);
+  //     _memoryCreationTimer?.cancel();
+  //     _createMemory();
+  //   } else if (recordingState == RecordingState.initialising) {
+  //     debugPrint('initialising, have to wait');
+  //   } else {
+  //     showDialog(
+  //       context: context,
+  //       builder: (c) => getDialog(
+  //         context,
+  //         () => Navigator.pop(context),
+  //         () async {
+  //           Navigator.pop(context);
+  //           setState(() => recordingState = RecordingState.initialising);
+  //           closeWebSocket();
+  //           await initiateWebsocket(BleAudioCodec.pcm16, 16000);
+  //           await startStreamRecording(wsConnectionState, websocketChannel);
+  //         },
+  //         'Limited Capabilities',
+  //         'Recording with your phone microphone has a few limitations, including but not limited to: speaker profiles, background reliability.',
+  //         okButtonText: 'Ok, I understand',
+  //       ),
+  //     );
+  //   }
+  // }
+

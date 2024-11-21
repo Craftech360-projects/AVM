@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
@@ -7,11 +5,10 @@ import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/settings/custom_prompt_page.dart';
+import 'package:friend_private/pages/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/pages/settings/widgets/customExpandiblewidget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
-import 'package:friend_private/src/features/settings/presentation/pages/setting_page.dart';
 import 'package:go_router/go_router.dart';
-import 'package:restart_app/restart_app.dart';
 
 class DeveloperPage extends StatefulWidget {
   const DeveloperPage({super.key});
@@ -75,7 +72,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               child: Icon(Icons.people),
                             ),
                             // Icon(Icons.people),
-                            SizedBox(width: 16),
+                            const SizedBox(width: 16),
                             Text(
                               'Enable Developer',
                               style: TextStyle(

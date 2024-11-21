@@ -1,18 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/features/capture/widgets/capture_card.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/widgets/memory_card.dart';
-import 'package:friend_private/features/memory/presentation/widgets/memory_search.dart';
 import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/capture/widgets/widgets.dart';
-import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
-import 'package:friend_private/src/features/live_transcript/presentation/bloc/live_transcript/live_transcript_bloc.dart';
-import 'package:friend_private/utils/audio/wav_bytes.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shimmer/shimmer.dart';
@@ -103,45 +97,74 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         //   memoryBloc: _memoryBloc,
         // ),
         // const SizedBox(height: 8),
+        //! Dummy Card
+        Card(
+          color: CustomColors.greyLavender,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                leading: CircleAvatar(
+                  child: ClipOval(
+                    child: Image.network(
+                      'https://thumbs.dreamstime.com/b/person-gray-photo-placeholder-woman-t-shirt-white-background-131683043.jpg',
+                      width: 50.0,
+                      height: 50.0,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                title: const Text('Text Here'),
+              ),
+              const Divider(
+                height: 0,
+                thickness: 0.5,
+                color: CustomColors.greyLight,
+              ),
+              const Text('Meta Data')
+            ],
+          ),
+        ),
         //*-- Capture --//
         widget.hasTranscripts
             ? SizedBox(
                 // height: 176,
                 child: Dismissible(
-                background: Shimmer.fromColors(
-                  baseColor: Colors.grey,
-                  highlightColor: Colors.white,
-                  child: const Center(
-                    child: Text(
-                      'Please Wait!..\nMemory Creating',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
+                  background: Shimmer.fromColors(
+                    baseColor: Colors.grey,
+                    highlightColor: Colors.white,
+                    child: const Center(
+                      child: Text(
+                        'Please Wait!..\nMemory Creating',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                key: capturePageKey,
-                // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
-                direction: DismissDirection.startToEnd,
-                onDismissed: (direction) =>
-                    widget.onDismissmissedCaptureMemory(direction),
-                child: Padding(
-                  // Add margin using Padding
-                  padding: const EdgeInsets.all(8.0),
-                  child: CaptureCard(
-                    context: context,
-                    hasTranscripts: widget.hasTranscripts,
-                    wsConnectionState: widget.wsConnectionState,
-                    device: widget.device,
-                    internetStatus: widget.internetStatus,
-                    segments: widget.segments,
-                    memoryCreating: widget.memoryCreating,
-                    photos: widget.photos,
-                    scrollController: widget.scrollController,
+                  key: capturePageKey,
+                  // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
+                  direction: DismissDirection.startToEnd,
+                  onDismissed: (direction) =>
+                      widget.onDismissmissedCaptureMemory(direction),
+                  child: Padding(
+                    // Add margin using Padding
+                    padding: const EdgeInsets.all(8.0),
+                    child: CaptureCard(
+                      context: context,
+                      hasTranscripts: widget.hasTranscripts,
+                      wsConnectionState: widget.wsConnectionState,
+                      device: widget.device,
+                      internetStatus: widget.internetStatus,
+                      segments: widget.segments,
+                      memoryCreating: widget.memoryCreating,
+                      photos: widget.photos,
+                      scrollController: widget.scrollController,
+                    ),
                   ),
                 ),
-              ))
+              )
             : Padding(
                 // Add margin using Padding
                 padding: const EdgeInsets.all(8.0),

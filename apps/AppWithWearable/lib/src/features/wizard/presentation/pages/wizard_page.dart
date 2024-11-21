@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/onboarding/find_device/page.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/utils/permissions/PermissionsService.dart';

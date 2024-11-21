@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/pages/capture/widgets/ripple_animation.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
-import 'package:friend_private/pages/home/home_page_wrapper.dart';
 import 'package:friend_private/pages/home/page.dart';
 import 'package:friend_private/pages/onboarding/find_device/page.dart';
 
