@@ -24,14 +24,14 @@ class BatteryIndicator extends StatelessWidget {
             IconImage.batteryIndicator,
           ),
         ),
-        SizedBox(width: 4.w),
         BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
           bloc: context.read<LiveTranscriptBloc>(),
           builder: (context, state) {
             if (state.bluetoothDeviceStatus ==
                 BluetoothDeviceStatus.connected) {
               return Text(
-                '${state.bleBatteryLevel}%',
+                // '${state.bleBatteryLevel}%',
+                '66%',
                 style: textTheme.bodySmall?.copyWith(fontSize: 12.h),
               );
             }

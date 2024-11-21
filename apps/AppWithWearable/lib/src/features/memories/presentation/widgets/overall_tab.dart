@@ -4,24 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friend_private/backend/database/memory.dart';
+import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/src/core/common_widget/expandable_text.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 
-class OverallTab extends StatelessWidget {
+class OverallTab extends StatefulWidget {
   final Structured
       target; // Replace `Memory` with the actual data type you have
 
   const OverallTab({super.key, required this.target});
 
   @override
+  _OverallTabState createState() => _OverallTabState();
+}
+
+class _OverallTabState extends State<OverallTab> {
+  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final events = target?.events ?? [];
+    final events = widget.target.events ?? [];
     log(events.toString());
-    final actionItems = target?.actionItems ??
-        []; // Replace `actionItems` with the correct field in `target`
-    print(target);
+    final actionItems = widget.target
+        .actionItems; // Replace `actionItems` with the correct field in `target`
+    log("actionItems>>>>>, ${actionItems.toString()}");
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,7 +46,7 @@ class OverallTab extends StatelessWidget {
             ),
           ),
           ExpandableText(
-            text: target.overview,
+            text: widget.target.overview,
             style: textTheme.bodyLarge?.copyWith(
               color: CustomColors.grey,
             ),
@@ -86,20 +93,6 @@ class OverallTab extends StatelessWidget {
                 ),
               );
             }),
-          // CustomListTile(
-          //   leading: Text(
-          //     '1.',
-          //     style: textTheme.bodyLarge?.copyWith(
-          //       color: CustomColors.grey,
-          //     ),
-          //   ),
-          //   title: Text(
-          //     'Development Team Update',
-          //     style: textTheme.bodyLarge?.copyWith(
-          //       color: CustomColors.grey,
-          //     ),
-          //   ),
-          // ),
           SizedBox(height: 12.h),
 
           /// Action Items Section
@@ -129,7 +122,10 @@ class OverallTab extends StatelessWidget {
               return CustomListTile(
                 minLeadingWidth: 0.w,
                 onTap: () {
-                  // Add event to save the action, if necessary
+                  setState(() {
+                    actionItem.completed = !actionItem.completed;
+                    MemoryProvider().updateActionItem(actionItem);
+                  });
                 },
                 leading: Container(
                   width: 6.h,
@@ -140,39 +136,19 @@ class OverallTab extends StatelessWidget {
                   ),
                 ),
                 title: Text(
-                  actionItem, // Replace with the correct action item property
+                  actionItem
+                      .description, // Use the appropriate property of ActionItem
                   style: textTheme.bodyLarge?.copyWith(
-                    color: CustomColors.grey,
-                    decoration: TextDecoration.lineThrough,
-                    decorationColor: CustomColors.greyLight,
+                    color: actionItem.completed
+                        ? CustomColors.greyLight
+                        : CustomColors.grey,
+                    decoration: actionItem.completed
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
                   ),
                 ),
               );
             }).toList(),
-
-          // CustomListTile(
-          //   minLeadingWidth: 0.w,
-          //   onTap: () {
-          //     // Add event to save the action
-          //   },
-          //   leading: Container(
-          //     width: 6.h,
-          //     height: 6.w,
-          //     decoration: const BoxDecoration(
-          //       color: CustomColors.grey,
-          //       shape: BoxShape.circle,
-          //     ),
-          //   ),
-          //   title: Text(
-          //     'The development team should continue working on '
-          //     'resolving any outstanding issues identified in testing.',
-          //     style: textTheme.bodyLarge?.copyWith(
-          //       color: CustomColors.grey,
-          //       decoration: TextDecoration.lineThrough,
-          //       decorationColor: CustomColors.greyLight,
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

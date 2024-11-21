@@ -320,7 +320,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                     padding: const EdgeInsets.only(
                         bottom: 16.0,
                         left: 16.0,
-                        right: 16.0), // Add padding for floating effect
+                        right: 16.0,
+                        top: 16.0), // Add padding for floating effect
                     child: CustomNavBar(
                       isChat: _controller!.index == 1,
                       isMemory: _controller!.index == 0,

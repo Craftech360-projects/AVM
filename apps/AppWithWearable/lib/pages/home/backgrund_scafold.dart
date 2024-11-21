@@ -69,7 +69,7 @@ class CustomScaffold extends StatelessWidget {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: const Color(0xFFE6F5FA),
-        // leading: const BatteryIndicator(),
+        leading: const BatteryIndicator(),
         actions: [
           CircleAvatar(
             backgroundColor: CustomColors.greyLavender,

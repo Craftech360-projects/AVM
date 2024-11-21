@@ -222,6 +222,7 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/pages/onboarding/find_device/page.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/live_transcript/data/datasources/ble_connection_datasource.dart';
 
@@ -251,7 +252,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
         title: Text(deviceConnected ? 'Connected Device' : 'Paired Device'),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: const Color(0xFFE6F5FA),
       body: BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
         builder: (context, state) {
           final batteryLevel = state.bleBatteryLevel ?? -1;
@@ -312,29 +313,29 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  color: batteryLevel > 75
-                                      ? const Color.fromARGB(255, 0, 255, 8)
-                                      : batteryLevel > 20
-                                          ? Colors.yellow.shade700
-                                          : Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 8.0),
-                              Text(
-                                batteryLevel != -1
-                                    ? '$batteryLevel% Battery'
-                                    : 'Battery Level Unknown',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+                              // Container(
+                              //   width: 10,
+                              //   height: 10,
+                              //   decoration: BoxDecoration(
+                              //     color: batteryLevel > 75
+                              //         ? const Color.fromARGB(255, 0, 255, 8)
+                              //         : batteryLevel > 20
+                              //             ? Colors.yellow.shade700
+                              //             : Colors.red,
+                              //     shape: BoxShape.circle,
+                              //   ),
+                              // ),
+                              // const SizedBox(width: 8.0),
+                              // Text(
+                              //   batteryLevel != -1
+                              //       ? '$batteryLevel% Battery'
+                              //       : 'Battery Level Unknown',
+                              //   style: const TextStyle(
+                              //     color: Colors.black,
+                              //     fontSize: 14,
+                              //     fontWeight: FontWeight.w600,
+                              //   ),
+                              // ),
                             ],
                           ),
                         )
@@ -346,9 +347,9 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(83, 158, 158, 158),
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(12),
+                  color: CustomColors.greyLavender,
+                  // border: Border.all(color: CustomColors.purpleBright),
+                  borderRadius: BorderRadius.circular(24),
                 ),
                 child: TextButton(
                   onPressed: () {
@@ -363,7 +364,15 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                       content: Text(
                           'Your AVM is ${widget.device == null ? "unpaired" : "disconnected"}   😔'),
                     ));
-                    MixpanelManager().disconnectFriendClicked();
+                    // MixpanelManager().disconnectFriendClicked();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FindDevicesPage(
+                          goNext: () {},
+                        ),
+                      ),
+                    );
                   },
                   child: Text(
                     widget.device == null ? "Unpair" : "Disconnect",

@@ -104,77 +104,59 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         // ),
         // const SizedBox(height: 8),
         //*-- Capture --//
-        // widget.hasTranscripts
-        //     ? SizedBox(
-        //         height: 176,
-        //         child: Dismissible(
-        //           background: Shimmer.fromColors(
-        //             baseColor: Colors.grey,
-        //             highlightColor: Colors.white,
-        //             child: const Center(
-        //               child: Text(
-        //                 'Please Wait!..\nMemory Creating',
-        //                 style: TextStyle(
-        //                   fontSize: 18.0,
-        //                   fontWeight: FontWeight.bold,
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //           key: capturePageKey,
-        //           // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
-        //           direction: DismissDirection.startToEnd,
-        //           onDismissed: (direction) =>
-        //               widget.onDismissmissedCaptureMemory(direction),
-        //           child: Padding(
-        //             // Add margin using Padding
-        //             padding: const EdgeInsets.all(8.0),
-        //             child: CaptureCard(
-        //               context: context,
-        //               hasTranscripts: widget.hasTranscripts,
-        //               wsConnectionState: widget.wsConnectionState,
-        //               device: widget.device,
-        //               internetStatus: widget.internetStatus,
-        //               segments: widget.segments,
-        //               memoryCreating: widget.memoryCreating,
-        //               photos: widget.photos,
-        //               scrollController: widget.scrollController,
-        //             ),
-        //           ),
-        //         ))
-        //     : Padding(
-        //         // Add margin using Padding
-        //         padding: const EdgeInsets.all(8.0),
-        //         child: CaptureCard(
-        //           context: context,
-        //           hasTranscripts: widget.hasTranscripts,
-        //           wsConnectionState: widget.wsConnectionState,
-        //           device: widget.device,
-        //           internetStatus: widget.internetStatus,
-        //           segments: widget.segments,
-        //           memoryCreating: widget.memoryCreating,
-        //           photos: widget.photos,
-        //           scrollController: widget.scrollController,
-        //         ),
-        //       ),
-        BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
-          builder: (context, state) {
-            return CaptureCard(
-              context: context,
-              hasTranscripts: widget.hasTranscripts,
-              wsConnectionState:
-                  state.bluetoothDeviceStatus == BluetoothDeviceStatus.connected
-                      ? WebsocketConnectionStatus.connected
-                      : WebsocketConnectionStatus.notConnected,
-              device: state.connectedDevice,
-              internetStatus: widget.internetStatus,
-              segments: widget.segments,
-              memoryCreating: widget.memoryCreating,
-              photos: widget.photos,
-              scrollController: widget.scrollController,
-            );
-          },
-        ),
+        widget.hasTranscripts
+            ? SizedBox(
+                // height: 176,
+                child: Dismissible(
+                background: Shimmer.fromColors(
+                  baseColor: Colors.grey,
+                  highlightColor: Colors.white,
+                  child: const Center(
+                    child: Text(
+                      'Please Wait!..\nMemory Creating',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                key: capturePageKey,
+                // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
+                direction: DismissDirection.startToEnd,
+                onDismissed: (direction) =>
+                    widget.onDismissmissedCaptureMemory(direction),
+                child: Padding(
+                  // Add margin using Padding
+                  padding: const EdgeInsets.all(8.0),
+                  child: CaptureCard(
+                    context: context,
+                    hasTranscripts: widget.hasTranscripts,
+                    wsConnectionState: widget.wsConnectionState,
+                    device: widget.device,
+                    internetStatus: widget.internetStatus,
+                    segments: widget.segments,
+                    memoryCreating: widget.memoryCreating,
+                    photos: widget.photos,
+                    scrollController: widget.scrollController,
+                  ),
+                ),
+              ))
+            : Padding(
+                // Add margin using Padding
+                padding: const EdgeInsets.all(8.0),
+                child: CaptureCard(
+                  context: context,
+                  hasTranscripts: widget.hasTranscripts,
+                  wsConnectionState: widget.wsConnectionState,
+                  device: widget.device,
+                  internetStatus: widget.internetStatus,
+                  segments: widget.segments,
+                  memoryCreating: widget.memoryCreating,
+                  photos: widget.photos,
+                  scrollController: widget.scrollController,
+                ),
+              ),
 
         //*--- Filter Button ---*//
 

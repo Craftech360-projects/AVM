@@ -97,6 +97,12 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                   ),
                 );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => BleConnectionPage(),
+                //   ),
+                // );
               }
             },
             title: BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
