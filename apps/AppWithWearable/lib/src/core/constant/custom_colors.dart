@@ -20,4 +20,5 @@ class CustomColors {
 
   static const Color yellowAccent = Color(0xFFFFE500);
   static const Color red = Color(0xFFFF0000);
+  static const Color card = Color(0x9600FF);
 }

@@ -293,6 +293,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                 controller: _controller,
                 children: [
                   // const SettingPage(),
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
                   CapturePage(
                     key: capturePageKey,
                     device: _device,
