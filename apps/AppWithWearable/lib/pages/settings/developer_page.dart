@@ -30,7 +30,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return CustomScaffold(
-        backgroundColor: const Color(0xFFE6F5FA),
+        // backgroundColor: const Color(0xFFE6F5FA),
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: const Color(0xFFE6F5FA),
@@ -50,8 +50,8 @@ class _DeveloperPageState extends State<DeveloperPage> {
           ),
         ),
         body: Container(
-          color:
-              const Color(0xFFE6F5FA), // Set your desired background color here
+          // color:
+          //     const Color(0xFFE6F5FA), // Set your desired background color here
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 4, 16),
             child: ListView(

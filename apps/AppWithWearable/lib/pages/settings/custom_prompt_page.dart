@@ -88,7 +88,7 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      backgroundColor: const Color(0xFFE6F5FA),
+      // backgroundColor: const Color(0xFFE6F5FA),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -98,12 +98,12 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
           },
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFFE6F5FA),
+        //   backgroundColor: const Color(0xFFE6F5FA),
         elevation: 0,
         title: const Text('Customize Prompt'),
       ),
       body: Container(
-        color: const Color(0xFFE6F5FA),
+        //  color: const Color(0xFFE6F5FA),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           child: Form(
@@ -208,14 +208,15 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomColors.greyLavender),
+                    backgroundColor: CustomColors.purpleDark,
+                  ),
                   onPressed: _saveForm,
                   child: Text(
                     'Save',
                     style: TextStyle(
-                        color: CustomColors.blackPrimary,
+                        color: CustomColors.white,
                         fontWeight: FontWeight.w400,
-                        fontSize: 14.h),
+                        fontSize: 20.h),
                   ),
                 ),
               ],

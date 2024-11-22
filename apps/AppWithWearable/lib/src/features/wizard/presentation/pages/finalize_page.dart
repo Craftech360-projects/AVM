@@ -17,60 +17,68 @@ class FinalizePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return CustomScaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(14.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      IconImage.avmLogo,
-                      height: 30.h,
-                    ),
-                    SizedBox(height: 20.h),
-                    Text(
-                      'You are all set 🎉',
-                      style: textTheme.displaySmall,
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              SizedBox(
-                width: double.maxFinite,
-                height: 50.h,
-                child: CustomElevatedButton(
-                  backgroundColor: CustomColors.blackPrimary,
-                  onPressed: () {
-                    if (SharedPreferencesUtil().onboardingCompleted) {
-                      // previous users
-                      routeToPage(context, const HomePageWrapper(),
-                          replace: true);
-                    }
-                    // Navigator.of(context).pushReplacement(
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         const HomePageWrapper(), // Replace with your next page widget
-                    //   ),
-                    // );
-                  },
-                  child: Text(
-                    'Get Started',
-                    style: textTheme.labelLarge?.copyWith(
-                      color: CustomColors.white,
+    return Scaffold(
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/bg_image.png', // Replace with your image asset path
+              fit: BoxFit.cover, // Ensures the image covers the entire screen
+            ),
+          ),
+          // Foreground content
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(14.w), // Retains the same padding
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          IconImage.avmLogo,
+                          height: 30.h,
+                        ),
+                        SizedBox(height: 20.h),
+                        Text(
+                          'You are all set 🎉',
+                          style: textTheme.displaySmall,
+                        ),
+                      ],
                     ),
                   ),
-                ),
+                  const Spacer(),
+                  SizedBox(
+                    width: double.maxFinite,
+                    height: 50.h,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CustomColors.blackPrimary,
+                      ),
+                      onPressed: () {
+                        if (SharedPreferencesUtil().onboardingCompleted) {
+                          // previous users
+                          routeToPage(context, const HomePageWrapper(),
+                              replace: true);
+                        }
+                      },
+                      child: Text(
+                        'Get Started',
+                        style: textTheme.labelLarge?.copyWith(
+                          color: CustomColors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

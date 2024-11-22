@@ -47,7 +47,7 @@ class _CalendarPageState extends State<CalendarPage> {
         appBar: AppBar(
           centerTitle: true,
           // backgroundColor: const Color(0xFFE6F5FA),
-          backgroundColor: const Color(0xFFE6F5FA),
+          // backgroundColor: const Color(0xFFE6F5FA),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -64,58 +64,58 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
         ),
         // backgroundColor: Theme.of(context).colorScheme.primary,
-        backgroundColor: const Color(0xFFE6F5FA),
+        //    backgroundColor: const Color(0xFFE6F5FA),
         body: Container(
-            color: const Color(
-                0xFFE6F5FA), // Set your desired background color here
+            // color: const Color(
+            //     0xFFE6F5FA), // Set your desired background color here
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 4, 16),
-              child: ListView(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(8),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          padding: const EdgeInsets.fromLTRB(16, 16, 4, 16),
+          child: ListView(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
                         children: [
-                          const Row(
-                            children: [
-                              Icon(Icons.edit_calendar),
-                              SizedBox(width: 16),
-                              Text(
-                                'Enable integration',
-                                style: TextStyle(
-                                  color: CustomColors.blackPrimary,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Switch(
-                            value: calendarEnabled,
-                            onChanged: _onSwitchChanged,
+                          Icon(Icons.edit_calendar),
+                          SizedBox(width: 16),
+                          Text(
+                            'Enable integration',
+                            style: TextStyle(
+                              color: CustomColors.blackPrimary,
+                              fontSize: 16,
+                            ),
                           ),
                         ],
                       ),
-                    ),
+                      Switch(
+                        value: calendarEnabled,
+                        onChanged: _onSwitchChanged,
+                      ),
+                    ],
                   ),
-                  const Text(
-                    'AVM can automatically schedule events from your conversations, or ask for your confirmation first.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  if (calendarEnabled) ..._calendarType(),
-                  const SizedBox(height: 24),
-                  if (calendarEnabled) ..._displayCalendars(),
-                ],
+                ),
               ),
-            ))
+              const Text(
+                'AVM can automatically schedule events from your conversations, or ask for your confirmation first.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 24),
+              if (calendarEnabled) ..._calendarType(),
+              const SizedBox(height: 24),
+              if (calendarEnabled) ..._displayCalendars(),
+            ],
+          ),
+        ))
         //  ListView(
         //   children: [
         //     Container(

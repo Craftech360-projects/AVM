@@ -23,26 +23,30 @@ class SigninPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return CustomScaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                flex: 6,
-                child: Center(
-                  child: Text(
-                    'Your personal growth journey with AI that '
-                    'listens to all your queries.',
-                    style: textTheme.displaySmall,
-                    textAlign: TextAlign.start,
-                  ),
+    return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              IconImage.avmLogo,
+              height: 30.h,
+            ),
+            SizedBox(height: 150.h),
+            Expanded(
+              flex: 6,
+              child: Center(
+                child: Text(
+                  'Your personal growth journey with AI that '
+                  'listens to all your queries.',
+                  style: textTheme.displaySmall,
+                  textAlign: TextAlign.start,
                 ),
               ),
-              // Google Sign-in Button
+            ),
+            // Google Sign-in Button
+            if (!Platform.isIOS) ...[
               SizedBox(
                 height: 50.h,
                 width: double.maxFinite,
@@ -94,92 +98,89 @@ class SigninPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 16.h),
-              // Apple Sign-in Button with the same design
-              if (Platform.isIOS)
-                SizedBox(
-                  height: 50.h,
-                  width: double.maxFinite,
-                  child: CustomElevatedButton(
-                    backgroundColor: CustomColors.white,
-                    icon: Icon(
-                      Icons.apple, // Using the Apple icon
-                      size: 22.h,
-                      color: Colors.black,
-                    ),
-                    onPressed: () async {
-                      try {
-                        final prefs = await SharedPreferences.getInstance();
-                        final userCred = await signInWithApple();
-                        final token = userCred != null
-                            ? await userCred.user?.getIdToken()
-                            : null;
+            ],
 
-                        if (token != null) {
-                          prefs.setString('firebase_token', token);
-                          final user = FirebaseAuth.instance.currentUser!;
-                          final prevUid = prefs.getString('uid') ?? '';
+            // Apple Sign-in Button with the same design
+            if (Platform.isIOS)
+              SizedBox(
+                height: 50.h,
+                width: double.maxFinite,
+                child: CustomElevatedButton(
+                  backgroundColor: CustomColors.white,
+                  icon: Icon(
+                    Icons.apple, // Using the Apple icon
+                    size: 22.h,
+                    color: Colors.black,
+                  ),
+                  onPressed: () async {
+                    try {
+                      final prefs = await SharedPreferences.getInstance();
+                      final userCred = await signInWithApple();
+                      final token = userCred != null
+                          ? await userCred.user?.getIdToken()
+                          : null;
 
-                          if (prevUid.isNotEmpty && prevUid != user.uid) {
-                            await migrateUserServer(prevUid, user.uid);
-                            prefs.setString('last_login_time',
-                                DateTime.now().toIso8601String());
-                          }
+                      if (token != null) {
+                        prefs.setString('firebase_token', token);
+                        final user = FirebaseAuth.instance.currentUser!;
+                        final prevUid = prefs.getString('uid') ?? '';
 
-                          prefs.setString('uid', user.uid);
-                          context.goNamed(OnboardingPage.name);
-                        } else {
-                          print("Apple Sign-in failed or user token is null");
+                        if (prevUid.isNotEmpty && prevUid != user.uid) {
+                          await migrateUserServer(prevUid, user.uid);
+                          prefs.setString('last_login_time',
+                              DateTime.now().toIso8601String());
                         }
-                      } catch (e) {
-                        print("Apple Sign-in failed: $e");
+
+                        prefs.setString('uid', user.uid);
+                        context.goNamed(OnboardingPage.name);
+                      } else {
+                        print("Apple Sign-in failed or user token is null");
                       }
-                    },
-                    child: Text(
-                      '  Continue using Apple',
-                      style: textTheme.bodyLarge,
-                    ),
+                    } catch (e) {
+                      print("Apple Sign-in failed: $e");
+                    }
+                  },
+                  child: Text(
+                    '  Continue using Apple',
+                    style: textTheme.bodyLarge,
                   ),
                 ),
-              SizedBox(height: 16.h),
-              RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style:
-                      textTheme.bodySmall?.copyWith(color: CustomColors.grey),
-                  children: [
-                    const TextSpan(
-                        text: 'By signing up for AVM, you agree to '),
-                    TextSpan(
-                      text: 'Terms and Conditions',
-                      style: textTheme.bodySmall?.copyWith(
-                        color: CustomColors.grey,
-                        decoration: TextDecoration.underline,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          showTermsDialog(context);
-                        },
-                    ),
-                    const TextSpan(text: ' and '),
-                    TextSpan(
-                      text: 'Privacy Policy',
-                      style: textTheme.bodySmall?.copyWith(
-                        color: CustomColors.grey,
-                        decoration: TextDecoration.underline,
-                      ),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          showPrivacyPolicy(context);
-                        },
-                    ),
-                  ],
-                ),
               ),
-              SizedBox(height: 16.h),
-            ],
-          ),
-        ),
-      ),
-    );
+            SizedBox(height: 16.h),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: textTheme.bodySmall?.copyWith(color: CustomColors.grey),
+                children: [
+                  const TextSpan(text: 'By signing up for AVM, you agree to '),
+                  TextSpan(
+                    text: 'Terms and Conditions',
+                    style: textTheme.bodySmall?.copyWith(
+                      color: CustomColors.grey,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        showTermsDialog(context);
+                      },
+                  ),
+                  const TextSpan(text: ' and '),
+                  TextSpan(
+                    text: 'Privacy Policy',
+                    style: textTheme.bodySmall?.copyWith(
+                      color: CustomColors.grey,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        showPrivacyPolicy(context);
+                      },
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 16.h),
+          ],
+        ));
   }
 }

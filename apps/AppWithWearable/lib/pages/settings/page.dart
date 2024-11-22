@@ -302,18 +302,18 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
               //   ),
               // ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    'Version: $version+$buildVersion',
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 150, 150, 150),
-                        fontSize: 16),
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              //   child: Align(
+              //     alignment: Alignment.center,
+              //     child: Text(
+              //       'Version: $version+$buildVersion',
+              //       style: const TextStyle(
+              //           color: Color.fromARGB(255, 150, 150, 150),
+              //           fontSize: 16),
+              //     ),
+              //   ),
+              // ),
               const SizedBox(height: 80),
             ],
           ),
