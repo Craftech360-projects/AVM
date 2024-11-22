@@ -325,6 +325,44 @@ getPreferencesWidgets({
 
 getItemAddOn(String title, VoidCallback onTap,
     {required IconData icon, bool visibility = true}) {
+  // return Visibility(
+  //   visible: visibility,
+  //   child: GestureDetector(
+  //     onTap: onTap,
+  //     child: Padding(
+  //       padding: const EdgeInsets.fromLTRB(0, 12, 8, 0),
+  //       child: Container(
+  //         decoration: BoxDecoration(
+  //           color: const Color.fromARGB(
+  //               0, 255, 255, 255), // Replace with your desired color
+  //           borderRadius: BorderRadius.circular(
+  //               10.0), // Adjust for desired rounded corners
+  //         ),
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+  //           child: Row(
+  //             children: [
+  //               Text(
+  //                 title,
+  //                 style: const TextStyle(
+  //                     color: CustomColors.blackPrimary, fontSize: 16),
+  //               ),
+  //               const SizedBox(width: 16),
+  //               Icon(icon, color: CustomColors.grey, size: 16.h),
+  //               const Spacer(),
+  //               const Icon(
+  //                 Icons.arrow_forward_ios,
+  //                 color: CustomColors.grey,
+  //                 size: 16,
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   ),
+  // );
+
   return Visibility(
     visible: visibility,
     child: GestureDetector(
@@ -342,18 +380,42 @@ getItemAddOn(String title, VoidCallback onTap,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
+                // Container(
+                //   width: 32, // Circle size
+                //   height: 32,
+                //   decoration: BoxDecoration(
+                //     color: CustomColors.greyLavender, // Background color
+                //     shape: BoxShape.circle,
+                //   ),
+                //   child: Center(
+                //     child: Icon(icon, color: CustomColors.grey, size: 16),
+                //   ),
+                // ),
+                // const SizedBox(width: 8),
                 Text(
                   title,
                   style: const TextStyle(
                       color: CustomColors.blackPrimary, fontSize: 16),
                 ),
-                const SizedBox(width: 16),
-                Icon(icon, color: CustomColors.grey, size: 16.h),
                 const Spacer(),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: CustomColors.grey,
-                  size: 16,
+                // Circular background for the first icon
+                // Spacing between icons
+                // Circular background for the arrow icon
+                Container(
+                  width: 32, // Circle size
+                  height: 32,
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(
+                        0, 238, 228, 255), // Background color
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: CustomColors.grey,
+                      size: 16,
+                    ),
+                  ),
                 ),
               ],
             ),

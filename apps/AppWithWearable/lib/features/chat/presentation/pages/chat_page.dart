@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -134,6 +136,7 @@ class _ChatPageTestState extends State<ChatPageTest>
                                 10.0); // Adjust height to the space you want
 
                         if (message?.senderEnum == MessageSender.ai) {
+                          log(message.toString());
                           return Column(
                             children: [
                               AIMessage(

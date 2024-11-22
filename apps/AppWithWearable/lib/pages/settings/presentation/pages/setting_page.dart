@@ -99,7 +99,12 @@ class _SettingPageState extends State<SettingPage> {
                 // );
               }
             },
-            title: Text('Battery Level: ${widget.batteryLevel}%'),
+            title: Text(
+              widget.batteryLevel > 0
+                  ? 'Battery Level: ${widget.batteryLevel}%'
+                  : 'Device not connected',
+            ),
+
             // title: BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
             //   builder: (context, state) {
             //     if (state.bleBatteryLevel != null) {

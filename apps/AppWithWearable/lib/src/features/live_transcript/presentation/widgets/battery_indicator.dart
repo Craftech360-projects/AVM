@@ -17,27 +17,31 @@ class BatteryIndicator extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
+        SizedBox(height: 8.w),
         Center(
-          child: SvgPicture.asset(
-            height: 16.h,
-            IconImage.batteryIndicator,
+          child: Container(
+            width: 25.h, // Adjust the size to your preference
+            height: 25.h, // Same as width to make it circular
+            decoration: BoxDecoration(
+              color: CustomColors.greyLavender, // Background color
+              shape: BoxShape.circle, // Makes the container circular
+            ),
+            child: SvgPicture.asset(
+              IconImage.batteryIndicator,
+              height: 10.h,
+              fit: BoxFit
+                  .scaleDown, // Ensure the icon fits nicely within the circle
+            ),
           ),
         ),
-        // BlocBuilder<LiveTranscriptBloc, LiveTranscriptState>(
-        //   bloc: context.read<LiveTranscriptBloc>(),
-        //   builder: (context, state) {
-        //     if (state.bluetoothDeviceStatus ==
-        //         BluetoothDeviceStatus.connected) {
-        //       return
-        Text(
-        
-          '$batteryLevel %',
-          style: textTheme.bodySmall?.copyWith(fontSize: 12.h),
-        ),
-        //     }
-        //     return const SizedBox.shrink();
-        //   },
-        // )
+        SizedBox(height: 8.h), // Add spacing between elements
+        if (batteryLevel! > 0) ...[
+          SizedBox(height: 8.h), // Add spacing only if text is shown
+          Text(
+            '$batteryLevel%',
+            style: textTheme.bodySmall?.copyWith(fontSize: 12.h),
+          ),
+        ],
       ],
     );
   }

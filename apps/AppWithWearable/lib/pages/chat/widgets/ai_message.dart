@@ -12,7 +12,9 @@ import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dar
 import 'package:friend_private/features/memory/presentation/pages/memory_detail_page.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/chats/presentation/widgets/avm_logo.dart';
+import 'package:friend_private/src/features/memories/presentation/pages/memory_detail_page.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:intl/intl.dart';
 
 class AIMessage extends StatelessWidget {
   final Message message;
@@ -33,9 +35,21 @@ class AIMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isMemoriesEmpty = memories.isEmpty;
+
+    // Print message and memories
+    print('Incoming message: ${message.text}');
+    for (var element in memories) {
+      if (element.structured.target != null) {
+        print('Memory at AI: ${element.structured.target!.title}');
+      } else {
+        print('Memory is null');
+      }
+    }
     for (var element in memories) {
       print('memories at ai ${element.structured.target!.title}');
     }
+
+    final textTheme = Theme.of(context).textTheme;
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,12 +61,12 @@ class AIMessage extends StatelessWidget {
               )
             : Container(
                 decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/background.png"),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                ),
+                    // image: DecorationImage(
+                    //   image: AssetImage("assets/images/background.png"),
+                    //   fit: BoxFit.cover,
+                    // ),
+                    // borderRadius: BorderRadius.all(Radius.circular(16.0)),
+                    ),
                 height: 32.h,
                 width: 32.w,
                 child: Stack(
@@ -73,10 +87,14 @@ class AIMessage extends StatelessWidget {
             child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
-            color: CustomColors.greyLavender, // Add background color
-            borderRadius:
-                BorderRadius.circular(12), // Optional: add border radius
-          ),
+              color: CustomColors.greyLight, // Or your theme's primary color
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(5.r),
+                topRight: Radius.circular(20.r),
+                bottomLeft: Radius.circular(20.r),
+                bottomRight: Radius.circular(20.r),
+              ) // Smaller radius for chat bubble effect) // Optional: add border radius
+              ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +125,7 @@ class AIMessage extends StatelessWidget {
                 style: TextStyle(
                     fontSize: 15.0,
                     fontWeight: FontWeight.w500,
-                    color: CustomColors.blackPrimary),
+                    color: CustomColors.white),
               )),
               // if (isMemoriesEmpty) ..._getInitialOptions(context),
               if (message.id != 1) _getCopyButton(context),
@@ -124,10 +142,12 @@ class AIMessage extends StatelessWidget {
                         0.0, 0.0, 0.0, 4.0),
                     child: GestureDetector(
                       onTap: () async {
+                        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                         MixpanelManager().chatMessageMemoryClicked(memory);
                         int memoryIndex =
                             memories.reversed.toList().indexOf(memory);
-                        print('chat memory index clicked $memoryIndex');
+                        print(
+                            '>>>>>>>>>>>>>>>>chat memory index clicked $memoryIndex');
                         // BlocProvider.of<MemoryBloc>(context)
                         //     .add(MemoryIndexChanged(memoryIndex: memoryIndex));
                         // await Navigator.of(context).push(MaterialPageRoute(
@@ -139,7 +159,7 @@ class AIMessage extends StatelessWidget {
                             .add(MemoryIndexChanged(memoryIndex: memoryIndex));
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => CustomMemoryDetailPage(
+                            builder: (context) => MemoryDetailPage(
                               memoryBloc: BlocProvider.of<MemoryBloc>(context),
                               memoryAtIndex: memoryIndex,
                             ),
@@ -166,6 +186,27 @@ class AIMessage extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 8),
+                            if (message?.createdAt != null) ...[
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    DateFormat('HH:mm').format(
+                                        message!.createdAt), // Format time
+                                    style: textTheme.bodySmall?.copyWith(
+                                      color: Colors.white70,
+                                      fontSize: 12.sp,
+                                    ),
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  // Icon(
+                                  //   Icons.done_all, // Or your preferred status icon
+                                  //   size: 14.sp,
+                                  //   color: Colors.white70,
+                                  // ),
+                                ],
+                              ),
+                            ],
                             const Icon(Icons.arrow_right_alt)
                           ],
                         ),
@@ -232,7 +273,13 @@ class AIMessage extends StatelessWidget {
         width: double.maxFinite,
         decoration: BoxDecoration(
           color: Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.r),
+            topRight: Radius.circular(20.r),
+            bottomLeft: Radius.circular(20.r),
+            bottomRight:
+                Radius.circular(5.r), // Smaller radius for chat bubble effect
+          ),
         ),
         child: Text(optionText, style: Theme.of(context).textTheme.bodyMedium),
       ),
