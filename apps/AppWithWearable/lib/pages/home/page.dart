@@ -25,6 +25,7 @@ import 'package:friend_private/pages/capture/page.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/home/device.dart';
 import 'package:friend_private/pages/settings/page.dart';
+import 'package:friend_private/pages/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/scripts.dart';
 import 'package:friend_private/src/features/home/presentation/pages/navbar.dart';
 import 'package:friend_private/utils/audio/foreground.dart';
@@ -302,7 +303,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                   ChatPageTest(
                     textFieldFocusNode: chatTextFieldFocusNode,
                   ),
-                  // const SettingPage(),
+                  const SettingPage(),
                 ],
               ),
               if (chatTextFieldFocusNode.hasFocus ||

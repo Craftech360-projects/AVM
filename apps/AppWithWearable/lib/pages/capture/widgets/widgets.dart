@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/growthbook.dart';
@@ -10,6 +11,7 @@ import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/pages/capture/widgets/sin_wave.dart';
 import 'package:friend_private/pages/speaker_id/page.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/utils/enums.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/utils/websockets.dart';
@@ -699,4 +701,426 @@ getPhoneMicRecordingButton(
       ),
     ),
   );
+}
+
+class GreetingCard extends StatelessWidget {
+  final String name;
+  final String? avatarUrl;
+  final bool isDisconnected;
+  final BuildContext context;
+  final bool hasTranscripts;
+  // Changed from ConnectionState to WebsocketConnectionStatus
+  final WebsocketConnectionStatus wsConnectionState;
+  final BTDeviceStruct? device; // Changed to match CaptureCard
+  final InternetStatus? internetStatus; // Made nullable to match CaptureCard
+  final List<TranscriptSegment>? segments; // Changed to match CaptureCard type
+  final bool memoryCreating;
+  final List<Tuple2<String, String>>
+      photos; // Changed to match CaptureCard type
+  final ScrollController?
+      scrollController; // Made nullable to match CaptureCard
+
+  const GreetingCard({
+    Key? key,
+    required this.name,
+    required this.isDisconnected,
+    required this.context,
+    required this.hasTranscripts,
+    required this.wsConnectionState,
+    this.device,
+    this.internetStatus,
+    this.segments,
+    this.memoryCreating = false,
+    this.photos = const [],
+    this.scrollController,
+    this.avatarUrl,
+  }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     bool isDeviceDisconnected = device == null;
+//     return Card(
+//       elevation: 0,
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(16),
+//       ),
+//       color: Colors.white,
+//       child: Padding(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             // Header with avatar and greeting
+//             Row(
+//               children: [
+//                 // Avatar
+//                 Container(
+//                   width: 40,
+//                   height: 40,
+//                   decoration: BoxDecoration(
+//                     shape: BoxShape.circle,
+//                     color: Colors.grey[200],
+//                   ),
+//                   child: avatarUrl != null
+//                       ? ClipOval(
+//                           child: Image.network(
+//                             avatarUrl!,
+//                             fit: BoxFit.cover,
+//                             errorBuilder: (context, error, stackTrace) {
+//                               return const Icon(Icons.person,
+//                                   color: Colors.grey);
+//                             },
+//                           ),
+//                         )
+//                       : const Icon(Icons.person, color: Colors.grey),
+//                 ),
+//                 const SizedBox(width: 12),
+
+//                 // Greeting text with wave emoji
+//                 Expanded(
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       AnimatedTextKit(
+//                         animatedTexts: [
+//                           TyperAnimatedText(
+//                             SharedPreferencesUtil().givenName != null
+//                                 ? '👋 Hi! ${SharedPreferencesUtil().givenName},\nChange is inevitable. '
+//                                     'Always strive for the next big thing!'
+//                                 : '👋 Hi! Guest,\nChange is inevitable. '
+//                                     'Always strive for the next big thing!',
+//                             textStyle: TextStyle(
+//                               fontSize: 16,
+//                               color: Colors.black,
+//                               fontWeight: FontWeight.w500,
+//                             ),
+//                           ),
+//                         ],
+//                         repeatForever: true, // Keep animating infinitely
+//                         pause: const Duration(milliseconds: 500),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+
+//             const SizedBox(height: 16),
+
+//             // Divider
+//             Container(height: 2, color: CustomColors.purpleDark),
+//             Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 if (segments != null && segments!.isNotEmpty) ...[
+//                   const SizedBox(height: 16),
+//                   AnimatedTextKit(
+//                     animatedTexts: [
+//                       TyperAnimatedText(
+//                         'Swipe to create memory',
+//                         textStyle: TextStyle(
+//                           color: Colors.grey[300],
+//                           fontSize: 14,
+//                           fontWeight: FontWeight.bold,
+//                         ),
+//                         speed:
+//                             const Duration(milliseconds: 100), // Typing speed
+//                       ),
+//                     ],
+//                     repeatForever: true, // Keep animating infinitely
+//                     pause: const Duration(
+//                         milliseconds: 500), // Pause between animations
+//                   ),
+//                 ],
+//               ],
+//             ),
+
+//             // Connection Status
+//             Padding(
+//               padding: const EdgeInsets.only(top: 12),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment
+//                     .spaceBetween, // Distribute items to both ends
+//                 children: [
+//                   // Left Status: INTERNET Connection
+
+//                   Row(
+//                     children: [
+//                       if (internetStatus != null)
+//                         Container(
+//                           width: 6,
+//                           height: 6,
+//                           decoration: BoxDecoration(
+//                             shape: BoxShape.circle,
+//                             color: internetStatus == InternetStatus.connected
+//                                 ? Colors.green
+//                                 : Colors.red,
+//                           ),
+//                         ),
+//                       const SizedBox(width: 12),
+//                       // : ${internetStatus.toString().split('.').last}
+//                       Text(
+//                         'Internet',
+//                         style: TextStyle(
+//                           color: internetStatus == InternetStatus.connected
+//                               ? Colors.green
+//                               : Colors.red,
+//                           fontSize: 14,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+
+//                   // Right Status: DEVICE Status
+//                   Row(
+//                     children: [
+//                       Container(
+//                         width: 6,
+//                         height: 6,
+//                         decoration: BoxDecoration(
+//                           shape: BoxShape.circle,
+//                           color: isDeviceDisconnected
+//                               ? Colors.amber
+//                               : Colors.green,
+//                         ),
+//                       ),
+//                       const SizedBox(width: 6),
+//                       Text(
+//                         isDeviceDisconnected
+//                             ? 'Disconnected'
+//                             : '${device?.name ?? ''} ${device?.id.replaceAll(':', '').split('-').last.substring(0, 6) ?? ''}',
+//                         style: TextStyle(
+//                           color: isDeviceDisconnected
+//                               ? Colors.amber
+//                               : Colors.green,
+//                           fontSize: 12,
+//                           height: 1.5,
+//                         ),
+//                         overflow: TextOverflow.fade,
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+  @override
+  Widget build(BuildContext context) {
+    bool isDeviceDisconnected = device == null;
+    return GestureDetector(
+      onTap: () {
+        if (segments != null && segments!.isNotEmpty) {
+          showModalBottomSheet(
+            useSafeArea: true,
+            isScrollControlled: true,
+            context: context,
+            builder: (context) => Stack(
+              children: [
+                Image.asset(
+                  'assets/images/bg_image.png',
+                  fit: BoxFit.fill,
+                  width: double.maxFinite,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: getTranscriptWidget(
+                          memoryCreating,
+                          segments ?? [],
+                          photos,
+                          device,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          );
+        }
+      },
+      child: Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header with avatar and greeting
+              Row(
+                children: [
+                  // Avatar
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey[200],
+                    ),
+                    child: avatarUrl != null
+                        ? ClipOval(
+                            child: Image.network(
+                              avatarUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.person,
+                                    color: Colors.grey);
+                              },
+                            ),
+                          )
+                        : const Icon(Icons.person, color: Colors.grey),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Greeting text with wave emoji
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AnimatedTextKit(
+                          animatedTexts: [
+                            TyperAnimatedText(
+                              SharedPreferencesUtil().givenName != null
+                                  ? '👋 Hi! ${SharedPreferencesUtil().givenName},\nChange is inevitable. '
+                                      'Always strive for the next big thing!'
+                                  : '👋 Hi! Guest,\nChange is inevitable. '
+                                      'Always strive for the next big thing!',
+                              textStyle: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                          repeatForever: false,
+                          //  pause: const Duration(milliseconds: 500),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Divider
+              Container(height: 2, color: CustomColors.purpleDark),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (segments != null && segments!.isNotEmpty) ...[
+                    const SizedBox(height: 16),
+                    AnimatedTextKit(
+                      animatedTexts: [
+                        TyperAnimatedText(
+                          'Swipe to create memory',
+                          textStyle: TextStyle(
+                            color: Colors.grey[300],
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          speed: const Duration(milliseconds: 100),
+                        ),
+                      ],
+                      repeatForever: true,
+                      pause: const Duration(milliseconds: 500),
+                    ),
+                  ],
+                ],
+              ),
+
+              // Connection Status
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Left Status: INTERNET Connection
+                    Row(
+                      children: [
+                        if (internetStatus != null)
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: internetStatus == InternetStatus.connected
+                                  ? Colors.green
+                                  : Colors.red,
+                            ),
+                          ),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Internet',
+                          style: TextStyle(
+                            color: internetStatus == InternetStatus.connected
+                                ? Colors.green
+                                : Colors.red,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Right Status: DEVICE Status
+                    Row(
+                      children: [
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isDeviceDisconnected
+                                ? Colors.amber
+                                : Colors.green,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          isDeviceDisconnected
+                              ? 'Disconnected'
+                              : '${device?.name ?? ''} ${device?.id.replaceAll(':', '').split('-').last.substring(0, 6) ?? ''}',
+                          style: TextStyle(
+                            color: isDeviceDisconnected
+                                ? Colors.amber
+                                : Colors.green,
+                            fontSize: 12,
+                            height: 1.5,
+                          ),
+                          overflow: TextOverflow.fade,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

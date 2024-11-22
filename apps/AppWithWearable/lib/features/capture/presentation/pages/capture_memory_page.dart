@@ -98,33 +98,49 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         // ),
         // const SizedBox(height: 8),
         //! Dummy Card
-        Card(
-          color: CustomColors.greyLavender,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                leading: CircleAvatar(
-                  child: ClipOval(
-                    child: Image.network(
-                      'https://thumbs.dreamstime.com/b/person-gray-photo-placeholder-woman-t-shirt-white-background-131683043.jpg',
-                      width: 50.0,
-                      height: 50.0,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                title: const Text('Text Here'),
-              ),
-              const Divider(
-                height: 0,
-                thickness: 0.5,
-                color: CustomColors.greyLight,
-              ),
-              const Text('Meta Data')
-            ],
-          ),
-        ),
+        // Card(
+        //   color: CustomColors.greyLavender,
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       ListTile(
+        //         leading: CircleAvatar(
+        //           child: ClipOval(
+        //             child: Image.network(
+        //               'https://thumbs.dreamstime.com/b/person-gray-photo-placeholder-woman-t-shirt-white-background-131683043.jpg',
+        //               width: 50.0,
+        //               height: 50.0,
+        //               fit: BoxFit.cover,
+        //             ),
+        //           ),
+        //         ),
+        //         title: const Text('Text Here'),
+        //       ),
+        //       const Divider(
+        //         height: 0,
+        //         thickness: 0.5,
+        //         color: CustomColors.greyLight,
+        //       ),
+        //       const Text('Meta Data')
+        //     ],
+        //   ),
+        // ),
+
+        // GreetingCard(
+        //   name: 'Joe',
+        //   isDisconnected: true,
+        //   context: context,
+        //   hasTranscripts: widget.hasTranscripts,
+        //   wsConnectionState: widget.wsConnectionState,
+        //   device: widget.device,
+        //   internetStatus: widget.internetStatus,
+        //   segments: widget.segments,
+        //   memoryCreating: widget.memoryCreating,
+        //   photos: widget.photos,
+        //   scrollController: widget.scrollController,
+        //   avatarUrl:
+        //       'https://thumbs.dreamstime.com/b/person-gray-photo-placeholder-woman-t-shirt-white-background-131683043.jpg',
+        // ),
         //*-- Capture --//
         widget.hasTranscripts
             ? SizedBox(
@@ -151,7 +167,20 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                   child: Padding(
                     // Add margin using Padding
                     padding: const EdgeInsets.all(8.0),
-                    child: CaptureCard(
+                    // child: CaptureCard(
+                    //   context: context,
+                    //   hasTranscripts: widget.hasTranscripts,
+                    //   wsConnectionState: widget.wsConnectionState,
+                    //   device: widget.device,
+                    //   internetStatus: widget.internetStatus,
+                    //   segments: widget.segments,
+                    //   memoryCreating: widget.memoryCreating,
+                    //   photos: widget.photos,
+                    //   scrollController: widget.scrollController,
+                    // ),
+                    child: GreetingCard(
+                      name: 'Joe',
+                      isDisconnected: true,
                       context: context,
                       hasTranscripts: widget.hasTranscripts,
                       wsConnectionState: widget.wsConnectionState,
@@ -161,6 +190,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                       memoryCreating: widget.memoryCreating,
                       photos: widget.photos,
                       scrollController: widget.scrollController,
+                      avatarUrl:
+                          'https://thumbs.dreamstime.com/b/person-gray-photo-placeholder-woman-t-shirt-white-background-131683043.jpg',
                     ),
                   ),
                 ),
@@ -168,7 +199,20 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
             : Padding(
                 // Add margin using Padding
                 padding: const EdgeInsets.all(8.0),
-                child: CaptureCard(
+                // child: CaptureCard(
+                //   context: context,
+                //   hasTranscripts: widget.hasTranscripts,
+                //   wsConnectionState: widget.wsConnectionState,
+                //   device: widget.device,
+                //   internetStatus: widget.internetStatus,
+                //   segments: widget.segments,
+                //   memoryCreating: widget.memoryCreating,
+                //   photos: widget.photos,
+                //   scrollController: widget.scrollController,
+                // ),
+                child: GreetingCard(
+                  name: 'Joe',
+                  isDisconnected: true,
                   context: context,
                   hasTranscripts: widget.hasTranscripts,
                   wsConnectionState: widget.wsConnectionState,
@@ -178,6 +222,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                   memoryCreating: widget.memoryCreating,
                   photos: widget.photos,
                   scrollController: widget.scrollController,
+                  avatarUrl:
+                      'https://thumbs.dreamstime.com/b/person-gray-photo-placeholder-woman-t-shirt-white-background-131683043.jpg',
                 ),
               ),
 
