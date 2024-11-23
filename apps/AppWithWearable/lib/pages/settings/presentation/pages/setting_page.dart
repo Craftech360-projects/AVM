@@ -293,92 +293,100 @@ class _SettingPageState extends State<SettingPage> {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: const Color(0xFFE6F5FA),
-        title: Text(
-          'Settings',
-          style: textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w500,
-            fontSize: 20.h,
+        appBar: AppBar(
+          centerTitle: true,
+          backgroundColor: const Color(0xFFE6F5FA),
+          title: Text(
+            'Settings',
+            style: textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+              fontSize: 20.h,
+            ),
           ),
         ),
-      ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
-        children: [
-          CustomListTile(
-            onTap: () {
-              if (widget.device != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ConnectedDevice(
-                      device: widget.device,
-                      batteryLevel: widget.batteryLevel,
-                    ),
-                  ),
-                );
-              } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FindDevicesPage(
-                      goNext: () {},
-                    ),
-                  ),
-                );
-              }
-            },
-            title: Text(
-              widget.batteryLevel > 0
-                  ? 'Battery Level: ${widget.batteryLevel}%'
-                  : 'Device not connected',
-            ),
-            trailing: const CircleAvatar(
-              backgroundColor: CustomColors.greyLavender,
-              child: Icon(Icons.bluetooth_searching),
+        body: Stack(children: [
+          // Background Image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/bg_image.png', // Replace with your image path
+              fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height: 16.h),
-          Text(
-            'Recording Setting',
-            style: textTheme.titleMedium?.copyWith(fontSize: 20.h),
-          ),
-          SizedBox(height: 16.h),
-          const LanguageDropdown(),
-          SizedBox(height: 16.h),
-          Text(
-            'Add Ons',
-            style: textTheme.titleMedium?.copyWith(fontSize: 20.h),
-          ),
-          SizedBox(height: 16.h),
-          getItemAddOn('Profile', () {
-            routeToPage(context, const ProfilePage());
-          }, icon: Icons.person),
-          getItemAddOn('Calendar Integration', () {
-            routeToPage(context, const CalendarPage());
-          }, icon: Icons.calendar_month),
-          getItemAddOn('Developers Option', () {
-            routeToPage(context, const DeveloperPage());
-          }, icon: Icons.settings_suggest),
-          SizedBox(height: 16.h),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                'Version: $version+$buildVersion',
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 150, 150, 150),
-                  fontSize: 16,
+          ListView(
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
+            children: [
+              CustomListTile(
+                onTap: () {
+                  if (widget.device != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ConnectedDevice(
+                          device: widget.device,
+                          batteryLevel: widget.batteryLevel,
+                        ),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FindDevicesPage(
+                          goNext: () {},
+                        ),
+                      ),
+                    );
+                  }
+                },
+                title: Text(
+                  widget.batteryLevel > 0
+                      ? 'Battery Level: ${widget.batteryLevel}%'
+                      : 'Device not connected',
+                ),
+                trailing: const CircleAvatar(
+                  backgroundColor: CustomColors.greyLavender,
+                  child: Icon(Icons.bluetooth_searching),
                 ),
               ),
-            ),
+              SizedBox(height: 16.h),
+              Text(
+                'Recording Setting',
+                style: textTheme.titleMedium?.copyWith(fontSize: 20.h),
+              ),
+              SizedBox(height: 16.h),
+              const LanguageDropdown(),
+              SizedBox(height: 16.h),
+              Text(
+                'Add Ons',
+                style: textTheme.titleMedium?.copyWith(fontSize: 20.h),
+              ),
+              SizedBox(height: 16.h),
+              getItemAddOn('Profile', () {
+                routeToPage(context, const ProfilePage());
+              }, icon: Icons.person),
+              getItemAddOn('Calendar Integration', () {
+                routeToPage(context, const CalendarPage());
+              }, icon: Icons.calendar_month),
+              getItemAddOn('Developers Option', () {
+                routeToPage(context, const DeveloperPage());
+              }, icon: Icons.settings_suggest),
+              SizedBox(height: 16.h),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Version: $version+$buildVersion',
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 150, 150, 150),
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 80),
+            ],
           ),
-          const SizedBox(height: 80),
-        ],
-      ),
-    );
+        ]));
   }
 }

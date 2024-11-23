@@ -961,8 +961,8 @@ class GreetingCard extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              const Color.fromARGB(255, 160, 159, 130),
-              const Color.fromARGB(255, 162, 152, 179),
+              CustomColors.greyLavender,
+              CustomColors.greyLavender,
             ], // Gradient colors
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -1015,7 +1015,7 @@ class GreetingCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '👋 Hi! ${internetStatus ?? "Guest"},\nChange is inevitable. Always strive for the next big thing!',
+                            '👋 Hi! ${SharedPreferencesUtil().givenName ?? "Guest"},\nChange is inevitable. Always strive for the next big thing!',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.black,

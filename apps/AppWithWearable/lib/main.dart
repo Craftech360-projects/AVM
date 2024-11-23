@@ -205,8 +205,8 @@ class _MyAppState extends State<MyApp> {
                 SharedPreferencesUtil().onboardingCompleted && widget.isAuth
                     ? const HomePageWrapper()
                     //    : const HomePageWrapper()
-                    //  : const SigninPage(),
-                    : const HomePageWrapper()
+                    : const SigninPage(),
+                // : const HomePageWrapper()
               ],
             ),
           ),

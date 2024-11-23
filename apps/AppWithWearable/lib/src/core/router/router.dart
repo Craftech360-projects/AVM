@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friend_private/pages/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/src/features/chats/presentation/pages/chats_page.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/pages/transcript_memory_page.dart';
 import 'package:friend_private/src/features/live_transcript/presentation/pages/ws_testpage.dart';
@@ -104,19 +105,19 @@ class AppRouter {
         //   )
         // ],
       ),
-      // GoRoute(
-      //   path: '/setting',
-      //   name: SettingPage.name,
-      //   parentNavigatorKey: _rootNavigatorKey,
-      //   pageBuilder: (context, state) => CustomTransitionPage(
-      //     child: const SettingPage(),
-      //     transitionDuration: const Duration(
-      //       milliseconds: _routeTransitionDuration,
-      //     ),
-      //     transitionsBuilder: (_, a, __, c) =>
-      //         FadeTransition(opacity: a, child: c),
-      //   ),
-      // ),
+      GoRoute(
+        path: '/setting',
+        name: SettingPage.name,
+        parentNavigatorKey: _rootNavigatorKey,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          child: const SettingPage(),
+          transitionDuration: const Duration(
+            milliseconds: _routeTransitionDuration,
+          ),
+          transitionsBuilder: (_, a, __, c) =>
+              FadeTransition(opacity: a, child: c),
+        ),
+      ),
       GoRoute(
         path: '/chats',
         name: ChatsPage.name,

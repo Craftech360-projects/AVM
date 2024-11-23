@@ -30,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return CustomScaffold(
+    return Scaffold(
       //  backgroundColor: const Color(0xFFE6F5FA),
       appBar: AppBar(
         centerTitle: true,
@@ -44,9 +44,12 @@ class _ProfilePageState extends State<ProfilePage> {
         //  backgroundColor: const Color(0xFFE6F5FA),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
+          // onPressed: () {
+          //   context
+          //       .pushNamed(SettingPage.name); // Go back to the previous screen
+          // },
           onPressed: () {
-            context
-                .pushNamed(SettingPage.name); // Go back to the previous screen
+            Navigator.pop(context); // Return to the previous screen
           },
         ),
         actions: [

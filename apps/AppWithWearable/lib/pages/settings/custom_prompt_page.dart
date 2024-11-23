@@ -87,14 +87,13 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
+    return Scaffold(
       // backgroundColor: const Color(0xFFE6F5FA),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // context.pushNamed(
-            //     DeveloperPage.name); // Go back to the previous screen
+            Navigator.pop(context); // Return to the previous screen
           },
         ),
         centerTitle: true,
@@ -103,28 +102,20 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
         title: const Text('Customize Prompt'),
       ),
       body: Container(
-        //  color: const Color(0xFFE6F5FA),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+                'assets/images/bg_image.png'), // Your background image
+            fit: BoxFit
+                .cover, // This will ensure the image covers the entire screen
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           child: Form(
             key: _formKey,
             child: ListView(
               children: [
-                // CustomTextField(
-                //   labelText: 'Prompt',
-                //   controller: _promptController,
-                //   maxLines: 9,
-                //   minLines: 9,
-                //   keyboardType: TextInputType.multiline,
-                //   hintText:
-                //       'Summarize the following conversation transcript. If the conversation does not contain significant insights or action items, output an empty title.',
-                //   validator: (value) {
-                //     if (value == null || value.isEmpty) {
-                //       return 'Please enter a valid prompt';
-                //     }
-                //     return null;
-                //   },
-                // ),
                 const SizedBox(height: 16),
                 CustomTextField(
                   labelText: 'Title',
@@ -216,7 +207,7 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
                     style: TextStyle(
                         color: CustomColors.white,
                         fontWeight: FontWeight.w400,
-                        fontSize: 20.h),
+                        fontSize: 20),
                   ),
                 ),
               ],

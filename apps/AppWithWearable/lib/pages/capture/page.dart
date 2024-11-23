@@ -457,7 +457,7 @@ class CapturePageState extends State<CapturePage>
   //     ],
   //   );
   // }
-
+//>>>>>>>>>>>>>>>>......>>>>>>>>>>>>>>>>>>>>>>............>>>>>>
   @override
   Widget build(BuildContext context) {
     return Stack(

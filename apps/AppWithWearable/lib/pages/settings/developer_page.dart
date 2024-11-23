@@ -29,30 +29,36 @@ class _DeveloperPageState extends State<DeveloperPage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return CustomScaffold(
-        // backgroundColor: const Color(0xFFE6F5FA),
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: const Color(0xFFE6F5FA),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              context.pushNamed(
-                  SettingPage.name); // Go back to the previous screen
-            },
-          ),
-          title: Text(
-            'Developer\'s Option',
-            style: textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w500,
-              fontSize: 20.h,
-            ),
+    return Scaffold(
+      // backgroundColor: const Color(0xFFE6F5FA),
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: const Color(0xFFE6F5FA),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Return to the previous screen
+          },
+        ),
+        title: Text(
+          'Developer\'s Option',
+          style: textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.w500,
+            fontSize: 20.h,
           ),
         ),
-        body: Container(
-          // color:
-          //     const Color(0xFFE6F5FA), // Set your desired background color here
-          child: Padding(
+      ),
+      body: Stack(
+        children: [
+          // Background Image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/bg_image.png', // Replace with your image path
+              fit: BoxFit.cover, // Ensures the image covers the entire screen
+            ),
+          ),
+          // Foreground Content
+          Padding(
             padding: const EdgeInsets.fromLTRB(16, 16, 4, 16),
             child: ListView(
               children: [
@@ -71,7 +77,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                               backgroundColor: CustomColors.greyLavender,
                               child: Icon(Icons.people),
                             ),
-                            // Icon(Icons.people),
                             const SizedBox(width: 16),
                             Text(
                               'Enable Developer',
@@ -114,9 +119,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
                                   '',
                           children: [
                             ListTile(
-                              title: const Text(
-                                'Deepgram',
-                              ),
+                              title: const Text('Deepgram'),
                               onTap: () {
                                 developerModeSelected(modeSelected: 'Deepgram');
                               },
@@ -145,15 +148,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
                             ListTile(
                               title: const Text('Default'),
                               onTap: () {
-                                // final customPromptDetails = CustomPrompt(
-                                //   prompt: null,
-                                //   title: null,
-                                //   overview: null,
-                                //   actionItems: null,
-                                //   category: null,
-                                //   calendar: null,
-                                // );
-
                                 summarizeMemory(
                                   '',
                                   [],
@@ -180,7 +174,9 @@ class _DeveloperPageState extends State<DeveloperPage> {
               ],
             ),
           ),
-        ));
+        ],
+      ),
+    );
   }
 
   void _onSwitchChanged(bool value) {

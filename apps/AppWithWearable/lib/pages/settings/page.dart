@@ -61,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> with WebSocketMixin {
     return PopScope(
       canPop: true,
       child: CustomScaffold(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        //  backgroundColor: Theme.of(context).colorScheme.primary,
         // appBar: AppBar(
         //   backgroundColor: Theme.of(context).colorScheme.surface,
         //   automaticallyImplyLeading: true,
