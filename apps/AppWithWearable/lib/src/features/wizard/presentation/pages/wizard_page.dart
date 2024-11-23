@@ -157,7 +157,8 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
               children: [
                 OnboardingButton(
                   message:
-                      'Looks like the app needs some permission! Please enable notifications access.',
+                      'Looks like the app needs some permission!',
+                  //     Please enable notifications access.
                   buttonText: 'Enable',
                   onSkip: _nextPage,
                   onPressed: () {

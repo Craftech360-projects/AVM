@@ -61,58 +61,58 @@ class SigninPage extends StatelessWidget {
                 ),
               ),
               // Google Sign-in Button
-              // if (!Platform.isIOS) ...[
-              SizedBox(
-                height: 50.h,
-                width: double.maxFinite,
-                child: CustomElevatedButton(
-                  backgroundColor: CustomColors.white,
-                  icon: SvgPicture.asset(
-                    IconImage.google,
-                    height: 22.h,
-                    width: 22.h,
-                  ),
-                  onPressed: () async {
-                    try {
-                      final prefs = await SharedPreferences.getInstance();
-                      final userCred = await signInWithGoogle();
-                      final token = userCred != null
-                          ? await userCred.user?.getIdToken()
-                          : null;
+              if (!Platform.isIOS) ...[
+                SizedBox(
+                  height: 50.h,
+                  width: double.maxFinite,
+                  child: CustomElevatedButton(
+                    backgroundColor: CustomColors.white,
+                    icon: SvgPicture.asset(
+                      IconImage.google,
+                      height: 22.h,
+                      width: 22.h,
+                    ),
+                    onPressed: () async {
+                      try {
+                        final prefs = await SharedPreferences.getInstance();
+                        final userCred = await signInWithGoogle();
+                        final token = userCred != null
+                            ? await userCred.user?.getIdToken()
+                            : null;
 
-                      if (token != null) {
-                        prefs.setString('firebase_token', token);
-                        final user = FirebaseAuth.instance.currentUser!;
-                        final prevUid = prefs.getString('uid') ?? '';
+                        if (token != null) {
+                          prefs.setString('firebase_token', token);
+                          final user = FirebaseAuth.instance.currentUser!;
+                          final prevUid = prefs.getString('uid') ?? '';
 
-                        if (prevUid.isNotEmpty && prevUid != user.uid) {
-                          await migrateUserServer(prevUid, user.uid);
-                          prefs.setString('last_login_time',
-                              DateTime.now().toIso8601String());
+                          if (prevUid.isNotEmpty && prevUid != user.uid) {
+                            await migrateUserServer(prevUid, user.uid);
+                            prefs.setString('last_login_time',
+                                DateTime.now().toIso8601String());
+                          }
+                          print(">>>>heeeeereeee");
+                          prefs.setString('uid', user.uid);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const OnboardingPage(),
+                            ),
+                          );
+                        } else {
+                          print("Sign-in failed or user token is null");
                         }
-                        print(">>>>heeeeereeee");
-                        prefs.setString('uid', user.uid);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const OnboardingPage(),
-                          ),
-                        );
-                      } else {
-                        print("Sign-in failed or user token is null");
+                      } catch (e) {
+                        print("Google Sign-in failed: $e");
                       }
-                    } catch (e) {
-                      print("Google Sign-in failed: $e");
-                    }
-                  },
-                  child: Text(
-                    '  Continue using Google',
-                    style: textTheme.bodyLarge,
+                    },
+                    child: Text(
+                      '  Continue using Google',
+                      style: textTheme.bodyLarge,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 16.h),
-              // ],
+                SizedBox(height: 16.h),
+              ],
 
               // Apple Sign-in Button
               if (Platform.isIOS)
@@ -146,7 +146,13 @@ class SigninPage extends StatelessWidget {
                           }
 
                           prefs.setString('uid', user.uid);
-                          context.goNamed(OnboardingPage.name);
+                          prefs.setString('uid', user.uid);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const OnboardingPage(),
+                            ),
+                          );
                         } else {
                           print("Apple Sign-in failed or user token is null");
                         }

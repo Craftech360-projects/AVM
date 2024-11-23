@@ -195,6 +195,7 @@
 //   }
 // }
 
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/preferences.dart';
@@ -203,6 +204,7 @@ import 'package:permission_handler/permission_handler.dart'
 import 'package:location/location.dart' as locationHandler;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class PermissionsService {
   // Method to request Notification Permission
@@ -285,6 +287,57 @@ class PermissionsService {
   }
 
   // Method to request Bluetooth Permissions (Android 12+)
+  // static Future<bool> requestBluetoothPermission(BuildContext context) async {
+  //   if (Platform.isAndroid || Platform.isIOS) {
+  //     bool userResponse = await _showPermissionRequestDialog(
+  //       context,
+  //       title: 'Bluetooth Permission',
+  //       message:
+  //           'Bluetooth access is needed to connect with nearby devices for data collection and sharing.',
+  //     );
+  //     if (!userResponse) return false;
+
+  //     // Request Bluetooth Scan permission
+  //     permissionHandler.PermissionStatus bluetoothScanStatus =
+  //         await permissionHandler.Permission.bluetoothScan.request();
+  //     if (bluetoothScanStatus.isDenied ||
+  //         bluetoothScanStatus.isPermanentlyDenied) {
+  //       _showPermissionDeniedDialog(
+  //           context,
+  //           'Bluetooth Scan Permission Required',
+  //           'Please enable Bluetooth Scan permission for device discovery.');
+  //       return false;
+  //     }
+
+  //     // Request Bluetooth Connect permission
+  //     permissionHandler.PermissionStatus bluetoothConnectStatus =
+  //         await permissionHandler.Permission.bluetoothConnect.request();
+  //     if (bluetoothConnectStatus.isDenied ||
+  //         bluetoothConnectStatus.isPermanentlyDenied) {
+  //       _showPermissionDeniedDialog(
+  //           context,
+  //           'Bluetooth Connect Permission Required',
+  //           'Please enable Bluetooth Connect permission for connecting to devices.');
+  //       return false;
+  //     }
+
+  //     // Request Bluetooth Advertise permission (if needed)
+  //     permissionHandler.PermissionStatus bluetoothAdvertiseStatus =
+  //         await permissionHandler.Permission.bluetoothAdvertise.request();
+  //     if (bluetoothAdvertiseStatus.isDenied ||
+  //         bluetoothAdvertiseStatus.isPermanentlyDenied) {
+  //       _showPermissionDeniedDialog(
+  //           context,
+  //           'Bluetooth Advertise Permission Required',
+  //           'Please enable Bluetooth Advertise permission for device communication.');
+  //       return false;
+  //     }
+
+  //     // Mark the permission as requested
+  //     SharedPreferencesUtil().bluetoothPermissionRequested = true;
+  //   }
+  //   return true;
+  // }
   static Future<bool> requestBluetoothPermission(BuildContext context) async {
     if (Platform.isAndroid || Platform.isIOS) {
       bool userResponse = await _showPermissionRequestDialog(
@@ -294,16 +347,40 @@ class PermissionsService {
             'Bluetooth access is needed to connect with nearby devices for data collection and sharing.',
       );
       if (!userResponse) return false;
+      PermissionStatus status = await Permission.bluetoothScan.request();
 
-      // Request Bluetooth Scan permission
-      permissionHandler.PermissionStatus bluetoothScanStatus =
-          await permissionHandler.Permission.bluetoothScan.request();
-      if (bluetoothScanStatus.isDenied ||
-          bluetoothScanStatus.isPermanentlyDenied) {
-        _showPermissionDeniedDialog(
-            context,
-            'Bluetooth Scan Permission Required',
-            'Please enable Bluetooth Scan permission for device discovery.');
+      if (status.isDenied) {
+        log("denied");
+        // Show a dialog or guide the user to the settings
+      } // Request Bluetooth Scan permission
+      // permissionHandler.PermissionStatus bluetoothScanStatus =
+      //     await permissionHandler.Permission.bluetoothScan.request();
+      // if (bluetoothScanStatus.isDenied ||
+      //     bluetoothScanStatus.isPermanentlyDenied) {
+      //   _showPermissionDeniedDialog(
+      //       context,
+      //       'Bluetooth Scan Permission Required',
+      //       'Please enable Bluetooth Scan permission for device discovery.');
+      //   return false;
+      // }
+      try {
+        permissionHandler.PermissionStatus bluetoothScanStatus =
+            await permissionHandler.Permission.bluetoothScan.request();
+
+        if (bluetoothScanStatus.isDenied ||
+            bluetoothScanStatus.isPermanentlyDenied) {
+          _showPermissionDeniedDialog(
+              context,
+              'Bluetooth Scan Permission Required',
+              'Please enable Bluetooth Scan permission for device discovery.');
+          return false;
+        }
+      } catch (e) {
+        // Catch any error that may occur during the permission request
+        _showPermissionDeniedDialog(context, 'Error Occurred',
+            'An error occurred while requesting Bluetooth Scan permission. Please try again.');
+        print(
+            'Error requesting Bluetooth Scan permission: $e'); // Optionally log the error
         return false;
       }
 

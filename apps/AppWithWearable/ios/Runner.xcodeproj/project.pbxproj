@@ -501,14 +501,13 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8N297BP5UV;
+				GOOGLE_SERVICE_INFO_PLIST = "GoogleService-Info-prod.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "CFT-AVM";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.craftech360.avm;
 				PRODUCT_NAME = Runner;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
-				GOOGLE_SERVICE_INFO_PLIST = GoogleService-Info-prod.plist;
-
 			};
 			name = "Release-prod";
 		};
@@ -1310,7 +1309,7 @@
 				AC482D2481D9D06501C7B267 /* Release-dev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Debug-prod";
 		};
 		97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */ = {
 			isa = XCConfigurationList;
@@ -1326,7 +1325,7 @@
 				0CE614322C21F36000559F1E /* Release-dev */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Debug-prod";
 		};
 /* End XCConfigurationList section */
 	};
