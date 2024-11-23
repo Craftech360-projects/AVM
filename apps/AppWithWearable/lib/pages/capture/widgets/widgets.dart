@@ -915,210 +915,226 @@ class GreetingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isDeviceDisconnected = device == null;
     return GestureDetector(
-      onTap: () {
-        print(internetStatus);
-        if (segments != null && segments!.isNotEmpty) {
-          showModalBottomSheet(
-            useSafeArea: true,
-            isScrollControlled: true,
-            context: context,
-            builder: (context) => Stack(
-              children: [
-                Image.asset(
-                  'assets/images/bg_image.png',
-                  fit: BoxFit.fill,
-                  width: double.maxFinite,
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.close),
-                      ),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: getTranscriptWidget(
-                          memoryCreating,
-                          segments ?? [],
-                          photos,
-                          device,
+        onTap: () {
+          print(internetStatus);
+          if (segments != null && segments!.isNotEmpty) {
+            showModalBottomSheet(
+              useSafeArea: true,
+              isScrollControlled: true,
+              context: context,
+              builder: (context) => Stack(
+                children: [
+                  Image.asset(
+                    'assets/images/bg_image.png',
+                    fit: BoxFit.fill,
+                    width: double.maxFinite,
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.close),
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          );
-        }
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              CustomColors.greyLavender,
-              CustomColors.greyLavender,
-            ], // Gradient colors
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Card(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          color:
-              Colors.transparent, // Transparent to show the gradient background
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header with avatar and greeting
-                Row(
-                  children: [
-                    // Avatar
-
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey[200],
-                      ),
-                      child: avatarUrl != null
-                          ? ClipOval(
-                              child: Image.network(
-                                avatarUrl!,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return const Icon(Icons.person,
-                                      color: Colors.grey);
-                                },
-                              ),
-                            )
-                          : const Icon(Icons.person, color: Colors.grey),
-                    ),
-                    const SizedBox(width: 12),
-
-                    // Greeting text with wave emoji
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '👋 Hi! ${SharedPreferencesUtil().givenName ?? "Guest"},\nChange is inevitable. Always strive for the next big thing!',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
-                            ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: getTranscriptWidget(
+                            memoryCreating,
+                            segments ?? [],
+                            photos,
+                            device,
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Divider
-                Container(
-                    height: 2, color: const Color.fromARGB(255, 14, 13, 13)),
-
-                // Swipe message
-                if (segments != null && segments!.isNotEmpty) ...[
-                  const SizedBox(height: 16),
-                  Text(
-                    'Swipe to create memory',
-                    style: TextStyle(
-                      color: Colors.grey[300],
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-
-                // Connection Status
-                Padding(
-                  padding: const EdgeInsets.only(top: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Left Status: INTERNET Connection
-                      Row(
-                        children: [
-                          if (internetStatus != null)
-                            Container(
-                              width: 6,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: internetStatus == 'connected'
-                                    ? Colors.green
-                                    : Colors.red,
-                              ),
-                            ),
-                          const SizedBox(width: 12),
-                          Text(
-                            'Internet',
-                            style: TextStyle(
-                              color: internetStatus == 'connected'
-                                  ? Colors.green
-                                  : Colors.red,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // Right Status: DEVICE Status
-                      Row(
-                        children: [
-                          Container(
-                            width: 6,
-                            height: 6,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isDeviceDisconnected
-                                  ? Colors.amber
-                                  : Colors.green,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            isDeviceDisconnected
-                                ? 'Disconnected'
-                                : '${device?.name ?? ''} ${device?.id.replaceAll(':', '').split('-').last.substring(0, 6) ?? ''}',
-                            style: TextStyle(
-                              color: isDeviceDisconnected
-                                  ? Colors.amber
-                                  : Colors.green,
-                              fontSize: 12,
-                              height: 1.5,
-                            ),
-                            overflow: TextOverflow.fade,
-                          ),
-                        ],
-                      ),
+                        ),
+                      )
                     ],
                   ),
+                ],
+              ),
+            );
+          }
+        },
+        child: Padding(
+          // Add padding for margin-like behavior
+          padding: const EdgeInsets.all(8.0), // Margin of 16 from all sides
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  CustomColors.greyLavender,
+                  CustomColors.greyLavender,
+                ], // Gradient colors
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                // Add white border here
+                color: Colors.white,
+                width: 3,
+              ),
+            ),
+            child: Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              color: Colors
+                  .transparent, // Transparent to show the gradient background
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header with avatar and greeting
+                    Row(
+                      children: [
+                        // Avatar
+
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey[200],
+                          ),
+                          child: avatarUrl != null
+                              ? ClipOval(
+                                  child: Image.network(
+                                    avatarUrl!,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return const Icon(Icons.person,
+                                          color: Colors.grey);
+                                    },
+                                  ),
+                                )
+                              : const Icon(Icons.person, color: Colors.grey),
+                        ),
+                        const SizedBox(width: 12),
+
+                        // Greeting text with wave emoji
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '👋 Hi! ${SharedPreferencesUtil().givenName ?? "Guest"},\nChange is inevitable. Always strive for the next big thing!',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Divider
+                    Container(
+                        height: 2,
+                        color: const Color.fromARGB(255, 14, 13, 13)),
+
+                    // Swipe message
+                    if (segments != null && segments!.isNotEmpty) ...[
+                      const SizedBox(height: 16),
+                      Text(
+                        'Swipe to create memory',
+                        style: TextStyle(
+                          color: Colors.grey[300],
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+
+                    // Connection Status
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Left Status: INTERNET Connection
+                          Row(
+                            children: [
+                              if (internetStatus != null)
+                                Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: InternetStatus.connected ==
+                                            InternetStatus.connected
+                                        ? Colors.green
+                                        : Colors.red,
+                                  ),
+                                ),
+                              const SizedBox(width: 12),
+                              Text(
+                                'Internet',
+                                style: TextStyle(
+                                  color: InternetStatus.connected ==
+                                          InternetStatus.connected
+                                      ? Colors.green
+                                      : Colors.red,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          // Right Status: DEVICE Status
+                          Row(
+                            children: [
+                              Container(
+                                width: 6,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isDeviceDisconnected
+                                      ? Colors.amber
+                                      : Colors.green,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Text(
+                                isDeviceDisconnected
+                                    ? 'Disconnected'
+                                    : '${device?.name ?? ''} ${device?.id.replaceAll(':', '').split('-').last.substring(0, 6) ?? ''}',
+                                style: TextStyle(
+                                  color: isDeviceDisconnected
+                                      ? Colors.amber
+                                      : Colors.green,
+                                  fontSize: 12,
+                                  height: 1.5,
+                                ),
+                                overflow: TextOverflow.fade,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-      // child: Card(
+        ));
+  }
+}
+
+
+  // child: Card(
       //   elevation: 0,
       //   shape: RoundedRectangleBorder(
       //     borderRadius: BorderRadius.circular(16),
@@ -1282,6 +1298,3 @@ class GreetingCard extends StatelessWidget {
       //     ),
       //   ),
       // ),
-    );
-  }
-}
