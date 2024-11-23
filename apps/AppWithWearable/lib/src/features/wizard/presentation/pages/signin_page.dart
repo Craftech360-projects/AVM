@@ -26,12 +26,16 @@ class SigninPage extends StatelessWidget {
     return Stack(
       children: [
         // Background Image
-        Positioned.fill(
+        Positioned(
+          top: MediaQuery.of(context).size.height / 3 -
+              30.h / 2, // One-third height minus half logo height
+          left: 16.0, // Horizontal padding from the left
           child: Image.asset(
-            'assets/images/bg_image.png', // Replace with your image path
-            fit: BoxFit.cover,
+            IconImage.avmLogo,
+            height: 30.h, // Adjust the logo size as needed
           ),
         ),
+
         // Foreground Content
         Padding(
           padding: const EdgeInsets.all(16.0),
@@ -39,11 +43,12 @@ class SigninPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Image.asset(
-                IconImage.avmLogo,
-                height: 30.h,
-              ),
               SizedBox(height: 150.h),
+              // Image.asset(
+              //   IconImage.avmLogo,
+              //   height: 30.h,
+              // ),
+
               Expanded(
                 flex: 6,
                 child: Center(
