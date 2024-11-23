@@ -916,6 +916,7 @@ class GreetingCard extends StatelessWidget {
     bool isDeviceDisconnected = device == null;
     return GestureDetector(
       onTap: () {
+        print(internetStatus);
         if (segments != null && segments!.isNotEmpty) {
           showModalBottomSheet(
             useSafeArea: true,
