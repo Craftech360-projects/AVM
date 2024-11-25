@@ -353,16 +353,16 @@ class PermissionsService {
         log("denied");
         // Show a dialog or guide the user to the settings
       } // Request Bluetooth Scan permission
-      // permissionHandler.PermissionStatus bluetoothScanStatus =
-      //     await permissionHandler.Permission.bluetoothScan.request();
-      // if (bluetoothScanStatus.isDenied ||
-      //     bluetoothScanStatus.isPermanentlyDenied) {
-      //   _showPermissionDeniedDialog(
-      //       context,
-      //       'Bluetooth Scan Permission Required',
-      //       'Please enable Bluetooth Scan permission for device discovery.');
-      //   return false;
-      // }
+      permissionHandler.PermissionStatus bluetoothScanStatus =
+          await permissionHandler.Permission.bluetoothScan.request();
+      if (bluetoothScanStatus.isDenied ||
+          bluetoothScanStatus.isPermanentlyDenied) {
+        _showPermissionDeniedDialog(
+            context,
+            'Bluetooth Scan Permission Required',
+            'Please enable Bluetooth Scan permission for device discovery.');
+        return false;
+      }
       try {
         permissionHandler.PermissionStatus bluetoothScanStatus =
             await permissionHandler.Permission.bluetoothScan.request();

@@ -13,6 +13,7 @@ import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/pages/capture/location_service.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/memories/integrations.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
@@ -215,11 +216,11 @@ Future<Memory> memoryCreationBlock(
         displayDuration: const Duration(milliseconds: 4000),
         Overlay.of(context),
         const CustomSnackBar.info(
-          maxLines: 6,
-          // textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-          message:
-              "Audio processing failed due to noise \n Please try again in a \n quieter place!",
-        ),
+            maxLines: 6,
+            // textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+            message:
+                "Audio processing failed due to noise \n Please try again in a \n quieter place!",
+            backgroundColor: CustomColors.greyLight),
       );
       // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       //   content: Text(
@@ -233,8 +234,8 @@ Future<Memory> memoryCreationBlock(
       showTopSnackBar(
         Overlay.of(context),
         const CustomSnackBar.success(
-          message: 'New memory created! 🚀',
-        ),
+            message: 'New memory created! 🚀',
+            backgroundColor: CustomColors.greyLavender),
       );
       // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       //   content: Text('New memory created! 🚀',

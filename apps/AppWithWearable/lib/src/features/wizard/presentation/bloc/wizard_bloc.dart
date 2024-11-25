@@ -18,14 +18,14 @@ class WizardBloc extends Bloc<WizardEvent, WizardState> {
           await PermissionsService.requestNotificationPermission(context);
       bool hasLocationPermission =
           await PermissionsService.requestLocationPermission(context);
-      bool hasBluetoothPermission =
-          await PermissionsService.requestBluetoothPermission(context);
+      // bool hasBluetoothPermission =
+      //     await PermissionsService.requestBluetoothPermission(context);
       bool hasInternetConnection =
           await PermissionsService.checkInternetConnection(context);
 
       if (notificationGranted &&
           hasLocationPermission &&
-          hasBluetoothPermission &&
+          // hasBluetoothPermission &&
           hasInternetConnection) {
         emit(PermissionsGranted());
       } else {

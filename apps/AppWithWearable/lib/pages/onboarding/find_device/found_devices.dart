@@ -39,8 +39,7 @@ class _FoundDevicesState extends State<FoundDevices>
 
   Future<void> setBatteryPercentage(BTDeviceStruct btDevice) async {
     try {
-      var battery =
-          await retrieveBatteryLevel(btDevice.id);
+      var battery = await retrieveBatteryLevel(btDevice.id);
       setState(() {
         batteryPercentage = battery;
         _isConnected = true;

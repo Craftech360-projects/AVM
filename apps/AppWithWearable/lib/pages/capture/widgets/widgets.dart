@@ -23,6 +23,7 @@ import 'package:friend_private/widgets/transcript.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:lottie/lottie.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -1050,13 +1051,18 @@ class GreetingCard extends StatelessWidget {
                       Text(
                         'Swipe to create memory',
                         style: TextStyle(
-                          color: Colors.grey[300],
+                          color: const Color.fromARGB(255, 31, 31, 31),
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
-
+                    // CustomSnackBar.info(
+                    //     maxLines: 6,
+                    //     // textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                    //     message:
+                    //         "Audio processing failed due to noise \n Please try again in a \n quieter place!",
+                    //    ),
                     // Connection Status
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
