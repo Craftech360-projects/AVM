@@ -69,7 +69,34 @@ Future<String> webhookOnMemoryCreatedCall(Memory? memory,
   if (memory == null) return '';
   debugPrint('devModeWebhookCall: $memory');
   return triggerMemoryRequestAtEndpoint(
-    SharedPreferencesUtil().webhookOnMemoryCreated,
+    //SharedPreferencesUtil().webhookOnMemoryCreated,
+    //  'https://webhook-test.com/e2dd86c6594e8f3557246064cee207e3',
+    'https://hooks.zapier.com/hooks/catch/17966596/3et9fky/',
+    // 'https://based-hardware--plugins-api.modal.run/zapier/memories',
+    memory,
+    returnRawBody: returnRawBody,
+  );
+}
+
+Future<String> zapWebhookOnMemoryCreatedCall(Memory? memory,
+    {bool returnRawBody = false}) async {
+  if (memory == null) return '';
+
+  // Retrieve preferences
+  final isZapierEnabled = SharedPreferencesUtil().zapierEnabled;
+  final webhookUrl = SharedPreferencesUtil().zapierWebhookUrl;
+  print("zap enabeld, $isZapierEnabled");
+  print("zap webhook, $webhookUrl");
+  // Check if Zapier integration is enabled and the webhook URL is valid
+  if (!isZapierEnabled || (webhookUrl == null || webhookUrl.isEmpty)) {
+    debugPrint('Zapier integration is disabled or webhook URL is missing.');
+    return '';
+  }
+
+  debugPrint('zap webcall: $memory');
+
+  return triggerMemoryRequestAtEndpoint(
+    webhookUrl, // Use the webhook URL from SharedPreferences
     memory,
     returnRawBody: returnRawBody,
   );
@@ -109,6 +136,7 @@ Future<bool> isPluginSetupCompleted(String? url) async {
 
 Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory,
     {bool returnRawBody = false}) async {
+  print("urll>>>>,${url}");
   if (url.isEmpty) return '';
   if (url.contains('?')) {
     url += '&uid=${SharedPreferencesUtil().uid}';

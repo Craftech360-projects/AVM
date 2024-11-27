@@ -5,7 +5,6 @@ import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/core/snackbar_util.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
 import 'package:friend_private/pages/plugins/plugin_detail.dart';
-import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:gradient_borders/gradient_borders.dart';
@@ -106,7 +105,7 @@ class _PluginsPageState extends State<PluginsPage> {
                 padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
                 margin: const EdgeInsets.fromLTRB(18, 0, 18, 0),
                 decoration: const BoxDecoration(
-                  color: CustomColors.grey,
+                  color: Colors.black,
                   borderRadius: BorderRadius.all(Radius.circular(16)),
                   border: GradientBoxBorder(
                     gradient: LinearGradient(colors: [
@@ -179,13 +178,11 @@ class _PluginsPageState extends State<PluginsPage> {
                         decoration: BoxDecoration(
                           color: filterMemories
                               ? Colors.deepPurple
-                              : const Color.fromARGB(255, 112, 109, 109),
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(16),
                           border: filterMemories
                               ? Border.all(color: Colors.deepPurple)
-                              : Border.all(
-                                  color:
-                                      const Color.fromARGB(255, 117, 117, 117)),
+                              : Border.all(color: Colors.grey),
                         ),
                         child: const Text(
                           'Memories',
@@ -266,7 +263,7 @@ class _PluginsPageState extends State<PluginsPage> {
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-                    color: CustomColors.greyLavender,
+                    color: Color.fromARGB(35, 255, 255, 255),
                   ),
                   margin: EdgeInsets.only(
                       bottom: 12,
@@ -290,7 +287,7 @@ class _PluginsPageState extends State<PluginsPage> {
                       maxLines: 1,
                       style: const TextStyle(
                           fontWeight: FontWeight.w600,
-                          color: CustomColors.blackPrimary,
+                          color: Colors.white,
                           fontSize: 16),
                     ),
                     subtitle: Column(

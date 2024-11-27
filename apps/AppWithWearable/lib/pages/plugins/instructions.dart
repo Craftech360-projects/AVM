@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:friend_private/src/core/constant/constant.dart';
 
 class PluginSetupInstructions extends StatefulWidget {
   final String markdown;
@@ -9,7 +10,8 @@ class PluginSetupInstructions extends StatefulWidget {
   const PluginSetupInstructions({super.key, required this.markdown});
 
   @override
-  State<PluginSetupInstructions> createState() => _PluginSetupInstructionsState();
+  State<PluginSetupInstructions> createState() =>
+      _PluginSetupInstructionsState();
 }
 
 class _PluginSetupInstructionsState extends State<PluginSetupInstructions> {
@@ -17,10 +19,11 @@ class _PluginSetupInstructionsState extends State<PluginSetupInstructions> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        //  backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text('Setup Instructions'),
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
+      //  backgroundColor: Theme.of(context).colorScheme.primary,
+      backgroundColor: CustomColors.greyOffWhite,
       body: ListView(
         children: [
           const SizedBox(height: 16),
@@ -28,7 +31,8 @@ class _PluginSetupInstructionsState extends State<PluginSetupInstructions> {
             padding: const EdgeInsets.only(left: 16.0, right: 24),
             child: MarkdownBody(
               shrinkWrap: true,
-              styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
+              styleSheet:
+                  MarkdownStyleSheet.fromTheme(Theme.of(context)).copyWith(
                 a: const TextStyle(fontSize: 18, height: 1.2),
                 p: const TextStyle(fontSize: 16, height: 1.2),
                 blockquote: const TextStyle(
@@ -38,7 +42,7 @@ class _PluginSetupInstructionsState extends State<PluginSetupInstructions> {
                   color: Colors.black,
                 ),
                 blockquoteDecoration: BoxDecoration(
-                  color: Colors.grey.shade800,
+                  color: const Color.fromARGB(110, 66, 66, 66),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 code: const TextStyle(
@@ -59,6 +63,7 @@ class _PluginSetupInstructionsState extends State<PluginSetupInstructions> {
                 // return Container();
               },
               onTapLink: (text, href, title) {
+                print(SharedPreferencesUtil().uid);
                 if (href != null) {
                   if (href.contains('?')) {
                     href += '&uid=${SharedPreferencesUtil().uid}';

@@ -101,7 +101,7 @@ void main() async {
           Zone.current.handleUncaughtError(
               details.exception, details.stack ?? StackTrace.empty);
         };
-        Instabug.setColorTheme(ColorTheme.dark);
+        //   Instabug.setColorTheme(ColorTheme.dark);
         _getRunApp(isAuth);
       },
       CrashReporting.reportCrash,
@@ -145,12 +145,12 @@ class _MyAppState extends State<MyApp> {
   Future<void> _initiatePlugins() async {
     plugins = SharedPreferencesUtil().pluginsList;
 
-    debugPrint("pluggnnn>>>>>>>>>>>>>>>>>>>");
+    //  debugPrint("pluggnnn>>>>>>>>>>>>>>>>>>>, ${plugins.toString()}");
     plugins = await retrievePlugins();
 
     //print(plugins);
     _edgeCasePluginNotAvailable();
-    debugPrint("here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    //  debugPrint("here<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     setState(() {});
   }
 
@@ -205,8 +205,8 @@ class _MyAppState extends State<MyApp> {
                 SharedPreferencesUtil().onboardingCompleted && widget.isAuth
                     ? const HomePageWrapper()
                     //   : const HomePageWrapper()
-                    : const SigninPage(),
-                // : const HomePageWrapper()
+                    //   : const SigninPage(),
+                    : const HomePageWrapper()
               ],
             ),
           ),

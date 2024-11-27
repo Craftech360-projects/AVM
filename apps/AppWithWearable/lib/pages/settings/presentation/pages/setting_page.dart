@@ -244,6 +244,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/pages/home/device.dart';
 import 'package:friend_private/pages/onboarding/find_device/page.dart';
+import 'package:friend_private/pages/plugins/page.dart';
+import 'package:friend_private/pages/plugins/zapier/page.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
@@ -369,6 +371,12 @@ class _SettingPageState extends State<SettingPage> {
               }, icon: Icons.calendar_month),
               getItemAddOn('Developers Option', () {
                 routeToPage(context, const DeveloperPage());
+              }, icon: Icons.settings_suggest),
+              getItemAddOn('Plugin', () {
+                routeToPage(context, const PluginsPage());
+              }, icon: Icons.settings_suggest),
+              getItemAddOn('Zapier', () {
+                routeToPage(context, const ZapierPage());
               }, icon: Icons.settings_suggest),
               SizedBox(height: 16.h),
               Padding(

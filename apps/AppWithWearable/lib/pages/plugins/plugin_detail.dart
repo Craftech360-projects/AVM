@@ -57,12 +57,18 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.plugin.name),
-          backgroundColor: Theme.of(context).colorScheme.primary,
+          // backgroundColor: Theme.of(context).colorScheme.primary,
           elevation: 0,
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Color(0xFFE6F5FA),
         body: ListView(
           children: [
+            // Positioned.fill(
+            //   child: Image.asset(
+            //     'assets/images/bg_image.png', // Replace with your image path
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
             const SizedBox(height: 32),
             ListTile(
               leading: CircleAvatar(
@@ -79,7 +85,7 @@ class _PluginDetailPageState extends State<PluginDetailPage> {
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
                       widget.plugin.description,
-                      style: const TextStyle(color: Colors.grey, fontSize: 14),
+                      style: const TextStyle(color: Colors.black, fontSize: 14),
                     ),
                   ),
                   SizedBox(height: widget.plugin.ratingAvg != null ? 4 : 0),

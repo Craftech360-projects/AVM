@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:friend_private/backend/api_requests/api/other.dart';
 import 'package:friend_private/backend/api_requests/api/pinecone.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/api_requests/api/random_memory_img.dart';
@@ -300,11 +301,11 @@ Future<Memory> finalizeMemoryRecord(
   memory.structured.target = structured;
 
   // Add plugin responses
-  // for (var r in pluginsResponse) {
-  //   memory.pluginsResponse.add(PluginResponse(r.item2, pluginId: r.item1.id));
-  // }
+  for (var r in pluginsResponse) {
+    memory.pluginsResponse.add(PluginResponse(r.item2, pluginId: r.item1.id));
+  }
 
-  // // Add photos
+  zapWebhookOnMemoryCreatedCall(memory, returnRawBody: true); // Add photos
   // for (var image in photos) {
   //   memory.photos.add(MemoryPhoto(image.item1, image.item2));
   // }

@@ -355,6 +355,18 @@ class SharedPreferencesUtil {
 
   String get fullName => '$givenName $familyName';
 
+  set zapierApiKey(String value) => saveString('zapierApiKey', value);
+
+  String get zapierApiKey => getString('zapierApiKey') ?? '';
+
+  set zapierWebhookUrl(String value) => saveString('zapierWebhookUrl', value);
+
+  String get zapierWebhookUrl => getString('zapierWebhookUrl') ?? '';
+
+  set zapierEnabled(bool value) => saveBool('zapierEnabled', value);
+
+  bool get zapierEnabled => getBool('zapierEnabled') ?? false;
+
 // String get userName => getString('userName') ?? givenName; // the one the users sets
 //
 // set userName(String value) => saveString('userName', value);

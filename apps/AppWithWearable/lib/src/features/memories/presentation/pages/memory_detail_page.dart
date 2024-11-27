@@ -5,12 +5,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/features/memory/presentation/bloc/memory_bloc.dart';
 import 'package:friend_private/pages/home/backgrund_scafold.dart';
+import 'package:friend_private/pages/memory_detail/share.dart';
+import 'package:friend_private/pages/memory_detail/widgets.dart';
 import 'package:friend_private/src/core/common_widget/common_widget.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/category_chip.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/overall_tab.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/tab_bar.dart';
 import 'package:friend_private/src/features/memories/presentation/widgets/transcript_tab.dart';
+import 'package:friend_private/utils/memories/reprocess.dart';
 import 'package:intl/intl.dart';
 
 // class MemoryDetailPage extends StatefulWidget {
@@ -41,6 +44,11 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
   late TabController _tabController;
   late Memory selectedMemory;
   //log(selectedMemory);
+  TextEditingController titleController = TextEditingController();
+  TextEditingController overviewController = TextEditingController();
+  PageController pageController = PageController();
+
+  List<bool> pluginResponseExpanded = [];
   @override
   void initState() {
     super.initState();
@@ -119,80 +127,138 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     final formattedTranscript =
         _getFormattedTranscript(selectedMemory.transcript);
 
-    return CustomScaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        backgroundColor: const Color(0xFFE6F5FA),
-        title: Text(
-          selectedMemory.createdAt != null
-              ? '${DateFormat('d MMM').format(selectedMemory.createdAt!)}   '
-                  '${DateFormat('h:mm a').format(selectedMemory.createdAt!)}'
-              : 'No Date',
-          style: textTheme.titleSmall?.copyWith(
-            color: CustomColors.greyLight,
-          ),
-        ),
-        actions: [
-          CustomIconButton(
-            size: 20.h,
-            iconPath: IconImage.share,
-            onPressed: () {},
-          ),
-          SizedBox(width: 8.w),
-          CustomIconButton(
-            size: 20.h,
-            iconPath: IconImage.moreHorizontal,
-            onPressed: () {},
-          ),
-          SizedBox(width: 8.w),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 14.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              selectedMemory.createdAt != null
-                  ? '${selectedMemory.structured.target?.title}'
-                  : "Not title",
-              style: textTheme.labelLarge?.copyWith(fontSize: 20.h),
+    return Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          // backgroundColor: const Color(0xFFE6F5FA),
+          title: Text(
+            selectedMemory.createdAt != null
+                ? '${DateFormat('d MMM').format(selectedMemory.createdAt!)}   '
+                    '${DateFormat('h:mm a').format(selectedMemory.createdAt!)}'
+                : 'No Date',
+            style: textTheme.titleSmall?.copyWith(
+              color: CustomColors.greyLight,
             ),
-            SizedBox(height: 12.h),
-            if (categories.isNotEmpty)
-              Wrap(
-                spacing: 8.w,
-                runSpacing: 8.h,
-                children: categories
-                    .map(
-                      (category) => CategoryChip(
-                        tagName: category,
-                      ),
-                    )
-                    .toList(),
-              ),
-            SizedBox(height: 12.h),
-            Expanded(
-              child: CustomTabBar(
-                tabs: [
-                  Tab(text: 'Overall'),
-                  Tab(text: 'Transcript'),
-                ],
-                children: [
-                  OverallTab(target: selectedMemory.structured.target!),
-                  //  TranscriptTab(target: selectedMemory.transcript!),
-                  TranscriptTab(
-                    memoryBloc: widget.memoryBloc,
-                    memoryAtIndex: widget.memoryAtIndex, // Add this
-                    // pageController: widget
-                    //     .pageController, // Add this// Pass the formatted transcript
-                  ),
-                ],
-              ),
+          ),
+          actions: [
+            // CustomIconButton(
+            //   size: 20.h,
+            //   iconPath: IconImage.share,
+            //   onPressed: () {},
+            // ),
+            // SizedBox(width: 8.w),
+            // CustomIconButton(
+            //   size: 20.h,
+            //   iconPath: IconImage.moreHorizontal,
+            //   onPressed: () {},
+            // ),
+            // SizedBox(width: 8.w),
+
+            IconButton(
+              onPressed: () {
+                showShareBottomSheet(
+                  context,
+                  widget.memoryBloc.state.memories[widget.memoryAtIndex],
+                  setState,
+                );
+              },
+              icon: const Icon(Icons.ios_share, size: 20),
+            ),
+            IconButton(
+              onPressed: () {
+                showOptionsBottomSheet(
+                  context,
+                  setState,
+                  widget.memoryBloc.state.memories[widget.memoryAtIndex],
+                  _reProcessMemory,
+                );
+              },
+              icon: const Icon(Icons.more_horiz),
             ),
           ],
         ),
-      ),
+        body: Container(
+          color: const Color(0xFFE6F5FA),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  selectedMemory.createdAt != null
+                      ? '${selectedMemory.structured.target?.title}'
+                      : "Not title",
+                  style: textTheme.labelLarge?.copyWith(fontSize: 20.h),
+                ),
+                SizedBox(height: 12.h),
+                if (categories.isNotEmpty)
+                  Wrap(
+                    spacing: 8.w,
+                    runSpacing: 8.h,
+                    children: categories
+                        .map(
+                          (category) => CategoryChip(
+                            tagName: category,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                SizedBox(height: 12.h),
+                Expanded(
+                  child: CustomTabBar(
+                    tabs: [
+                      Tab(text: 'Overall'),
+                      Tab(text: 'Transcript'),
+                    ],
+                    children: [
+                      OverallTab(target: selectedMemory.structured.target!),
+                      //  TranscriptTab(target: selectedMemory.transcript!),
+                      TranscriptTab(
+                        memoryBloc: widget.memoryBloc,
+                        memoryAtIndex: widget.memoryAtIndex, // Add this
+                        // pageController: widget
+                        //     .pageController, // Add this// Pass the formatted transcript
+                      ),
+                    ],
+                  ),
+                ),
+                // IconButton(
+                //   onPressed: () {
+                //     showOptionsBottomSheet(
+                //       context,
+                //       setState,
+                //       widget.memoryBloc.state.memories[widget.memoryAtIndex],
+                //       _reProcessMemory,
+                //     );
+                //   },
+                //   icon: const Icon(Icons.more_horiz),
+                // ),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  _reProcessMemory(BuildContext context, StateSetter setModalState,
+      Memory memory, Function changeLoadingState) async {
+    Memory? newMemory = await reProcessMemory(
+      context,
+      memory,
+      () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content:
+              Text('Error while processing memory. Please try again later.'))),
+      changeLoadingState,
     );
+
+    pluginResponseExpanded = List.filled(memory.pluginsResponse.length, false);
+    overviewController.text = newMemory!.structured.target!.overview;
+    titleController.text = newMemory.structured.target!.title;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text('Memory processed! 🚀',
+              style: TextStyle(color: Colors.white))),
+    );
+    Navigator.pop(context, true);
   }
 }

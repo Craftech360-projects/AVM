@@ -279,7 +279,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       child: CustomScaffold(
         device: _device, // Replace with your device instance
         batteryLevel: batteryLevel, // Replace with your battery level
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        //  backgroundColor: Theme.of(context).colorScheme.primary,
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -288,6 +288,12 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           },
           child: Stack(
             children: [
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/bg_image.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
               TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: _controller,
