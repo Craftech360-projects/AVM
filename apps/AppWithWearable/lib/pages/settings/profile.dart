@@ -34,6 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
       //  backgroundColor: const Color(0xFFE6F5FA),
       appBar: AppBar(
         centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 246, 253, 255),
         title: Text(
           'Profile',
           style: textTheme.titleLarge?.copyWith(

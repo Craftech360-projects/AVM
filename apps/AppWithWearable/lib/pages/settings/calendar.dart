@@ -40,6 +40,7 @@ class _CalendarPageState extends State<CalendarPage> {
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 246, 253, 255),
         centerTitle: true,
         // backgroundColor: const Color(0xFFE6F5FA),
         // backgroundColor: const Color(0xFFE6F5FA),

@@ -90,6 +90,7 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
     return Scaffold(
       // backgroundColor: const Color(0xFFE6F5FA),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 246, 253, 255),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

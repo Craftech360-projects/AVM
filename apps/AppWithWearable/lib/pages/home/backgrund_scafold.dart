@@ -68,26 +68,55 @@ class CustomScaffold extends StatelessWidget {
       // appBar: appBar,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: const Color(0xFFE6F5FA),
+        backgroundColor: const Color.fromARGB(255, 246, 253, 255),
         leading: BatteryIndicator(batteryLevel: batteryLevel),
         actions: [
-          CircleAvatar(
-            backgroundColor: CustomColors.greyLavender,
-            child: CustomIconButton(
-              size: 16.h,
-              iconPath: IconImage.gear,
-              onPressed: () {
-                print("here");
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        SettingPage(device: device, batteryLevel: batteryLevel),
-                  ),
-                );
-              },
+          // CircleAvatar(
+          //   backgroundColor: CustomColors.greyLavender,
+          //   child: CustomIconButton(
+          //     size: 20.h,
+          //     iconPath: IconImage.gear,
+          //     onPressed: () {
+          //       print("here");
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) =>
+          //               SettingPage(device: device, batteryLevel: batteryLevel),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // )
+          GestureDetector(
+            onTap: () {
+              print("Outer CircleAvatar tapped");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      SettingPage(device: device, batteryLevel: batteryLevel),
+                ),
+              );
+            },
+            child: CircleAvatar(
+              backgroundColor: CustomColors.greyLavender,
+              child: CustomIconButton(
+                size: 20.h,
+                iconPath: IconImage.gear,
+                onPressed: () {
+                  print("Inner button pressed");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingPage(
+                          device: device, batteryLevel: batteryLevel),
+                    ),
+                  );
+                },
+              ),
             ),
-          )
+          ),
         ],
       ),
       body: Stack(

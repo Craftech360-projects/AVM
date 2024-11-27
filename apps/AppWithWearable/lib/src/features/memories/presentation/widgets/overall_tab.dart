@@ -5,9 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
+import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/src/core/common_widget/expandable_text.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
+import 'package:friend_private/utils/features/calendar.dart';
+import 'package:friend_private/utils/other/temp.dart';
 
 class OverallTab extends StatefulWidget {
   final Structured
@@ -78,20 +82,64 @@ class _OverallTabState extends State<OverallTab> {
               int index = entry.key + 1;
               var event = entry.value;
 
-              return CustomListTile(
-                leading: Text(
-                  '$index.',
-                  style: textTheme.bodyLarge?.copyWith(
-                    color: CustomColors.grey,
+              return ListTile(
+                  leading: Text(
+                    '$index.',
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: CustomColors.grey,
+                    ),
                   ),
-                ),
-                title: Text(
-                  event, // Replace this with the correct event property if needed
-                  style: textTheme.bodyLarge?.copyWith(
-                    color: CustomColors.grey,
+                  title: Text(
+                    event.title,
+                    // Replace this with the correct event property if needed
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: CustomColors.grey,
+                    ),
                   ),
-                ),
-              );
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Text(
+                      ''
+                      '${dateTimeFormat('MMM d, yyyy', event.startsAt)} at ${dateTimeFormat('h:mm a', event.startsAt)} ~ ${event.duration} minutes.',
+                      style: const TextStyle(color: Colors.grey, fontSize: 15),
+                    ),
+                  ),
+                  trailing: IconButton(
+                    onPressed: event.created
+                        ? null
+                        : () {
+                            var calEnabled =
+                                SharedPreferencesUtil().calendarEnabled;
+                            var calSelected =
+                                SharedPreferencesUtil().calendarId.isNotEmpty;
+                            if (!calEnabled || !calSelected) {
+                              routeToPage(context, const CalendarPage());
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(!calEnabled
+                                      ? 'Enable calendar integration to add events'
+                                      : 'Select a calendar to add events to'),
+                                ),
+                              );
+                              return;
+                            }
+                            MemoryProvider().setEventCreated(event);
+                            setState(() => event.created = true);
+                            CalendarUtil().createEvent(
+                              event.title,
+                              event.startsAt,
+                              event.duration,
+                              description: event.description,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Event added to calendar'),
+                              ),
+                            );
+                          },
+                    icon: Icon(event.created ? Icons.check : Icons.add,
+                        color: CustomColors.blackPrimary),
+                  ));
             }),
           SizedBox(height: 12.h),
 

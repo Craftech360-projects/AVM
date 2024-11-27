@@ -33,7 +33,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
       // backgroundColor: const Color(0xFFE6F5FA),
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: const Color(0xFFE6F5FA),
+        backgroundColor: const Color.fromARGB(255, 246, 253, 255),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

@@ -53,6 +53,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     with WidgetsBindingObserver, TickerProviderStateMixin {
   ForegroundUtil foregroundUtil = ForegroundUtil();
   TabController? _controller;
+
   List<Widget> screens = [Container(), const SizedBox(), const SizedBox()];
 
   List<Memory> memories = [];
