@@ -1,23 +1,34 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/backend/schema/plugin.dart';
+import 'package:friend_private/pages/memory_detail/widgets.dart';
 import 'package:friend_private/pages/settings/calendar.dart';
 import 'package:friend_private/src/core/common_widget/expandable_text.dart';
 import 'package:friend_private/src/core/common_widget/list_tile.dart';
 import 'package:friend_private/src/core/constant/constant.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/temp.dart';
+import 'package:friend_private/widgets/expandable_text.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+
+import '../../../../../pages/plugins/page.dart';
 
 class OverallTab extends StatefulWidget {
-  final Structured
-      target; // Replace `Memory` with the actual data type you have
+  final Structured target;
 
-  const OverallTab({super.key, required this.target});
+  final dynamic
+      pluginsResponse; // Replace `Memory` with the actual data type you have
+
+  const OverallTab({super.key, required this.target, this.pluginsResponse});
 
   @override
   _OverallTabState createState() => _OverallTabState();
@@ -28,15 +39,29 @@ class _OverallTabState extends State<OverallTab> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final events = widget.target.events ?? [];
-    log(events.toString());
+    final pluginResponse = widget.pluginsResponse;
+    List<bool> pluginResponseExpanded = [];
+    final pluginsList = SharedPreferencesUtil().pluginsList;
+    //  log(events.toString());
+    log(pluginResponse[0].toString());
+
+    print(pluginResponse.runtimeType);
+    if (pluginResponse.isNotEmpty) {
+      print(pluginResponse[0]); // Prints the first element
+      print(pluginResponse[0]
+          .runtimeType); // Prints the type of the first element
+    }
+
     final actionItems = widget.target
         .actionItems; // Replace `actionItems` with the correct field in `target`
-    log("actionItems>>>>>, ${actionItems.toString()}");
-
+    // log("actionItems>>>>>, ${actionItems.toString()}");
+    pluginResponseExpanded = List.filled(pluginResponse.length, false);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 12.h),
+
           /// AI Summary
           CustomListTile(
             leading: SvgPicture.asset(
@@ -81,7 +106,7 @@ class _OverallTabState extends State<OverallTab> {
             ...events.asMap().entries.map((entry) {
               int index = entry.key + 1;
               var event = entry.value;
-
+              SizedBox(height: 12.h);
               return ListTile(
                   leading: Text(
                     '$index.',
@@ -197,8 +222,163 @@ class _OverallTabState extends State<OverallTab> {
                 ),
               );
             }).toList(),
+          // getPluginsWidgets(
+          //   context,
+          //   pluginResponse,
+          //   pluginsList,
+          //   (i) => setState(
+          //       () => pluginResponseExpanded[i] = !pluginResponseExpanded[i]),
+          // ),
+          const SizedBox(height: 32),
+          Divider(color: CustomColors.purpleBright, height: 1),
+          const SizedBox(height: 32),
+          ...getPluginsWidgets(
+            context,
+            pluginResponse,
+            pluginsList,
+            pluginResponseExpanded,
+            (i) => setState(
+                () => pluginResponseExpanded[i] = !pluginResponseExpanded[i]),
+          )
         ],
       ),
     );
+  }
+
+  List<Widget> getPluginsWidgets(
+    BuildContext context,
+    List<PluginResponse> pluginResponse,
+    List<Plugin> pluginsList,
+    List<bool> pluginResponseExpanded,
+    Function(int) onItemToggled,
+  ) {
+    if (pluginResponse.isEmpty) {
+      return [
+        const SizedBox(height: 32),
+        Text(
+          'No plugins were triggered.',
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 20),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                border: const Border(),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (c) => const PluginsPage()));
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                    child: Text('Enable Plugins',
+                        style: TextStyle(
+                            color: CustomColors.blackPrimary, fontSize: 16))),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 32),
+      ];
+    } else {
+      return [
+        Text(
+          'Plugins 🧑‍💻',
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 26),
+        ),
+        const SizedBox(height: 24),
+        ...pluginResponse.mapIndexed((i, pluginResponse) {
+          if (pluginResponse.content.length < 5) return const SizedBox.shrink();
+          Plugin? plugin = pluginsList.firstWhereOrNull(
+              (element) => element.id == pluginResponse.pluginId);
+          return Container(
+            margin: const EdgeInsets.only(bottom: 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                plugin != null
+                    ? ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          maxRadius: 16,
+                          backgroundImage: NetworkImage(plugin.getImageUrl()),
+                        ),
+                        title: Text(
+                          plugin.name,
+                          maxLines: 1,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: CustomColors.blackPrimary,
+                            fontSize: 16,
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Text(
+                            plugin.description,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 14),
+                          ),
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.copy_rounded,
+                              color: Colors.white, size: 20),
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(
+                                text: utf8.decode(
+                                    pluginResponse.content.trim().codeUnits)));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content:
+                                  Text('Plugin response copied to clipboard'),
+                            ));
+                          },
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+                // ExpandableTextWidget(
+                //   text: utf8.decode(pluginResponse.content.trim().codeUnits),
+                //   isExpanded: pluginResponseExpanded[i],
+                //   toggleExpand: () {
+                //     onItemToggled(i);
+                //   },
+                //   style: TextStyle(
+                //       color: CustomColors.blackSecondary,
+                //       fontSize: 15,
+                //       height: 1.3),
+                //   maxLines: 6,
+                //   linkColor: Colors.white,
+                // ),
+                ExpandableTextWidget(
+                  text: utf8.decode(pluginResponse.content.trim().codeUnits),
+                  // isExpanded: pluginResponseExpanded[i],
+                  isExpanded: pluginResponseExpanded[i],
+                  toggleExpand: () => onItemToggled(i), // Updates the state
+                  style: TextStyle(
+                    color: CustomColors.blackSecondary,
+                    fontSize: 15,
+                    height: 1.3,
+                  ),
+                  maxLines: 6,
+                  linkColor: Colors.white,
+                ),
+              ],
+            ),
+          );
+        }),
+        const SizedBox(height: 8),
+      ];
+    }
   }
 }

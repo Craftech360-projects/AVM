@@ -73,6 +73,7 @@ class _TranscriptContent extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 12.h),
           Text(
             segment.timestamp ?? '00:00:30',
             style: textTheme.titleMedium?.copyWith(

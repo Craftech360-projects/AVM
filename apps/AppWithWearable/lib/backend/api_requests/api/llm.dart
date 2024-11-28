@@ -170,6 +170,62 @@ Future<dynamic> llamaApiCall({
   }
 }
 
+Future<dynamic> llamaPluginApiCall({
+  required String message,
+  double temperature = 0.7,
+  int maxTokens = -1,
+}) async {
+  debugPrint("Inside LLaMA API call");
+
+  // Define the URL for the LLaMA API
+  const url = 'https://api.groq.com/openai/v1/chat/completions';
+
+  // Define the headers for the request
+  final headers = {
+    'Content-Type': 'application/json',
+    'Authorization':
+        'Bearer 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',
+  };
+
+  // Construct the body of the request
+  final body = jsonEncode({
+    // Replace with specific model identifier if needed
+    "model": "llama3-8b-8192",
+    'messages': [
+      {'role': 'system', 'content': ''' '''},
+      {
+        'role': 'user',
+        'content': " {$message}",
+      },
+    ],
+    'temperature': temperature,
+    'max_tokens': maxTokens,
+    'stream': false,
+    'response_format': {"type": "text"},
+  });
+
+  // Make the API call
+  try {
+    var response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+    if (response.statusCode == 200) {
+      debugPrint("Success: ${response.statusCode}, ${response.body}");
+      print("Plugin response>>>> $jsonDecode(response.body)");
+      // return jsonDecode(response.body);
+      var decodedResponse = jsonDecode(response.body);
+      // Extract and return only the content
+      debugPrint(decodedResponse['choices'][0]['message']['content']);
+      return decodedResponse['choices'][0]['message']['content'];
+    } else {
+      debugPrint("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
+      return null;
+    }
+  } catch (e) {
+    debugPrint("Error making LLaMA API call: $e");
+    return null;
+  }
+}
+
 Future<String> executeGptPrompt(String? prompt,
     {bool ignoreCache = false}) async {
   if (prompt == null) return '';
@@ -190,8 +246,38 @@ Future<String> executeGptPrompt(String? prompt,
 
   String response = await llamaApiCall(
       message: prompt,
-      temperature: 0.7, // Adjust temperature as needed
-      maxTokens: 1000 // Adjust maxTokens as needed or set to -1 for default
+      temperature: 0.9, // Adjust temperature as needed
+      maxTokens: 3000 // Adjust maxTokens as needed or set to -1 for default
+      );
+  debugPrint(">>>>>>>>>>>>>>>>??? $response");
+  // debugPrint('executeGptPrompt response: $response');
+  prefs.setGptCompletionCache(promptBase64, response);
+  //debugPrint('executeGptPrompt response: $response');
+  return response;
+}
+
+Future<String> executeGptPluginPrompt(String? prompt,
+    {bool ignoreCache = false}) async {
+  if (prompt == null) return '';
+  print("executing prompt here>>>>>>>>>>>>>>>, ${prompt.length}");
+  var prefs = SharedPreferencesUtil();
+  var promptBase64 = base64Encode(utf8.encode(prompt));
+  var cachedResponse = prefs.gptCompletionCache(promptBase64);
+  if (!ignoreCache && prefs.gptCompletionCache(promptBase64).isNotEmpty) {
+    return cachedResponse;
+  }
+  // print(">>>>>>>>>>>>>>>start");
+  // api call using openai
+  // String response = await gptApiCall(model: 'gpt-4o', messages: [
+  //   {'role': 'system', 'content': prompt}
+  // ]);
+
+  //api call using llama
+
+  String response = await llamaPluginApiCall(
+      message: prompt,
+      temperature: 0.9, // Adjust temperature as needed
+      maxTokens: 3000 // Adjust maxTokens as needed or set to -1 for default
       );
   debugPrint(">>>>>>>>>>>>>>>>??? $response");
   // debugPrint('executeGptPrompt response: $response');

@@ -203,7 +203,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                         )
                         .toList(),
                   ),
-                SizedBox(height: 12.h),
+                SizedBox(height: 32.h),
+                //  const SizedBox(height: 32),
                 Expanded(
                   child: CustomTabBar(
                     tabs: [
@@ -211,7 +212,9 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                       Tab(text: 'Transcript'),
                     ],
                     children: [
-                      OverallTab(target: selectedMemory.structured.target!),
+                      OverallTab(
+                          target: selectedMemory.structured.target!,
+                          pluginsResponse: selectedMemory.pluginsResponse),
                       //  TranscriptTab(target: selectedMemory.transcript!),
                       TranscriptTab(
                         memoryBloc: widget.memoryBloc,

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -301,10 +302,14 @@ Future<Memory> finalizeMemoryRecord(
   memory.structured.target = structured;
 
   // Add plugin responses
+
+  //
+  print("Plugin working started>>>>>>>>>>>>>>>");
   for (var r in pluginsResponse) {
     memory.pluginsResponse.add(PluginResponse(r.item2, pluginId: r.item1.id));
   }
-
+  print("Plugin working finished<<<<<<<<<<<<<<<<<<<<<<<<");
+  log("plugin response,${memory.pluginsResponse.toString()}");
   zapWebhookOnMemoryCreatedCall(memory, returnRawBody: true); // Add photos
   // for (var image in photos) {
   //   memory.photos.add(MemoryPhoto(image.item1, image.item2));

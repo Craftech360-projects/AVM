@@ -151,8 +151,11 @@ Respond in a JSON format with the following structure:
 //  Plugins Response:
     var structured = Structured.fromJson(await jsonDecode(structuredResponse));
     debugPrint("structured, $structured");
-    if (structured.title.isEmpty) return SummaryResult(structured, []);
+
     var pluginsResponse = await executePlugins(transcript);
+    print("$pluginsResponse");
+    if (structured.title.isEmpty) return SummaryResult(structured, []);
+
     //var pluginsResponse = await executePlugins(transcript);
     return SummaryResult(structured, pluginsResponse);
   } catch (e) {
@@ -162,6 +165,7 @@ Respond in a JSON format with the following structure:
 }
 
 Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
+  print("executing pluginssss .....$transcript");
   final pluginsList = SharedPreferencesUtil().pluginsList;
   final pluginsEnabled = SharedPreferencesUtil().pluginsEnabled;
   final enabledPlugins = pluginsList
@@ -173,7 +177,7 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
     (plugin) async {
       try {
         // TODO: tweak with user name in anyway?
-        String response = await executeGptPrompt('''
+        String response = await executeGptPluginPrompt('''
         Your are an AI with the following characteristics:
         Name: ${plugin.name}, 
         Description: ${plugin.description},
@@ -190,6 +194,9 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
             .replaceAll('     ', '')
             .replaceAll('    ', '')
             .trim());
+
+        print("plugin response, $response");
+
         return Tuple2(
             plugin, response.replaceAll('```', '').replaceAll('""', '').trim());
       } catch (e, stacktrace) {
@@ -200,7 +207,7 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
         //       'plugins_count': pluginsEnabled.length.toString(),
         //       'transcript_length': transcript.length.toString(),
         //     });
-        debugPrint('Error executing plugin ${plugin.id}');
+        debugPrint('Error executing plugin ${plugin.id},${e}');
         return Tuple2(plugin, '');
       }
     },

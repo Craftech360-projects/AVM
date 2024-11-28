@@ -50,7 +50,12 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
           ),
           if (isOverflowing)
             InkWell(
-              onTap: () => widget.toggleExpand(),
+              onTap: () => {
+                print("click expand"),
+                widget.toggleExpand(),
+                widget.isExpanded != widget.isExpanded,
+                print(widget.isExpanded),
+              },
               child: Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Text(
