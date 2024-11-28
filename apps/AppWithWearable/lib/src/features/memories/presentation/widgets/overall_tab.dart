@@ -232,6 +232,7 @@ class _OverallTabState extends State<OverallTab> {
           const SizedBox(height: 32),
           Divider(color: CustomColors.purpleBright, height: 1),
           const SizedBox(height: 32),
+
           ...getPluginsWidgets(
             context,
             pluginResponse,
@@ -252,6 +253,11 @@ class _OverallTabState extends State<OverallTab> {
     List<bool> pluginResponseExpanded,
     Function(int) onItemToggled,
   ) {
+    if (pluginResponseExpanded.length != pluginResponse.length) {
+      pluginResponseExpanded =
+          List.generate(pluginResponse.length, (index) => false);
+    }
+    print(pluginResponse.isEmpty);
     if (pluginResponse.isEmpty) {
       return [
         const SizedBox(height: 32),
