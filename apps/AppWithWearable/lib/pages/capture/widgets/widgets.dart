@@ -973,11 +973,11 @@ class GreetingCard extends StatelessWidget {
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(26),
-              border: Border.all(
-                // Add white border here
-                color: Colors.white,
-                width: 3,
-              ),
+              // border: Border.all(
+              //   // Add white border here
+              //   color: Colors.white,
+              //   width: 3,
+              // ),
             ),
             child: Card(
               elevation: 0,
@@ -1034,6 +1034,7 @@ class GreetingCard extends StatelessWidget {
                                       'Montserrat-Bold', // Built-in material design font
                                 ),
                               ),
+                              const SizedBox(height: 6),
                               Text(
                                 'Change is inevitable. Always strive for the next big thing!',
                                 style: TextStyle(
