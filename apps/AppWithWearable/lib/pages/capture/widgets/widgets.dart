@@ -966,8 +966,8 @@ class GreetingCard extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.blueGrey.shade400,
-                  Colors.blueGrey.shade400,
+                  Colors.blueGrey.shade200,
+                  Colors.blueGrey.shade200,
                 ], // Gradient colors
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -1054,7 +1054,7 @@ class GreetingCard extends StatelessWidget {
                     const SizedBox(height: 16),
 
                     // Divider
-                    Container(height: 1, color: CustomColors.white),
+                    Container(height: 1, color: CustomColors.purpleDark),
 
                     // Swipe message
                     if (segments != null && segments!.isNotEmpty) ...[
