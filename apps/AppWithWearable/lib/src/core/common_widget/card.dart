@@ -22,11 +22,30 @@ class CustomCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
-      child: Card(
-        color: const Color.fromARGB(255, 217, 217, 218),
-        elevation: 0,
-        shape: RoundedRectangleBorder(
+      // child: Card(
+      //   color: CustomColors.white,
+      //   elevation: 5,
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(borderRadius),
+      //   ),
+      //   child: Padding(
+      //     padding: padding,
+      //     child: child,
+      //   ),
+      // ),
+
+      child: Container(
+        decoration: BoxDecoration(
+          color: CustomColors.white,
           borderRadius: BorderRadius.circular(borderRadius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2), // Shadow color
+              spreadRadius: 8, // Spread radius
+              blurRadius: 8, // Blur radius
+              offset: Offset(2, 2), // Shadow position (x, y)
+            ),
+          ],
         ),
         child: Padding(
           padding: padding,

@@ -62,8 +62,15 @@ class FinalizePage extends StatelessWidget {
                       onPressed: () {
                         if (SharedPreferencesUtil().onboardingCompleted) {
                           // previous users
-                          routeToPage(context, const HomePageWrapper(),
-                              replace: true);
+                          //   routeToPage(context, const HomePageWrapper(),
+                          //       replace: true);
+                          // }
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomePageWrapper(),
+                            ),
+                          );
                         }
                       },
                       child: Text(

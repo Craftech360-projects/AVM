@@ -281,6 +281,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
         device: _device, // Replace with your device instance
         batteryLevel: batteryLevel, // Replace with your battery level
         //  backgroundColor: Theme.of(context).colorScheme.primary,
+        tabIndex: _controller!.index,
         body: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -289,12 +290,12 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           },
           child: Stack(
             children: [
-              Positioned.fill(
-                child: Image.asset(
-                  'assets/images/bg_image.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
+              // Positioned.fill(
+              //   child: Image.asset(
+              //     'assets/images/bg_image.png',
+              //     fit: BoxFit.cover,
+              //   ),
+              // ),
               TabBarView(
                 physics: const NeverScrollableScrollPhysics(),
                 controller: _controller,
@@ -562,57 +563,57 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
 
                // _controller!.index == 1
-              //     ? Padding(
-              //         padding: const EdgeInsets.only(left: 0),
-              //         child: Container(
-              //           // decoration: BoxDecoration(
-              //           //   border: Border.all(color: Colors.grey),
-              //           //   borderRadius: BorderRadius.circular(30),
-              //           // ),
-              //           padding: const EdgeInsets.symmetric(horizontal: 16),
-              //           child: DropdownButton<String>(
-              //             menuMaxHeight: 350,
-              //             value: SharedPreferencesUtil().selectedChatPluginId,
-              //             onChanged: (s) async {
-              //               if ((s == 'no_selected' &&
-              //                       SharedPreferencesUtil()
-              //                           .pluginsEnabled
-              //                           .isEmpty) ||
-              //                   s == 'enable') {
-              //                 await routeToPage(context,
-              //                     const PluginsPage(filterChatOnly: true));
-              //                 setState(() {});
-              //                 return;
-              //               }
-              //               print(
-              //                   'Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
-              //               if (s == null ||
-              //                   s ==
-              //                       SharedPreferencesUtil()
-              //                           .selectedChatPluginId) return;
+                  // ? Padding(
+                  //     padding: const EdgeInsets.only(left: 0),
+                  //     child: Container(
+                  //       // decoration: BoxDecoration(
+                  //       //   border: Border.all(color: Colors.grey),
+                  //       //   borderRadius: BorderRadius.circular(30),
+                  //       // ),
+                  //       padding: const EdgeInsets.symmetric(horizontal: 16),
+                  //       child: DropdownButton<String>(
+                  //         menuMaxHeight: 350,
+                  //         value: SharedPreferencesUtil().selectedChatPluginId,
+                  //         onChanged: (s) async {
+                  //           if ((s == 'no_selected' &&
+                  //                   SharedPreferencesUtil()
+                  //                       .pluginsEnabled
+                  //                       .isEmpty) ||
+                  //               s == 'enable') {
+                  //             await routeToPage(context,
+                  //                 const PluginsPage(filterChatOnly: true));
+                  //             setState(() {});
+                  //             return;
+                  //           }
+                  //           print(
+                  //               'Selected: $s prefs: ${SharedPreferencesUtil().selectedChatPluginId}');
+                  //           if (s == null ||
+                  //               s ==
+                  //                   SharedPreferencesUtil()
+                  //                       .selectedChatPluginId) return;
 
-              //               SharedPreferencesUtil().selectedChatPluginId = s;
-              //               var plugin =
-              //                   plugins.firstWhereOrNull((p) => p.id == s);
-              //               // chatPageKey.currentState
-              //               //     ?.sendInitialPluginMessage(plugin);
-              //               setState(() {});
-              //             },
-              //             icon: Container(),
-              //             alignment: Alignment.center,
-              //             dropdownColor: Colors.black,
-              //             style: const TextStyle(
-              //                 color: Colors.white, fontSize: 16),
-              //             underline:
-              //                 Container(height: 0, color: Colors.transparent),
-              //             isExpanded: false,
-              //             itemHeight: 48,
-              //             padding: EdgeInsets.zero,
-              //             items: _getPluginsDropdownItems(context),
-              //           ),
-              //         ),
-              //       )
-              //     : const SizedBox(width: 16),
+                  //           SharedPreferencesUtil().selectedChatPluginId = s;
+                  //           var plugin =
+                  //               plugins.firstWhereOrNull((p) => p.id == s);
+                  //           // chatPageKey.currentState
+                  //           //     ?.sendInitialPluginMessage(plugin);
+                  //           setState(() {});
+                  //         },
+                  //         icon: Container(),
+                  //         alignment: Alignment.center,
+                  //         dropdownColor: Colors.black,
+                  //         style: const TextStyle(
+                  //             color: Colors.white, fontSize: 16),
+                  //         underline:
+                  //             Container(height: 0, color: Colors.transparent),
+                  //         isExpanded: false,
+                  //         itemHeight: 48,
+                  //         padding: EdgeInsets.zero,
+                  //         items: _getPluginsDropdownItems(context),
+                  //       ),
+                  //     ),
+                  //   )
+                  // : const SizedBox(width: 16),
 
 
 

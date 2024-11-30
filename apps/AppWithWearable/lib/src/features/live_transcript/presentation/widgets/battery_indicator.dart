@@ -17,10 +17,10 @@ class BatteryIndicator extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(height: 8.w),
+        SizedBox(height: 10.w),
         Center(
           child: Container(
-            width: 25.h, // Adjust the size to your preference
+            width: 25.w, // Adjust the size to your preference
             height: 25.h, // Same as width to make it circular
             decoration: BoxDecoration(
               color: CustomColors.greyLavender, // Background color
@@ -39,7 +39,7 @@ class BatteryIndicator extends StatelessWidget {
           SizedBox(height: 8.h), // Add spacing only if text is shown
           Text(
             '$batteryLevel%',
-            style: textTheme.bodySmall?.copyWith(fontSize: 12.h),
+            style: textTheme.bodySmall?.copyWith(fontSize: 12.w),
           ),
         ],
       ],

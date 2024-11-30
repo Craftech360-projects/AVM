@@ -22,7 +22,7 @@ Future<Uint8List> getImage() async {
 }
 
 Future<Uint8List> getImageFromPollinations(String prompt,
-    {int width = 1280, int height = 720, nologo = true}) async {
+    {int width = 333, int height = 333, nologo = true}) async {
   // Replace spaces with underscores in the prompt
   String formattedPrompt = prompt.replaceAll(' ', '_');
 

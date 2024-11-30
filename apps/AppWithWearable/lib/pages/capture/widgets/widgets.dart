@@ -966,13 +966,13 @@ class GreetingCard extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  CustomColors.greyLavender,
-                  CustomColors.greyLavender,
+                  Colors.blueGrey.shade400,
+                  Colors.blueGrey.shade400,
                 ], // Gradient colors
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(26),
               border: Border.all(
                 // Add white border here
                 color: Colors.white,
@@ -997,26 +997,26 @@ class GreetingCard extends StatelessWidget {
                       children: [
                         // Avatar
 
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey[200],
-                          ),
-                          child: avatarUrl != null
-                              ? ClipOval(
-                                  child: Image.network(
-                                    avatarUrl!,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return const Icon(Icons.person,
-                                          color: Colors.grey);
-                                    },
-                                  ),
-                                )
-                              : const Icon(Icons.person, color: Colors.grey),
-                        ),
+                        // Container(
+                        //   width: 40,
+                        //   height: 40,
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     color: Colors.grey[200],
+                        //   ),
+                        //   child: avatarUrl != null
+                        //       ? ClipOval(
+                        //           child: Image.network(
+                        //             avatarUrl!,
+                        //             fit: BoxFit.cover,
+                        //             errorBuilder: (context, error, stackTrace) {
+                        //               return const Icon(Icons.person,
+                        //                   color: Colors.grey);
+                        //             },
+                        //           ),
+                        //         )
+                        //       : const Icon(Icons.person, color: Colors.grey),
+                        // ),
                         const SizedBox(width: 12),
 
                         // Greeting text with wave emoji
@@ -1025,11 +1025,23 @@ class GreetingCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '👋 Hi! ${SharedPreferencesUtil().givenName ?? "Guest"},\nChange is inevitable. Always strive for the next big thing!',
+                                '👋 Hi! ${SharedPreferencesUtil().givenName ?? "Guest"},',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600, // Regular weight
+                                  fontFamily:
+                                      'Montserrat-Bold', // Built-in material design font
+                                ),
+                              ),
+                              Text(
+                                'Change is inevitable. Always strive for the next big thing!',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.w600, // Regular weight
+                                  fontFamily:
+                                      'Montserrat-Bold', // Built-in material design font
                                 ),
                               ),
                             ],
@@ -1041,9 +1053,7 @@ class GreetingCard extends StatelessWidget {
                     const SizedBox(height: 16),
 
                     // Divider
-                    Container(
-                        height: 2,
-                        color: const Color.fromARGB(255, 14, 13, 13)),
+                    Container(height: 1, color: CustomColors.white),
 
                     // Swipe message
                     if (segments != null && segments!.isNotEmpty) ...[

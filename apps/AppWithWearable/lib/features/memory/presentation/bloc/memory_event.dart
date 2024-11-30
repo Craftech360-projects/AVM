@@ -45,8 +45,8 @@ class MemoryIndexChanged extends MemoryEvent {
 }
 
 class FilterMemory extends MemoryEvent {
- final  FilterItem filterItem;
- const FilterMemory({
+  final FilterItem filterItem;
+  const FilterMemory({
     required this.filterItem,
   });
   @override

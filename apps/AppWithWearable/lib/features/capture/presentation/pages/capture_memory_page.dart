@@ -267,14 +267,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
 
         BlocConsumer<MemoryBloc, MemoryState>(
           bloc: _memoryBloc,
-          // buildWhen: (previousState, currentState) {
-          //   print('previous State${previousState.memories.length}');
-          //   print('current  State${currentState.memories.length}');
-          //   return previousState.memories.length !=
-          //       currentState.memories.length;
-          // },
           builder: (context, state) {
-            print('>>>-${state.toString()}');
+            // print('>>>-${state.toString()}');
             if (state.status == MemoryStatus.loading) {
               return const Center(
                 child: CircularProgressIndicator(),

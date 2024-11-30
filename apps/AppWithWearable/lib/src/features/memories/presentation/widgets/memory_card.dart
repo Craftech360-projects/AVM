@@ -39,8 +39,8 @@ class MemoryCard extends StatelessWidget {
                   // Using memory.title
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: textTheme.titleSmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  // style: textTheme.titleSmall
+                  //     ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 12.h),
                 Text(

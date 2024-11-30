@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:friend_private/src/core/theme/theme.dart';
+import 'package:friend_private/src/core/constant/custom_colors.dart';
 
 class CustomTheme {
   CustomTheme._();
@@ -9,13 +10,6 @@ class CustomTheme {
     chipTheme: AvmChipTheme.lightCardTheme,
     listTileTheme: AvmListTileTheme.lightCardTheme,
     textTheme: AvmTextTheme.lightTextTheme,
-    scaffoldBackgroundColor: Colors.transparent,
-    // appBarTheme: const AppBarTheme(
-    //   backgroundColor: Colors.transparent,
-    //   elevation: 0,
-    //   scrolledUnderElevation: 0,
-    //   shadowColor: Colors.transparent,
-    //   surfaceTintColor: Colors.transparent,
-    // ),
+    scaffoldBackgroundColor: CustomColors.greyOffWhite,
   );
 }

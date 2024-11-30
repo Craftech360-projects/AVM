@@ -192,8 +192,8 @@ class _MyAppState extends State<MyApp> {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: const [Locale('en')],
-            themeMode: ThemeMode.light,
-            theme: CustomTheme.lightTheme,
+            // themeMode: ThemeMode.light,
+            // theme: CustomTheme.lightTheme,
             home: Stack(
               children: [
                 Positioned.fill(
