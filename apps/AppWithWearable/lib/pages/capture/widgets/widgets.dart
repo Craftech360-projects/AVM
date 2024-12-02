@@ -862,7 +862,7 @@ class GreetingCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '👋 Hi! ${SharedPreferencesUtil().givenName ?? "Guest"},',
+                                ' Hi! ${SharedPreferencesUtil().givenName ?? "Guest"} 👋',
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.white,
