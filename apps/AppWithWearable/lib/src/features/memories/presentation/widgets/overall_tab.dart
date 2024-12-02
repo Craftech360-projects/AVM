@@ -230,17 +230,17 @@ class _OverallTabState extends State<OverallTab> {
           //       () => pluginResponseExpanded[i] = !pluginResponseExpanded[i]),
           // ),
           const SizedBox(height: 32),
-          Divider(color: CustomColors.purpleBright, height: 1),
-          const SizedBox(height: 32),
+          // Divider(color: CustomColors.purpleBright, height: 1),
+          // const SizedBox(height: 32),
 
-          ...getPluginsWidgets(
-            context,
-            pluginResponse,
-            pluginsList,
-            pluginResponseExpanded,
-            (i) => setState(
-                () => pluginResponseExpanded[i] = !pluginResponseExpanded[i]),
-          )
+          // ...getPluginsWidgets(
+          //   context,
+          //   pluginResponse,
+          //   pluginsList,
+          //   pluginResponseExpanded,
+          //   (i) => setState(
+          //       () => pluginResponseExpanded[i] = !pluginResponseExpanded[i]),
+          // )
         ],
       ),
     );

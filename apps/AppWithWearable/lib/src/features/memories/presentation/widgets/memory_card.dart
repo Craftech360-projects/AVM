@@ -39,6 +39,12 @@ class MemoryCard extends StatelessWidget {
                   // Using memory.title
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600, // Regular weight
+                    fontFamily:
+                        'Montserrat-Bold', // Built-in material design font
+                  ),
                   // style: textTheme.titleSmall
                   //     ?.copyWith(fontWeight: FontWeight.bold),
                 ),
@@ -46,7 +52,7 @@ class MemoryCard extends StatelessWidget {
                 Text(
                   '${DateFormat('d MMM').format(memory.createdAt)}  '
                   '   ${DateFormat('h:mm a').format(memory.createdAt)}',
-                  style: Theme.of(context).textTheme.bodySmall,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 // Text(
                 //   '${DateFormat('d MMM').format(memory.createdAt)}  ' ??

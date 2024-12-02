@@ -372,9 +372,9 @@ class _SettingPageState extends State<SettingPage> {
               getItemAddOn('Developers Option', () {
                 routeToPage(context, const DeveloperPage());
               }, icon: Icons.settings_suggest),
-              getItemAddOn('Plugin', () {
-                routeToPage(context, const PluginsPage());
-              }, icon: Icons.settings_suggest),
+              // getItemAddOn('Plugin', () {
+              //   routeToPage(context, const PluginsPage());
+              // }, icon: Icons.settings_suggest),
               getItemAddOn('Zapier', () {
                 routeToPage(context, const ZapierPage());
               }, icon: Icons.settings_suggest),

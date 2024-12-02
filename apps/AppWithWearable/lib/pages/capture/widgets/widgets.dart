@@ -966,9 +966,12 @@ class GreetingCard extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Colors.blueGrey.shade200,
-                  Colors.blueGrey.shade200,
-                ], // Gradient colors
+                  // Custom color
+                  Color(0xFFA2D2FF), // Custom color
+                  // Custom color
+                  Color(0xFFCDB4DB),
+                ],
+                // Gradient colors
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -978,6 +981,15 @@ class GreetingCard extends StatelessWidget {
               //   color: Colors.white,
               //   width: 3,
               // ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black
+                      .withOpacity(0.1), // Shadow color with some transparency
+                  spreadRadius: 4, // Spread radius
+                  blurRadius: 4, // Blur radius
+                  offset: Offset(2, 2), // Offset in x and y direction
+                ),
+              ],
             ),
             child: Card(
               elevation: 0,
@@ -1028,7 +1040,7 @@ class GreetingCard extends StatelessWidget {
                                 '👋 Hi! ${SharedPreferencesUtil().givenName ?? "Guest"},',
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.w600, // Regular weight
                                   fontFamily:
                                       'Montserrat-Bold', // Built-in material design font
@@ -1039,7 +1051,7 @@ class GreetingCard extends StatelessWidget {
                                 'Change is inevitable. Always strive for the next big thing!',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.w600, // Regular weight
                                   fontFamily:
                                       'Montserrat-Bold', // Built-in material design font
@@ -1118,7 +1130,7 @@ class GreetingCard extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: isDeviceDisconnected
-                                      ? Colors.amber
+                                      ? Colors.red
                                       : Colors.green,
                                 ),
                               ),
@@ -1129,7 +1141,7 @@ class GreetingCard extends StatelessWidget {
                                     : '${device?.name ?? ''} ${device?.id.replaceAll(':', '').split('-').last.substring(0, 6) ?? ''}',
                                 style: TextStyle(
                                   color: isDeviceDisconnected
-                                      ? Colors.amber
+                                      ? Colors.red
                                       : Colors.green,
                                   fontSize: 12,
                                   height: 1.5,

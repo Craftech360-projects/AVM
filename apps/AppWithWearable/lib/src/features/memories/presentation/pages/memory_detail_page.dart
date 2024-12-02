@@ -130,7 +130,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     return Scaffold(
         appBar: AppBar(
           centerTitle: false,
-          // backgroundColor: const Color(0xFFE6F5FA),
+          backgroundColor: const Color(0xFFE6F5FA),
           title: Text(
             selectedMemory.createdAt != null
                 ? '${DateFormat('d MMM').format(selectedMemory.createdAt!)}   '
@@ -177,9 +177,14 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
             ),
           ],
         ),
-        body: Container(
-          color: const Color(0xFFE6F5FA),
-          child: Padding(
+        body: Stack(children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/bg_image.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,7 +244,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
               ],
             ),
           ),
-        ));
+        ]));
   }
 
   _reProcessMemory(BuildContext context, StateSetter setModalState,

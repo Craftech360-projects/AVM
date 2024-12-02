@@ -62,7 +62,7 @@ class MemoryCardWidget extends StatelessWidget {
                             },
                             child: const Text(
                               'Cancel',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.black),
                             ),
                           ),
                           ElevatedButton(

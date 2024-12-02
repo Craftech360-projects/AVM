@@ -246,9 +246,11 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                 label: Text(
                   _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
                   style: const TextStyle(
-                      color: Color.fromARGB(255, 212, 212, 212),
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
+                    color: Color.fromARGB(255, 212, 212, 212),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Montserrat-Bold',
+                  ),
                 ),
                 //  Icon(
                 //   _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
@@ -263,6 +265,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
               ),
             ),
           ),
+
         //*--- MEMORY LIST ---*//
 
         BlocConsumer<MemoryBloc, MemoryState>(
