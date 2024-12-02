@@ -366,7 +366,7 @@ class _SettingPageState extends State<SettingPage> {
               getItemAddOn('Profile', () {
                 routeToPage(context, const ProfilePage());
               }, icon: Icons.person),
-              getItemAddOn('Calendar Integration', () {
+              getItemAddOn('Calendar ', () {
                 routeToPage(context, const CalendarPage());
               }, icon: Icons.calendar_month),
               getItemAddOn('Developers Option', () {

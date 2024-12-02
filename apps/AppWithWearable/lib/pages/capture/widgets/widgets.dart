@@ -737,181 +737,6 @@ class GreetingCard extends StatelessWidget {
     this.avatarUrl,
   }) : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     bool isDeviceDisconnected = device == null;
-//     return Card(
-//       elevation: 0,
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(16),
-//       ),
-//       color: Colors.white,
-//       child: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             // Header with avatar and greeting
-//             Row(
-//               children: [
-//                 // Avatar
-//                 Container(
-//                   width: 40,
-//                   height: 40,
-//                   decoration: BoxDecoration(
-//                     shape: BoxShape.circle,
-//                     color: Colors.grey[200],
-//                   ),
-//                   child: avatarUrl != null
-//                       ? ClipOval(
-//                           child: Image.network(
-//                             avatarUrl!,
-//                             fit: BoxFit.cover,
-//                             errorBuilder: (context, error, stackTrace) {
-//                               return const Icon(Icons.person,
-//                                   color: Colors.grey);
-//                             },
-//                           ),
-//                         )
-//                       : const Icon(Icons.person, color: Colors.grey),
-//                 ),
-//                 const SizedBox(width: 12),
-
-//                 // Greeting text with wave emoji
-//                 Expanded(
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       AnimatedTextKit(
-//                         animatedTexts: [
-//                           TyperAnimatedText(
-//                             SharedPreferencesUtil().givenName != null
-//                                 ? '👋 Hi! ${SharedPreferencesUtil().givenName},\nChange is inevitable. '
-//                                     'Always strive for the next big thing!'
-//                                 : '👋 Hi! Guest,\nChange is inevitable. '
-//                                     'Always strive for the next big thing!',
-//                             textStyle: TextStyle(
-//                               fontSize: 16,
-//                               color: Colors.black,
-//                               fontWeight: FontWeight.w500,
-//                             ),
-//                           ),
-//                         ],
-//                         repeatForever: true, // Keep animating infinitely
-//                         pause: const Duration(milliseconds: 500),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-
-//             const SizedBox(height: 16),
-
-//             // Divider
-//             Container(height: 2, color: CustomColors.purpleDark),
-//             Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 if (segments != null && segments!.isNotEmpty) ...[
-//                   const SizedBox(height: 16),
-//                   AnimatedTextKit(
-//                     animatedTexts: [
-//                       TyperAnimatedText(
-//                         'Swipe to create memory',
-//                         textStyle: TextStyle(
-//                           color: Colors.grey[300],
-//                           fontSize: 14,
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                         speed:
-//                             const Duration(milliseconds: 100), // Typing speed
-//                       ),
-//                     ],
-//                     repeatForever: true, // Keep animating infinitely
-//                     pause: const Duration(
-//                         milliseconds: 500), // Pause between animations
-//                   ),
-//                 ],
-//               ],
-//             ),
-
-//             // Connection Status
-//             Padding(
-//               padding: const EdgeInsets.only(top: 12),
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment
-//                     .spaceBetween, // Distribute items to both ends
-//                 children: [
-//                   // Left Status: INTERNET Connection
-
-//                   Row(
-//                     children: [
-//                       if (internetStatus != null)
-//                         Container(
-//                           width: 6,
-//                           height: 6,
-//                           decoration: BoxDecoration(
-//                             shape: BoxShape.circle,
-//                             color: internetStatus == InternetStatus.connected
-//                                 ? Colors.green
-//                                 : Colors.red,
-//                           ),
-//                         ),
-//                       const SizedBox(width: 12),
-//                       // : ${internetStatus.toString().split('.').last}
-//                       Text(
-//                         'Internet',
-//                         style: TextStyle(
-//                           color: internetStatus == InternetStatus.connected
-//                               ? Colors.green
-//                               : Colors.red,
-//                           fontSize: 14,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-
-//                   // Right Status: DEVICE Status
-//                   Row(
-//                     children: [
-//                       Container(
-//                         width: 6,
-//                         height: 6,
-//                         decoration: BoxDecoration(
-//                           shape: BoxShape.circle,
-//                           color: isDeviceDisconnected
-//                               ? Colors.amber
-//                               : Colors.green,
-//                         ),
-//                       ),
-//                       const SizedBox(width: 6),
-//                       Text(
-//                         isDeviceDisconnected
-//                             ? 'Disconnected'
-//                             : '${device?.name ?? ''} ${device?.id.replaceAll(':', '').split('-').last.substring(0, 6) ?? ''}',
-//                         style: TextStyle(
-//                           color: isDeviceDisconnected
-//                               ? Colors.amber
-//                               : Colors.green,
-//                           fontSize: 12,
-//                           height: 1.5,
-//                         ),
-//                         overflow: TextOverflow.fade,
-//                       ),
-//                     ],
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
   @override
   Widget build(BuildContext context) {
     bool isDeviceDisconnected = device == null;
@@ -1071,22 +896,30 @@ class GreetingCard extends StatelessWidget {
                     // Swipe message
                     if (segments != null && segments!.isNotEmpty) ...[
                       const SizedBox(height: 16),
-                      Text(
-                        'Swipe to create memory',
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 31, 31, 31),
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                      // Text(
+                      //   'Swipe to create memory',
+                      //   style: TextStyle(
+                      //     color: const Color.fromARGB(255, 31, 31, 31),
+                      //     fontSize: 14,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
+
+                      AnimatedOpacity(
+                        opacity: segments!.isNotEmpty ? 1.0 : 0.0,
+                        duration: const Duration(seconds: 1),
+                        curve: Curves.easeInOut,
+                        child: const Text(
+                          'Swipe to create memory',
+                          style: TextStyle(
+                            color: Color.fromARGB(129, 31, 31, 31),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
-                    // CustomSnackBar.info(
-                    //     maxLines: 6,
-                    //     // textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-                    //     message:
-                    //         "Audio processing failed due to noise \n Please try again in a \n quieter place!",
-                    //    ),
-                    // Connection Status
+
                     Padding(
                       padding: const EdgeInsets.only(top: 12),
                       child: Row(
@@ -1113,9 +946,12 @@ class GreetingCard extends StatelessWidget {
                                 style: TextStyle(
                                   color: InternetStatus.connected ==
                                           InternetStatus.connected
-                                      ? Colors.green
-                                      : Colors.red,
+                                      ? Colors.black
+                                      : Colors.grey,
                                   fontSize: 14,
+                                  height: 1.5,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Montserrat-Bold',
                                 ),
                               ),
                             ],
@@ -1141,10 +977,12 @@ class GreetingCard extends StatelessWidget {
                                     : '${device?.name ?? ''} ${device?.id.replaceAll(':', '').split('-').last.substring(0, 6) ?? ''}',
                                 style: TextStyle(
                                   color: isDeviceDisconnected
-                                      ? Colors.red
-                                      : Colors.green,
-                                  fontSize: 12,
+                                      ? Colors.grey
+                                      : Colors.black,
+                                  fontSize: 14,
                                   height: 1.5,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Montserrat-Bold',
                                 ),
                                 overflow: TextOverflow.fade,
                               ),

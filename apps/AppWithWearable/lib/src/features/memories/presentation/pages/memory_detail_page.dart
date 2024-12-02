@@ -218,8 +218,10 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                     ],
                     children: [
                       OverallTab(
-                          target: selectedMemory.structured.target!,
-                          pluginsResponse: selectedMemory.pluginsResponse),
+                        target: selectedMemory.structured.target!,
+
+                        //pluginsResponse: selectedMemory.pluginsResponse
+                      ),
                       //  TranscriptTab(target: selectedMemory.transcript!),
                       TranscriptTab(
                         memoryBloc: widget.memoryBloc,

@@ -23,10 +23,19 @@ class MemoryCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(30.h),
             child: Image.memory(
-              memory.memoryImg!, // Update with memory image if available
+              memory.memoryImg!,
               height: 100.h,
               width: 100.w,
               fit: BoxFit.fitHeight,
+              errorBuilder: (context, error, stackTrace) {
+                // Fallback to a dummy image when invalid image data is encountered
+                return Image.asset(
+                  'assets/images/image_placeholder.png', // Replace with your dummy image path
+                  height: 100.h,
+                  width: 100.w,
+                  fit: BoxFit.fitHeight,
+                );
+              },
             ),
           ),
           SizedBox(width: 8.w),

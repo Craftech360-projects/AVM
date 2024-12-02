@@ -43,19 +43,19 @@ class _OverallTabState extends State<OverallTab> {
     List<bool> pluginResponseExpanded = [];
     final pluginsList = SharedPreferencesUtil().pluginsList;
     //  log(events.toString());
-    log(pluginResponse[0].toString());
+    // log(pluginResponse[0].toString());
 
-    print(pluginResponse.runtimeType);
-    if (pluginResponse.isNotEmpty) {
-      print(pluginResponse[0]); // Prints the first element
-      print(pluginResponse[0]
-          .runtimeType); // Prints the type of the first element
-    }
+    // print(pluginResponse.runtimeType);
+    // if (pluginResponse.isNotEmpty) {
+    //   print(pluginResponse[0]); // Prints the first element
+    //   print(pluginResponse[0]
+    //       .runtimeType); // Prints the type of the first element
+    // }
 
     final actionItems = widget.target
         .actionItems; // Replace `actionItems` with the correct field in `target`
     // log("actionItems>>>>>, ${actionItems.toString()}");
-    pluginResponseExpanded = List.filled(pluginResponse.length, false);
+//    pluginResponseExpanded = List.filled(pluginResponse.length, false);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,8 +230,8 @@ class _OverallTabState extends State<OverallTab> {
           //       () => pluginResponseExpanded[i] = !pluginResponseExpanded[i]),
           // ),
           const SizedBox(height: 32),
-          // Divider(color: CustomColors.purpleBright, height: 1),
-          // const SizedBox(height: 32),
+          //   Divider(color: CustomColors.purpleBright, height: 1),
+          const SizedBox(height: 32),
 
           // ...getPluginsWidgets(
           //   context,

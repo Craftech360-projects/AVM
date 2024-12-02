@@ -109,13 +109,36 @@ Future<List<Memory>> restoreFromBackup(
     }
 
     // Convert JSON to Memory objects
+    // List<Memory> memoriesToRestore = decodedData.map((json) {
+    //   try {
+    //     // Check and convert memoryImg if it's a List<dynamic>
+    //     if (json['memoryImg'] is List<dynamic>) {
+    //       json['memoryImg'] =
+    //           Uint8List.fromList(List<int>.from(json['memoryImg']));
+    //     }
+    //     return Memory.fromJson(json);
+    //   } catch (e) {
+    //     print('Error converting json to memory: $e');
+    //     rethrow;
+    //   }
+    // }).toList();
     List<Memory> memoriesToRestore = decodedData.map((json) {
       try {
-        // Check and convert memoryImg if it's a List<dynamic>
         if (json['memoryImg'] is List<dynamic>) {
+          // If memoryImg is a list, convert it to Uint8List
           json['memoryImg'] =
               Uint8List.fromList(List<int>.from(json['memoryImg']));
+        } else if (json['memoryImg'] is String) {
+          // If memoryImg is a String, assume it's Base64-encoded and decode it
+          json['memoryImg'] = base64Decode(json['memoryImg']);
+        } else if (json['memoryImg'] == null) {
+          // Handle null if memoryImg is optional
+          json['memoryImg'] = null;
+        } else {
+          throw Exception(
+              "Unsupported type for memoryImg: ${json['memoryImg'].runtimeType}");
         }
+
         return Memory.fromJson(json);
       } catch (e) {
         print('Error converting json to memory: $e');
