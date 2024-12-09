@@ -147,14 +147,6 @@ class _DeveloperPageState extends State<DeveloperPage> {
       SharedPreferencesUtil().saveApiType('NewApiKey', 'Default');
       PromptProvider().removeAllPrompts();
       SharedPreferencesUtil().isPromptSaved = false;
-
-      // if (Platform.isAndroid) Restart.restartApp();
-
-      // Restart.restartApp(
-      //     // notificationTitle: 'Restarting App',
-      //     // notificationBody: 'Please tap here to open the app again.',
-      //     );
-      print('developer option not true');
     }
     setState(() {
       developerEnabled = value;
@@ -162,7 +154,7 @@ class _DeveloperPageState extends State<DeveloperPage> {
   }
 
   void developerModeSelected({required String modeSelected}) {
-    print('Mode Selected $modeSelected');
+    // print('Mode Selected $modeSelected');
     SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
     // SharedPreferencesUtil().isPromptSaved = false;
     const AlertDialog(
@@ -170,10 +162,5 @@ class _DeveloperPageState extends State<DeveloperPage> {
     );
     Future.delayed(const Duration(seconds: 3));
     // if (Platform.isAndroid) Restart.restartApp();
-
-    // Restart.restartApp(
-    // notificationTitle: 'Restarting App',
-    // notificationBody: 'Please tap here to open the app again.',
-    //     );
   }
 }

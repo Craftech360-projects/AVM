@@ -143,7 +143,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     _isLoading = true;
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        _isLoading = true;
+        _isLoading = false;
       });
     });
     _controller = TabController(
@@ -289,8 +289,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           height: 70,
         ),
         // showBackBtn: true,
-        device: _device, // Replace with your device instance
-        batteryLevel: batteryLevel, // Replace with your battery level
+        device: _device,
+        batteryLevel: batteryLevel,
         tabIndex: _controller!.index,
         body: GestureDetector(
           onTap: () {

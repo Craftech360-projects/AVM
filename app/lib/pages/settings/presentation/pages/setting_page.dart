@@ -6,7 +6,7 @@ import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/pages/home/custom_scaffold.dart';
 import 'package:friend_private/pages/home/device.dart';
 import 'package:friend_private/pages/onboarding/find_device/page.dart';
-import 'package:friend_private/pages/plugins/zapier/page.dart';
+import 'package:friend_private/pages/plugins/zapier/zapier_page.dart';
 import 'package:friend_private/pages/settings/presentation/widgets/language_dropdown.dart';
 import 'package:friend_private/pages/settings/widgets/calendar.dart';
 import 'package:friend_private/pages/settings/widgets/developer_page.dart';

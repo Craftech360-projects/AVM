@@ -114,13 +114,13 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
       uri = Uri.parse(
           'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=$language&sample_rate=$sampleRate&codec=$codec&channels=$channels');
       break;
+
     case 'Sarvam':
       uri = Uri.parse(
         'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service2&sample_rate=$sampleRate&codec=pcm8&channels=1',
       );
       break;
     case 'Whisper':
-      print('No api for this');
       break;
     default:
       'Deepgram';
