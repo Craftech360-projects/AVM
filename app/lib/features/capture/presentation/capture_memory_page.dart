@@ -75,8 +75,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     return Column(
       children: [
         widget.hasTranscripts
-            ? Expanded(
-                // height: 176,
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Dismissible(
                   background: Shimmer.fromColors(
                     baseColor: AppColors.grey,
@@ -92,7 +92,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                     ),
                   ),
                   key: capturePageKey,
-                  // key: ValueKey(widget.segments?.first.id ?? 'no-segment'),
                   direction: DismissDirection.startToEnd,
                   onDismissed: (direction) =>
                       widget.onDismissmissedCaptureMemory(direction),
@@ -117,7 +116,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                 ),
               )
             : Padding(
-                // Add margin using Padding
                 padding: const EdgeInsets.all(8.0),
                 child: GreetingCard(
                   name: 'Joe',

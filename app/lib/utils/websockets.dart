@@ -81,11 +81,12 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   String codec,
 ) async {
   debugPrint('Websocket Opening');
-  final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
+  // final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
 
-  final deepgramapikey = getDeepgramApiKeyForUsage();
-  debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
+  // final deepgramapikey = getDeepgramApiKeyForUsage();
+  // debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
+  const deepgramapikey = "e19942922008143bf76a75cb75b92853faa0b0da";
   debugPrint("apikey , $deepgramapikey");
 
   // String encoding = "opus";
@@ -108,7 +109,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
   );
 
-  print('apiType at dee$apiType');
+  debugPrint('apiType at dee$apiType');
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(

@@ -13,10 +13,10 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
+import 'package:friend_private/features/capture/logic/openglass_mixin.dart';
 import 'package:friend_private/features/capture/presentation/capture_memory_page.dart';
 import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
 import 'package:friend_private/pages/capture/location_service.dart';
-import 'package:friend_private/features/capture/logic/openglass_mixin.dart';
 import 'package:friend_private/utils/audio/wav_bytes.dart';
 import 'package:friend_private/utils/ble/communication.dart';
 import 'package:friend_private/utils/features/backups.dart';
@@ -29,8 +29,8 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:location/location.dart';
 import 'package:uuid/uuid.dart';
 
-import '../logic/websocket_mixin.dart';
 import '../../../pages/capture/phone_recorder_mixin.dart';
+import '../logic/websocket_mixin.dart';
 
 class CapturePage extends StatefulWidget {
   final Function refreshMemories;
@@ -64,7 +64,6 @@ class CapturePageState extends State<CapturePage>
   bool _hasTranscripts = false;
   static const quietSecondsForMemoryCreation = 60;
 
-  /// ----
   List<TranscriptSegment> segments = [];
 
   StreamSubscription? _bleBytesStream;
@@ -89,16 +88,19 @@ class CapturePageState extends State<CapturePage>
 
   Future<void> initiateWebsocket(
       [BleAudioCodec? audioCodec, int? sampleRate]) async {
+    debugPrint("Entered Web Socket");
     // this will not work with opus for now, more complexity, unneeded rn
-    BleAudioCodec codec = audioCodec ??
-        (btDevice?.id == null
-            ? BleAudioCodec.pcm8
-            : await getAudioCodec(btDevice!.id));
+    BleAudioCodec codec = BleAudioCodec.pcm8;
+    // ?
+    // : await getAudioCodec(btDevice!.id)
+    // );
     await initWebSocket(
       codec: codec,
       sampleRate: sampleRate,
       onConnectionSuccess: () {
+        debugPrint("====> WEB SOCKET Connection Success");
         if (segments.isNotEmpty) {
+          debugPrint("====> Segment Not Empty");
           // means that it was a reconnection, so we need to reset
           streamStartedAtSecond = null;
           secondsMissedOnReconnect =
@@ -106,16 +108,21 @@ class CapturePageState extends State<CapturePage>
         }
         setState(() {});
       },
-      onConnectionFailed: (err) => setState(() {}),
+      onConnectionFailed: (err) => setState(() {
+        debugPrint("====> Connection Failed");
+      }),
       onConnectionClosed: (int? closeCode, String? closeReason) {
+        debugPrint("====> Connection Closed");
         // connection was closed, either on resetState, or by backend, or by some other reason.
         setState(() {});
       },
       onConnectionError: (err) {
+        debugPrint("====> Connection Error");
         // connection was okay, but then failed.
         setState(() {});
       },
       onMessageReceived: (List<TranscriptSegment> newSegments) {
+        debugPrint("====> Message Received");
         if (newSegments.isEmpty) return;
 
         if (segments.isEmpty) {
@@ -158,6 +165,7 @@ class CapturePageState extends State<CapturePage>
   }
 
   Future<void> initiateBytesStreamingProcessing() async {
+    print("====> Byte Streaming Initiated");
     if (btDevice == null) return;
     BleAudioCodec codec = await getAudioCodec(btDevice!.id);
     audioStorage = WavBytesUtil(codec: codec);
@@ -168,7 +176,7 @@ class CapturePageState extends State<CapturePage>
         audioStorage!.storeFramePacket(value);
         value.removeRange(0, 3);
         if (wsConnectionState == WebsocketConnectionStatus.connected) {
-          //    debugPrint("Adding audio>>>>>>>>>>>>>,$value");
+          debugPrint("Adding audio>>>>>>>>>>>>>,$value");
           websocketChannel?.sink.add(value);
         }
       },
@@ -311,7 +319,6 @@ class CapturePageState extends State<CapturePage>
     startOpenGlass();
     initiateBytesStreamingProcessing();
     processCachedTranscript();
-
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (await LocationService().displayPermissionsDialog()) {
@@ -350,16 +357,13 @@ class CapturePageState extends State<CapturePage>
 
   @override
   void dispose() {
-    // Cancel all listeners, timers, and WebSockets first
     WidgetsBinding.instance.removeObserver(this);
-    record.dispose(); // Make sure this method does not throw errors
+    record.dispose();
     _bleBytesStream?.cancel();
     _memoryCreationTimer?.cancel();
     closeWebSocket();
     _internetListener.cancel();
     _scrollController.dispose();
-
-    // Ensure this is called last
     super.dispose();
   }
 
