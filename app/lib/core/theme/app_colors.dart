@@ -4,11 +4,9 @@ class AppColors {
   static const yellow = Color.fromARGB(255, 235, 202, 16);
   static const lightBg = Color(0xfff2f2f2);
   static const darkBg = Color(0xff0d0c0c);
-  static const darkGrey = Color(0xff343434);
-  static const blueV1 = Color.fromARGB(255, 67, 87, 186);
+  // static const darkGrey = Color(0xff343434);
   static const commonPink = Color(0xCFF2E4FF);
   static const black = Color(0xFF000000);
-  static const blackSecondary = Color(0xFF12110F);
   static const greyDark = Color(0xFF303030);
   static const greyMedium = Color(0xFF444444);
   static const grey = Color(0xFF545454);

@@ -11,7 +11,6 @@ import 'package:friend_private/backend/database/message_provider.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/features/capture/logic/openglass_mixin.dart';
 import 'package:friend_private/features/capture/presentation/capture_memory_page.dart';
@@ -165,7 +164,7 @@ class CapturePageState extends State<CapturePage>
   }
 
   Future<void> initiateBytesStreamingProcessing() async {
-    print("====> Byte Streaming Initiated");
+    debugPrint("====> Byte Streaming Initiated");
     if (btDevice == null) return;
     BleAudioCodec codec = await getAudioCodec(btDevice!.id);
     audioStorage = WavBytesUtil(codec: codec);
@@ -406,29 +405,20 @@ class CapturePageState extends State<CapturePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Stack(
-      children: [
-        Column(
-          children: [
-            CaptureMemoryPage(
-              context: context,
-              hasTranscripts: _hasTranscripts,
-              wsConnectionState: wsConnectionState,
-              device: widget.device, // Dynamic device details
-              internetStatus: _internetStatus,
-              segments: segments,
-              memoryCreating: memoryCreating,
-              photos: photos,
-              scrollController: _scrollController,
-              onDismissmissedCaptureMemory: (direction) {
-                _createMemory();
-                setState(() {});
-              },
-            ),
-            h15,
-          ],
-        ),
-      ],
+    return CaptureMemoryPage(
+      context: context,
+      hasTranscripts: _hasTranscripts,
+      wsConnectionState: wsConnectionState,
+      device: widget.device,
+      internetStatus: _internetStatus,
+      segments: segments,
+      memoryCreating: memoryCreating,
+      photos: photos,
+      scrollController: _scrollController,
+      onDismissmissedCaptureMemory: (direction) {
+        _createMemory();
+        setState(() {});
+      },
     );
   }
 }

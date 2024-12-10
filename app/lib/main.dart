@@ -67,7 +67,7 @@ void main() async {
   bool isAuth = false;
   try {
     isAuth = (await getIdToken()) != null;
-  } catch (e) {} // if no connect this will fail
+  } catch (e) {}
 
   if (isAuth) MixpanelManager().identify();
 

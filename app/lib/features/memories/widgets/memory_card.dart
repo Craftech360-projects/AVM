@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/memory.dart';
+import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/src/common_widget/card.dart';
 import 'package:intl/intl.dart';
 
@@ -17,7 +18,7 @@ class MemoryCard extends StatelessWidget {
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(30.h),
+            borderRadius: br15,
             child: Image.memory(
               memory.memoryImg!,
               height: 100.h,
@@ -25,7 +26,7 @@ class MemoryCard extends StatelessWidget {
               fit: BoxFit.fitHeight,
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset(
-                  'assets/images/image_placeholder.png', // Replace with your dummy image path
+                  'assets/images/image_placeholder.png',
                   height: 100.h,
                   width: 100.w,
                   fit: BoxFit.fitHeight,
@@ -50,7 +51,6 @@ class MemoryCard extends StatelessWidget {
                   '   ${DateFormat('h:mm a').format(memory.createdAt)}',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                
               ],
             ),
           ),

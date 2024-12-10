@@ -354,7 +354,7 @@ class OverallTabState extends State<OverallTab> {
                   isExpanded: pluginResponseExpanded[i],
                   toggleExpand: () => onItemToggled(i), // Updates the state
                   style: const TextStyle(
-                    color: AppColors.blackSecondary,
+                    color: AppColors.black,
                     fontSize: 15,
                     height: 1.3,
                   ),

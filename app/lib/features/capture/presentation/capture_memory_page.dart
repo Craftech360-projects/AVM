@@ -72,14 +72,14 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   @override
   Widget build(BuildContext context) {
     // _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
-    return Column(
+    return ListView(
       children: [
         widget.hasTranscripts
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Dismissible(
                   background: Shimmer.fromColors(
-                    baseColor: AppColors.grey,
+                    baseColor: AppColors.white,
                     highlightColor: AppColors.white,
                     child: const Center(
                       child: Text(

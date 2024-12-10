@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/message.dart';
+import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:intl/intl.dart';
 
@@ -22,16 +23,17 @@ class CustomCard extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
+          border: Border.all(color: AppColors.yellowAccent, width: 1),
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(borderRadius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2), // Shadow color
-              spreadRadius: 8, // Spread radius
-              blurRadius: 8, // Blur radius
-              offset: const Offset(2, 2), // Shadow position (x, y)
-            ),
-          ],
+          borderRadius: br15,
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.grey.withOpacity(0.2), // Shadow color
+          //     spreadRadius: 8, // Spread radius
+          //     blurRadius: 8, // Blur radius
+          //     offset: const Offset(2, 2), // Shadow position (x, y)
+          //   ),
+          // ],
         ),
         child: Padding(
           padding: padding,
@@ -57,8 +59,7 @@ class UserCard extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 16.w,
-        vertical:
-            8.h,
+        vertical: 8.h,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -75,8 +76,7 @@ class UserCard extends StatelessWidget {
                     topLeft: Radius.circular(20.r),
                     topRight: Radius.circular(20.r),
                     bottomLeft: Radius.circular(20.r),
-                    bottomRight: Radius.circular(
-                        5.r),
+                    bottomRight: Radius.circular(5.r),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -125,7 +125,6 @@ class UserCard extends StatelessWidget {
                         ],
                       ),
                     ],
-                    
                   ],
                 ),
               ),
