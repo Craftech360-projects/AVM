@@ -506,6 +506,7 @@ String qaRagPrompt(String context, List<Message> messages, {Plugin? plugin}) {
   debugPrint(prompt);
   return prompt;
 }
+Print()
 
 Future<String> getInitialPluginPrompt(Plugin? plugin) async {
   if (plugin == null) {
