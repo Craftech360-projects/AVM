@@ -87,6 +87,9 @@ build/
 *.swp
 *.tmp
 hs_err_pid*
+*.apk
+*.dill
+/app/build/
 
 # Servers
 backend/app-server/dist
