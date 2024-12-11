@@ -114,17 +114,42 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
 
   FutureOr<void> _searchMemory(SearchMemory event, Emitter<MemoryState> emit) {
     try {
+      print('Incoming search query: ${event.query}');
+      print(event.query.toLowerCase());
       if (event.query.isEmpty) {
         add(const DisplayedMemory());
       } else {
+        // final filteredMemories = state.memories.where((memory) {
+        //   final searchContent = '${memory.transcript}'
+        //           '${memory.structured.target?.title}'
+        //           '${memory.structured.target?.overview}'
+        //       .toLowerCase();
+        //   print(searchContent);
+        //   return searchContent.contains(event.query.toLowerCase());
+        // }).toList();
+
+        // emit(
+        //   state.copyWith(
+        //     status: MemoryStatus.success,
+        //     memories: filteredMemories,
+        //   ),
+        // );
+        final normalizedQuery = _normalize(event.query);
+
+        // Split query into keywords for multi-word search
+        final keywords = normalizedQuery.split(' ');
+
+        // Filter memories based on normalized content and keywords
         final filteredMemories = state.memories.where((memory) {
-          final searchContent = '${memory.transcript}'
-                  '${memory.structured.target?.title}'
-                  '${memory.structured.target?.overview}'
-              .toLowerCase();
-          return searchContent.contains(event.query.toLowerCase());
+          final searchContent = _normalize('${memory.transcript} '
+              '${memory.structured.target?.title} '
+              '${memory.structured.target?.overview}');
+
+          // Ensure all keywords are matched
+          return keywords.every((keyword) => searchContent.contains(keyword));
         }).toList();
 
+        // Emit the filtered results
         emit(
           state.copyWith(
             status: MemoryStatus.success,
@@ -140,5 +165,13 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
         ),
       );
     }
+  }
+
+  // Private normalize method
+  String _normalize(String input) {
+    return input
+        .toLowerCase() // Convert to lowercase
+        .replaceAll(RegExp(r'[^\w\s]'), '') // Remove special characters and punctuation
+        .replaceAll(RegExp(r'\s+'), ' '); // Replace multiple spaces with a single space
   }
 }

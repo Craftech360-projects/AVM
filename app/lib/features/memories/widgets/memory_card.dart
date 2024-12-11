@@ -50,7 +50,6 @@ class MemoryCard extends StatelessWidget {
                   '   ${DateFormat('h:mm a').format(memory.createdAt)}',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                
               ],
             ),
           ),
