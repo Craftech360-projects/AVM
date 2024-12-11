@@ -119,7 +119,8 @@ env.g.dart
 # Flutter build files
 app/.dart_tool/
 app/build/
-
+# Ignore APK files
+*.apk
 # Jekyll
 docs/_site/
 .jekyll-metadata
