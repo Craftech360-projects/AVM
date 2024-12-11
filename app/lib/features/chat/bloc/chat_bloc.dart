@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/api_requests/stream_api_response.dart';
 import 'package:friend_private/backend/database/memory.dart';
@@ -25,139 +24,157 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       : super(ChatState.initial()) {
     on<LoadInitialChat>(_onLoadedMessages);
     on<SendInitialPluginMessage>(_onSendInitialPluginMessage);
-
-    on<SendMessage>(
-      (event, emit) async {
-        try {
-          print('event bloc ${event.message}');
-          emit(state.copyWith(status: ChatStatus.loading));
-          // Prepare and save the initial messages
-          var aiMessage = _prepareStreaming(event.message);
-
-          // Retrieve the RAG context
-          final ragInfo = await retrieveRAGContext(event.message);
-          print('raginfo $ragInfo');
-
-          String ragContext = ragInfo[0];
-          List<Memory> memories = ragInfo[1].cast<Memory>();
-          print('RAG Context: $ragContext memories: ${memories.length}');
-
-          // Use the RAG context to create a prompt
-          var prompt = qaRagPrompt(
-            ragContext,
-            await MessageProvider().retrieveMostRecentMessages(limit: 10),
-          );
-
-          // Stream the AI response and update the AI message
-          await streamApiResponse(
-            prompt,
-            _callbackFunctionChatStreaming(aiMessage),
-            () {
-              aiMessage.memories.addAll(memories);
-              MessageProvider().updateMessage(aiMessage);
-              add(LoadInitialChat());
-            },
-          );
-        } catch (error) {
-          emit(
-            state.copyWith(
-                status: ChatStatus.failure, errorMesage: error.toString()),
-          );
-        }
-      },
-    );
-
-    // on<SendMessage>(_onSendMessage);
-    // on<RefreshMessages>(_onRefreshMessages);
+    on<SendMessage>(_onSendMessage);
+    on<RefreshMessages>(_refreshMessages);
   }
+
+  /// Refresh messages and update the state
+  Future<void> _refreshMessages(
+      RefreshMessages event, Emitter<ChatState> emit) async {
+    try {
+      emit(state.copyWith(status: ChatStatus.loading));
+
+      // Fetch updated messages
+      List<Message> messages = messageProvider.getMessages();
+      emit(state.copyWith(
+        status: ChatStatus.loaded,
+        messages: messages,
+      ));
+      print("Messages refreshed. Count: ${messages.length}");
+    } catch (error) {
+      emit(state.copyWith(
+        status: ChatStatus.failure,
+        errorMesage: error.toString(),
+      ));
+    }
+  }
+
+  /// Handle initial plugin message
   Future<void> _onSendInitialPluginMessage(
       SendInitialPluginMessage event, Emitter<ChatState> emit) async {
-    emit(state.copyWith(status: ChatStatus.loading));
     try {
+      emit(state.copyWith(status: ChatStatus.loading));
+
       var ai = Message(DateTime.now(), '', 'ai', pluginId: event.plugin?.id);
       await messageProvider.saveMessage(ai);
 
-      // Update state to include the new message and refresh the view
-      List<Message> messages = messageProvider.getMessages();
-      emit(state.copyWith(status: ChatStatus.loaded, messages: messages));
+      print("AI message created with plugin ID: ${event.plugin?.id}");
 
-      // Process the response from API
       await streamApiResponse(
         await getInitialPluginPrompt(event.plugin),
         _callbackFunctionChatStreaming(ai),
-        () {
+        () async {
           messageProvider.updateMessage(ai);
-          add(RefreshMessages());
+          add(LoadInitialChat()); // Reload the chat after streaming
         },
       );
-
-      // Optionally, you can handle loading state or other UI updates here
-      emit(state.copyWith(status: ChatStatus.loaded));
     } catch (error) {
       emit(state.copyWith(
-          status: ChatStatus.failure, errorMesage: error.toString()));
+        status: ChatStatus.failure,
+        errorMesage: error.toString(),
+      ));
     }
   }
 
-  FutureOr<void> _onLoadedMessages(event, emit) {
-    emit(state.copyWith(status: ChatStatus.loading));
+  /// Load initial messages when the screen is loaded
+  Future<void> _onLoadedMessages(
+      LoadInitialChat event, Emitter<ChatState> emit) async {
     try {
+      emit(state.copyWith(status: ChatStatus.loading));
+
       List<Message> messages = messageProvider.getMessages();
-      for (var element in messages) {
-        debugPrint('chat message bloc ${element.memories}');
-      }
-      // print('message length ${messages}');
-      emit(state.copyWith(status: ChatStatus.loaded, messages: messages));
-      // Optionally, you can also get the count of messages
-      int messageCount = messageProvider.getMessagesCount();
-      print('Total number of messages: $messageCount');
-      if (messageCount == 0) {
-        sendInitialPluginMessage(null);
+      if (messages.isEmpty) {
+        print("No messages found. Sending initial plugin message.");
+        await sendInitialPluginMessage(null);
+      } else {
+        emit(state.copyWith(
+          status: ChatStatus.loaded,
+          messages: messages,
+        ));
+        print("Loaded initial messages. Count: ${messages.length}");
       }
     } catch (error) {
       emit(state.copyWith(
-          status: ChatStatus.failure, errorMesage: error.toString()));
+        status: ChatStatus.failure,
+        errorMesage: error.toString(),
+      ));
     }
   }
-}
 
-sendInitialPluginMessage(Plugin? plugin) async {
-  var ai = Message(DateTime.now(), '', 'ai', pluginId: plugin?.id);
-  MessageProvider().saveMessage(ai);
-  // widget.messages.add(ai);
-  // _moveListToBottom();
-  streamApiResponse(
-    await getInitialPluginPrompt(plugin),
-    _callbackFunctionChatStreaming(ai),
-    () {
-    },
-  );
-  // changeLoadingState();
-}
+  /// Send a message and handle streaming response
+  Future<void> _onSendMessage(
+      SendMessage event, Emitter<ChatState> emit) async {
+    try {
+      emit(state.copyWith(status: ChatStatus.loading));
 
-_prepareStreaming(String text) {
-  // textController.clear(); // setState if isolated
-  var human = Message(DateTime.now(), text, 'human');
-  var ai = Message(
-    DateTime.now(),
-    '',
-    'ai',
-  );
-  MessageProvider().saveMessage(human);
-  MessageProvider().saveMessage(ai);
-  // widget.messages.add(human);
-  // widget.messages.add(ai);
-  // _moveListToBottom(extra: widget.textFieldFocusNode.hasFocus ? 148 : 200);
-  return ai;
-}
+      var aiMessage = _prepareStreaming(event.message);
 
-_callbackFunctionChatStreaming(Message aiMessage) {
-  return (String content) async {
-    aiMessage.text = '${aiMessage.text}$content';
-    MessageProvider().updateMessage(aiMessage);
-    // widget.messages.removeLast();
-    // widget.messages.add(aiMessage);
-    // setState(() {});
-    // _moveListToBottom();
-  };
+      // Retrieve the RAG context
+      final ragInfo = await retrieveRAGContext(event.message);
+      String ragContext = ragInfo[0];
+      List<Memory> memories = ragInfo[1].cast<Memory>();
+
+      print("RAG Context: $ragContext | Memories: ${memories.length}");
+
+      // Create a prompt using the RAG context
+      var prompt = qaRagPrompt(
+        ragContext,
+        await messageProvider.retrieveMostRecentMessages(limit: 10),
+      );
+
+      await streamApiResponse(
+        prompt,
+        _callbackFunctionChatStreaming(aiMessage),
+        () async {
+          aiMessage.memories.addAll(memories);
+          messageProvider.updateMessage(aiMessage);
+          add(RefreshMessages()); // Refresh after the stream
+        },
+      );
+    } catch (error) {
+      emit(state.copyWith(
+        status: ChatStatus.failure,
+        errorMesage: error.toString(),
+      ));
+    }
+  }
+
+  /// Prepare messages for streaming
+  Message _prepareStreaming(String text) {
+    var human = Message(DateTime.now(), text, 'human');
+    var ai = Message(DateTime.now(), '', 'ai');
+    messageProvider.saveMessage(human);
+    messageProvider.saveMessage(ai);
+    return ai;
+  }
+
+  /// Handle streaming response for AI message
+  Future<void> Function(String) _callbackFunctionChatStreaming(
+      Message aiMessage) {
+    return (String content) async {
+      aiMessage.text = '${aiMessage.text}$content';
+      await messageProvider
+          .updateMessage(aiMessage); // Ensure update is awaited
+      print("AI Message updated: ${aiMessage.text}");
+    };
+  }
+
+  /// Handle sending initial plugin message (standalone function)
+  Future<void> sendInitialPluginMessage(Plugin? plugin) async {
+    try {
+      var ai = Message(DateTime.now(), '', 'ai', pluginId: plugin?.id);
+      messageProvider.saveMessage(ai);
+
+      await streamApiResponse(
+        await getInitialPluginPrompt(plugin),
+        _callbackFunctionChatStreaming(ai),
+        () async {
+          messageProvider.updateMessage(ai);
+          add(LoadInitialChat());
+        },
+      );
+    } catch (error) {
+      print("Error in sendInitialPluginMessage: $error");
+    }
+  }
 }

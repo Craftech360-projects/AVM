@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/core/assets/app_images.dart';
-import 'package:friend_private/features/wizard/pages/signin_page.dart';
 import 'package:friend_private/pages/home/custom_scaffold.dart';
 import 'package:friend_private/pages/home/page.dart';
 
@@ -40,8 +39,13 @@ class SplashScreenState extends State<SplashScreen>
           : Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => const SigninPage()),
+                  builder: (BuildContext context) => const HomePageWrapper()),
             );
+      // : Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(
+      //         builder: (BuildContext context) => const SigninPage()),
+      //   );
     });
   }
 

@@ -187,11 +187,11 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
         try {
           final data = jsonDecode(event);
-          print('websocket data satyam $event');
+          //  print('websocket data satyam $event');
           if (data['type'] == 'Metadata') {
             // Handle metadata event
           } else if (data['type'] == 'Results') {
-            print('deepgram sever selected');
+            //  print('deepgram sever selected');
             // Handle results event
             final alternatives = data['channel']['alternatives'];
             if (alternatives is List && alternatives.isNotEmpty) {
@@ -211,7 +211,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
                 lastAudioTime = DateTime.now();
                 debugPrint('updated lastAudioTime: $lastAudioTime');
               } else {
-                debugPrint('Empty or invalid transcript');
+                // debugPrint('Empty or invalid transcript');
               }
             } else {
               debugPrint('No alternatives found in the result');

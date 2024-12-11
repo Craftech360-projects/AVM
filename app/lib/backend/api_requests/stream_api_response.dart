@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/preferences.dart';
 import 'package:http/http.dart' as http;
 
 import './streaming_models.dart';
@@ -88,6 +87,51 @@ import './streaming_models.dart';
 //       });
 // }
 
+// Future streamApiResponse(
+//   String prompt,
+//   Future<dynamic> Function(String) callback,
+//   VoidCallback onDone,
+// ) async {
+//   var client = http.Client();
+//   const url = 'https://api.groq.com/openai/v1/chat/completions';
+//   final headers = {
+//     'Content-Type': 'application/json',
+//     'Authorization':
+//         'Bearer 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',
+//   };
+
+//   var body = jsonEncode({
+//     "model": "llama-3.1-70b-versatile",
+//     "messages": [
+//       {"role": "system", "content": ""},
+//       {"role": "user", "content": prompt}
+//     ],
+//     "stream": true,
+//   });
+
+//   var request = http.Request("POST", Uri.parse(url))
+//     ..headers.addAll(headers)
+//     ..body = body;
+
+//   try {
+//     final http.StreamedResponse response = await client.send(request);
+//     if (response.statusCode == 401) {
+//       debugPrint('Unauthorized request');
+//       callback('Incorrect API Key provided.');
+//       return;
+//     } else if (response.statusCode == 429) {
+//       callback('You have reached the API limit.');
+//       return;
+//     } else if (response.statusCode != 200) {
+//       callback('Unknown Error with LLaMA API.');
+//       return;
+//     }
+//     debugPrint('Stream response: ${response.statusCode}');
+//     _processStream(response, callback, onDone);
+//   } catch (e) {
+//     debugPrint('Error sending request: $e');
+//   }
+// }
 Future streamApiResponse(
   String prompt,
   Future<dynamic> Function(String) callback,
@@ -104,8 +148,8 @@ Future streamApiResponse(
   var body = jsonEncode({
     "model": "llama-3.1-70b-versatile",
     "messages": [
-      {"role": "system", "content": ""},
-      {"role": "user", "content": prompt}
+      {"role": "system", "content": ""}, // Placeholder system message
+      {"role": "user", "content": prompt} // User's prompt
     ],
     "stream": true,
   });
@@ -116,9 +160,9 @@ Future streamApiResponse(
 
   try {
     final http.StreamedResponse response = await client.send(request);
+
     if (response.statusCode == 401) {
-      debugPrint('Unauthorized request');
-      callback('Incorrect API Key provided.');
+      callback('Unauthorized request');
       return;
     } else if (response.statusCode == 429) {
       callback('You have reached the API limit.');
@@ -127,10 +171,14 @@ Future streamApiResponse(
       callback('Unknown Error with LLaMA API.');
       return;
     }
+
+    // Process the streamed response
     debugPrint('Stream response: ${response.statusCode}');
-    _processStream(response, callback, onDone);
+    _processStream(response, callback,
+        onDone); // Calls the onDone callback when streaming finishes
   } catch (e) {
     debugPrint('Error sending request: $e');
+    callback('Error with request: $e');
   }
 }
 

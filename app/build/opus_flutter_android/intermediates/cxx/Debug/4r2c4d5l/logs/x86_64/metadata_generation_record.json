@@ -11,11 +11,11 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": -1545704276
+    "memoizedHashCode": -330001149
   },
   {
     "level_": 0,
-    "message_": "rebuilding JSON D:\\AVM\\app\\build\\opus_flutter_android\\.cxx\\Debug\\4r2c4d5l\\x86_64\\android_gradle_build.json due to:",
+    "message_": "JSON \u0027D:\\AVM\\app\\build\\opus_flutter_android\\.cxx\\Debug\\4r2c4d5l\\x86_64\\android_gradle_build.json\u0027 was up-to-date",
     "file_": "C:\\Users\\rahul\\AppData\\Local\\Pub\\Cache\\git\\opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8\\opus_flutter_android\\android\\Android.mk",
     "tag_": "debug|x86_64",
     "diagnosticCode_": 0,
@@ -25,105 +25,7 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": 791858307
-  },
-  {
-    "level_": 0,
-    "message_": "- no fingerprint file, will remove stale configuration folder",
-    "file_": "C:\\Users\\rahul\\AppData\\Local\\Pub\\Cache\\git\\opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8\\opus_flutter_android\\android\\Android.mk",
-    "tag_": "debug|x86_64",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -648548948
-  },
-  {
-    "level_": 0,
-    "message_": "removing stale contents from \u0027D:\\AVM\\app\\build\\opus_flutter_android\\.cxx\\Debug\\4r2c4d5l\\x86_64\u0027",
-    "file_": "C:\\Users\\rahul\\AppData\\Local\\Pub\\Cache\\git\\opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8\\opus_flutter_android\\android\\Android.mk",
-    "tag_": "debug|x86_64",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 1746353711
-  },
-  {
-    "level_": 0,
-    "message_": "created folder \u0027D:\\AVM\\app\\build\\opus_flutter_android\\.cxx\\Debug\\4r2c4d5l\\x86_64\u0027",
-    "file_": "C:\\Users\\rahul\\AppData\\Local\\Pub\\Cache\\git\\opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8\\opus_flutter_android\\android\\Android.mk",
-    "tag_": "debug|x86_64",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 1615325347
-  },
-  {
-    "level_": 0,
-    "message_": "executing ndkBuild @echo off\n\"C:\\\\Users\\\\rahul\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\26.3.11579264\\\\ndk-build.cmd\" ^\n  \"NDK_PROJECT_PATH\u003dnull\" ^\n  \"APP_BUILD_SCRIPT\u003dC:\\\\Users\\\\rahul\\\\AppData\\\\Local\\\\Pub\\\\Cache\\\\git\\\\opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8\\\\opus_flutter_android\\\\android\\\\Android.mk\" ^\n  \"APP_ABI\u003dx86_64\" ^\n  \"NDK_ALL_ABIS\u003dx86_64\" ^\n  \"NDK_DEBUG\u003d1\" ^\n  \"APP_PLATFORM\u003dandroid-21\" ^\n  \"NDK_OUT\u003dD:\\\\AVM\\\\app\\\\build\\\\opus_flutter_android\\\\intermediates\\\\cxx\\\\Debug\\\\4r2c4d5l/obj\" ^\n  \"NDK_LIBS_OUT\u003dD:\\\\AVM\\\\app\\\\build\\\\opus_flutter_android\\\\intermediates\\\\cxx\\\\Debug\\\\4r2c4d5l/lib\" ^\n  \"APP_SHORT_COMMANDS\u003dfalse\" ^\n  \"LOCAL_SHORT_COMMANDS\u003dfalse\" ^\n  -B ^\n  -n\n",
-    "file_": "C:\\Users\\rahul\\AppData\\Local\\Pub\\Cache\\git\\opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8\\opus_flutter_android\\android\\Android.mk",
-    "tag_": "debug|x86_64",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 1869198248
-  },
-  {
-    "level_": 0,
-    "message_": "@echo off\n\"C:\\\\Users\\\\rahul\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\26.3.11579264\\\\ndk-build.cmd\" ^\n  \"NDK_PROJECT_PATH\u003dnull\" ^\n  \"APP_BUILD_SCRIPT\u003dC:\\\\Users\\\\rahul\\\\AppData\\\\Local\\\\Pub\\\\Cache\\\\git\\\\opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8\\\\opus_flutter_android\\\\android\\\\Android.mk\" ^\n  \"APP_ABI\u003dx86_64\" ^\n  \"NDK_ALL_ABIS\u003dx86_64\" ^\n  \"NDK_DEBUG\u003d1\" ^\n  \"APP_PLATFORM\u003dandroid-21\" ^\n  \"NDK_OUT\u003dD:\\\\AVM\\\\app\\\\build\\\\opus_flutter_android\\\\intermediates\\\\cxx\\\\Debug\\\\4r2c4d5l/obj\" ^\n  \"NDK_LIBS_OUT\u003dD:\\\\AVM\\\\app\\\\build\\\\opus_flutter_android\\\\intermediates\\\\cxx\\\\Debug\\\\4r2c4d5l/lib\" ^\n  \"APP_SHORT_COMMANDS\u003dfalse\" ^\n  \"LOCAL_SHORT_COMMANDS\u003dfalse\" ^\n  -B ^\n  -n\n",
-    "file_": "C:\\Users\\rahul\\AppData\\Local\\Pub\\Cache\\git\\opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8\\opus_flutter_android\\android\\Android.mk",
-    "tag_": "debug|x86_64",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -1245046411
-  },
-  {
-    "level_": 0,
-    "message_": "parse and convert ndk-build output to build configuration JSON",
-    "file_": "C:\\Users\\rahul\\AppData\\Local\\Pub\\Cache\\git\\opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8\\opus_flutter_android\\android\\Android.mk",
-    "tag_": "debug|x86_64",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -8730234
-  },
-  {
-    "level_": 0,
-    "message_": "done executing ndkBuild",
-    "file_": "C:\\Users\\rahul\\AppData\\Local\\Pub\\Cache\\git\\opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8\\opus_flutter_android\\android\\Android.mk",
-    "tag_": "debug|x86_64",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 1856116332
+    "memoizedHashCode": -2076552399
   },
   {
     "level_": 0,
@@ -137,6 +39,6 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": -1120487384
+    "memoizedHashCode": 95215743
   }
 ]
