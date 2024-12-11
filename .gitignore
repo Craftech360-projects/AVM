@@ -116,6 +116,9 @@ env.g.dart
 */upload-keystore.jks
 */key.properties
 *.jks
+# Flutter build files
+app/.dart_tool/
+app/build/
 
 # Jekyll
 docs/_site/
