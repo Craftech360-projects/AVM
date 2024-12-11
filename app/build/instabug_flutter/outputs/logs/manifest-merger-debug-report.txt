@@ -1,0 +1,33 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml:1:1-10:12
+INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml:1:1-10:12
+INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml:1:1-10:12
+	package
+		ADDED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml:2:3-33
+		INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml:1:11-69
+application
+ADDED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml:4:3-8:17
+meta-data#com.instabug.library.ibg_platform
+ADDED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml:5:5-7:33
+	android:value
+		ADDED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml:7:7-30
+	android:name
+		ADDED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml:6:7-55
+uses-sdk
+INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+		ADDED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+		ADDED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\rahul\AppData\Local\Pub\Cache\hosted\pub.dev\instabug_flutter-13.4.0\android\src\main\AndroidManifest.xml

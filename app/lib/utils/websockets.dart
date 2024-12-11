@@ -81,8 +81,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   String codec,
 ) async {
   debugPrint('Websocket Opening');
-  // final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
-
+  final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
+  debugPrint(recordingsLanguage);
   // final deepgramapikey = getDeepgramApiKeyForUsage();
   // debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
@@ -122,6 +122,9 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
       );
       break;
     case 'Whisper':
+      uri = Uri.parse(
+        'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=service3&sample_rate=$sampleRate&codec=pcm8&channels=1',
+      );
       break;
     default:
       'Deepgram';

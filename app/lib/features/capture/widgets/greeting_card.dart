@@ -118,11 +118,12 @@ class GreetingCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Hi Alex!${SharedPreferencesUtil().givenName}',
+                              'Hi ${SharedPreferencesUtil().givenName ?? 'Guest'}!',
                               style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.white),
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.white,
+                              ),
                             ),
                             h5,
                             const Text(

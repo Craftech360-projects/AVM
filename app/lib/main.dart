@@ -46,11 +46,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   ble.FlutterBluePlus.setLogLevel(ble.LogLevel.info, color: true);
+
   if (F.env == Environment.prod) {
+    print(F.env);
     await Firebase.initializeApp(
       options: prod.DefaultFirebaseOptions.currentPlatform,
     );
   } else {
+    print(F.env);
     await Firebase.initializeApp(
       options: dev.DefaultFirebaseOptions.currentPlatform,
     );

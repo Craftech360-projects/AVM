@@ -1,0 +1,28 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.craftech360.avm.app-mergeDevDebugResources-67:/values-night-v31/values-night-v31.xml",
+            "map": [
+                {
+                    "source": "D:\\AVM\\app\\android\\app\\src\\main\\res\\values-night-v31\\styles.xml",
+                    "from": {
+                        "startLines": "3,19",
+                        "startColumns": "4,4",
+                        "startOffsets": "175,1198",
+                        "endLines": "12,21",
+                        "endColumns": "12,12",
+                        "endOffsets": "840,1364"
+                    },
+                    "to": {
+                        "startLines": "2,11",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,600",
+                        "endLines": "10,13",
+                        "endColumns": "12,12",
+                        "endOffsets": "595,764"
+                    }
+                }
+            ]
+        }
+    ]
+}

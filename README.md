@@ -80,3 +80,4 @@ transcrpt snd m emory plaude ai>>>>>plaude ai ,action item , integraton notion,
 add on
 
 border for search input chage to white
+v

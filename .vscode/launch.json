@@ -1,0 +1,55 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      
+      {
+        "name": "app (dev)",
+        "cwd": "app",
+        "request": "launch",
+        "type": "dart",
+        "args": ["--flavor", "dev"],
+        "flutterMode": "debug"
+      },
+      {
+        "name": "app (dev profile mode)",
+        "cwd": "app",
+        "request": "launch",
+        "type": "dart",
+        "args": ["--flavor", "dev"],
+        "flutterMode": "profile"
+      },
+      {
+        "name": "app (dev release mode)",
+        "cwd": "app",
+        "request": "launch",
+        "type": "dart",
+        "args": ["--flavor", "dev"],
+        "flutterMode": "release"
+      },
+      {
+        "name": "app (prod)",
+        "cwd": "app",
+        "request": "launch",
+        "type": "dart",
+        "args": ["--flavor", "prod"],
+        "flutterMode": "debug"
+      },
+      {
+        "name": "app (prod profile mode)",
+        "cwd": "app",
+        "request": "launch",
+        "type": "dart",
+        "args": ["--flavor", "prod"],
+        "flutterMode": "profile"
+      },
+      {
+        "name": "app (prod release mode)",
+        "cwd": "app",
+        "request": "launch",
+        "type": "dart",
+        "args": ["--flavor", "prod"],
+        "flutterMode": "release"
+      }
+    ]
+  }
+  

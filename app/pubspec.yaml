@@ -125,6 +125,7 @@ dependencies:
     git:
       url: https://github.com/fluttercommunity/flutter_workmanager.git
       ref: b783000
+  
 
 dependency_overrides:
   http: ^1.2.1
@@ -168,6 +169,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/vectors/
+    - assets/icon.png
 
   fonts:
     - family: Montserrat

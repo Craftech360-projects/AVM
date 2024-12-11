@@ -68,7 +68,7 @@ class _FindDevicesPageState extends State<FindDevicesPage>
                     },
                     () {},
                     'Enable Bluetooth',
-                    'Friend needs Bluetooth to connect to your wearable. Please enable Bluetooth and try again.',
+                    'AVM needs Bluetooth to connect to your wearable. Please enable Bluetooth and try again.',
                     singleButton: true,
                   ),
                 );

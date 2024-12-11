@@ -1,13 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
-import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
-import 'package:friend_private/pages/memories/widgets/empty_memories.dart';
 import 'package:friend_private/features/memories/pages/memory_detail_page.dart';
 import 'package:friend_private/features/memories/widgets/memory_card.dart';
+import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
+import 'package:friend_private/pages/memories/widgets/empty_memories.dart';
 
 class MemoryCardWidget extends StatelessWidget {
   const MemoryCardWidget({
@@ -23,7 +21,7 @@ class MemoryCardWidget extends StatelessWidget {
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: _memoryBloc,
       builder: (context, state) {
-        log('state of memory ${state.memories}');
+        // log('state of memory ${state.memories}');
         if (state.memories.isEmpty) {
           return const Center(
             child: Padding(

@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.craftech360.avm.app-mergeDevDebugResources-67:/values-sw320dp-land-v13/values-sw320dp-land-v13.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\rahul\\.gradle\\caches\\transforms-3\\0c2e795a817388cabca40265804b3089\\transformed\\jetified-instabug-survey-13.4.1\\res\\values-sw320dp-land-v13\\values-sw320dp-land-v13.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,107,162,217,266,325,390,452,522,587",
+                        "endColumns": "51,54,54,48,58,64,61,69,64,61",
+                        "endOffsets": "102,157,212,261,320,385,447,517,582,644"
+                    }
+                }
+            ]
+        }
+    ]
+}

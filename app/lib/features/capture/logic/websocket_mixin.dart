@@ -251,7 +251,7 @@ mixin WebSocketMixin {
       body: 'Unable to connect to the transcript service.'
           ' Please restart the app or contact support if the problem persists.',
     );
-  } // should trigger a connection restored? as with internet?
+  } // TODO: should trigger a connection restored? as with internet?
 
   void _notifyInternetLost() {
     clearNotification(3);
@@ -272,9 +272,31 @@ mixin WebSocketMixin {
     );
   }
 
-  void closeWebSocket() {
-    websocketChannel?.sink.close(1000);
-    _reconnectionTimer?.cancel();
-    _internetListener.cancel();
+  // void closeWebSocket() {
+  //   websocketChannel?.sink.close(1000);
+  //   _reconnectionTimer?.cancel();
+  //   _internetListener.cancel();
+  // }
+
+  Future<void> closeWebSocket() async {
+    try {
+      if (websocketChannel != null) {
+        await websocketChannel!.sink.close(1000, 'Closed by user');
+        websocketChannel = null;
+      }
+      _reconnectionTimer?.cancel();
+   //   await _internetListener.cancel();
+
+      // Reset connection state and variables
+      wsConnectionState = WebsocketConnectionStatus.notConnected;
+      websocketReconnecting = false;
+      _reconnectionAttempts = 0;
+      _isConnecting = false;
+      _hasNotifiedUser = false;
+
+      debugPrint('WebSocket connection closed successfully');
+    } catch (e) {
+      debugPrint('Error closing WebSocket connection: $e');
+    }
   }
 }
