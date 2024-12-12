@@ -144,7 +144,7 @@ class GreetingCard extends StatelessWidget {
                       duration: const Duration(seconds: 1),
                       curve: Curves.easeInOut,
                       child: const Text(
-                        'Swipe to create memory',
+                        'Swipe right to create memory',
                         style: TextStyle(
                           color: Color.fromARGB(129, 31, 31, 31),
                           fontSize: 14,

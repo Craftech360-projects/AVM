@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/memory.dart';

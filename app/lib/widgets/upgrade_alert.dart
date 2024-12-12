@@ -10,10 +10,6 @@ class MyUpgrader extends Upgrader {
 
   @override
   bool isUpdateAvailable() {
-    final storeVersion = currentAppStoreVersion;
-    final installedVersion = currentInstalledVersion;
-    // print('storeVersion=$storeVersion');
-    // print('installedVersion=$installedVersion');
     return super.isUpdateAvailable();
   }
 }

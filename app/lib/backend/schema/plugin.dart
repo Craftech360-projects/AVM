@@ -176,8 +176,8 @@ class Plugin {
   }
 
   static List<Plugin> fromJsonList(List<dynamic> jsonList) {
-    // TODO: move me out of this, bad performance, every time .pluginList is read
-    // TODO: handle plugins that are deleted
+    // move me out of this, bad performance, every time .pluginList is read
+    // handle plugins that are deleted
     var pluginsId = SharedPreferencesUtil().pluginsEnabled;
     List<Plugin> plugins = jsonList.map((e) {
       var plugin = Plugin.fromJson(e);

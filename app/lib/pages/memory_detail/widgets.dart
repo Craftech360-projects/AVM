@@ -12,7 +12,6 @@ import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/pages/memories/widgets/confirm_deletion_widget.dart';
 import 'package:friend_private/pages/memory_detail/enable_title.dart';
 import 'package:friend_private/pages/memory_detail/test_prompts.dart';
-import 'package:friend_private/pages/plugins/page.dart';
 import 'package:friend_private/pages/settings/widgets/calendar.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/temp.dart';
@@ -324,8 +323,8 @@ List<Widget> getPluginsWidgets(
             ),
             child: MaterialButton(
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (c) => const PluginsPage()));
+                // Navigator.of(context).push(
+                //     MaterialPageRoute(builder: (c) => const PluginsPage())); ===> CHECK THIS LATER
               },
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
@@ -341,7 +340,7 @@ List<Widget> getPluginsWidgets(
     ];
   }
   return [
-    // TODO: include a way to trigger specific plugins
+    // include a way to trigger specific plugins
     if (memory.pluginsResponse.isNotEmpty && !memory.discarded) ...[
       memory.structured.target!.actionItems.isEmpty
           ? const SizedBox(height: 40)
@@ -448,7 +447,7 @@ List<Widget> getGeolocationWidgets(Memory memory, BuildContext context) {
           // memory.geolocation.target != null
           //     ? GestureDetector(
           //         onTap: () async {
-          //           // TODO: open google maps URL if available
+          //           // open google maps URL if available
           //           // if (await canLaunchUrl(
           //           //         Uri.parse(MapsUtil.getGoogleMapsPlaceUrl(memory.geolocation.target!.googlePlaceId!))) ==
           //           //     true) {
@@ -533,7 +532,7 @@ showOptionsBottomSheet(
                           onTap: () {
                             setModalState(
                                 () => loadingPluginIntegrationTest = true);
-                            // TODO: if not set, show dialog to set URL or take them to settings.
+                            // if not set, show dialog to set URL or take them to settings.
 
                             webhookOnMemoryCreatedCall(memory,
                                     returnRawBody: true)
@@ -650,7 +649,7 @@ showOptionsBottomSheet(
                           onTap: () {
                             setModalState(
                                 () => loadingPluginIntegrationTest = true);
-                            // TODO: if not set, show dialog to set URL or take them to settings.
+                            // if not set, show dialog to set URL or take them to settings.
 
                             webhookOnMemoryCreatedCall(memory,
                                     returnRawBody: true)
@@ -700,7 +699,7 @@ showOptionsBottomSheet(
                           onTap: () {
                             setModalState(
                                 () => loadingPluginIntegrationTest = true);
-                            // TODO: if not set, show dialog to set URL or take them to settings.
+                            // if not set, show dialog to set URL or take them to settings.
 
                             zapWebhookOnMemoryCreatedCall(memory,
                                     returnRawBody: true)
@@ -744,25 +743,4 @@ showOptionsBottomSheet(
           }));
   if (result == true) setState(() {});
   debugPrint('showBottomSheet result: $result');
-}
-
-_getMemoryPromptDialogContent(
-    BuildContext context, TextEditingController controller) {
-  return SizedBox(
-    height: 200,
-    child: Column(
-      children: [
-        TextField(
-          controller: controller,
-          decoration: const InputDecoration(
-            hintText: 'Enter the prompt',
-            border: OutlineInputBorder(borderSide: BorderSide.none),
-            contentPadding: EdgeInsets.all(0),
-          ),
-          keyboardType: TextInputType.multiline,
-          maxLines: 8,
-        ),
-      ],
-    ),
-  );
 }

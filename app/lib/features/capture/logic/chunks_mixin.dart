@@ -51,7 +51,7 @@ mixin AudioChunksMixin {
                 await _processFileToTranscript(data.item1);
             setIsTranscribing(false);
             onNewSegments(newSegments, data.item2);
-          } catch (e, stacktrace) {
+          } catch (e) {
             debugPrint('Error processing 30 seconds frame');
             print(e);
             // CrashReporting.reportHandledCrash(

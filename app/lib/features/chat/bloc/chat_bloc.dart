@@ -1,8 +1,7 @@
 import 'dart:async';
-
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/api_requests/stream_api_response.dart';
 import 'package:friend_private/backend/database/memory.dart';
@@ -29,18 +28,18 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SendMessage>(
       (event, emit) async {
         try {
-          print('event bloc ${event.message}');
+          // print('event bloc ${event.message}');
           emit(state.copyWith(status: ChatStatus.loading));
           // Prepare and save the initial messages
           var aiMessage = _prepareStreaming(event.message);
 
           // Retrieve the RAG context
           final ragInfo = await retrieveRAGContext(event.message);
-          print('raginfo $ragInfo');
+          // print('raginfo $ragInfo');
 
           String ragContext = ragInfo[0];
           List<Memory> memories = ragInfo[1].cast<Memory>();
-          print('RAG Context: $ragContext memories: ${memories.length}');
+          // print('RAG Context: $ragContext memories: ${memories.length}');
 
           // Use the RAG context to create a prompt
           var prompt = qaRagPrompt(

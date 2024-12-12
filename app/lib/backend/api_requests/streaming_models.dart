@@ -52,7 +52,7 @@ class Choices {
       this.finishReason}); // Fixed spacing
 
   Choices.fromJson(Map<String, dynamic> json) {
-    String? a = json['message'].toString();
+    json['message'].toString();
     index = json['index'];
     delta = json['delta'] != null ? Delta.fromJson(json['delta']) : null;
     message = json['message'] != null

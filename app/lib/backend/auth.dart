@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -54,7 +53,7 @@ String sha256ofString(String input) {
 //   } else {
 //     print("its null2");
 //   }
-//   // TODO: this would not be set again if the user uninstalls and installs the app again :/ as name and email are only given once.
+//   // this would not be set again if the user uninstalls and installs the app again :/ as name and email are only given once.
 
 //   // Create an `OAuthCredential` from the credential returned by Apple.
 //   final oauthCredential = OAuthProvider("apple.com").credential(
@@ -241,7 +240,7 @@ Future<UserCredential> signInWithGoogle() async {
   print('Google Auth: $googleAuth');
 
   // Create a new credential
-  // TODO: store email + name, need to?
+  // store email + name, need to?
   final credential = GoogleAuthProvider.credential(
     accessToken: googleAuth?.accessToken,
     idToken: googleAuth?.idToken,
@@ -257,7 +256,7 @@ Future<UserCredential> signInWithGoogle() async {
     SharedPreferencesUtil().givenName = givenName;
     SharedPreferencesUtil().familyName = familyName;
   }
-  // TODO: test subsequent signIn
+  // test subsequent signIn
   debugPrint('signInWithGoogle Email: ${SharedPreferencesUtil().email}');
   debugPrint('signInWithGoogle Name: ${SharedPreferencesUtil().givenName}');
   return result;

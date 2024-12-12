@@ -11,7 +11,7 @@ import 'package:friend_private/backend/preferences.dart';
 Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
   debugPrint('deepgramTranscribe');
   var startTime = DateTime.now();
-  // TODO: why there seems to be no punctuation
+  // why there seems to be no punctuation
   Deepgram deepgram = Deepgram(getDeepgramApiKeyForUsage(), baseQueryParams: {
     'model': 'nova-2-general',
     'detect_language': false,
@@ -25,7 +25,7 @@ Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
     // 'topics': true,
     // 'intents': true,
     // 'sentiment': true,
-    // TODO: try more options, sentiment analysis, intent, topics
+    // try more options, sentiment analysis, intent, topics
   });
 
   DeepgramSttResult res = await deepgram.transcribeFromFile(file);

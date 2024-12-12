@@ -7,7 +7,7 @@ part 'memory_state.dart';
 class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
   MemoryBloc() : super(MemoryInitial()) {
     on<MemoryEvent>((event, emit) {
-      // TODO: implement event handler
+      // implement event handler
     });
   }
 }

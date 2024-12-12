@@ -92,7 +92,7 @@ class _RecordSampleTabState extends State<RecordSampleTab>
     // File file = await WavBytesUtil.createWavFile(bytes,
     //     filename: '${widget.sample.id}.wav');
     await uploadSample(file, SharedPreferencesUtil().uid); // optimistic request
-    // TODO: handle failures + url: null, retry sample
+    // handle failures + url: null, retry sample
   }
 
   Future<void> cancelRecording() async {

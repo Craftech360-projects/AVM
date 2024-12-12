@@ -110,6 +110,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.white,
         elevation: 0,
         leading: widget.showBackBtn

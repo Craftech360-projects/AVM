@@ -239,7 +239,7 @@ class CapturePageState extends State<CapturePage>
       context,
       TranscriptSegment.segmentsAsString(segments),
       segments,
-      file?.path,
+      file!.path,
       startedAt: currentTranscriptStartedAt,
       finishedAt: currentTranscriptFinishedAt,
       geolocation: await LocationService().getGeolocationDetails(),
@@ -376,7 +376,7 @@ class CapturePageState extends State<CapturePage>
           const SnackBar(
             content: Text(
               'Location services are disabled. Enable them for a better experience.',
-              style: TextStyle(color: Colors.white, fontSize: 14),
+              style: TextStyle(color: AppColors.white, fontSize: 14),
             ),
           ),
         );

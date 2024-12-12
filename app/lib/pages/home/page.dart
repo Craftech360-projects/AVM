@@ -19,7 +19,7 @@ import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/core/assets/app_images.dart';
 import 'package:friend_private/features/capture/presentation/capture_page.dart';
 import 'package:friend_private/features/chat/bloc/chat_bloc.dart';
-import 'package:friend_private/features/chat/presentation/page.dart';
+import 'package:friend_private/features/chat/presentation/chat_page.dart';
 import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
 import 'package:friend_private/main.dart';
 import 'package:friend_private/pages/home/custom_scaffold.dart';
@@ -281,6 +281,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           ? UpgradeDialogStyle.cupertino
           : UpgradeDialogStyle.material,
       child: CustomScaffold(
+        resizeToAvoidBottomInset: true,
         showBatteryLevel: true,
         showGearIcon: true,
         title: Image.asset(
@@ -293,6 +294,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
         batteryLevel: batteryLevel,
         tabIndex: _controller!.index,
         body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: () {
             FocusScope.of(context).unfocus();
             chatTextFieldFocusNode.unfocus();
@@ -302,22 +304,24 @@ class _HomePageWrapperState extends State<HomePageWrapper>
               ? const ScreenSkeleton()
               : Stack(
                   children: [
-                    TabBarView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: _controller,
-                      children: [
-                        CapturePage(
-                          key: capturePageKey,
-                          device: _device,
-                          batteryLevel: batteryLevel,
-                          refreshMemories: _initiateMemories,
-                          refreshMessages: _refreshMessages,
-                        ),
-                        ChatPageTest(
-                          textFieldFocusNode: chatTextFieldFocusNode,
-                        ),
-                        const SettingPage(),
-                      ],
+                    Positioned.fill(
+                      child: TabBarView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        controller: _controller,
+                        children: [
+                          CapturePage(
+                            key: capturePageKey,
+                            device: _device,
+                            batteryLevel: batteryLevel,
+                            refreshMemories: _initiateMemories,
+                            refreshMessages: _refreshMessages,
+                          ),
+                          ChatPageTest(
+                            textFieldFocusNode: chatTextFieldFocusNode,
+                          ),
+                          const SettingPage(),
+                        ],
+                      ),
                     ),
                     if (chatTextFieldFocusNode.hasFocus ||
                         memoriesTextFieldFocusNode.hasFocus)
@@ -325,24 +329,19 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                     else
                       Align(
                         alignment: Alignment.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: 16.0, left: 16.0, right: 16.0, top: 16.0),
-                          child: CustomNavBar(
-                            isChat: _controller!.index == 1,
-                            isMemory: _controller!.index == 0,
-                            onTabChange: (index) => _controller
-                                ?.animateTo(index), // Optional callback
-                            onSendMessage: (message) {
-                              BlocProvider.of<ChatBloc>(context)
-                                  .add(SendMessage(message));
-                            },
-                            onMemorySearch: (query) {
-                              BlocProvider.of<MemoryBloc>(context).add(
-                                SearchMemory(query: query),
-                              );
-                            },
-                          ),
+                        child: CustomNavBar(
+                          isChat: _controller!.index == 1,
+                          isMemory: _controller!.index == 0,
+                          onTabChange: (index) => _controller?.animateTo(index),
+                          onSendMessage: (message) {
+                            BlocProvider.of<ChatBloc>(context)
+                                .add(SendMessage(message));
+                          },
+                          onMemorySearch: (query) {
+                            BlocProvider.of<MemoryBloc>(context).add(
+                              SearchMemory(query: query),
+                            );
+                          },
                         ),
                       )
                   ],

@@ -1,7 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:friend_private/src/config/app_loger.dart';
-
-
+import 'package:friend_private/src/config/app_logger.dart';
 
 class SimpleBlocObserver extends BlocObserver {
   const SimpleBlocObserver();

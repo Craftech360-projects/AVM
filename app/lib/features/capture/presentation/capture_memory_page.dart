@@ -71,54 +71,50 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    // _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
-    return ListView(
+    return Column(
       children: [
         widget.hasTranscripts
-            ? Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Dismissible(
-                  background: Shimmer.fromColors(
-                    baseColor: AppColors.white,
-                    highlightColor: AppColors.white,
-                    child: const Center(
-                      child: Text(
-                        'Please Wait!..\nMemory Creating',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+            ? Dismissible(
+                background: Shimmer.fromColors(
+                  baseColor: AppColors.greyLight,
+                  highlightColor: AppColors.white,
+                  child: const Center(
+                    child: Text(
+                      'Please Wait!..\nCreating Memory',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-                  key: capturePageKey,
-                  direction: DismissDirection.startToEnd,
-                  onDismissed: (direction) =>
-                      widget.onDismissmissedCaptureMemory(direction),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GreetingCard(
-                      name: 'Joe',
-                      isDisconnected: true,
-                      context: context,
-                      hasTranscripts: widget.hasTranscripts,
-                      wsConnectionState: widget.wsConnectionState,
-                      device: widget.device,
-                      internetStatus: widget.internetStatus,
-                      segments: widget.segments,
-                      memoryCreating: widget.memoryCreating,
-                      photos: widget.photos,
-                      scrollController: widget.scrollController,
-                      avatarUrl:
-                          'https://thumbs.dreamstime.com/b/person-gray-photo-placeholder-woman-t-shirt-white-background-131683043.jpg',
-                    ),
+                ),
+                key: capturePageKey,
+                direction: DismissDirection.startToEnd,
+                onDismissed: (direction) =>
+                    widget.onDismissmissedCaptureMemory(direction),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GreetingCard(
+                    name: '',
+                    isDisconnected: true,
+                    context: context,
+                    hasTranscripts: widget.hasTranscripts,
+                    wsConnectionState: widget.wsConnectionState,
+                    device: widget.device,
+                    internetStatus: widget.internetStatus,
+                    segments: widget.segments,
+                    memoryCreating: widget.memoryCreating,
+                    photos: widget.photos,
+                    scrollController: widget.scrollController,
+                    avatarUrl:
+                        'https://thumbs.dreamstime.com/b/person-gray-photo-placeholder-woman-t-shirt-white-background-131683043.jpg',
                   ),
                 ),
               )
             : Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: GreetingCard(
-                  name: 'Joe',
+                  name: '',
                   isDisconnected: true,
                   context: context,
                   hasTranscripts: widget.hasTranscripts,
@@ -137,32 +133,29 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         //*--- Filter Button ---*//
 
         if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _isNonDiscarded = !_isNonDiscarded;
-                    _memoryBloc.add(
-                      DisplayedMemory(isNonDiscarded: _isNonDiscarded),
-                    );
-                  });
-                },
-                label: Text(
-                  _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
-                  style: const TextStyle(
-                    color: AppColors.grey,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                icon: Icon(
-                  _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
-                  size: 16,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () {
+                setState(() {
+                  _isNonDiscarded = !_isNonDiscarded;
+                  _memoryBloc.add(
+                    DisplayedMemory(isNonDiscarded: _isNonDiscarded),
+                  );
+                });
+              },
+              label: Text(
+                _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
+                style: const TextStyle(
                   color: AppColors.grey,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
+              ),
+              icon: Icon(
+                _isNonDiscarded ? Icons.cancel_outlined : Icons.filter_list,
+                size: 16,
+                color: AppColors.grey,
               ),
             ),
           ),
@@ -178,15 +171,15 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                 child: CircularProgressIndicator(),
               );
             } else if (state.status == MemoryStatus.failure) {
-              return Center(
+              return const Center(
                 child: Text(
-                  'Error: ${state.failure}',
+                  'Oops! Failed to load memories',
                 ),
               );
             } else if (state.status == MemoryStatus.success) {
               return MemoryCardWidget(memoryBloc: _memoryBloc);
             }
-            return const SizedBox.shrink();
+            return const SizedBox();
           },
           listener: (context, state) {
             if (state.status == MemoryStatus.failure) {

@@ -34,7 +34,7 @@ const String manufacturerNameCharacteristicUuid =
 Future<List<BluetoothService>> getBleServices(String deviceId) async {
   final device = BluetoothDevice.fromId(deviceId);
   try {
-    // TODO: need to be fixed for open glass
+    // need to be fixed for open glass
     // if (Platform.isAndroid && device.servicesList.isNotEmpty) return device.servicesList;
     return await device.discoverServices();
   } catch (e, stackTrace) {

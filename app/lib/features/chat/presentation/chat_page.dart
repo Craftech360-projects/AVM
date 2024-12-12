@@ -1,15 +1,17 @@
+// ignore_for_file: unused_field, unused_local_variable
+
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/features/chat/bloc/chat_bloc.dart';
 import 'package:friend_private/features/chat/widgets/ai_message.dart';
-import 'package:friend_private/src/common_widget/card.dart';
+import 'package:friend_private/features/chat/widgets/user_message.dart';
 
 class ChatPageTest extends StatefulWidget {
   final FocusNode textFieldFocusNode;
@@ -62,14 +64,13 @@ class _ChatPageTestState extends State<ChatPageTest>
 
   @override
   void dispose() {
-    _scrollController.dispose(); // Dispose of your controllers
+    _scrollController.dispose();
     _animationController.dispose();
-    super.dispose(); // Call the superclass's dispose method
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final textTheme:Theme.of(context).textTheme
     final textTheme = Theme.of(context).textTheme;
     return Stack(
       children: [
@@ -85,24 +86,19 @@ class _ChatPageTestState extends State<ChatPageTest>
                 },
               );
 
-              //*-- Messages --*//
               return Column(
                 children: [
-                  // Row for "Today"
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0,
-                        horizontal: 10), // Adjust spacing as needed
+                  const Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
                     child: Row(
                       children: [
-                        Text(
-                          "Today",
-                          style: textTheme.bodySmall?.copyWith(
-                            color: AppColors.purpleBright,
-                          ),
-                        ),
-                        SizedBox(width: 8.w),
-                        const Expanded(
+                        Text("Today",
+                            style: TextStyle(
+                                color: AppColors.purpleBright,
+                                fontWeight: FontWeight.w500)),
+                        w5,
+                        Expanded(
                           child: Divider(
                             color: AppColors.purpleBright,
                             thickness: 0.5,
@@ -126,10 +122,7 @@ class _ChatPageTestState extends State<ChatPageTest>
                       itemBuilder: (context, index) {
                         final message = state.messages?[index];
 
-                        // Add a SizedBox to create space between messages (adjust height as needed)
-                        const SizedBox(
-                            height:
-                                10.0); // Adjust height to the space you want
+                        h10;
 
                         if (message?.senderEnum == MessageSender.ai) {
                           log(message.toString());
@@ -147,9 +140,7 @@ class _ChatPageTestState extends State<ChatPageTest>
                                     .firstWhereOrNull(
                                         (e) => e.id == message.pluginId),
                               ),
-                              const SizedBox(
-                                  height:
-                                      10.0), // Space between this message and the next one
+                              h10,
                             ],
                           );
                         } else {
@@ -157,11 +148,8 @@ class _ChatPageTestState extends State<ChatPageTest>
                             children: [
                               UserCard(
                                 message: message,
-                                // Additional configuration for UserCard if necessary
                               ),
-                              const SizedBox(
-                                  height:
-                                      10.0), // Space between this message and the next one
+                              h10,
                             ],
                           );
                         }

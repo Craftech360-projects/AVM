@@ -14,10 +14,6 @@ const _routeTransitionDuration = 300;
 class AppRouter {
   GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,
-    // initialLocation: '/wsPage',
-    // initialLocation: '/setting',
-
-    // initialLocation: '/signin',
     routes: [
       GoRoute(
         path: '/signin',
@@ -45,25 +41,13 @@ class AppRouter {
               FadeTransition(opacity: a, child: c),
         ),
       ),
-      // GoRoute(
-      //   path: '/ble-connection',
-      //   name: BleConnectionPage.name,
-      //   parentNavigatorKey: _rootNavigatorKey,
-      //   pageBuilder: (context, state) => CustomTransitionPage(
-      //     child: const BleConnectionPage(),
-      //     transitionDuration: const Duration(
-      //       milliseconds: _routeTransitionDuration,
-      //     ),
-      //     transitionsBuilder: (_, a, __, c) =>
-      //         FadeTransition(opacity: a, child: c),
-      //   ),
-      // ),
+      
       GoRoute(
         path: '/finalize-onboarding',
         name: FinalizePage.name,
         parentNavigatorKey: _rootNavigatorKey,
         pageBuilder: (context, state) => CustomTransitionPage(
-          child: const FinalizePage(),
+          child:  FinalizePage(goNext: () {  },),
           transitionDuration: const Duration(
             milliseconds: _routeTransitionDuration,
           ),
@@ -85,32 +69,7 @@ class AppRouter {
               FadeTransition(opacity: a, child: c),
         ),
       ),
-      // GoRoute(
-      //   path: '/chats',
-      //   name: ChatsPage.name,
-      //   parentNavigatorKey: _rootNavigatorKey,
-      //   pageBuilder: (context, state) => CustomTransitionPage(
-      //     child: const ChatsPage(),
-      //     transitionDuration: const Duration(
-      //       milliseconds: _routeTransitionDuration,
-      //     ),
-      //     transitionsBuilder: (_, a, __, c) =>
-      //         FadeTransition(opacity: a, child: c),
-      //   ),
-      // ),
-      // GoRoute(
-      //   path: '/wsPage',
-      //   name: WebSocketTestPage.name,
-      //   parentNavigatorKey: _rootNavigatorKey,
-      //   pageBuilder: (context, state) => CustomTransitionPage(
-      //     child: WebSocketTestPage(),
-      //     transitionDuration: const Duration(
-      //       milliseconds: _routeTransitionDuration,
-      //     ),
-      //     transitionsBuilder: (_, a, __, c) =>
-      //         FadeTransition(opacity: a, child: c),
-      //   ),
-      // ),
+      
     ],
     debugLogDiagnostics: true,
   );

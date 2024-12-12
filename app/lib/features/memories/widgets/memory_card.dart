@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/core/constants/constants.dart';
-import 'package:friend_private/src/common_widget/card.dart';
+import 'package:friend_private/features/chat/widgets/user_message.dart';
 import 'package:intl/intl.dart';
 
 class MemoryCard extends StatelessWidget {
@@ -34,7 +34,7 @@ class MemoryCard extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(width: 8.w),
+          w10,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,8 +47,8 @@ class MemoryCard extends StatelessWidget {
                         fontSize: 16, fontWeight: FontWeight.w600)),
                 SizedBox(height: 12.h),
                 Text(
-                  '${DateFormat('d MMM').format(memory.createdAt)}  '
-                  '   ${DateFormat('h:mm a').format(memory.createdAt)}',
+                  '${DateFormat('d MMM').format(memory.createdAt)} '
+                  ' ${DateFormat('h:mm a').format(memory.createdAt)}',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],

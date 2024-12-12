@@ -51,7 +51,7 @@ class LocationService {
   Future<Geolocation?> getGeolocationDetails() async {
     if (await hasPermission()) {
       LocationData locationData = await location.getLocation();
-      // TODO: move http requests to other.dart
+      // move http requests to other.dart
 
       try {
         var res = await http.get(

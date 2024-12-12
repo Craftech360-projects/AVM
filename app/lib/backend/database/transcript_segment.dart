@@ -27,7 +27,7 @@ class TranscriptSegment {
     // this.createdAt,
   }) {
     // speakerId = speaker != null ? int.parse(speaker!.split('_')[1]) : 0;
-    // // createdAt ??= DateTime.now(); // TODO: -30 seconds + start time ? max(now, (now-30)
+    // // createdAt ??= DateTime.now(); // -30 seconds + start time ? max(now, (now-30)
     try {
       if (speaker != null && speaker!.contains('_')) {
         speakerId = int.tryParse(speaker!.split('_')[1]) ?? 0;
@@ -59,8 +59,8 @@ class TranscriptSegment {
 
       // speaker: (json['speaker'] ?? 'SPEAKER_00') as String,
       isUser: (json['is_user'] ?? false) as bool,
-      start: json['start'] as double ?? 0.0,
-      end: json['end'] as double ?? 0.0,
+      start: json['start'] as double,
+      end: json['end'] as double,
       // createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
     );
   }
@@ -92,7 +92,7 @@ class TranscriptSegment {
       'It was the worst case.',
       'and,'
     ];
-    // TODO: do this with any words that gets repeated twice
+    // do this with any words that gets repeated twice
     // - Replicate apparently has much more hallucinations
     for (var i = 0; i < segments.length; i++) {
       for (var hallucination in hallucinations) {
@@ -164,7 +164,7 @@ class TranscriptSegment {
     includeTimestamps =
         includeTimestamps && TranscriptSegment.canDisplaySeconds(segments);
     for (var segment in segments) {
-      // TODO: maybe store TranscriptSegment directly as utf8 decoded
+      // maybe store TranscriptSegment directly as utf8 decoded
       var segmentText = utf8.decode(segment.text.trim().codeUnits);
       var timestampStr =
           includeTimestamps ? '[${segment.getTimestampString()}]' : '';

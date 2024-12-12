@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +9,7 @@ import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/message.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
+import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/features/chat/bloc/chat_bloc.dart';
 import 'package:friend_private/features/memories/pages/memory_detail_page.dart';
@@ -35,16 +38,16 @@ class AIMessage extends StatelessWidget {
     bool isMemoriesEmpty = memories.isEmpty;
 
     // Print message and memories
-    print('Incoming message: ${message.text}');
+    // print('Incoming message: ${message.text}');
     for (var element in memories) {
       if (element.structured.target != null) {
-        print('Memory at AI: ${element.structured.target!.title}');
+        // print('Memory at AI: ${element.structured.target!.title}');
       } else {
-        print('Memory is null');
+        // print('Memory is null');
       }
     }
     for (var element in memories) {
-      print('memories at ai ${element.structured.target!.title}');
+      // print('memories at ai ${element.structured.target!.title}');
     }
 
     final textTheme = Theme.of(context).textTheme;
@@ -67,26 +70,26 @@ class AIMessage extends StatelessWidget {
                     ),
                 height: 32.h,
                 width: 32.w,
-                child: Stack(
+                child: const Stack(
                   alignment: Alignment.center,
                   children: [
-                    SizedBox(width: 8.w),
+                    w10,
                   ],
                 ),
               ),
-        const SizedBox(width: 16.0),
+        w15,
         Expanded(
             child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
           decoration: BoxDecoration(
-              color: AppColors.greyLight, // Or your theme's primary color
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5.r),
-                topRight: Radius.circular(20.r),
-                bottomLeft: Radius.circular(20.r),
-                bottomRight: Radius.circular(20.r),
-              ) // Smaller radius for chat bubble effect) // Optional: add border radius
-              ),
+            color: AppColors.greyLight,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20.r),
+              topRight: Radius.circular(20.r),
+              bottomLeft: Radius.circular(20.r),
+              bottomRight: Radius.circular(5.r),
+            ),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +107,7 @@ class AIMessage extends StatelessWidget {
                     )
                   : const SizedBox(),
               message.typeEnum == MessageType.daySummary
-                  ? const SizedBox(height: 16)
+                  ? h15
                   : const SizedBox(),
               SelectionArea(
                   child: AutoSizeText(
@@ -134,12 +137,10 @@ class AIMessage extends StatelessWidget {
                         0.0, 0.0, 0.0, 4.0),
                     child: GestureDetector(
                       onTap: () async {
-                        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
                         MixpanelManager().chatMessageMemoryClicked(memory);
                         int memoryIndex =
                             memories.reversed.toList().indexOf(memory);
-                        print(
-                            '>>>>>>>>>>>>>>>>chat memory index clicked $memoryIndex');
+
                         // BlocProvider.of<MemoryBloc>(context)
                         //     .add(MemoryIndexChanged(memoryIndex: memoryIndex));
                         // await Navigator.of(context).push(MaterialPageRoute(
@@ -157,7 +158,7 @@ class AIMessage extends StatelessWidget {
                             ),
                           ),
                         );
-                        // TODO: maybe refresh memories here too
+                        // maybe refresh memories here too
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -178,24 +179,24 @@ class AIMessage extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            if (message?.createdAt != null) ...[
+                            ...[
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
                                     DateFormat('HH:mm').format(
-                                        message!.createdAt), // Format time
+                                        message.createdAt), // Format time
                                     style: textTheme.bodySmall?.copyWith(
                                       color: Colors.white70,
                                       fontSize: 12.sp,
                                     ),
                                   ),
-                                  SizedBox(width: 4.w),
-                                  // Icon(
-                                  //   Icons.done_all, // Or your preferred status icon
-                                  //   size: 14.sp,
-                                  //   color: Colors.white70,
-                                  // ),
+                                  // SizedBox(width: 4.w),
+                                  // // Icon(
+                                  // //   Icons.done_all, // Or your preferred status icon
+                                  // //   size: 14.sp,
+                                  // //   color: Colors.white70,
+                                  // // ),
                                 ],
                               ),
                             ],
@@ -229,7 +230,7 @@ class AIMessage extends StatelessWidget {
               content: Text(
                 'Response copied to clipboard.',
                 style: TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: AppColors.white,
                   fontSize: 12.0,
                 ),
               ),
@@ -245,12 +246,12 @@ class AIMessage extends StatelessWidget {
               child: Icon(
                 Icons.content_copy,
                 color: Theme.of(context).textTheme.bodySmall!.color,
-                size: 10.0,
+                size: 12.0,
               ),
             ),
-            Text(
+            const Text(
               'Copy response',
-              style: Theme.of(context).textTheme.bodySmall,
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
             ),
           ],
         ),
@@ -261,17 +262,11 @@ class AIMessage extends StatelessWidget {
   _getInitialOption(BuildContext context, String optionText) {
     return GestureDetector(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
         width: double.maxFinite,
         decoration: BoxDecoration(
           color: Colors.grey.shade200,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20.r),
-            topRight: Radius.circular(20.r),
-            bottomLeft: Radius.circular(20.r),
-            bottomRight:
-                Radius.circular(5.r), // Smaller radius for chat bubble effect
-          ),
+          borderRadius: br15,
         ),
         child: Text(optionText, style: Theme.of(context).textTheme.bodyMedium),
       ),
@@ -281,7 +276,7 @@ class AIMessage extends StatelessWidget {
           // BlocProvider.of<ChatBloc>(context).add(SendMessage(optionText));
           BlocProvider.of<ChatBloc>(context).add(SendMessage(optionText));
         } catch (e) {
-          print("error,$e");
+          debugPrint("error,$e");
         }
       },
     );
@@ -289,15 +284,15 @@ class AIMessage extends StatelessWidget {
 
   _getInitialOptions(BuildContext context) {
     return [
-      const SizedBox(height: 8),
+      h5,
       _getInitialOption(context, 'Which tasks are due today or tomorrow?'),
-      const SizedBox(height: 8),
+      h5,
       _getInitialOption(
           context, 'What progress did I make on yesterday tasks?'),
-      const SizedBox(height: 8),
+      h5,
       _getInitialOption(context,
           'Can you summarize the latest tips on growing my business??'),
-      const SizedBox(height: 8),
+      h5,
       _getInitialOption(context,
           'What new skills or knowledge did I gain from recent discussions?'),
     ];

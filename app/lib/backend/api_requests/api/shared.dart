@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:instabug_http_client/instabug_http_client.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
@@ -47,7 +46,7 @@ Future<http.Response?> makeApiCall({
     } else {
       throw Exception('Unsupported HTTP method: $method');
     }
-  } catch (e, stackTrace) {
+  } catch (e) {
     debugPrint('HTTP request failed: $e');
     // CrashReporting.reportHandledCrash(
     //   e,
@@ -80,7 +79,7 @@ dynamic extractContentFromResponse(
     return data['choices'][0]['message']['content'];
   } else {
     debugPrint('Error fetching data: ${response?.statusCode}');
-    // TODO: handle error, better specially for script migration
+    // handle error, better specially for script migration
     // CrashReporting.reportHandledCrash(
     //   Exception('Error fetching data: ${response?.statusCode}'),
     //   StackTrace.current,

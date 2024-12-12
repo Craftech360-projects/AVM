@@ -291,7 +291,7 @@ void showShareBottomSheet(
                                   : Container()),
                           onTap: () => setExportType(ExportType.txt),
                         ),
-                        // FIXME ~ is not working ~ helvetica issue
+                        // FIXme ~ is not working ~ helvetica issue
                         // ListTile(
                         //   leading: const Icon(Icons.picture_as_pdf),
                         //   title: const Text('PDF'),
@@ -362,7 +362,7 @@ void showShareBottomSheet(
                                 : null,
                           ),
                         ),
-                        // FIXME markdown export not working
+                        // FIXMe ~ markdown export not working
                         // ListTile(
                         //   leading: const Icon(Icons.subtitles),
                         //   title: const Text('Markdown'),

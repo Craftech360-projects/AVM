@@ -130,7 +130,7 @@ Future<bool> deleteVector(String memoryId) async {
   debugPrint(response.toString());
   return true;
 }
-// TODO: update vectors when fields updated
+// update vectors when fields updated
 
 Future<List<double>> getEmbeddingsFromInput(String input) async {
   var vector = await gptApiCall(

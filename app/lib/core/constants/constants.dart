@@ -112,16 +112,17 @@ AppBar commonAppBar(
 void avmSnackBar(BuildContext context, String content) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      backgroundColor: AppColors.greyLavender,
+      backgroundColor: const Color.fromARGB(255, 235, 214, 255),
       content: Text(
         content,
         style: const TextStyle(
           fontFamily: "Montserrat",
           fontSize: 17,
           fontWeight: FontWeight.w500,
-          color: AppColors.lightBg,
+          color: AppColors.black,
         ),
       ),
+      
       shape: RoundedRectangleBorder(borderRadius: br12),
       padding: const EdgeInsets.all(14),
       behavior: SnackBarBehavior.floating,

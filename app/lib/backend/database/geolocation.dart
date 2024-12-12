@@ -2,7 +2,7 @@ import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class Geolocation {
-  // TODO: location should be the place the memory starts
+  // location should be the place the memory starts
   @Id()
   int id = 0;
 
@@ -19,7 +19,7 @@ class Geolocation {
   String? locationType;
   String? placeName;
 
-  // TODO: eventually locations could map to multiple memories
+  // eventually locations could map to multiple memories
   // @Backlink('memory')
   // final memories = ToMany<Memory>();
 

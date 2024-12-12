@@ -60,7 +60,8 @@ class ForegroundUtil {
     // if (!await FlutterForegroundTask.canDrawOverlays) {
     //   await FlutterForegroundTask.openSystemAlertWindowSettings();
     // }
-    debugPrint('requestPermissionForAndroid: ${!await FlutterForegroundTask.isIgnoringBatteryOptimizations}');
+    debugPrint(
+        'requestPermissionForAndroid: ${!await FlutterForegroundTask.isIgnoringBatteryOptimizations}');
     if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
       await FlutterForegroundTask.requestIgnoreBatteryOptimization();
     }
@@ -156,12 +157,5 @@ class ForegroundUtil {
   void _closeReceivePort() {
     _receivePort?.close();
     _receivePort = null;
-  }
-
-  _handleReceivePort() async {
-    if (await FlutterForegroundTask.isRunningService) {
-      final newReceivePort = FlutterForegroundTask.receivePort;
-      _registerReceivePort(newReceivePort);
-    }
   }
 }

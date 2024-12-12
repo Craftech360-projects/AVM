@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:instabug_flutter/instabug_flutter.dart';
 
 void logErrorMessage(String message, String deviceId) {
   debugPrint('($deviceId) $message');

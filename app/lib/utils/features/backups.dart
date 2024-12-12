@@ -1,8 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:math';
-
-import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/foundation.dart';
@@ -11,13 +7,6 @@ import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/utils/features/googledrive.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:googleapis_auth/googleapis_auth.dart';
-import 'package:googleapis/drive/v3.dart' as drive;
-import 'package:googleapis_auth/auth_io.dart'; // For `clientViaAccessCredentials`
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 String encodeJson(List<dynamic> jsonObj, String password) {
   String jsonString = json.encode(jsonObj);

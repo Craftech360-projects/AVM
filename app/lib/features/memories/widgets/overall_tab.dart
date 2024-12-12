@@ -18,8 +18,6 @@ import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/temp.dart';
 import 'package:friend_private/widgets/expandable_text.dart';
 
-import '../../../pages/plugins/page.dart';
-
 class OverallTab extends StatefulWidget {
   final Structured target;
 
@@ -259,8 +257,8 @@ class OverallTabState extends State<OverallTab> {
               ),
               child: MaterialButton(
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (c) => const PluginsPage()));
+                  // Navigator.of(context).push(
+                  //     MaterialPageRoute(builder: (c) => const PluginsPage())); ==> CHECK THIS LATER
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
@@ -335,19 +333,7 @@ class OverallTabState extends State<OverallTab> {
                         ),
                       )
                     : const SizedBox.shrink(),
-                // ExpandableTextWidget(
-                //   text: utf8.decode(pluginResponse.content.trim().codeUnits),
-                //   isExpanded: pluginResponseExpanded[i],
-                //   toggleExpand: () {
-                //     onItemToggled(i);
-                //   },
-                //   style: TextStyle(
-                //       color: AppColors.blackSecondary,
-                //       fontSize: 15,
-                //       height: 1.3),
-                //   maxLines: 6,
-                //   linkColor: Colors.white,
-                // ),
+                
                 ExpandableTextWidget(
                   text: utf8.decode(pluginResponse.content.trim().codeUnits),
                   // isExpanded: pluginResponseExpanded[i],

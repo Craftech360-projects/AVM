@@ -41,7 +41,8 @@ class _PermissionsPageState extends State<PermissionsPage> {
             ),
             contentPadding: const EdgeInsets.only(left: 8),
             // controlAffinity: ListTileControlAffinity.leading,
-            checkboxShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            checkboxShape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
           const SizedBox(height: 16),
           Row(
@@ -64,15 +65,18 @@ class _PermissionsPageState extends State<PermissionsPage> {
                         )
                       : null,
                   child: MaterialButton(
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16),
                     onPressed: () {
-                      // TODO: if toggle not on, show ignore
+                      // if toggle not on, show ignore
                       widget.goNext();
                     },
                     child: Text(
                       switchValue ? 'Continue' : 'Skip',
                       style: TextStyle(
-                        decoration: switchValue ? TextDecoration.none : TextDecoration.underline,
+                        decoration: switchValue
+                            ? TextDecoration.none
+                            : TextDecoration.underline,
                       ),
                     ),
                   ),

@@ -1,9 +1,6 @@
-import 'dart:io';
-import 'dart:convert';
 import 'package:friend_private/backend/database/box.dart';
 import 'package:friend_private/backend/database/prompt.dart';
 import 'package:objectbox/objectbox.dart';
-import 'package:path_provider/path_provider.dart';
 
 class PromptProvider {
   static final PromptProvider _instance = PromptProvider._internal();

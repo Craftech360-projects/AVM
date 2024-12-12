@@ -5,7 +5,6 @@ import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/pages/memory_detail_page.dart';
-import 'package:friend_private/pages/memory_detail/page.dart';
 import 'package:intl/intl.dart';
 
 class MemoryListItem extends StatefulWidget {
