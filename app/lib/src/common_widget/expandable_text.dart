@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/core/theme/app_colors.dart';
 
 class ExpandableText extends StatefulWidget {
   const ExpandableText({
@@ -75,7 +76,7 @@ class _ExpandableTextState extends State<ExpandableText> {
                     TextSpan(
                       text: widget.leadingText,
                       style: theme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w500,fontSize: 16.h),
+                          fontWeight: FontWeight.w500, fontSize: 16.h),
                     ),
                   TextSpan(
                     text: widget.text,
@@ -91,10 +92,9 @@ class _ExpandableTextState extends State<ExpandableText> {
           if (_isOverflowing)
             GestureDetector(
               onTap: _toggleExpanded,
-              child: Text(
-                _expanded ? 'See less' : 'Read more...',
-                style: theme.titleSmall,
-              ),
+              child: Text(_expanded ? 'See less..' : 'Read more..',
+                  style: TextStyle(
+                      color: AppColors.blue, fontWeight: FontWeight.w500)),
             ),
         ],
       ),

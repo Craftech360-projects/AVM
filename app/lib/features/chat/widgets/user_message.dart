@@ -23,17 +23,19 @@ class CustomCard extends StatelessWidget {
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(borderRadius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              spreadRadius: 8,
-              blurRadius: 8,
-              offset: const Offset(2, 2),
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(
+                color: AppColors.greyMedium.withOpacity(0.5), width: 1)
+            // boxShadow: [
+            //   BoxShadow(
+            //     color: AppColors.grey.withOpacity(0.2),
+            //     spreadRadius: 8,
+            //     blurRadius: 8,
+            //     offset: const Offset(2, 2),
+            //   ),
+            // ],
             ),
-          ],
-        ),
         child: Padding(
           padding: padding,
           child: child,
@@ -113,12 +115,7 @@ class UserCard extends StatelessWidget {
                                 color: AppColors.white,
                                 fontSize: 11,
                               )),
-                          // w5,
-                          // // Icon(
-                          // //   Icons.done_all, // Or your preferred status icon
-                          // //   size: 14.sp,
-                          // //   color: Colors.white70,
-                          // // ),
+                          
                         ],
                       ),
                     ],
@@ -127,46 +124,7 @@ class UserCard extends StatelessWidget {
               ),
             ),
           ),
-          // SizedBox(width: 8.w),
-          // // User Avatar
-          // Container(
-          //   decoration: BoxDecoration(
-          //     borderRadius: BorderRadius.circular(20.r),
-          //     border: Border.all(
-          //       color: Colors.white,
-          //       width: 2,
-          //     ),
-          //     boxShadow: [
-          //       BoxShadow(
-          //         color: Colors.black.withOpacity(0.1),
-          //         offset: const Offset(0, 2),
-          //         blurRadius: 4,
-          //       ),
-          //     ],
-          //   ),
-          //   child: ClipRRect(
-          //     borderRadius: BorderRadius.circular(20.r),
-          //     child: Image.network(
-          //       'https://thumbs.dreamstime.com/b/person-gray-photo-placeholder-woman-t-shirt-white-background-131683043.jpg',
-          //       height: 40.h,
-          //       width: 40.w,
-          //       fit: BoxFit.cover,
-          //       errorBuilder: (context, error, stackTrace) {
-          //         return Container(
-          //           height: 40.h,
-          //           width: 40.w,
-          //           color: Colors.grey[300],
-          //           child: Icon(
-          //             Icons.person,
-          //             color: Colors.grey[600],
-          //             size: 24.sp,
-          //           ),
-          //         );
-          //       },
-          //     ),
-          //   ),
-          // ),
-          // SizedBox(width: 8.w),
+          
         ],
       ),
     );

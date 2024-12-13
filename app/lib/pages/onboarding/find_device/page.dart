@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/core/assets/app_images.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
@@ -118,15 +119,16 @@ class FindDevicesPageState extends State<FindDevicesPage>
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      showBackBtn: SharedPreferencesUtil().onboardingCompleted ? true : false,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
             AppImages.appLogo,
             height: 30.h,
           ),
-          SizedBox(height: 150.h),
+          // SizedBox(height: 150.h),
 
           /// Bluetooth Animation
           BleAnimation(
@@ -140,14 +142,14 @@ class FindDevicesPageState extends State<FindDevicesPage>
               size: 30.h,
             ),
           ),
-          SizedBox(height: 140.h),
+          // SizedBox(height: 140.h),
 
           FoundDevices(deviceList: deviceList, goNext: widget.goNext),
-          if (deviceList.isEmpty && enableInstructions)
-            const SizedBox(height: 48),
+          // if (deviceList.isEmpty && enableInstructions)
+          //   const SizedBox(height: 48),
           if (deviceList.isEmpty && enableInstructions)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
+              padding: const EdgeInsets.symmetric(horizontal: 28.0),
               child: ElevatedButton(
                 onPressed: () =>
                     launchUrl(Uri.parse('mailto:craftechapps@gmail.com')),

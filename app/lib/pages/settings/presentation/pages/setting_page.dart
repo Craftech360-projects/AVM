@@ -106,17 +106,18 @@ class _SettingPageState extends State<SettingPage> {
                 h15,
                 Text(
                   'Recording Settings',
-                  style: textTheme.titleMedium?.copyWith(fontSize: 20.h),
+                  style: textTheme.titleMedium
+                      ?.copyWith(fontSize: 20.h, fontWeight: FontWeight.w600),
                 ),
-                h15,
+                h5,
                 const LanguageDropdown(),
-                h15,
+                h30,
                 Text(
                   'Add Ons',
                   style: textTheme.titleMedium
                       ?.copyWith(fontSize: 20.h, fontWeight: FontWeight.w600),
                 ),
-                h15,
+                h5,
                 ItemAddOn(
                   title: 'Profile',
                   onTap: () {

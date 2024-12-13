@@ -45,7 +45,6 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
         length: 4,
         initialIndex: 1,
         child: CustomScaffold(
-          backgroundColor: Colors.transparent,
           appBar: AppBar(
             actions: [
               IconButton(

@@ -71,38 +71,38 @@ class SigninPage extends StatelessWidget {
                           width: 26.h,
                         ),
                         onPressed: () async {
-                          // try {
-                          //   final prefs = await SharedPreferences.getInstance();
-                          //   final userCred = await signInWithGoogle();
-                          //   // ignore: unnecessary_null_comparison
-                          //   final token = userCred != null
-                          //       ? await userCred.user?.getIdToken()
-                          //       : null;
+                          try {
+                            final prefs = await SharedPreferences.getInstance();
+                            final userCred = await signInWithGoogle();
+                            // ignore: unnecessary_null_comparison
+                            final token = userCred != null
+                                ? await userCred.user?.getIdToken()
+                                : null;
 
-                          //   if (token != null) {
-                          //     prefs.setString('firebase_token', token);
-                          //     final user = FirebaseAuth.instance.currentUser!;
-                          //     final prevUid = prefs.getString('uid') ?? '';
+                            if (token != null) {
+                              prefs.setString('firebase_token', token);
+                              final user = FirebaseAuth.instance.currentUser!;
+                              final prevUid = prefs.getString('uid') ?? '';
 
-                          //     if (prevUid.isNotEmpty && prevUid != user.uid) {
-                          //       await migrateUserServer(prevUid, user.uid);
-                          //       prefs.setString('last_login_time',
-                          //           DateTime.now().toIso8601String());
-                          //     }
+                              if (prevUid.isNotEmpty && prevUid != user.uid) {
+                                await migrateUserServer(prevUid, user.uid);
+                                prefs.setString('last_login_time',
+                                    DateTime.now().toIso8601String());
+                              }
 
-                          //     prefs.setString('uid', user.uid);
+                              prefs.setString('uid', user.uid);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const OnboardingPage(),
                             ),
                           );
-                          //   } else {
-                          //     log("Sign-in failed or user token is null");
-                          //   }
-                          // } catch (e) {
-                          //   log("Google Sign-in failed: $e");
-                          // }
+                            } else {
+                              log("Sign-in failed or user token is null");
+                            }
+                          } catch (e) {
+                            log("Google Sign-in failed: $e");
+                          }
                         },
                         child: const Text(' Continue using Google',
                             style: TextStyle(
@@ -158,7 +158,7 @@ class SigninPage extends StatelessWidget {
                               );
                             } else {
                               log("Apple Sign-in failed or user token is null");
-                            }
+                            } 
                           } catch (e) {
                             log("Apple Sign-in failed: $e");
                           }

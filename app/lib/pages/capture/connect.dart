@@ -19,7 +19,6 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
         title: const Text('Connect Your AVM'),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
         child: SingleChildScrollView(
           child: Column(

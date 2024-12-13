@@ -39,20 +39,10 @@ class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget>
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Image.asset(
-          //   "assets/images/stars.png",
-          // ),
-
-          // Image.asset("assets/images/blob.png"),
-          Image.asset(
-            AppImages.appLogo,
-            height: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160),
-            width: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 160),
-          )
-        ],
+      child: Image.asset(
+        AppImages.appLogo,
+        height: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 120),
+        width: (MediaQuery.sizeOf(context).height <= 700 ? 130 : 120),
       ),
     );
   }

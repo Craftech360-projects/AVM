@@ -13,17 +13,17 @@ class MemoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      borderRadius: 30.h + 12.h,
-      padding: EdgeInsets.all(12.h),
+      borderRadius: 7.h + 12.h,
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: br15,
+            borderRadius: br12,
             child: Image.memory(
               memory.memoryImg!,
               height: 100.h,
               width: 100.w,
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset(
                   'assets/images/image_placeholder.png',
@@ -44,10 +44,12 @@ class MemoryCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600)),
-                SizedBox(height: 12.h),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        height: 1.4)),
+                h10,
                 Text(
-                  '${DateFormat('d MMM').format(memory.createdAt)} '
+                  '${DateFormat('d MMM').format(memory.createdAt)} -'
                   ' ${DateFormat('h:mm a').format(memory.createdAt)}',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),

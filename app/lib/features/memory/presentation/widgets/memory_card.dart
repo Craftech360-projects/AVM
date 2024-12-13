@@ -64,19 +64,19 @@ class MemoryCardWidget extends StatelessWidget {
                             },
                             child: const Text(
                               'Cancel',
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(color: AppColors.black),
                             ),
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
+                              backgroundColor: AppColors.red,
                             ),
                             onPressed: () {
                               Navigator.of(context).pop(true);
                             },
                             child: const Text(
                               'Delete',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: AppColors.white),
                             ),
                           ),
                         ],

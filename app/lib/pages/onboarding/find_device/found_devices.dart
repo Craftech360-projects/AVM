@@ -92,7 +92,7 @@ class FoundDevicesState extends State<FoundDevices>
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 22),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           !_isConnected
@@ -119,7 +119,7 @@ class FoundDevicesState extends State<FoundDevices>
               decoration: BoxDecoration(
                   border: Border.all(color: AppColors.black),
                   borderRadius: br30),
-              height: 55.h,
+              height: 50.h,
               width: double.maxFinite,
               child: CustomElevatedButton(
                 backgroundColor: AppColors.white,
@@ -160,42 +160,7 @@ class FoundDevicesState extends State<FoundDevices>
                 ),
               ),
             ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          //   child: CustomElevatedButton(
-          //     backgroundColor: AppColors.white,
-          //     onPressed: () {
-          //       // if (widget.device != null) {
-          //       //   BleConnectionDatasource().bleDisconnectDevice(widget.device!);
-          //       // }
-          //     },
-          //     child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //       children: [
-          //         Text(
-          //           '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, 6)})',
-          //           style: const TextStyle(
-          //             fontWeight: FontWeight.w500,
-          //             fontSize: 18,
-          //             color: AppColors.black,
-          //           ),
-          //         ),
-          //         Text(
-          //           '🔋 ${batteryPercentage.toString()}%',
-          //           style: TextStyle(
-          //             fontWeight: FontWeight.w500,
-          //             fontSize: 18,
-          //             color: batteryPercentage <= 25
-          //                 ? Colors.red
-          //                 : batteryPercentage > 25 && batteryPercentage <= 50
-          //                     ? Colors.orange
-          //                     : Colors.green,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
+        
         ],
       ),
     );

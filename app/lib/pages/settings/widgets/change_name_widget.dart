@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/preferences.dart';
+import 'package:friend_private/core/constants/constants.dart';
+import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/core/widgets/snackbar_util.dart';
 
 class ChangeNameWidget extends StatefulWidget {
@@ -34,26 +36,29 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              const Text('How AVM should call you?'),
-              const SizedBox(height: 8),
+              const Text(
+                'How AVM should call you?',
+                style: TextStyle(fontSize: 16),
+              ),
+              h10,
               CupertinoTextField(
                 controller: nameController,
-                placeholderStyle: const TextStyle(color: Colors.white54),
-                style: const TextStyle(color: Colors.white),
+                placeholderStyle: const TextStyle(color: AppColors.black),
+                style: const TextStyle(color: AppColors.black),
               ),
             ],
           ),
         ),
         actions: <Widget>[
           CupertinoDialogAction(
-            textStyle: const TextStyle(color: Colors.white),
+            textStyle: const TextStyle(color: AppColors.red),
             onPressed: () {
               Navigator.of(context).pop();
             },
             child: const Text('Cancel'),
           ),
           CupertinoDialogAction(
-            textStyle: const TextStyle(color: Colors.white),
+            textStyle: const TextStyle(color: AppColors.blue),
             onPressed: () {
               if (nameController.text.isEmpty ||
                   nameController.text.trim().isEmpty) {
@@ -81,7 +86,7 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
               const SizedBox(height: 8),
               TextField(
                 controller: nameController,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
               ),
             ],
           ),
@@ -93,7 +98,7 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
             },
             child: const Text(
               'Cancel',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.red),
             ),
           ),
           TextButton(
@@ -111,7 +116,7 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
             },
             child: const Text(
               'Save',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.blue),
             ),
           ),
         ],

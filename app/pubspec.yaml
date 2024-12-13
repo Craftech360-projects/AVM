@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   # animated_text_kit: ^4.2.2
+  
   archive: ^3.6.1
   auto_size_text:
   awesome_notifications:
@@ -124,7 +125,7 @@ dependency_overrides:
     git:
       url: https://github.com/mdmohsin7/opus_flutter.git
       path: opus_flutter_android
-  # web: ^1.0.0
+      
 dev_dependencies:
   flutter_launcher_icons: ^0.14.2
   build_runner: ^2.4.11

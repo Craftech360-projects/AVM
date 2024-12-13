@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:friend_private/backend/database/memory.dart';
+import 'package:friend_private/core/constants/constants.dart';
+import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
@@ -162,42 +164,57 @@ void showShareBottomSheet(
 
           return Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: AppColors.white,
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(16), topRight: Radius.circular(16)),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (currentView == BottomSheetView.share) ...[
-                  ListTile(
-                    title: Text(
-                      '${memory.discarded ? 'Discarded Memory' : memory.structured.target?.title}',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    leading: const Icon(Icons.description),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.cancel_outlined),
-                      onPressed: () => Navigator.of(ctx).pop(),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.description,
+                        size: 32,
+                      ),
+                      w10,
+                      Expanded(
+                        child: Text(
+                          maxLines: 2,
+                          '${memory.discarded ? 'Discarded Memory' : memory.structured.target?.title}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 16, height: 1.3),
+                        ),
+                      ),
+                      w5,
+                      IconButton(
+                        icon: const Icon(
+                          Icons.cancel_outlined,
+                          size: 27,
+                        ),
+                        onPressed: () => Navigator.of(ctx).pop(),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Copy',
-                    style: Theme.of(context).textTheme.labelLarge,
+                  const Divider(
+                    color: AppColors.black,
+                    thickness: 1,
                   ),
-                  const SizedBox(height: 8),
                   Card(
-                    shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    color: AppColors.commonPink,
+                    shape: RoundedRectangleBorder(borderRadius: br12),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Column(
                         children: [
                           _buildListTile(
                             context,
-                            title: 'Transcript',
+                            title: 'Copy Transcript',
                             icon: Icons.copy,
                             onTap: () => {
                               Navigator.pop(ctx),
@@ -208,7 +225,7 @@ void showShareBottomSheet(
                               ? const SizedBox.shrink()
                               : _buildListTile(
                                   context,
-                                  title: 'Summary',
+                                  title: 'Copy Summary',
                                   icon: Icons.file_copy,
                                   onTap: () => {
                                     Navigator.pop(ctx),
@@ -219,25 +236,19 @@ void showShareBottomSheet(
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Export',
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  const SizedBox(height: 8),
+                  h10,
                   Card(
+                    color: AppColors.commonPink,
                     shape: memory.discarded
                         ? null
-                        : const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(12))),
+                        : RoundedRectangleBorder(borderRadius: br12),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Column(
                         children: [
                           _buildListTile(
                             context,
-                            title: 'Transcript',
+                            title: 'Export Transcript',
                             icon: Icons.description,
                             onTap: () {
                               updateView(BottomSheetView.exportTranscript);
@@ -247,7 +258,7 @@ void showShareBottomSheet(
                               ? const SizedBox.shrink()
                               : _buildListTile(
                                   context,
-                                  title: 'Summary',
+                                  title: 'Export Summary',
                                   icon: Icons.summarize,
                                   onTap: () =>
                                       updateView(BottomSheetView.exportSummary),
@@ -256,29 +267,28 @@ void showShareBottomSheet(
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10)
+                  h20,
                 ] else if (currentView == BottomSheetView.exportTranscript) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Text('Export Transcript',
-                            style: Theme.of(context).textTheme.labelLarge),
+                            style: TextStyle(fontSize: 18, height: 1.3)),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.cancel_outlined),
+                        icon: const Icon(
+                          Icons.cancel_outlined,
+                          size: 27,
+                        ),
                         onPressed: () => updateView(BottomSheetView.share),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  // Container(
-                  //   alignment: Alignment.centerLeft,
-                  //   child: Text('Export as',
-                  //       style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey.shade400)),
-                  // ),
+                  h10,
                   Card(
+                    color: AppColors.commonPink,
                     child: Column(
                       children: [
                         ListTile(
@@ -291,19 +301,10 @@ void showShareBottomSheet(
                                   : Container()),
                           onTap: () => setExportType(ExportType.txt),
                         ),
-                        // FIXme ~ is not working ~ helvetica issue
-                        // ListTile(
-                        //   leading: const Icon(Icons.picture_as_pdf),
-                        //   title: const Text('PDF'),
-                        //   trailing: SizedBox(
-                        //       width: 60,
-                        //       child: exportType == ExportType.pdf ? const Icon(Icons.check_outlined) : Container()),
-                        //   onTap: () => setExportType(ExportType.pdf),
-                        // ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  h10,
                   SizedBox(
                     width: double.infinity,
                     height: 60,
@@ -322,33 +323,33 @@ void showShareBottomSheet(
                         }
                       },
                       child: Text('Export',
-                          style: Theme.of(context).textTheme.bodyLarge),
+                          style: TextStyle(
+                              color: AppColors.black,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500)),
                     ),
                   ),
+                  h20,
                 ] else if (currentView == BottomSheetView.exportSummary) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text('Export Summary',
-                            style: Theme.of(context).textTheme.labelLarge),
-                      ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                          child: Text('Export Summary',
+                              style: TextStyle(fontSize: 18, height: 1.3))),
                       IconButton(
-                        icon: const Icon(Icons.cancel_outlined),
+                        icon: const Icon(
+                          Icons.cancel_outlined,
+                          size: 27,
+                        ),
                         onPressed: () => updateView(BottomSheetView.share),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  // Container(
-                  //   alignment: Alignment.centerLeft,
-                  //   child: Text(
-                  //     'Export as',
-                  //     style: Theme.of(context).textTheme.bodySmall,
-                  //   ),
-                  // ),
+                  h10,
                   Card(
+                    color: AppColors.commonPink,
                     child: Column(
                       children: [
                         ListTile(
@@ -362,16 +363,6 @@ void showShareBottomSheet(
                                 : null,
                           ),
                         ),
-                        // FIXMe ~ markdown export not working
-                        // ListTile(
-                        //   leading: const Icon(Icons.subtitles),
-                        //   title: const Text('Markdown'),
-                        //   onTap: () => setExportType(ExportType.markdown),
-                        //   trailing: SizedBox(
-                        //     width: 60,
-                        //     child: exportType == ExportType.markdown ? const Icon(Icons.check_outlined) : null,
-                        //   ),
-                        // ),
                         ListTile(
                           leading: const Icon(Icons.picture_as_pdf),
                           title: const Text('PDF'),
@@ -386,7 +377,7 @@ void showShareBottomSheet(
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  h10,
                   SizedBox(
                     height: 60,
                     width: double.infinity,
@@ -406,10 +397,16 @@ void showShareBottomSheet(
                             break;
                         }
                       },
-                      child: Text('Export',
-                          style: Theme.of(context).textTheme.bodyLarge),
+                      child: Text(
+                        'Export',
+                        style: TextStyle(
+                            color: AppColors.black,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
+                  h20,
                 ]
               ],
             ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
+import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
-import 'package:friend_private/core/widgets/snackbar_util.dart';
 import 'package:friend_private/features/capture/presentation/capture_page.dart';
 import 'package:friend_private/features/capture/widgets/greeting_card.dart';
 import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
@@ -76,7 +76,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         widget.hasTranscripts
             ? Dismissible(
                 background: Shimmer.fromColors(
-                  baseColor: AppColors.greyLight,
+                  baseColor: const Color.fromARGB(255, 124, 121, 121),
                   highlightColor: AppColors.white,
                   child: const Center(
                     child: Text(
@@ -145,7 +145,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                 });
               },
               label: Text(
-                _isNonDiscarded ? 'Hide Discarded' : 'Show Discarded',
+                _isNonDiscarded ? 'Show Discarded' : 'Hide Discarded',
                 style: const TextStyle(
                   color: AppColors.grey,
                   fontSize: 14,
@@ -183,8 +183,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           },
           listener: (context, state) {
             if (state.status == MemoryStatus.failure) {
-              showSnackBar(
-                  message: 'Error: ${state.failure}', context: context);
+              avmSnackBar(context, 'Error: ${state.failure}');
             }
           },
         ),

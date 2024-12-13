@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
 
 class CustomTabBar extends StatefulWidget {
@@ -36,11 +37,11 @@ class _CustomTabBarState extends State<CustomTabBar>
       children: [
         Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14.h + 4.h),
+            borderRadius: BorderRadius.circular(6.h + 8.h),
             color: AppColors.white,
             border: Border.all(
-              color: AppColors.greyLavender,
-              width: 4,
+              color: AppColors.commonPink,
+              width: 2,
             ),
           ),
           child: SizedBox(
@@ -50,10 +51,10 @@ class _CustomTabBarState extends State<CustomTabBar>
                 dividerColor: Colors.transparent,
                 // padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 6.w),
                 indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: Colors.white,
-                unselectedLabelColor: Colors.grey,
+                labelColor: AppColors.white,
+                unselectedLabelColor: AppColors.grey,
                 indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14.h),
+                  borderRadius: br12,
                   color: AppColors.black,
                 ),
                 indicatorWeight: 0,

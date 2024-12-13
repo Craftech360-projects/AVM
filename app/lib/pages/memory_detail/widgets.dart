@@ -9,6 +9,8 @@ import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
+import 'package:friend_private/core/constants/constants.dart';
+import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/pages/memories/widgets/confirm_deletion_widget.dart';
 import 'package:friend_private/pages/memory_detail/enable_title.dart';
 import 'package:friend_private/pages/memory_detail/test_prompts.dart';
@@ -431,57 +433,10 @@ List<Widget> getPluginsWidgets(
 }
 
 List<Widget> getGeolocationWidgets(Memory memory, BuildContext context) {
-  return memory.geolocation.target == null || memory.discarded
-      ? []
-      : [
-          // Text(
-          //   'Taken at',
-          //   style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 20),
-          // ),
-          // const SizedBox(height: 8),
-          // Text(
-          //   '${memory.geolocation.target!.address}',
-          //   style: TextStyle(color: Colors.grey.shade300),
-          // ),
-          // const SizedBox(height: 8),
-          // memory.geolocation.target != null
-          //     ? GestureDetector(
-          //         onTap: () async {
-          //           // open google maps URL if available
-          //           // if (await canLaunchUrl(
-          //           //         Uri.parse(MapsUtil.getGoogleMapsPlaceUrl(memory.geolocation.target!.googlePlaceId!))) ==
-          //           //     true) {
-          //           //   await launchUrl(
-          //           //       Uri.parse(MapsUtil.getGoogleMapsPlaceUrl(memory.geolocation.target!.googlePlaceId!)));
-          //           // }
-          //           MapsUtil.launchMap(memory.geolocation.target!.latitude!, memory.geolocation.target!.longitude!);
-          //         },
-          //         child: CachedNetworkImage(
-          //           imageBuilder: (context, imageProvider) {
-          //             return Container(
-          //               margin: const EdgeInsets.only(top: 10, bottom: 8),
-          //               height: 200,
-          //               decoration: BoxDecoration(
-          //                 borderRadius: BorderRadius.circular(16),
-          //                 image: DecorationImage(
-          //                   image: imageProvider,
-          //                   fit: BoxFit.cover,
-          //                 ),
-          //               ),
-          //             );
-          //           },
-          //           imageUrl: MapsUtil.getMapImageUrl(
-          //             memory.geolocation.target!.latitude!,
-          //             memory.geolocation.target!.longitude!,
-          //           ),
-          //         ),
-          //       )
-          //     : const SizedBox.shrink(),
-          // const SizedBox(height: 8),
-        ];
+  return memory.geolocation.target == null || memory.discarded ? [] : [];
 }
 
-showOptionsBottomSheet(
+void showOptionsBottomSheet(
   BuildContext context,
   StateSetter setState,
   Memory memory,
@@ -495,16 +450,8 @@ showOptionsBottomSheet(
 
   var result = await showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-      ),
       builder: (context) => StatefulBuilder(builder: (context, setModalState) {
             return Container(
-              //    height: SharedPreferencesUtil().devModeEnabled ? 300 : 216,
-              height: SharedPreferencesUtil().devModeEnabled ? 300 : 300,
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: const BorderRadius.only(
@@ -512,20 +459,21 @@ showOptionsBottomSheet(
                   topRight: Radius.circular(16),
                 ),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: displayDevTools
                     ? [
                         ListTile(
                           title:
                               const Text('Trigger Memory Created Integration'),
                           leading: loadingPluginIntegrationTest
-                              ? const SizedBox(
+                              ? SizedBox(
                                   height: 24,
                                   width: 24,
                                   child: CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
+                                        AppColors.blue),
                                   ),
                                 )
                               : const Icon(Icons.send_to_mobile_outlined),
@@ -533,7 +481,6 @@ showOptionsBottomSheet(
                             setModalState(
                                 () => loadingPluginIntegrationTest = true);
                             // if not set, show dialog to set URL or take them to settings.
-
                             webhookOnMemoryCreatedCall(memory,
                                     returnRawBody: true)
                                 .then((response) {
@@ -568,7 +515,7 @@ showOptionsBottomSheet(
                     : [
                         ListTile(
                           title: const Text('Share memory'),
-                          leading: const Icon(Icons.send),
+                          leading: const Icon(Icons.share),
                           onTap: loadingReprocessMemory
                               ? null
                               : () {
@@ -588,10 +535,11 @@ showOptionsBottomSheet(
                                   height: 24,
                                   child: CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.deepPurple),
+                                        AppColors.blue),
                                   ))
-                              : const Icon(Icons.refresh,
-                                  color: Colors.deepPurple),
+                              : const Icon(
+                                  Icons.refresh,
+                                ),
                           onTap: loadingReprocessMemory
                               ? null
                               : () => reprocessMemory(
@@ -605,8 +553,7 @@ showOptionsBottomSheet(
                         ListTile(
                           title: const Text('Delete'),
                           leading: const Icon(
-                            Icons.delete,
-                            color: Colors.red,
+                            Icons.delete_rounded,
                           ),
                           onTap: loadingReprocessMemory
                               ? null
@@ -633,94 +580,94 @@ showOptionsBottomSheet(
                                   );
                                 },
                         ),
-                        ListTile(
-                          title:
-                              const Text('Trigger Memory Created Integration'),
-                          leading: loadingPluginIntegrationTest
-                              ? const SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
-                                  ),
-                                )
-                              : const Icon(Icons.send_to_mobile_outlined),
-                          onTap: () {
-                            setModalState(
-                                () => loadingPluginIntegrationTest = true);
-                            // if not set, show dialog to set URL or take them to settings.
 
-                            webhookOnMemoryCreatedCall(memory,
-                                    returnRawBody: true)
-                                .then((response) {
-                              showDialog(
-                                context: context,
-                                builder: (c) => getDialog(
-                                  context,
-                                  () => Navigator.pop(context),
-                                  () => Navigator.pop(context),
-                                  'Result:',
-                                  response,
-                                  okButtonText: 'Ok',
-                                  singleButton: true,
-                                ),
-                              );
-                              setModalState(
-                                  () => loadingPluginIntegrationTest = false);
-                            });
-                          },
-                        ),
-                        ListTile(
-                          title: const Text('Test a Memory Prompt'),
-                          leading: const Icon(Icons.chat),
-                          trailing:
-                              const Icon(Icons.arrow_forward_ios, size: 20),
-                          onTap: () {
-                            routeToPage(
-                                context, TestPromptsPage(memory: memory));
-                          },
-                        ),
-                        ListTile(
-                          title: const Text('Trigger Zap Created Integration'),
-                          leading: loadingPluginIntegrationTest
-                              ? const SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
-                                  ),
-                                )
-                              : const Icon(
-                                  Icons.send_to_mobile_outlined,
-                                  color: Colors.red,
-                                ),
-                          onTap: () {
-                            setModalState(
-                                () => loadingPluginIntegrationTest = true);
-                            // if not set, show dialog to set URL or take them to settings.
+                        // ListTile(
+                        //   title:
+                        //       const Text('Trigger Memory Created Integration'),
+                        //   leading: loadingPluginIntegrationTest
+                        //       ? const SizedBox(
+                        //           height: 24,
+                        //           width: 24,
+                        //           child: CircularProgressIndicator(
+                        //             valueColor: AlwaysStoppedAnimation<Color>(
+                        //                 AppColors.blue),
+                        //           ),
+                        //         )
+                        //       : const Icon(Icons.send_to_mobile_outlined),
+                        //   onTap: () {
+                        //     setModalState(
+                        //         () => loadingPluginIntegrationTest = true);
+                        //     // if not set, show dialog to set URL or take them to settings.
 
-                            zapWebhookOnMemoryCreatedCall(memory,
-                                    returnRawBody: true)
-                                .then((response) {
-                              showDialog(
-                                context: context,
-                                builder: (c) => getDialog(
-                                  context,
-                                  () => Navigator.pop(context),
-                                  () => Navigator.pop(context),
-                                  'Result:',
-                                  response,
-                                  okButtonText: 'Ok',
-                                  singleButton: true,
-                                ),
-                              );
-                              setModalState(
-                                  () => loadingPluginIntegrationTest = false);
-                            });
-                          },
-                        ),
+                        //     webhookOnMemoryCreatedCall(memory,
+                        //             returnRawBody: true)
+                        //         .then((response) {
+                        //       showDialog(
+                        //         context: context,
+                        //         builder: (c) => getDialog(
+                        //           context,
+                        //           () => Navigator.pop(context),
+                        //           () => Navigator.pop(context),
+                        //           'Result:',
+                        //           response,
+                        //           okButtonText: 'Ok',
+                        //           singleButton: true,
+                        //         ),
+                        //       );
+                        //       setModalState(
+                        //           () => loadingPluginIntegrationTest = false);
+                        //     });
+                        //   },
+                        // ),
+                        // ListTile(
+                        //   title: const Text('Test a Memory Prompt'),
+                        //   leading: const Icon(Icons.chat),
+                        //   trailing:
+                        //       const Icon(Icons.arrow_forward_ios, size: 20),
+                        //   onTap: () {
+                        //     routeToPage(
+                        //         context, TestPromptsPage(memory: memory));
+                        //   },
+                        // ),
+                        // ListTile(
+                        //   title: const Text('Trigger Zap Created Integration'),
+                        //   leading: loadingPluginIntegrationTest
+                        //       ? const SizedBox(
+                        //           height: 24,
+                        //           width: 24,
+                        //           child: CircularProgressIndicator(
+                        //             valueColor: AlwaysStoppedAnimation<Color>(
+                        //                 AppColors.blue),
+                        //           ),
+                        //         )
+                        //       : const Icon(
+                        //           Icons.send_to_mobile_outlined,
+                        //         ),
+                        //   onTap: () {
+                        //     setModalState(
+                        //         () => loadingPluginIntegrationTest = true);
+                        //     // if not set, show dialog to set URL or take them to settings.
+
+                        //     zapWebhookOnMemoryCreatedCall(memory,
+                        //             returnRawBody: true)
+                        //         .then((response) {
+                        //       showDialog(
+                        //         context: context,
+                        //         builder: (c) => getDialog(
+                        //           context,
+                        //           () => Navigator.pop(context),
+                        //           () => Navigator.pop(context),
+                        //           'Result:',
+                        //           response,
+                        //           okButtonText: 'Ok',
+                        //           singleButton: true,
+                        //         ),
+                        //       );
+                        //       setModalState(
+                        //           () => loadingPluginIntegrationTest = false);
+                        //     });
+                        //   },
+                        // ),
                         SharedPreferencesUtil().devModeEnabled
                             ? ListTile(
                                 onTap: () {
@@ -731,12 +678,12 @@ showOptionsBottomSheet(
                                 title: const Text('Developer Tools'),
                                 leading: const Icon(
                                   Icons.developer_mode,
-                                  color: Colors.white,
                                 ),
                                 trailing: const Icon(Icons.arrow_forward_ios,
                                     size: 20),
                               )
                             : const SizedBox.shrink(),
+                        h20,
                       ],
               ),
             );

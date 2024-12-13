@@ -1,16 +1,17 @@
-// ignore_for_file: unused_local_variable, unnecessary_null_comparison
+// ignore_for_file: unnecessary_null_comparison, duplicate_ignore
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/memory.dart';
+import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
-import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
-import 'package:friend_private/pages/memory_detail/share.dart';
-import 'package:friend_private/pages/memory_detail/widgets.dart';
 import 'package:friend_private/features/memories/widgets/category_chip.dart';
 import 'package:friend_private/features/memories/widgets/overall_tab.dart';
 import 'package:friend_private/features/memories/widgets/tab_bar.dart';
 import 'package:friend_private/features/memories/widgets/transcript_tab.dart';
+import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
+import 'package:friend_private/pages/memory_detail/share.dart';
+import 'package:friend_private/pages/memory_detail/widgets.dart';
 import 'package:friend_private/utils/memories/reprocess.dart';
 import 'package:intl/intl.dart';
 
@@ -122,22 +123,22 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     // log(selectedMemory.toString());
     final categories =
         _getCategories(selectedMemory.structured.target?.category);
-    final formattedTranscript =
-        _getFormattedTranscript(selectedMemory.transcript);
+    _getFormattedTranscript(selectedMemory.transcript);
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        backgroundColor: const Color(0xFFE6F5FA),
+        backgroundColor: AppColors.white,
         title: Text(
-          selectedMemory.createdAt != null
-              ? '${DateFormat('d MMM').format(selectedMemory.createdAt)}   '
-                  '${DateFormat('h:mm a').format(selectedMemory.createdAt)}'
-              : 'No Date',
-          style: textTheme.titleSmall?.copyWith(
-            color: AppColors.greyLight,
-          ),
-        ),
+            // ignore: unnecessary_null_comparison
+            selectedMemory.createdAt != null
+                ? '${DateFormat('d MMM').format(selectedMemory.createdAt)} -'
+                    ' ${DateFormat('h:mm a').format(selectedMemory.createdAt)}'
+                : 'No Date',
+            style: TextStyle(
+                color: AppColors.grey,
+                fontSize: 14,
+                fontWeight: FontWeight.w500)),
         actions: [
           IconButton(
             onPressed: () {
@@ -147,7 +148,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 setState,
               );
             },
-            icon: const Icon(Icons.ios_share, size: 20),
+            icon: const Icon(Icons.ios_share, size: 24),
           ),
           IconButton(
             onPressed: () {
@@ -158,70 +159,70 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 _reProcessMemory,
               );
             },
-            icon: const Icon(Icons.more_horiz),
+            icon: const Icon(Icons.more_vert_rounded, size: 25),
           ),
+          w10,
         ],
       ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/bg_image.png',
-              fit: BoxFit.cover,
-            ),
+      body: Container(
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 22),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.3, 1.0],
+            colors: [AppColors.white, AppColors.commonPink],
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  selectedMemory.createdAt != null
-                      ? '${selectedMemory.structured.target?.title}'
-                      : "Not title",
-                  style: textTheme.labelLarge?.copyWith(fontSize: 20.h),
-                ),
-                SizedBox(height: 12.h),
-                if (categories.isNotEmpty)
-                  Wrap(
-                    spacing: 8.w,
-                    runSpacing: 8.h,
-                    children: categories
-                        .map(
-                          (category) => CategoryChip(
-                            tagName: category,
-                          ),
-                        )
-                        .toList(),
-                  ),
-                SizedBox(height: 32.h),
-                //  const SizedBox(height: 32),
-                Expanded(
-                  child: CustomTabBar(
-                    tabs: const [
-                      Tab(text: 'Overall'),
-                      Tab(text: 'Transcript'),
-                    ],
-                    children: [
-                      OverallTab(
-                        target: selectedMemory.structured.target!,
-
-                        //pluginsResponse: selectedMemory.pluginsResponse
-                      ),
-                      //  TranscriptTab(target: selectedMemory.transcript!),
-                      TranscriptTab(
-                        memoryBloc: widget.memoryBloc,
-                        memoryAtIndex: widget.memoryAtIndex, // Add this
-                        // pageController: widget
-                        //     .pageController, // Add this// Pass the formatted transcript
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              selectedMemory.createdAt != null
+                  ? '${selectedMemory.structured.target?.title}'
+                  : "No title",
+              style:
+                  textTheme.labelLarge?.copyWith(fontSize: 20.h, height: 1.25),
             ),
-          ),
-        ],
+            h5,
+            if (categories.isNotEmpty)
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                children: categories
+                    .map(
+                      (category) => CategoryChip(
+                        tagName: category,
+                      ),
+                    )
+                    .toList(),
+              ),
+            h20,
+            Expanded(
+              child: CustomTabBar(
+                tabs: const [
+                  Tab(text: 'Overall'),
+                  Tab(text: 'Transcript'),
+                ],
+                children: [
+                  OverallTab(
+                    target: selectedMemory.structured.target!,
+                    //pluginsResponse: selectedMemory.pluginsResponse
+                  ),
+                  //  TranscriptTab(target: selectedMemory.transcript!),
+                  TranscriptTab(
+                    memoryBloc: widget.memoryBloc,
+                    memoryAtIndex: widget.memoryAtIndex, // Add this
+                    // pageController: widget
+                    //     .pageController, // Add this// Pass the formatted transcript
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

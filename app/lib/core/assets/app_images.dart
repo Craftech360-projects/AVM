@@ -5,7 +5,7 @@ class AppImages {
   static const String appLogo = "${basePath}app_logo$format";
   static const String googleLogo = "${basePath}google_logo$format";
   static const String facebookLogo = "${basePath}apple_logo$format";
-  static const String appleLogo = "${basePath}iphone$format";
+  static const String appleLogo = "${basePath}apple_logo$format";
   static const String gearIcon = "${basePath}gear$format";
   static const String home = "${basePath}home$format";
   static const String message = "${basePath}message$format";

@@ -43,6 +43,7 @@ class FinalizePage extends StatelessWidget {
                 ),
               ),
               Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
                     borderRadius: br30),

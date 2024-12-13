@@ -71,7 +71,7 @@ class _ZapierPageState extends State<ZapierPage> {
               color: AppColors.greyMedium,
             ),
           ),
-          const SizedBox(height: 24),
+          h20,
           if (zapierEnabled) ..._zapierIntegrationOptions(),
         ],
       ),
@@ -82,11 +82,11 @@ class _ZapierPageState extends State<ZapierPage> {
     final textTheme = Theme.of(context).textTheme;
     return [
       Container(
-        margin: EdgeInsets.all(22.h),
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        margin: EdgeInsets.symmetric(vertical: 12.0),
+        padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: AppColors.greyLavender,
-          borderRadius: br15,
+          borderRadius: br12,
         ),
         child: Center(
           child: Padding(
@@ -98,41 +98,41 @@ class _ZapierPageState extends State<ZapierPage> {
           ),
         ),
       ),
-      const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        child: Text(
-          'Enter your Zapier webhook URL and select the type of workflows you want to automate.',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: AppColors.grey,
-          ),
+      Text(
+        'Enter your Zapier webhook URL and select the type of workflows you want to automate.',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: AppColors.grey,
         ),
       ),
       h20,
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6.0),
-        child: TextField(
-          controller: webhookController,
-          decoration: InputDecoration(
-            focusedBorder: OutlineInputBorder(
-              borderRadius: br15,
-              borderSide: const BorderSide(color: AppColors.purpleBright),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: br15,
-              borderSide: const BorderSide(color: AppColors.grey),
-            ),
-            hintText: "Zapier Webhook URL",
-            border: OutlineInputBorder(
-              borderRadius: br15,
-            ),
+      TextField(
+        textAlign: TextAlign.center,
+        controller: webhookController,
+        decoration: InputDecoration(
+          focusedBorder: OutlineInputBorder(
+            borderRadius: br12,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: br12,
+            borderSide: const BorderSide(color: AppColors.grey),
+          ),
+          hintText: "Zapier Webhook URL",
+          border: OutlineInputBorder(
+            borderRadius: br12,
           ),
         ),
       ),
       h15,
       ElevatedButton(
         onPressed: _saveWebhook,
-        child: const Text('Save Webhook'),
+        child: const Text(
+          'Save Webhook',
+          style: TextStyle(
+              color: AppColors.black,
+              fontWeight: FontWeight.w600,
+              fontSize: 17),
+        ),
       ),
       h15,
     ];
@@ -150,20 +150,11 @@ class _ZapierPageState extends State<ZapierPage> {
 
   _saveWebhook() {
     if (!zapierEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Enable Zapier integration to save webhook URL.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      avmSnackBar(context, "Enable Zapier integration to save webhook URL.");
+
       return;
     }
     SharedPreferencesUtil().zapierWebhookUrl = webhookController.text;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Zapier Webhook URL saved successfully.'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    avmSnackBar(context, "Zapier Webhook URL saved successfully.");
   }
 }

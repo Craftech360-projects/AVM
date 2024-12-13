@@ -11,7 +11,7 @@ import 'package:friend_private/backend/database/message_provider.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/core/theme/app_colors.dart';
+import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/features/capture/logic/openglass_mixin.dart';
 import 'package:friend_private/features/capture/presentation/capture_memory_page.dart';
 import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
@@ -23,6 +23,7 @@ import 'package:friend_private/utils/memories/integrations.dart';
 import 'package:friend_private/utils/memories/process.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/websockets.dart';
+import 'package:friend_private/widgets/custom_dialog_box.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:location/location.dart';
@@ -323,16 +324,15 @@ class CapturePageState extends State<CapturePage>
       if (await LocationService().displayPermissionsDialog()) {
         showDialog(
           context: context,
-          builder: (c) => getDialog(
-            context,
-            () => Navigator.of(context).pop(),
-            () async {
+          builder: (c) => CustomDialogWidget(
+            icon: Icons.location_on_rounded,
+            title: "Enable Location Services? 🌍",
+            message:
+                "We need your location permissions to add a location tag to your memories. This will help you remember where they happened.",
+            yesPressed: () async {
               Navigator.of(context).pop();
               await requestLocationPermission();
             },
-            'Enable Location Services?  🌍',
-            'We need your location permissions to add a location tag to your memories. This will help you remember where they happened.',
-            singleButton: false,
           ),
         );
       }
@@ -372,14 +372,8 @@ class CapturePageState extends State<CapturePage>
     if (!serviceEnabled) {
       debugPrint('Location service not enabled');
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Location services are disabled. Enable them for a better experience.',
-              style: TextStyle(color: AppColors.white, fontSize: 14),
-            ),
-          ),
-        );
+        avmSnackBar(context,
+            "Location services are disabled. Enable them for a better experience.");
       }
     } else {
       PermissionStatus permissionGranted =
@@ -389,14 +383,8 @@ class CapturePageState extends State<CapturePage>
       } else if (permissionGranted == PermissionStatus.deniedForever) {
         debugPrint('Location permission denied forever');
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'If you change your mind, you can enable location services in your device settings.',
-                style: TextStyle(color: AppColors.white, fontSize: 14),
-              ),
-            ),
-          );
+          avmSnackBar(context,
+              "If you change your mind, you can enable location services in your device settings.");
         }
       }
     }

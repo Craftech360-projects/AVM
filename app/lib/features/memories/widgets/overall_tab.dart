@@ -10,6 +10,7 @@ import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/plugin.dart';
 import 'package:friend_private/core/assets/app_vectors.dart';
+import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/pages/settings/widgets/calendar.dart';
 import 'package:friend_private/src/common_widget/expandable_text.dart';
@@ -40,7 +41,7 @@ class OverallTabState extends State<OverallTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 12.h),
+          h10,
 
           /// AI Summary
           CustomListTile(
@@ -60,7 +61,7 @@ class OverallTabState extends State<OverallTab> {
               color: AppColors.grey,
             ),
           ),
-          SizedBox(height: 12.h),
+          h20,
 
           /// Chapters
           CustomListTile(
@@ -71,10 +72,9 @@ class OverallTabState extends State<OverallTab> {
             ),
             title: Text('Events', style: textTheme.titleMedium),
           ),
-
           if (events.isEmpty)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.h),
+              padding: EdgeInsets.symmetric(vertical: 0.h),
               child: Text(
                 'No events found',
                 style: textTheme.bodyLarge?.copyWith(
@@ -86,7 +86,7 @@ class OverallTabState extends State<OverallTab> {
             ...events.asMap().entries.map((entry) {
               int index = entry.key + 1;
               var event = entry.value;
-              SizedBox(height: 12.h);
+              h10;
               return ListTile(
                   leading: Text(
                     '$index.',
@@ -106,7 +106,8 @@ class OverallTabState extends State<OverallTab> {
                     child: Text(
                       ''
                       '${dateTimeFormat('MMM d, yyyy', event.startsAt)} at ${dateTimeFormat('h:mm a', event.startsAt)} ~ ${event.duration} minutes.',
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
+                      style:
+                          const TextStyle(color: AppColors.grey, fontSize: 15),
                     ),
                   ),
                   trailing: IconButton(
@@ -146,7 +147,7 @@ class OverallTabState extends State<OverallTab> {
                         color: AppColors.black),
                   ));
             }),
-          SizedBox(height: 12.h),
+          h20,
 
           /// Action Items Section
           CustomListTile(
@@ -162,7 +163,7 @@ class OverallTabState extends State<OverallTab> {
           ),
           if (actionItems.isEmpty)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.h),
+              padding: EdgeInsets.symmetric(vertical: 0.h),
               child: Text(
                 'No action items found',
                 style: textTheme.bodyLarge?.copyWith(
@@ -189,8 +190,7 @@ class OverallTabState extends State<OverallTab> {
                   ),
                 ),
                 title: Text(
-                  actionItem
-                      .description, // Use the appropriate property of ActionItem
+                  actionItem.description,
                   style: textTheme.bodyLarge?.copyWith(
                     color: actionItem.completed
                         ? AppColors.greyLight
@@ -202,25 +202,7 @@ class OverallTabState extends State<OverallTab> {
                 ),
               );
             }),
-          // getPluginsWidgets(
-          //   context,
-          //   pluginResponse,
-          //   pluginsList,
-          //   (i) => setState(
-          //       () => pluginResponseExpanded[i] = !pluginResponseExpanded[i]),
-          // ),
-          const SizedBox(height: 32),
-          //   Divider(color: AppColors.purpleBright, height: 1),
-          const SizedBox(height: 32),
-
-          // ...getPluginsWidgets(
-          //   context,
-          //   pluginResponse,
-          //   pluginsList,
-          //   pluginResponseExpanded,
-          //   (i) => setState(
-          //       () => pluginResponseExpanded[i] = !pluginResponseExpanded[i]),
-          // )
+            h30,
         ],
       ),
     );
@@ -240,7 +222,7 @@ class OverallTabState extends State<OverallTab> {
     print(pluginResponse.isEmpty);
     if (pluginResponse.isEmpty) {
       return [
-        const SizedBox(height: 32),
+        h30,
         Text(
           'No plugins were triggered.',
           style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 20),
@@ -271,7 +253,7 @@ class OverallTabState extends State<OverallTab> {
             ),
           ],
         ),
-        const SizedBox(height: 32),
+        h30,
       ];
     } else {
       return [
@@ -279,7 +261,7 @@ class OverallTabState extends State<OverallTab> {
           'Plugins 🧑‍💻',
           style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 26),
         ),
-        const SizedBox(height: 24),
+        h20,
         ...pluginResponse.mapIndexed((i, pluginResponse) {
           if (pluginResponse.content.length < 5) return const SizedBox.shrink();
           Plugin? plugin = pluginsList.firstWhereOrNull(
@@ -294,7 +276,7 @@ class OverallTabState extends State<OverallTab> {
                     ? ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: CircleAvatar(
-                          backgroundColor: Colors.white,
+                          backgroundColor: AppColors.white,
                           maxRadius: 16,
                           backgroundImage: NetworkImage(plugin.getImageUrl()),
                         ),
@@ -314,12 +296,12 @@ class OverallTabState extends State<OverallTab> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 14),
+                                color: AppColors.grey, fontSize: 14),
                           ),
                         ),
                         trailing: IconButton(
                           icon: const Icon(Icons.copy_rounded,
-                              color: Colors.white, size: 20),
+                              color: AppColors.white, size: 20),
                           onPressed: () {
                             Clipboard.setData(ClipboardData(
                                 text: utf8.decode(
@@ -333,7 +315,6 @@ class OverallTabState extends State<OverallTab> {
                         ),
                       )
                     : const SizedBox.shrink(),
-                
                 ExpandableTextWidget(
                   text: utf8.decode(pluginResponse.content.trim().codeUnits),
                   // isExpanded: pluginResponseExpanded[i],
@@ -345,13 +326,13 @@ class OverallTabState extends State<OverallTab> {
                     height: 1.3,
                   ),
                   maxLines: 6,
-                  linkColor: Colors.white,
+                  linkColor: AppColors.white,
                 ),
               ],
             ),
           );
         }),
-        const SizedBox(height: 8),
+        h10,
       ];
     }
   }

@@ -100,7 +100,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+      padding: const EdgeInsets.symmetric(vertical: 28.0, horizontal: 6.0),
       child: GestureDetector(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 600),
@@ -138,7 +138,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     },
                     child: Image.asset(
                       AppImages.appLogo,
-                      height: 13.h,
+                      height: 16.h,
                     ),
                   ),
                 ),
@@ -152,7 +152,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                 ),
               if (isExpanded)
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w),
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: GestureDetector(
                     onTap: () {
                       if (isExpanded) {
@@ -170,7 +170,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     },
                     child: Image.asset(
                       AppImages.appLogo,
-                      height: 13.h,
+                      height: 16.h,
                     ),
                   ),
                 ),
@@ -181,7 +181,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: CustomIconButton(
                     iconPath: AppImages.search,
-                    size: 22.h,
+                    size: 24.h,
                     onPressed: isExpanded ? collapse : toggleSearchVisibility,
                   ),
                 ),
@@ -190,7 +190,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
                   child: CustomIconButton(
                     iconPath: AppImages.message,
-                    size: 22.h,
+                    size: 24.h,
                     onPressed: isExpanded ? collapse : toggleMessageVisibility,
                   ),
                 ),
