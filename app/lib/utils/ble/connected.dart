@@ -37,7 +37,7 @@ StreamSubscription<OnConnectionStateChangedEvent>? getConnectionStateListener({
           id: event.device.remoteId.str,
           name: event.device.platformName,
           rssi: await event.device.readRssi(),
-          // TODO: add firmware version
+          // add firmware version
         ));
       }
     }

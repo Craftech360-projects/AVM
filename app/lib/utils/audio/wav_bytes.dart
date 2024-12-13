@@ -151,7 +151,7 @@ class WavBytesUtil {
     Uint8List wavBytes;
     if (codec == BleAudioCodec.pcm8 || codec == BleAudioCodec.pcm16) {
       Int16List samples = getPcmSamples(frames);
-      // TODO: try pcm16
+      // try pcm16
       wavBytes = getUInt8ListBytes(
           samples, codec == BleAudioCodec.pcm8 ? 8000 : 16000);
     } else if (codec == BleAudioCodec.mulaw8 ||

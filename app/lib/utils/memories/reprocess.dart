@@ -4,7 +4,6 @@ import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
-import 'package:instabug_flutter/instabug_flutter.dart';
 
 import '../../backend/database/prompt_provider.dart';
 import '../../backend/preferences.dart';
@@ -41,23 +40,14 @@ Future<Memory?> reProcessMemory(
         forceProcess: true,
         conversationDate: memory.createdAt,
         customPromptDetails: savedPrompt);
-  } catch (err, stacktrace) {
+  } catch (err) {
     print(err);
-    var memoryReporting = MixpanelManager().getMemoryEventProperties(memory);
-    // CrashReporting.reportHandledCrash(err, stacktrace,
-    //     level: NonFatalExceptionLevel.critical,
-    //     userAttributes: {
-    //       'memory_transcript_length':
-    //           memoryReporting['transcript_length'].toString(),
-    //       'memory_transcript_word_count':
-    //           memoryReporting['transcript_word_count'].toString(),
-    //       // 'memory_transcript_language': memoryReporting['transcript_language'], // TODO: this is incorrect
-    //     });
+    MixpanelManager().getMemoryEventProperties(memory);
     onFailedProcessing();
     changeLoadingState();
     return null;
   }
-  // TODO: move this to a method from structured?
+  // move this to a method from structured?
   Structured structured = memory.structured.target!;
   Structured newStructured = summaryResult.structured;
   structured.title = newStructured.title;
@@ -89,7 +79,7 @@ Future<Memory?> reProcessMemory(
   // Add Calendar Events
 
   getEmbeddingsFromInput(structured.toString()).then((vector) {
-    // TODO: update instead if it wasn't "discarded"
+    // update instead if it wasn't "discarded"
     upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
   });
 

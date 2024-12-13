@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/database/memory.dart';
-import 'package:friend_private/src/common_widget/card.dart';
+import 'package:friend_private/core/constants/constants.dart';
+import 'package:friend_private/features/chat/widgets/user_message.dart';
 import 'package:intl/intl.dart';
 
 class MemoryCard extends StatelessWidget {
@@ -12,20 +13,20 @@ class MemoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      borderRadius: 30.h + 12.h,
-      padding: EdgeInsets.all(12.h),
+      borderRadius: 7.h + 12.h,
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(30.h),
+            borderRadius: br12,
             child: Image.memory(
               memory.memoryImg!,
               height: 100.h,
               width: 100.w,
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset(
-                  'assets/images/image_placeholder.png', // Replace with your dummy image path
+                  'assets/images/image_placeholder.png',
                   height: 100.h,
                   width: 100.w,
                   fit: BoxFit.fitHeight,
@@ -33,7 +34,7 @@ class MemoryCard extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(width: 8.w),
+          w10,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,11 +44,13 @@ class MemoryCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w600)),
-                SizedBox(height: 12.h),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        height: 1.4)),
+                h10,
                 Text(
-                  '${DateFormat('d MMM').format(memory.createdAt)}  '
-                  '   ${DateFormat('h:mm a').format(memory.createdAt)}',
+                  '${DateFormat('d MMM').format(memory.createdAt)} -'
+                  ' ${DateFormat('h:mm a').format(memory.createdAt)}',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/core/assets/app_images.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
@@ -24,10 +25,10 @@ class FindDevicesPage extends StatefulWidget {
       {super.key, required this.goNext, this.includeSkip = true});
   static const String routeName = '/FindDevicesPage';
   @override
-  _FindDevicesPageState createState() => _FindDevicesPageState();
+  FindDevicesPageState createState() => FindDevicesPageState();
 }
 
-class _FindDevicesPageState extends State<FindDevicesPage>
+class FindDevicesPageState extends State<FindDevicesPage>
     with SingleTickerProviderStateMixin {
   List<BTDeviceStruct> deviceList = [];
   late Timer _didNotMakeItTimer;
@@ -118,15 +119,16 @@ class _FindDevicesPageState extends State<FindDevicesPage>
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
+      showBackBtn: SharedPreferencesUtil().onboardingCompleted ? true : false,
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
             AppImages.appLogo,
             height: 30.h,
           ),
-          SizedBox(height: 150.h),
+          // SizedBox(height: 150.h),
 
           /// Bluetooth Animation
           BleAnimation(
@@ -136,30 +138,33 @@ class _FindDevicesPageState extends State<FindDevicesPage>
             repeat: true,
             child: Icon(
               Icons.bluetooth_searching,
-              color: Colors.white,
+              color: AppColors.white,
               size: 30.h,
             ),
           ),
-          SizedBox(height: 140.h),
+          // SizedBox(height: 140.h),
 
           FoundDevices(deviceList: deviceList, goNext: widget.goNext),
+          // if (deviceList.isEmpty && enableInstructions)
+          //   const SizedBox(height: 48),
           if (deviceList.isEmpty && enableInstructions)
-            const SizedBox(height: 48),
-          if (deviceList.isEmpty && enableInstructions)
-            ElevatedButton(
-              onPressed: () =>
-                  launchUrl(Uri.parse('mailto:craftechapps@gmail.com')),
-              child: Container(
-                width: double.infinity,
-                height: 45,
-                alignment: Alignment.center,
-                child: const Text(
-                  'Contact Support?',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                    color: AppColors.black,
-                    decoration: TextDecoration.underline,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28.0),
+              child: ElevatedButton(
+                onPressed: () =>
+                    launchUrl(Uri.parse('mailto:craftechapps@gmail.com')),
+                child: Container(
+                  width: double.infinity,
+                  height: 45,
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Contact Support ?',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: AppColors.black,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
               ),
@@ -169,29 +174,3 @@ class _FindDevicesPageState extends State<FindDevicesPage>
     );
   }
 }
-
-
-
-
-
- // if (widget.includeSkip && deviceList.isEmpty)
-        //   ElevatedButton(
-        //     onPressed: () {
-        //       widget.goNext();
-        //       MixpanelManager().useWithoutDeviceOnboardingFindDevices();
-        //     },
-        //     child: Container(
-        //       width: double.infinity,
-        //       height: 45,
-        //       alignment: Alignment.center,
-        //       child: const Text(
-        //         'Connect Later',
-        //         style: TextStyle(
-        //           fontWeight: FontWeight.w400,
-        //           fontSize: 16,
-        //           color: Colors.white,
-        //           // decoration: TextDecoration.underline,
-        //         ),
-        //       ),
-        //     ),
-        //   ),

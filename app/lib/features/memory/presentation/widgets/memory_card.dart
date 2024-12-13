@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/memory.dart';
+import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/features/memories/pages/memory_detail_page.dart';
 import 'package:friend_private/features/memories/widgets/memory_card.dart';
@@ -17,7 +18,6 @@ class MemoryCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: _memoryBloc,
       builder: (context, state) {
@@ -30,13 +30,12 @@ class MemoryCardWidget extends StatelessWidget {
             ),
           );
         }
-        return SizedBox(
-          height: (height - 5) * 0.48,
+        return Expanded(
           child: ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.only(left: 12, right: 12, bottom: 0),
-            shrinkWrap: true,
             itemCount: state.memories.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 8),
+            separatorBuilder: (context, index) => h10,
             itemBuilder: (context, index) {
               Memory memory = state.memories[index];
               //*-- Delete Memory Card --*//
@@ -63,19 +62,19 @@ class MemoryCardWidget extends StatelessWidget {
                             },
                             child: const Text(
                               'Cancel',
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(color: AppColors.black),
                             ),
                           ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
+                              backgroundColor: AppColors.red,
                             ),
                             onPressed: () {
                               Navigator.of(context).pop(true);
                             },
                             child: const Text(
                               'Delete',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: AppColors.white),
                             ),
                           ),
                         ],

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:friend_private/backend/api_requests/api/server.dart';
-import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/backend/schema/sample.dart';
@@ -139,66 +138,7 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
               ),
               TextButton(onPressed: () {}, child: const Text('cancel Stream'))
             ],
-          )
-          // _controller == null
-          //     ? const Center(
-          //         child: CircularProgressIndicator(
-          //           color: Colors.white,
-          //         ),
-          //       )
-          //     : Column(
-          //         children: [
-          //           Expanded(
-          //             child: TabBarView(
-          //               controller: _controller,
-          //               physics: const NeverScrollableScrollPhysics(),
-          //               children: [
-          //                 InstructionsTab(goNext: _goNext),
-          //                 ..._samples.mapIndexed<Widget>(
-          //                     (index, sample) => RecordSampleTab(
-          //                           sample: sample,
-          //                           btDevice: _device,
-          //                           sampleIdx: index,
-          //                           totalSamples: _samples.length,
-          //                           goNext: _goNext,
-          //                           onRecordCompleted: () {
-          //                             setState(() {
-          //                               sample.displayNext = true;
-          //                             });
-          //                           },
-          //                         )),
-          //                 CompletionTab(
-          //                   goNext: _goNext,
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //           const SizedBox(height: 24),
-          //         ],
-          //       ),
-          ),
+          )),
     );
-  }
-
-  _goNext() async {
-    if (_currentIdx == _controller!.length - 1) {
-      if (widget.onbording) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (c) => const HomePageWrapper()));
-      } else {
-        Navigator.pop(context);
-      }
-      return;
-    }
-    if (_currentIdx == 0) {
-      if (widget.onbording) {
-        MixpanelManager().speechProfileStartedOnboarding();
-      } else {
-        MixpanelManager().speechProfileStarted();
-      }
-    }
-    _currentIdx += 1;
-    _controller?.animateTo(_currentIdx);
-    setState(() {});
   }
 }

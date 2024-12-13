@@ -84,11 +84,11 @@ class GreetingCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             gradient: const LinearGradient(
+              stops: [0.2, 1.0],
               colors: [
-                Color(0xFFA2D2FF),
+                Color.fromARGB(255, 112, 186, 255),
                 Color(0xFFCDB4DB),
               ],
-              // Gradient colors
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -118,7 +118,7 @@ class GreetingCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Hi ${SharedPreferencesUtil().givenName ?? 'Guest'}!',
+                              'Hi! ${SharedPreferencesUtil().givenName}',
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -145,9 +145,9 @@ class GreetingCard extends StatelessWidget {
                       duration: const Duration(seconds: 1),
                       curve: Curves.easeInOut,
                       child: const Text(
-                        'Swipe to create memory',
+                        'Swipe right to create memory',
                         style: TextStyle(
-                          color: Color.fromARGB(129, 31, 31, 31),
+                          color: AppColors.greyMedium,
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),

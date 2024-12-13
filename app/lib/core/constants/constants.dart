@@ -22,6 +22,9 @@ const w20 = SizedBox(
 const w30 = SizedBox(
   width: 30,
 );
+const h1 = SizedBox(
+  height: 01,
+);
 const h5 = SizedBox(
   height: 05,
 );
@@ -39,6 +42,8 @@ const h30 = SizedBox(
 );
 
 // Border Radiuses
+BorderRadius br1 = BorderRadius.circular(01);
+BorderRadius br2 = BorderRadius.circular(02);
 BorderRadius br5 = BorderRadius.circular(05);
 BorderRadius br8 = BorderRadius.circular(08);
 BorderRadius br10 = BorderRadius.circular(10);
@@ -112,20 +117,23 @@ AppBar commonAppBar(
 void avmSnackBar(BuildContext context, String content) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      backgroundColor: AppColors.greyLavender,
+      backgroundColor: const Color.fromARGB(255, 226, 199, 252),
       content: Text(
         content,
         style: const TextStyle(
           fontFamily: "Montserrat",
           fontSize: 17,
           fontWeight: FontWeight.w500,
-          color: AppColors.lightBg,
+          color: AppColors.black,
         ),
       ),
       shape: RoundedRectangleBorder(borderRadius: br12),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 12),
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.all(18),
+      elevation: 0.0,
+      margin: const EdgeInsets.only(left: 18, top: 0, right: 18, bottom: 0),
+      showCloseIcon: true,
+      closeIconColor: AppColors.black,
     ),
   );
 }

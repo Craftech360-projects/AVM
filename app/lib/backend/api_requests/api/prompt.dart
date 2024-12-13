@@ -81,11 +81,11 @@ Future<SummaryResult> summarizeMemory(
     return SummaryResult(Structured('', ''), []);
   }
   if (transcript.split(' ').length > 100) {
-    // TODO: try lower count?
+    // try lower count?
     forceProcess = true;
   }
 
-  // TODO: try later with temperature 0
+  // try later with temperature 0
   // NOTE: PROMPT IS VERY DELICATE, IT CAN DISCARD EVERYTHING IF NOT HANDLED PROPERLY
   // The purpose for structuring this memory is to remember important conversations, decisions, and action items. If there's nothing like that in the transcript, output an empty title.
   var prompt = '''
@@ -170,12 +170,12 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
   final enabledPlugins = pluginsList
       .where((e) => pluginsEnabled.contains(e.id) && e.worksWithMemories())
       .toList();
-  // TODO: include memory details parsed already as extra context?
-  // TODO: improve plugin result, include result + id to map it to.
+  // include memory details parsed already as extra context?
+  // improve plugin result, include result + id to map it to.
   List<Future<Tuple2<Plugin, String>>> pluginPrompts = enabledPlugins.map(
     (plugin) async {
       try {
-        // TODO: tweak with user name in anyway?
+        // tweak with user name in anyway?
         String response = await executeGptPluginPrompt('''
         Your are an AI with the following characteristics:
         Name: ${plugin.name}, 
@@ -198,7 +198,7 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
 
         return Tuple2(
             plugin, response.replaceAll('```', '').replaceAll('""', '').trim());
-      } catch (e, stacktrace) {
+      } catch (e) {
         // CrashReporting.reportHandledCrash(e, stacktrace,
         //     level: NonFatalExceptionLevel.critical,
         //     userAttributes: {
@@ -217,7 +217,7 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
   try {
     var responses = await allPluginResponses;
     return responses.where((e) => e.item2.length > 5).toList();
-  } catch (e, stacktrace) {
+  } catch (e) {
     // CrashReporting.reportHandledCrash(e, stacktrace,
     //     level: NonFatalExceptionLevel.critical,
     //     userAttributes: {
@@ -554,7 +554,7 @@ Future<String> getPhotoDescription(Uint8List data) async {
   return await gptApiCall(model: 'gpt-4o', messages: messages, maxTokens: 100);
 }
 
-// TODO: another thought is to ask gpt for a list of "scenes", so each one could be stored independently in vectors
+// another thought is to ask gpt for a list of "scenes", so each one could be stored independently in vectors
 Future<List<int>> determineImagesToKeep(
     List<Tuple2<Uint8List, String>> images) async {
   // was thinking here to take all images, and based on description, filter the ones that do not have repeated descriptions.

@@ -7,8 +7,6 @@ import 'package:friend_private/backend/growthbook.dart';
 import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
-import 'package:friend_private/core/constants/constants.dart';
-import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/pages/capture/connect.dart';
 import 'package:friend_private/features/capture/widgets/sin_wave.dart';
 import 'package:friend_private/pages/speaker_id/page.dart';
@@ -297,15 +295,6 @@ class GetConnectionStateWidgets extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  Widget _getNoFriendConnectedYet(BuildContext context) {
-    return const Center(
-        child: Icon(
-      Icons.power_off_outlined,
-      size: 50,
-      color: Colors.grey,
-    ));
   }
 
   void checkBluetoothStatus(BuildContext context) async {

@@ -4,11 +4,8 @@ class AppColors {
   static const yellow = Color.fromARGB(255, 235, 202, 16);
   static const lightBg = Color(0xfff2f2f2);
   static const darkBg = Color(0xff0d0c0c);
-  static const darkGrey = Color(0xff343434);
-  static const blueV1 = Color.fromARGB(255, 67, 87, 186);
-  static const commonPink = Color(0xCFF2E4FF);
+  static const commonPink = Color.fromARGB(255, 242, 228, 255);
   static const black = Color(0xFF000000);
-  static const blackSecondary = Color(0xFF12110F);
   static const greyDark = Color(0xFF303030);
   static const greyMedium = Color(0xFF444444);
   static const grey = Color(0xFF545454);
@@ -21,7 +18,8 @@ class AppColors {
   static const greyLavender = Color(0xFFEEE4FF);
   static const purpleDark = Color(0xFF723B72);
   static const purpleBright = Color(0xFF9600FF);
-  static const yellowAccent = Color(0xFFFFE500);
+  static const blue = Color.fromARGB(255, 15, 159, 255);
+  static const blueGreyDark = Color.fromARGB(255, 35, 46, 51);
   static const red = Color(0xFFFF0000);
-  static const card = Color(0x009600ff);
+  static const orange = Color.fromARGB(255, 255, 168, 39);
 }

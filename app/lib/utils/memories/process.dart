@@ -36,8 +36,6 @@ Future<Memory?> processTranscriptContent(
   LocationService locationService = LocationService();
   if (await locationService.hasPermission() &&
       await locationService.enableService()) {
-    Geolocation? geolocation =
-        await locationService.getGeolocationDetails(); // Fetch geolocation
 
     debugPrint(">>>>>>>>>Geolocation fetched successfully,$Geolocation");
   } else {
@@ -111,7 +109,7 @@ Future<SummaryResult?> _retrieveStructure(
 
       debugPrint("Plugins Response:");
     }
-  } catch (e, stacktrace) {
+  } catch (e) {
     debugPrint('Error: $e');
     // CrashReporting.reportHandledCrash(e, stacktrace,
     //     level: NonFatalExceptionLevel.error,

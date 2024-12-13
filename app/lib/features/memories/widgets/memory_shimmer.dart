@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
-import 'package:friend_private/src/common_widget/card.dart';
+import 'package:friend_private/features/chat/widgets/user_message.dart';
 import 'package:friend_private/src/common_widget/shimmer.dart';
 
 class MemoryShimmer extends StatelessWidget {

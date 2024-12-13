@@ -4,10 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/core/assets/app_images.dart';
 import 'package:friend_private/core/constants/constants.dart';
-import 'package:friend_private/pages/home/custom_scaffold.dart';
-import 'package:friend_private/pages/onboarding/find_device/page.dart';
 import 'package:friend_private/features/wizard/bloc/wizard_bloc.dart';
 import 'package:friend_private/features/wizard/widgets/onboarding_button.dart';
+import 'package:friend_private/pages/home/custom_scaffold.dart';
+import 'package:friend_private/pages/onboarding/find_device/page.dart';
 
 class OnboardingPage extends StatelessWidget {
   // Change to StatelessWidget
@@ -59,63 +59,65 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      body: Stack(
-        children: [
-          // AVM Logo positioned at 1/3 of the screen height, padded left
-          Positioned(
-            top: MediaQuery.of(context).size.height / 4 -
-                30.h / 2, // One-third height minus half logo height
-            left: 16.0, // Horizontal padding from the left
-            child: Image.asset(
-              AppImages.appLogo,
-              height: 30.h, // Adjust the logo size as needed
-            ),
-          ),
-
-          // Foreground content
-          BlocListener<WizardBloc, WizardState>(
-            listener: (context, state) {
-              if (state is PermissionsGranted) {
-                avmSnackBar(context,
-                    "All permissions granted, proceeding with the app!");
-                _nextPage();
-              } else if (state is PermissionsDenied) {
-                avmSnackBar(context, state.message);
-              }
-            },
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                OnboardingButton(
-                  message:
-                      'Looks like the app needs some permissions!\nPlease enable the necessary permissions',
-                  buttonText: 'Enable',
-                  onSkip: _nextPage,
-                  onPressed: () {
-                    context.read<WizardBloc>().add(CheckPermissionsEvent());
-                  },
+      body: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.6,
+          margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 22),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: Image.asset(
+                  AppImages.appLogo,
+                  height: 30.h,
                 ),
-                OnboardingButton(
-                  message:
-                      'Your personal growth journey with AI that listens to all your queries.',
-                  buttonText: 'Connect my AVM',
-                  onSkip: _nextPage,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FindDevicesPage(
-                          goNext: () {},
-                        ),
-                      ),
-                    );
-                  },
+              ),
+              BlocListener<WizardBloc, WizardState>(
+                listener: (context, state) {
+                  if (state is PermissionsGranted) {
+                    avmSnackBar(context,
+                        "All permissions granted, proceeding with the app!");
+                    _nextPage();
+                  } else if (state is PermissionsDenied) {
+                    avmSnackBar(context, state.message);
+                  }
+                },
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    OnboardingButton(
+                      message:
+                          'Looks like the app needs\nsome permissions! Please\nenable necesssary permissions',
+                      buttonText: 'Enable',
+                      onSkip: _nextPage,
+                      onPressed: () {
+                        context.read<WizardBloc>().add(CheckPermissionsEvent());
+                      },
+                    ),
+                    OnboardingButton(
+                      message:
+                          'Your personal growth journey\nwith AI that listens to\nall your queries',
+                      buttonText: 'Connect my AVM',
+                      onSkip: _nextPage,
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FindDevicesPage(
+                              goNext: () {},
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

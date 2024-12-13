@@ -30,8 +30,8 @@ class TranscriptTab extends StatelessWidget {
         return Timeline.tileBuilder(
           physics: const BouncingScrollPhysics(),
           theme: TimelineThemeData(
-            nodePosition: 0.h,
-            indicatorPosition: 0.04.h,
+            nodePosition: 0.0.h,
+            indicatorPosition: 0.05.h,
           ),
           padding: EdgeInsets.symmetric(vertical: 20.h),
           builder: TimelineTileBuilder.connected(
@@ -40,8 +40,8 @@ class TranscriptTab extends StatelessWidget {
             ),
             connectorBuilder: (_, index, __) {
               return SolidLineConnector(
-                color: AppColors.greyMedium2,
-                thickness: 1.5.w,
+                color: AppColors.black,
+                thickness: 1.w,
               );
             },
             indicatorBuilder: (_, index) {
@@ -67,25 +67,29 @@ class _TranscriptContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Padding(
-      padding: EdgeInsets.only(left: 4.w, bottom: 30.h),
+    return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 12.h),
-          Text(
-            segment.timestamp ?? '00:00:30',
-            style: textTheme.titleMedium?.copyWith(
-              color: AppColors.greyLight,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 05),
+            child: Text(
+              segment.timestamp ?? '00:00:30',
+              style: textTheme.titleMedium?.copyWith(
+                color: AppColors.black,
+              ),
             ),
           ),
-          ExpandableText(
-            leadingText: 'Speaker ${segment.speaker}: ',
-            text: segment.text,
-            style: textTheme.bodyMedium?.copyWith(
-              wordSpacing: 0,
-              letterSpacing: 0.1,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 05),
+            child: ExpandableText(
+              leadingText: 'Speaker ${segment.speaker} : ',
+              text: segment.text,
+              style: textTheme.bodyMedium?.copyWith(
+                wordSpacing: 0,
+                letterSpacing: 0.1,
+              ),
             ),
           )
         ],

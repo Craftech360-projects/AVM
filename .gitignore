@@ -1,5 +1,6 @@
 *.env
 .env
+notes.md
 __pycache__/
 libraries/
 myenv/
@@ -78,7 +79,6 @@ build/
 
 # Version control
 .git/
-
 
 # Miscellaneous
 *.lock

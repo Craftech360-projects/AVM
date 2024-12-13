@@ -8,7 +8,7 @@ import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/main.dart';
 import 'package:friend_private/pages/home/page.dart';
 
-// TODO: could install the latest version due to podfile issues, so installed 0.8.3
+// could install the latest version due to podfile issues, so installed 0.8.3
 // https://pub.dev/packages/awesome_notifications/versions/0.8.3
 
 Future<void> initializeNotifications() async {
@@ -50,7 +50,7 @@ _retrieveNotificationInterval({
   bool isDailySummaryNotification = false,
 }) async {
   NotificationCalendar? interval;
-  // TODO: allow people to set a notification time in settings
+  // allow people to set a notification time in settings
   if (isMorningNotification) {
     var scheduled = await AwesomeNotifications().listScheduledNotifications();
     var hasMorningNotification =

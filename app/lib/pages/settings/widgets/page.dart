@@ -93,7 +93,7 @@
 //                 SharedPreferencesUtil().recordingsLanguage = _selectedLanguage;
 //                 MixpanelManager().recordingLanguageChanged(_selectedLanguage);
 //               }, _selectedLanguage),
-//               // TODO: do not works like this, fix if reusing
+//               // do not works like this, fix if reusing
 //               // ...getNotificationsWidgets(setState, postMemoryNotificationIsChecked, reconnectNotificationIsChecked),
 //               //! Disabled As of now
 //               /*

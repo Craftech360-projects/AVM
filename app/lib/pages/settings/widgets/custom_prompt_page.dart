@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/api_requests/api/prompt.dart';
 import 'package:friend_private/backend/database/prompt.dart';
 import 'package:friend_private/backend/database/prompt_provider.dart';
 import 'package:friend_private/backend/preferences.dart';
@@ -24,24 +23,6 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
 
   void _saveForm() async {
     if (_formKey.currentState!.validate()) {
-      final customPromptDetails = CustomPrompt(
-        prompt:
-            _promptController.text.isNotEmpty ? _promptController.text : null,
-        title: _titleController.text.isNotEmpty ? _titleController.text : null,
-        overview: _overviewController.text.isNotEmpty
-            ? _overviewController.text
-            : null,
-        actionItems: _actionItemController.text.isNotEmpty
-            ? _actionItemController.text
-            : null,
-        category: _categoryController.text.isNotEmpty
-            ? _categoryController.text
-            : null,
-        calendar: _calenderController.text.isNotEmpty
-            ? _calenderController.text
-            : null,
-      );
-
       PromptProvider().savePrompt(
         Prompt(
             prompt: _promptController.text,

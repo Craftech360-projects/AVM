@@ -11,6 +11,7 @@ import 'package:friend_private/pages/home/custom_scaffold.dart';
 import 'package:friend_private/pages/settings/widgets/backup_btn.dart';
 import 'package:friend_private/pages/settings/widgets/change_name_widget.dart';
 import 'package:friend_private/pages/settings/widgets/restore_btn.dart';
+import 'package:friend_private/widgets/custom_dialog_box.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -159,25 +160,15 @@ Widget getSignOutButton(BuildContext context, VoidCallback onSignOut) {
     ),
     trailing: CircleAvatar(
       backgroundColor: AppColors.greyLavender,
-      child: Icon(Icons.logout, size: 22.h),
+      child: Icon(Icons.logout_rounded, size: 22.h),
     ),
-    onTap: () {
-      showDialog(
-        barrierColor: AppColors.greyDark,
-        context: context,
-        builder: (ctx) {
-          return getDialog(
-            ctx,
-            () => Navigator.of(ctx).pop(),
-            () {
-              onSignOut();
-              Navigator.of(ctx).pop();
-            },
-            'Sign Out?',
-            'Are you sure you want to sign out?',
-          );
-        },
-      );
-    },
+    onTap: () => CustomDialogBox(
+        context,
+        icon: Icons.logout_rounded,
+        title: "Sign Out",
+        message: "Are you sure you want to sign out?",
+        yesPressed: () {
+          
+        },),
   );
 }

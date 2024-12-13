@@ -27,7 +27,6 @@ import 'package:friend_private/firebase_options_dev.dart' as dev;
 import 'package:friend_private/firebase_options_prod.dart' as prod;
 import 'package:friend_private/flavors.dart';
 import 'package:friend_private/pages/splash/splash_screen.dart';
-import 'package:friend_private/src/config/app_loger.dart';
 import 'package:friend_private/src/config/simple_bloc_observer.dart';
 import 'package:friend_private/utils/features/calendar.dart';
 import 'package:friend_private/utils/other/notifications.dart';
@@ -63,14 +62,14 @@ void main() async {
   await SharedPreferencesUtil.init();
   await ObjectBoxUtil.init();
   await MixpanelManager.init();
-  AppLogger.init();
+  // AppLogger.init();
   Bloc.observer = const SimpleBlocObserver();
 
   listenAuthTokenChanges();
   bool isAuth = false;
   try {
     isAuth = (await getIdToken()) != null;
-  } catch (e) {} // if no connect this will fail
+  } catch (e) {}
 
   if (isAuth) MixpanelManager().identify();
 

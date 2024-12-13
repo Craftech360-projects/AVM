@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:friend_private/backend/preferences.dart';
 
-// TODO: handle this cases
+// handle this cases
 // - Process reminders during the transcription? if they include smth like "Hey Friend..."
 // - If there's a event to be created that was in 10 minutes, but the conversation was 20 minutes
 //    - we shouldn't create the event, but that edge cases still happens.
@@ -23,9 +23,12 @@ class CalendarUtil {
 
   enableCalendarAccess() async {
     var permissionsGranted = await _calendarPlugin!.hasPermissions();
-    if (permissionsGranted.isSuccess && (permissionsGranted.data == null || permissionsGranted.data == false)) {
+    if (permissionsGranted.isSuccess &&
+        (permissionsGranted.data == null || permissionsGranted.data == false)) {
       permissionsGranted = await _calendarPlugin!.requestPermissions();
-      if (!permissionsGranted.isSuccess || permissionsGranted.data == null || permissionsGranted.data == false) {
+      if (!permissionsGranted.isSuccess ||
+          permissionsGranted.data == null ||
+          permissionsGranted.data == false) {
         return false;
       }
     }
@@ -47,7 +50,8 @@ class CalendarUtil {
     return [];
   }
 
-  Future<bool> createEvent(String title, DateTime startsAt, int durationMinutes, {String? description}) async {
+  Future<bool> createEvent(String title, DateTime startsAt, int durationMinutes,
+      {String? description}) async {
     bool hasAccess = await enableCalendarAccess();
     if (!hasAccess) return false;
     final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
@@ -58,7 +62,8 @@ class CalendarUtil {
       title: title,
       description: description,
       start: TZDateTime.from(startsAt, currentLocation!),
-      end: TZDateTime.from(startsAt.add(Duration(minutes: durationMinutes)), currentLocation),
+      end: TZDateTime.from(
+          startsAt.add(Duration(minutes: durationMinutes)), currentLocation),
       availability: Availability.Tentative,
     );
     final createResult = await _calendarPlugin!.createOrUpdateEvent(event);

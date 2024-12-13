@@ -8,6 +8,7 @@ enum SpeechProfileStatus {
   failed
 }
 
+// ignore: must_be_immutable
 class SpeechProfileState extends Equatable {
   final SpeechProfileStatus status;
   final bool? permissionEnabled;

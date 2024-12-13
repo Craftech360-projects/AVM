@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -150,36 +152,22 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
     // KeepAlive mechanism
     Timer? keepAliveTimer;
-    const keepAliveInterval =
-        Duration(seconds: 7); // Send KeepAlive every 7 seconds
+// Send KeepAlive every 7 seconds
     const silenceTimeout = Duration(seconds: 30); // Silence timeout
     DateTime? lastAudioTime;
 
-    void startKeepAlive() {
-      keepAliveTimer = Timer.periodic(keepAliveInterval, (timer) async {
-        try {
-          await channel.ready; // Ensure the channel is ready
-          final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
-          channel.sink.add(keepAliveMsg);
-          // debugPrint('Sent KeepAlive message');
-        } catch (e) {
-          debugPrint('Error sending KeepAlive message: $e');
-        }
-      });
-    }
-
-    void stopKeepAlive() {
-      keepAliveTimer?.cancel();
-    }
-
-    void checkSilence() {
-      if (lastAudioTime != null &&
-          DateTime.now().difference(lastAudioTime!) > silenceTimeout) {
-        // debugPrint(
-        //     'Silence detected for more than 30 seconds. Stopping KeepAlive.');
-        stopKeepAlive();
-      }
-    }
+    // void startKeepAlive() {
+    //   keepAliveTimer = Timer.periodic(keepAliveInterval, (timer) async {
+    //     try {
+    //       await channel.ready; // Ensure the channel is ready
+    //       final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
+    //       channel.sink.add(keepAliveMsg);
+    //       // debugPrint('Sent KeepAlive message');
+    //     } catch (e) {
+    //       debugPrint('Error sending KeepAlive message: $e');
+    //     }
+    //   });
+    // }
 
     channel.stream.listen(
       (event) {

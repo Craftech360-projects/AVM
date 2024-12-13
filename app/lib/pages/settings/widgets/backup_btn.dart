@@ -5,6 +5,7 @@ import 'package:friend_private/backend/mixpanel.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/utils/features/backups.dart';
+import 'package:friend_private/widgets/custom_dialog_box.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<bool> requestStoragePermission(BuildContext context) async {
@@ -133,35 +134,20 @@ class _BackupButtonState extends State<BackupButton> {
   void _showDisableBackupDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (c) => AlertDialog(
-        title: const Text('Disable Automatic Backups'),
-        content: const Text(
-          'You will be responsible for backing up your own data. We will not be able to restore it automatically once you disable this feature. Are you sure?',
-          style: TextStyle(fontWeight: FontWeight.w500),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel',
-                style: TextStyle(
-                    color: AppColors.purpleBright,
-                    fontWeight: FontWeight.w500)),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                backupsEnabled = false;
-                SharedPreferencesUtil().backupsEnabled = false;
-                MixpanelManager().backupsDisabled();
-                deleteBackupApi();
-              });
-              Navigator.of(context).pop();
-            },
-            child: const Text('Disable',
-                style: TextStyle(
-                    color: AppColors.grey, fontWeight: FontWeight.w500)),
-          ),
-        ],
+      builder: (c) => CustomDialogWidget(
+        icon: Icons.backup_rounded,
+        title: "Disable Automatic Backups",
+        message:
+            "You will be responsible for backing up your own data. We will not be able to restore it automatically once you disable this feature. Are you sure?",
+        yesPressed: () {
+          setState(() {
+            backupsEnabled = false;
+            SharedPreferencesUtil().backupsEnabled = false;
+            MixpanelManager().backupsDisabled();
+            deleteBackupApi();
+          });
+          Navigator.of(context).pop();
+        },
       ),
     );
   }
