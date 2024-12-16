@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:friend_private/backend/api_requests/api/pinecone.dart';
 import 'package:friend_private/backend/database/memory.dart';
 import 'package:friend_private/backend/database/memory_provider.dart';
 import 'package:friend_private/backend/mixpanel.dart';
@@ -33,11 +32,12 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
       message: "Are you sure you want to delete this memory?",
       icon: Icons.delete_rounded,
       yesPressed: () async {
-        deleteVector(widget.memory.id.toString());
+        // deleteVector(widget.memory.id.toString());
         await MemoryProvider().deleteMemory(widget.memory);
         Navigator.pop(context);
         widget.onDelete?.call();
         MixpanelManager().memoryDeleted(widget.memory);
+        
       },
     );
   }

@@ -58,18 +58,39 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
     );
   }
 
-  FutureOr<void> _updatedMemory(event, emit) async {
-    MemoryProvider().updateMemoryStructured(event.structured);
+  FutureOr<void> _updatedMemory(
+      UpdatedMemory event, Emitter<MemoryState> emit) async {
+    try {
+      await MemoryProvider().updateMemoryStructured(event.structured);
 
-    emit(state.copyWith(
-      status: MemoryStatus.success,
-    ));
+      // Fetch updated memory list
+      final allMemories = await MemoryProvider().getMemories();
+      final nonDiscardedMemories =
+          allMemories.where((memory) => !memory.discarded).toList();
+
+      emit(
+        state.copyWith(
+          status: MemoryStatus.success,
+          memories: nonDiscardedMemories, // Emit the updated list
+        ),
+      );
+    } catch (error) {
+      emit(
+        state.copyWith(
+          status: MemoryStatus.failure,
+          failure: error.toString(),
+        ),
+      );
+    }
   }
 
-  FutureOr<void> _deletedMemory(event, emit) {
+  FutureOr<void> _deletedMemory(event, emit) async {
     try {
       MemoryProvider().deleteMemory(event.memory);
       _displayedMemory;
+      final allMemories = await MemoryProvider().getMemories();
+      final nonDiscardedMemories =
+          allMemories.where((memory) => !memory.discarded).toList();
     } catch (error) {
       emit(
         state.copyWith(
@@ -119,21 +140,6 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
       if (event.query.isEmpty) {
         add(const DisplayedMemory());
       } else {
-        // final filteredMemories = state.memories.where((memory) {
-        //   final searchContent = '${memory.transcript}'
-        //           '${memory.structured.target?.title}'
-        //           '${memory.structured.target?.overview}'
-        //       .toLowerCase();
-        //   print(searchContent);
-        //   return searchContent.contains(event.query.toLowerCase());
-        // }).toList();
-
-        // emit(
-        //   state.copyWith(
-        //     status: MemoryStatus.success,
-        //     memories: filteredMemories,
-        //   ),
-        // );
         final normalizedQuery = _normalize(event.query);
 
         // Split query into keywords for multi-word search
@@ -171,7 +177,9 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
   String _normalize(String input) {
     return input
         .toLowerCase() // Convert to lowercase
-        .replaceAll(RegExp(r'[^\w\s]'), '') // Remove special characters and punctuation
-        .replaceAll(RegExp(r'\s+'), ' '); // Replace multiple spaces with a single space
+        .replaceAll(
+            RegExp(r'[^\w\s]'), '') // Remove special characters and punctuation
+        .replaceAll(
+            RegExp(r'\s+'), ' '); // Replace multiple spaces with a single space
   }
 }

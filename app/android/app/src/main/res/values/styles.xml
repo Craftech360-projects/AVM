@@ -1,0 +1,8 @@
+<resources>
+    <!-- Base application theme -->
+    <style name="LaunchTheme" >
+        <item name="android:windowBackground">@drawable/launch_background</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+</resources>

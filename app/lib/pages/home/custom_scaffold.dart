@@ -9,7 +9,6 @@ import 'package:friend_private/core/assets/app_images.dart';
 import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/core/widgets/battery_widget.dart';
-import 'package:friend_private/features/capture/widgets/battery_indicator.dart';
 import 'package:friend_private/pages/settings/presentation/pages/setting_page.dart';
 import 'package:friend_private/src/common_widget/icon_button.dart';
 
