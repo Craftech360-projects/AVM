@@ -11,7 +11,6 @@ import 'package:friend_private/pages/home/custom_scaffold.dart';
 import 'package:friend_private/pages/settings/widgets/backup_btn.dart';
 import 'package:friend_private/pages/settings/widgets/change_name_widget.dart';
 import 'package:friend_private/pages/settings/widgets/restore_btn.dart';
-import 'package:friend_private/widgets/custom_dialog_box.dart';
 import 'package:friend_private/widgets/dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -136,13 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
             getSignOutButton(context, () {
-              signOut(context);
-              SharedPreferencesUtil().onboardingCompleted = false;
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const SigninPage(),
-                ),
-              );
+              print("signout");
             }),
           ],
         ),
@@ -151,6 +144,35 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
+// Widget getSignOutButton(BuildContext context, VoidCallback onSignOut) {
+//   return ListTile(
+//     contentPadding: const EdgeInsets.fromLTRB(4, 0, 24, 0),
+//     title: const Text(
+//       'Sign Out',
+//       style: TextStyle(color: AppColors.red, fontWeight: FontWeight.w600),
+//     ),
+//     trailing: CircleAvatar(
+//       backgroundColor: AppColors.greyLavender,
+//       child: Icon(Icons.logout_rounded, size: 22.h),
+//     ),
+//     onTap: () => CustomDialogBox(
+//       context,
+//       icon: Icons.logout_rounded,
+//       title: "Sign Out",
+//       message: "Are you sure you want to sign out?",
+//       yesPressed: () {
+//         print("here");
+//         signOut(context);
+//         SharedPreferencesUtil().onboardingCompleted = false;
+//         Navigator.of(context).pushReplacement(
+//           MaterialPageRoute(
+//             builder: (context) => const SigninPage(),
+//           ),
+//         );
+//       },
+//     ),
+//   );
+// }
 Widget getSignOutButton(BuildContext context, VoidCallback onSignOut) {
   return ListTile(
     contentPadding: const EdgeInsets.fromLTRB(4, 0, 24, 0),
@@ -162,13 +184,47 @@ Widget getSignOutButton(BuildContext context, VoidCallback onSignOut) {
       backgroundColor: AppColors.greyLavender,
       child: Icon(Icons.logout_rounded, size: 22.h),
     ),
-    onTap: () => CustomDialogBox(
-        context,
-        icon: Icons.logout_rounded,
-        title: "Sign Out",
-        message: "Are you sure you want to sign out?",
-        yesPressed: () {
-          
-        },),
+    onTap: () {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: [
+                Icon(Icons.logout_rounded, color: AppColors.red),
+                const SizedBox(width: 8),
+                const Text("Sign Out"),
+              ],
+            ),
+            content: const Text("Are you sure you want to sign out?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child:
+                    const Text("Cancel", style: TextStyle(color: Colors.grey)),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                  onSignOut(); // Call the sign-out callback
+                  signOut(context); // Execute sign-out logic
+                  SharedPreferencesUtil().onboardingCompleted =
+                      false; // Update preferences
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const SigninPage(),
+                    ),
+                  );
+                },
+                child:
+                    const Text("Yes", style: TextStyle(color: AppColors.red)),
+              ),
+            ],
+          );
+        },
+      );
+    },
   );
 }
