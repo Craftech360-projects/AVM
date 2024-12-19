@@ -1,0 +1,29 @@
+flavors:
+  prod:
+    app:
+      name: "AVM"
+      icon: "assets/images/app_launcher_icon.png"
+    android:
+      applicationId: "com.craftech360.avm"
+      icon: "assets/images/app_launcher_icon.png"
+      firebase:
+        config: "apps/AppWithWearable/android/app/src/prod/google-services.json"
+    ios:
+      bundleId: "com.craftech360.avm"
+      icon: "assets/images/app_launcher_icon.png"
+      firebase:
+        config: "apps/AppWithWearable/ios/Config/Prod/GoogleService-Info.plist"
+  dev:
+    app:
+      name: "AVM Dev"
+      icon: "assets/images/app_launcher_icon.png"
+    android:
+      icon: "assets/images/app_launcher_icon.png"
+      applicationId: "com.craftech360.avm"
+      firebase:
+        config: "apps/AppWithWearable/android/app/src/dev/google-services.json"
+    ios:
+      bundleId: "com.craftech360.avm"
+      icon: "assets/images/app_launcher_icon.png"
+      firebase:
+        config: "apps/AppWithWearable/ios/Config/Dev/GoogleService-Info.plist"
