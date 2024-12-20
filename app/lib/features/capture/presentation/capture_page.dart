@@ -24,7 +24,6 @@ import 'package:friend_private/utils/memories/process.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:friend_private/widgets/custom_dialog_box.dart';
-import 'package:friend_private/widgets/dialog.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:location/location.dart';
 import 'package:uuid/uuid.dart';
@@ -98,7 +97,8 @@ class CapturePageState extends State<CapturePage>
       codec: codec,
       sampleRate: sampleRate,
       onConnectionSuccess: () {
-        debugPrint("====> WEB SOCKET Connection Success");
+        debugPrint(
+            "====> WEB SOCKET Connection Success>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         if (segments.isNotEmpty) {
           debugPrint("====> Segment Not Empty");
           // means that it was a reconnection, so we need to reset
@@ -145,7 +145,7 @@ class CapturePageState extends State<CapturePage>
             sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
-        debugPrint('Memory creation timer restarted');
+        debugPrint('Memory creation timer restarted..........');
         _memoryCreationTimer?.cancel();
         _memoryCreationTimer = Timer(
             const Duration(seconds: quietSecondsForMemoryCreation),
@@ -178,7 +178,7 @@ class CapturePageState extends State<CapturePage>
         if (wsConnectionState == WebsocketConnectionStatus.connected) {
           //debugPrint("Adding audio>>>>>>>>>>>>>,$value");
           websocketChannel?.sink.add(value);
-        }
+        } else {}
       },
     );
   }
@@ -224,6 +224,7 @@ class CapturePageState extends State<CapturePage>
   }
 
   _createMemory({bool forcedCreation = false}) async {
+    print('Creating memory');
     if (memoryCreating) return;
     // should clean variables here? and keep them locally?
     setState(() => memoryCreating = true);
@@ -234,13 +235,15 @@ class CapturePageState extends State<CapturePage>
     //     file =
     //         (await audioStorage!.createWavFile(removeLastNSeconds: secs)).item1;
     //     uploadFile(file);
-    //   } catch (e) {} // in case was a local recording and not a BLE recording
+    //   } catch (e) {
+    //     file = null; // in case was a local recording and not a BLE recording
+    //   }
     // }
     Memory? memory = await processTranscriptContent(
       context,
       TranscriptSegment.segmentsAsString(segments),
       segments,
-      file!.path,
+      file?.path ?? '',
       startedAt: currentTranscriptStartedAt,
       finishedAt: currentTranscriptFinishedAt,
       geolocation: await LocationService().getGeolocationDetails(),

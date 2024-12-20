@@ -101,9 +101,9 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   // }
   //   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
 
-  String encoding = "linear16";
+  String encoding = "opus";
   const String language = 'en-US';
-  const int sampleRate = 8000;
+  const int sampleRate = 16000;
   const String codec = 'pcm8';
   const int channels = 1;
   final String apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
