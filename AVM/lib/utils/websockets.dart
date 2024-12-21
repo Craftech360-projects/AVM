@@ -93,7 +93,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
   // String encoding = "opus";
 
-  // if (codec == 'pcm8' || codec == 'pcm16') {
+  // if (codec == 'pcm) {
   //   // encoding = 'linear16';
   //   encoding = 'opus';
   // } else {

@@ -225,17 +225,9 @@ class AIMessage extends StatelessWidget {
         highlightColor: Colors.transparent,
         onTap: () async {
           await Clipboard.setData(ClipboardData(text: message.text));
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Response copied to clipboard.',
-                style: TextStyle(
-                  color: AppColors.white,
-                  fontSize: 12.0,
-                ),
-              ),
-              duration: Duration(milliseconds: 2000),
-            ),
+          avmSnackBar(
+            context,
+            'Response copied to clipboard',
           );
         },
         child: Row(

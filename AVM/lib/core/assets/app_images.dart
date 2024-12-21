@@ -2,7 +2,7 @@ class AppImages {
   static const String basePath = "assets/images/";
   static const String format = ".png";
 
-  static const String appLogo = "${basePath}app_logo$format";
+  static const String appLogo = "${basePath}avm_text$format";
   static const String googleLogo = "${basePath}google_logo$format";
   static const String facebookLogo = "${basePath}apple_logo$format";
   static const String appleLogo = "${basePath}apple_logo$format";

@@ -1,12 +1,13 @@
-import 'package:avm/backend/api_requests/api/prompt.dart';
+import 'package:flutter/material.dart';
 import 'package:avm/backend/database/prompt_provider.dart';
+import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
+import 'package:avm/features/capture/logic/websocket_mixin.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/settings/widgets/custom_expandible_widget.dart';
 import 'package:avm/pages/settings/widgets/custom_prompt_page.dart';
-import 'package:flutter/material.dart';
 
 class DeveloperPage extends StatefulWidget {
   const DeveloperPage({super.key});
@@ -15,13 +16,38 @@ class DeveloperPage extends StatefulWidget {
   State<DeveloperPage> createState() => _DeveloperPageState();
 }
 
-class _DeveloperPageState extends State<DeveloperPage> {
+class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
   bool developerEnabled = false;
+  bool isModeSelected = false;
+  bool isPromptSaved = false;
   @override
   void initState() {
     super.initState();
     developerEnabled = SharedPreferencesUtil().developerOptionEnabled;
+    isPromptSaved = SharedPreferencesUtil().isPromptSaved;
     // if (developerEnabled) _getCalendars();
+  }
+
+  void _setDefaultPrompt() {
+    setState(() {
+      PromptProvider().removeAllPrompts();
+      SharedPreferencesUtil().isPromptSaved = false;
+      isPromptSaved = false;
+    });
+  }
+
+  void _customizePrompt() {
+    Navigator.of(context)
+        .push(
+      MaterialPageRoute(
+        builder: (context) => const CustomPromptPage(),
+      ),
+    )
+        .then((_) {
+      setState(() {
+        isPromptSaved = SharedPreferencesUtil().isPromptSaved;
+      });
+    });
   }
 
   @override
@@ -87,20 +113,63 @@ class _DeveloperPageState extends State<DeveloperPage> {
                     children: [
                       ListTile(
                         title: const Text('Deepgram'),
-                        onTap: () {
+                        onTap: () async {
                           developerModeSelected(modeSelected: 'Deepgram');
+
+                          closeWebSocket();
+
+                          developerModeSelected(modeSelected: 'Deepgram');
+
+                          await initWebSocket(
+                            onConnectionClosed:
+                                (int? closeCode, String? closeReason) {
+                              setState(() {});
+                            },
+                            onConnectionSuccess: () {
+                              setState(() {});
+                            },
+                            onConnectionError: (p1) {},
+                            onConnectionFailed: (p1) {},
+                            onMessageReceived: (List<TranscriptSegment> p1) {},
+                          );
                         },
                       ),
                       ListTile(
                         title: const Text('Sarvam'),
-                        onTap: () {
+                        onTap: () async {
+                          closeWebSocket();
                           developerModeSelected(modeSelected: 'Sarvam');
+                          await initWebSocket(
+                            onConnectionClosed:
+                                (int? closeCode, String? closeReason) {
+                              setState(() {});
+                            },
+                            onConnectionSuccess: () {
+                              setState(() {});
+                            },
+                            onConnectionError: (p1) {},
+                            onConnectionFailed: (p1) {},
+                            onMessageReceived: (List<TranscriptSegment> p1) {},
+                          );
                         },
                       ),
                       ListTile(
                         title: const Text('Whisper'),
-                        onTap: () {
+                        onTap: () async {
+                          closeWebSocket();
                           developerModeSelected(modeSelected: 'Whisper');
+                          await initWebSocket(
+                            onConnectionClosed:
+                                (int? closeCode, String? closeReason) {
+                              setState(() {});
+                            },
+                            onConnectionSuccess: () {
+                              setState(() {});
+                            },
+                            onConnectionError: (p1) {},
+                            onConnectionFailed: (p1) {},
+                            onMessageReceived: (List<TranscriptSegment> p1) {},
+                          );
                         },
                       ),
                     ],
@@ -110,26 +179,37 @@ class _DeveloperPageState extends State<DeveloperPage> {
                   const SizedBox(height: 12),
                   CustomExpansionTile(
                     title: 'Prompt',
+                    subtitle: isPromptSaved ? 'Customize Prompt' : 'Default',
                     children: [
                       ListTile(
+                        leading: !isPromptSaved
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
                         title: const Text('Default'),
-                        onTap: () {
-                          summarizeMemory(
-                            '',
-                            [],
-                            customPromptDetails: null,
-                          );
-                        },
+                        onTap: _setDefaultPrompt,
                       ),
                       ListTile(
+                        leading: isPromptSaved
+                            ? const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.green,
+                                size: 18,
+                              )
+                            : const Icon(
+                                Icons.done_all_rounded,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
                         title: const Text('Customize Prompt'),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const CustomPromptPage(),
-                            ),
-                          );
-                        },
+                        onTap: _customizePrompt,
                       ),
                     ],
                   ),

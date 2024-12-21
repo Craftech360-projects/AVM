@@ -107,10 +107,10 @@ dev_dependencies:
   objectbox_generator: ^4.0.3
 
 flutter_launcher_icons:
-  android: true
+  android: "launcher_icon"
   ios: true
   remove_alpha_ios: true
-  image_path: "assets/images/app_launcher_icon.png"
+  image_path: "assets/images/avm_app_icon.png"
 
 flutter:
   uses-material-design: true

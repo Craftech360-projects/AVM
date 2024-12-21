@@ -75,7 +75,6 @@ class CapturePageState extends State<CapturePage>
 
   InternetStatus? _internetStatus;
 
-  late StreamSubscription<InternetStatus> _internetListener;
   bool isGlasses = false;
   String conversationId =
       const Uuid().v4(); // used only for transcript segment plugins
@@ -316,32 +315,15 @@ class CapturePageState extends State<CapturePage>
         );
       }
     });
-    _internetListener =
-        InternetConnection().onStatusChange.listen((InternetStatus status) {
-      switch (status) {
-        case InternetStatus.connected:
-          _internetStatus = InternetStatus.connected;
-          break;
-        case InternetStatus.disconnected:
-          _internetStatus = InternetStatus.disconnected;
-          // so if you have a memory in progress, it doesn't get created, and you don't lose the remaining bytes.
-          _memoryCreationTimer?.cancel();
-          break;
-      }
-    });
 
     super.initState();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    record.dispose();
-    _bleBytesStream?.cancel();
-    _memoryCreationTimer?.cancel();
-    closeWebSocket();
-    _internetListener.cancel();
     _scrollController.dispose();
+    _bleBytesStream?.cancel();
+    websocketChannel?.sink.close();
     super.dispose();
   }
 

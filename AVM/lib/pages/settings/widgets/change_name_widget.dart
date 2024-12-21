@@ -4,7 +4,6 @@ import 'package:avm/backend/auth.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
-import 'package:avm/core/widgets/snackbar_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,13 +61,12 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
             onPressed: () {
               if (nameController.text.isEmpty ||
                   nameController.text.trim().isEmpty) {
-                showSnackBar(message: 'Name cannot be empty', context: context);
+                avmSnackBar(context,  "Name cannot be empty");
                 return;
               }
               SharedPreferencesUtil().givenName = nameController.text;
               updateGivenName(nameController.text);
-              showSnackBar(
-                  message: 'Name updated successfully!', context: context);
+             avmSnackBar(context,  "Name updated successfully!");
               Navigator.of(context).pop();
             },
             child: const Text('Save'),
@@ -105,13 +103,12 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
             onPressed: () {
               if (nameController.text.isEmpty ||
                   nameController.text.trim().isEmpty) {
-                showSnackBar(message: 'Name cannot be empty', context: context);
+                avmSnackBar(context,  "Name cannot be empty");
                 return;
               }
               SharedPreferencesUtil().givenName = nameController.text;
               updateGivenName(nameController.text);
-              showSnackBar(
-                  message: 'Name updated successfully!', context: context);
+              avmSnackBar(context,  "Name updated successfully!");
               Navigator.of(context).pop();
             },
             child: const Text(

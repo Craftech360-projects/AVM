@@ -305,11 +305,12 @@ class OverallTabState extends State<OverallTab> {
                             Clipboard.setData(ClipboardData(
                                 text: utf8.decode(
                                     pluginResponse.content.trim().codeUnits)));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content:
-                                  Text('Plugin response copied to clipboard'),
-                            ));
+                            var calEnabled = SharedPreferencesUtil().calendarEnabled;
+                            avmSnackBar(
+                                context,
+                                !calEnabled
+                                    ? 'Enable calendar integration to add events'
+                                    : 'Select a calendar to add events to');
                           },
                         ),
                       )

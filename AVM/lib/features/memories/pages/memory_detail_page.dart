@@ -232,9 +232,10 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     Memory? newMemory = await reProcessMemory(
       context,
       memory,
-      () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content:
-              Text('Error while processing memory. Please try again later.'))),
+      () => avmSnackBar(
+        context,
+        'Memory processing failed! Please try again.',
+      ),
       changeLoadingState,
     );
 
@@ -242,11 +243,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     overviewController.text = newMemory!.structured.target!.overview;
     titleController.text = newMemory.structured.target!.title;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('Memory processed! 🚀',
-              style: TextStyle(color: Colors.white))),
-    );
+    avmSnackBar(context, "Memory reprocessed successfully!");
     Navigator.pop(context, true);
   }
 }

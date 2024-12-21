@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +41,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         status: ChatStatus.loaded,
         messages: messages,
       ));
-      print("Messages refreshed. Count: ${messages.length}");
     } catch (error) {
       emit(state.copyWith(
         status: ChatStatus.failure,
@@ -57,8 +57,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       var ai = Message(DateTime.now(), '', 'ai', pluginId: event.plugin?.id);
       await messageProvider.saveMessage(ai);
-
-      print("AI message created with plugin ID: ${event.plugin?.id}");
 
       await streamApiResponse(
         await getInitialPluginPrompt(event.plugin),
@@ -84,14 +82,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       List<Message> messages = messageProvider.getMessages();
       if (messages.isEmpty) {
-        print("No messages found. Sending initial plugin message.");
         await sendInitialPluginMessage(null);
       } else {
         emit(state.copyWith(
           status: ChatStatus.loaded,
           messages: messages,
         ));
-        print("Loaded initial messages. Count: ${messages.length}");
       }
     } catch (error) {
       emit(state.copyWith(
@@ -113,8 +109,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final ragInfo = await retrieveRAGContext(event.message);
       String ragContext = ragInfo[0];
       List<Memory> memories = ragInfo[1].cast<Memory>();
-
-      print("RAG Context: $ragContext | Memories: ${memories.length}");
 
       // Create a prompt using the RAG context
       var prompt = qaRagPrompt(
@@ -155,7 +149,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       aiMessage.text = '${aiMessage.text}$content';
       await messageProvider
           .updateMessage(aiMessage); // Ensure update is awaited
-      print("AI Message updated: ${aiMessage.text}");
     };
   }
 
@@ -174,7 +167,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         },
       );
     } catch (error) {
-      print("Error in sendInitialPluginMessage: $error");
+      log(error.toString());
     }
   }
 }

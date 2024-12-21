@@ -60,8 +60,9 @@ Future<bool> customDialogBox(BuildContext context,
             userResponse = false;
             Navigator.of(c).pop();
           },
-          icon: const Icon(Icons.close),
+          icon: const Icon(Icons.close, color: AppColors.white),
           label: const Text('No'),
+       
         ),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -75,7 +76,7 @@ Future<bool> customDialogBox(BuildContext context,
             userResponse = true;
             Navigator.of(c).pop();
           },
-          icon: const Icon(Icons.check),
+          icon: const Icon(Icons.check, color: AppColors.white),
           label: const Text('Yes'),
         ),
       ],
@@ -135,8 +136,8 @@ void showPermissionDeniedDialog(
           onPressed: () {
             Navigator.of(c).pop();
           },
-          icon: const Icon(Icons.check),
-          label: const Text('Yes'),
+          icon: const Icon(Icons.check, color: AppColors.white),
+          label: const Text('Ok'),
         ),
       ],
     ),
@@ -210,7 +211,7 @@ class CustomDialogWidget extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: const Icon(Icons.close),
+          icon: const Icon(Icons.close, color: AppColors.white),
           label: const Text('No'),
         ),
         ElevatedButton.icon(
@@ -222,7 +223,7 @@ class CustomDialogWidget extends StatelessWidget {
             ),
           ),
           onPressed: yesPressed,
-          icon: const Icon(Icons.check),
+          icon: const Icon(Icons.check, color: AppColors.white),
           label: const Text('Yes'),
         ),
       ],

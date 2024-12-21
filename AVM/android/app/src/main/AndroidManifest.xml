@@ -42,7 +42,7 @@
 
     <!-- Add android:stopWithTask option only when necessary. -->
     <application
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:label="AVM"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
@@ -75,6 +75,9 @@
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
+            <!-- <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:resource="@drawable/ic_stat_avm" /> -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

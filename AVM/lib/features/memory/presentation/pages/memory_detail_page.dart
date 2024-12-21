@@ -1,3 +1,4 @@
+import 'package:avm/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:avm/backend/database/memory.dart';
@@ -210,9 +211,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
     Memory? newMemory = await reProcessMemory(
       context,
       memory,
-      () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content:
-              Text('Error while processing memory. Please try again later.'))),
+      () => avmSnackBar(context, 'Memory processing failed! Please try again.'),
       changeLoadingState,
     );
 
@@ -220,11 +219,7 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
     overviewController.text = newMemory!.structured.target!.overview;
     titleController.text = newMemory.structured.target!.title;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('Memory processed! 🚀',
-              style: TextStyle(color: Colors.white))),
-    );
+    avmSnackBar(context, "Memory reprocessed successfully!");
     Navigator.pop(context, true);
   }
 }
