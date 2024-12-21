@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:friend_private/backend/database/transcript_segment.dart';
+import 'package:friend_private/backend/preferences.dart';
 import 'package:friend_private/backend/schema/bt_device.dart';
 import 'package:friend_private/core/constants/constants.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
@@ -8,6 +9,7 @@ import 'package:friend_private/features/capture/presentation/capture_page.dart';
 import 'package:friend_private/features/capture/widgets/greeting_card.dart';
 import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
 import 'package:friend_private/features/memory/presentation/widgets/memory_card.dart';
+import 'package:friend_private/utils/other/notifications.dart'; // Import the notification utility file
 import 'package:friend_private/utils/websockets.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:shimmer/shimmer.dart';
@@ -52,6 +54,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   //   FilterItem(filterType: 'Technology', filterStatus: false),
   // ];
   final TextEditingController _searchController = TextEditingController();
+  bool notificationPlugin = false;
+
   @override
   void initState() {
     super.initState();
@@ -61,7 +65,40 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     _searchController.addListener(() {
       _memoryBloc.add(SearchMemory(query: _searchController.text));
     });
+
+    initializeNotifications(); // Initialize notifications
   }
+
+  void _activateNotification() async {
+    bool isNotificationEnabled = SharedPreferencesUtil().notificationPlugin;
+    print('Notification status: $isNotificationEnabled');
+
+    SharedPreferencesUtil().notificationPlugin = !isNotificationEnabled;
+  }
+
+  // void _PluginNotification() async {
+
+  //     String transcript = '''
+  //   Speaker 1: Hey, how have you been?
+  //   Speaker 2: I've been good, just busy with work. How about you?
+  //   Speaker 1: Same here. I wanted to catch up and see if you're free this weekend for a hike.
+  //   ''';
+  //     // Replace with actual transcript
+  //     String friendlyReplyJson = await generateFriendlyReply(transcript);
+  //     var friendlyReplyMap = jsonDecode(friendlyReplyJson);
+  //     debugPrint(friendlyReplyMap.toString());
+  //     String friendlyReply =
+  //         friendlyReplyMap['reply'] ?? 'Default friendly reply';
+  //     print(friendlyReply);
+  //     // createNotification(
+  //     //   title: 'Notification Title',
+  //     //   body: friendlyReply,
+  //     //   notificationId: 10,
+  //     // );
+  //     createMessagingNotification('AVM', friendlyReply);
+
+  //     print('Notification activated');
+  //   }
 
   @override
   void dispose() {
@@ -159,7 +196,14 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
               ),
             ),
           ),
-
+        //*--- NOTIFICATION BUTTON ---*//
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+            onPressed: _activateNotification,
+            child: const Text('Activate Notification'),
+          ),
+        ),
         //*--- MEMORY LIST ---*//
 
         BlocConsumer<MemoryBloc, MemoryState>(

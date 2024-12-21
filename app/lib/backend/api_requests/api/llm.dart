@@ -120,7 +120,7 @@ Future<dynamic> llamaApiCall({
   int maxTokens = -1,
 }) async {
   debugPrint("Inside LLaMA API call");
-
+  print(message);
   // Define the URL for the LLaMA API
   const url = 'https://api.groq.com/openai/v1/chat/completions';
 

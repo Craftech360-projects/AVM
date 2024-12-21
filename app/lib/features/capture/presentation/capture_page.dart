@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -61,7 +62,9 @@ class CapturePageState extends State<CapturePage>
 
   BTDeviceStruct? btDevice;
   bool _hasTranscripts = false;
-  static const quietSecondsForMemoryCreation = 60;
+  static final isNotificationEnabled =
+      SharedPreferencesUtil().notificationPlugin;
+  int quietSecondsForMemoryCreation = isNotificationEnabled ? 15 : 60;
 
   List<TranscriptSegment> segments = [];
 
@@ -84,6 +87,11 @@ class CapturePageState extends State<CapturePage>
   double? streamStartedAtSecond;
   DateTime? firstStreamReceivedAt;
   int? secondsMissedOnReconnect;
+
+  Future<bool> getNotificationPluginValue() async {
+    // Implement the logic to get the notification plugin value
+    return SharedPreferencesUtil().notificationPlugin;
+  }
 
   Future<void> initiateWebsocket(
       [BleAudioCodec? audioCodec, int? sampleRate]) async {
@@ -121,7 +129,7 @@ class CapturePageState extends State<CapturePage>
         // connection was okay, but then failed.
         setState(() {});
       },
-      onMessageReceived: (List<TranscriptSegment> newSegments) {
+      onMessageReceived: (List<TranscriptSegment> newSegments) async {
         debugPrint("====> Message Received");
         if (newSegments.isEmpty) return;
 
@@ -145,11 +153,25 @@ class CapturePageState extends State<CapturePage>
             sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
-        debugPrint('Memory creation timer restarted..........');
+        debugPrint(
+            'Memory creation timer restarted........notification pluign acive  status..,$isNotificationEnabled');
         _memoryCreationTimer?.cancel();
-        _memoryCreationTimer = Timer(
-            const Duration(seconds: quietSecondsForMemoryCreation),
-            () => _createMemory());
+        // _memoryCreationTimer = Timer(
+        //     Duration(seconds: quietSecondsForMemoryCreation),
+        //     () => _createMemory());
+        bool notificationPluginValue = await getNotificationPluginValue();
+        print("notificationPluginValue, $notificationPluginValue");
+        if (notificationPluginValue) {
+          print("notification plugin active");
+          _memoryCreationTimer =
+              Timer(Duration(seconds: 15), () => _PluginNotification());
+        } else {
+          print("memory creation plugin active");
+          _memoryCreationTimer = Timer(
+            Duration(seconds: 60),
+            () => _createMemory(),
+          );
+        }
         currentTranscriptStartedAt ??= DateTime.now();
         currentTranscriptFinishedAt = DateTime.now();
         if (_scrollController.hasClients) {
@@ -162,6 +184,42 @@ class CapturePageState extends State<CapturePage>
         setState(() {});
       },
     );
+  }
+
+  void _PluginNotification() async {
+    String transcript = TranscriptSegment.segmentsAsString(segments);
+    ;
+    // Replace with actual transcript
+    String friendlyReplyJson = await generateFriendlyReply(transcript);
+    var friendlyReplyMap = jsonDecode(friendlyReplyJson);
+    debugPrint(friendlyReplyMap.toString());
+    String friendlyReply =
+        friendlyReplyMap['reply'] ?? 'Default friendly reply';
+    print(friendlyReply);
+    // createNotification(
+    //   title: 'Notification Title',
+    //   body: friendlyReply,
+    //   notificationId: 10,
+    // );
+    createMessagingNotification('AVM', friendlyReply);
+
+    print('Notification activated');
+    await widget.refreshMemories();
+    SharedPreferencesUtil().transcriptSegments = [];
+    segments = [];
+    setState(() => memoryCreating = false);
+    audioStorage?.clearAudioBytes();
+    setHasTranscripts(false);
+
+    currentTranscriptStartedAt = null;
+    currentTranscriptFinishedAt = null;
+    elapsedSeconds = 0;
+
+    streamStartedAtSecond = null;
+    firstStreamReceivedAt = null;
+    secondsMissedOnReconnect = null;
+    photos = [];
+    conversationId = const Uuid().v4();
   }
 
   Future<void> initiateBytesStreamingProcessing() async {
@@ -396,6 +454,8 @@ class CapturePageState extends State<CapturePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    //ui>>>>>
     return CaptureMemoryPage(
       context: context,
       hasTranscripts: _hasTranscripts,

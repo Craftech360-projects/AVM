@@ -31,9 +31,14 @@ class SharedPreferencesUtil {
   // Notification Permission Tracking
   set notificationPermissionRequested(bool value) =>
       saveBool('notificationPermissionRequested', value);
+
   bool get notificationPermissionRequested =>
       getBool('notificationPermissionRequested') ?? false;
+      
+ bool get notificationPlugin => getBool('notificationPlugin') ?? false;
 
+  // Setter for notificationPlugin
+  set notificationPlugin(bool value) => saveBool('notificationPlugin', value);
   // Location Permission Tracking
   set locationPermissionRequested(bool value) =>
       saveBool('locationPermissionRequested', value);
