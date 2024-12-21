@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "729805354350-8hc5blr2ld5s04hvvhut4minrstnlsb1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.craftech360.avm",
+            "certificate_hash": "dd238f961933c6f7677d5c939b52bd33cddfa70a"
+          }
+        },
+        {
           "client_id": "729805354350-h0amkamvqj28g5mibeaeho75f4t38ea9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -45,78 +53,6 @@
             "certificate_hash": "e173dad1d00256f4d77cbd7916fb822bee9d7c06"
           }
         },
-        {
-          "client_id": "729805354350-uh6eons6bd8ncejuanmsgu6memuvi5ar.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAdin4urfjAI0ty8Eg-5rf2gIiWERmTTI8"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "729805354350-5g44b5oac8a31h1ii7nk2uebmispmj0l.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "729805354350-0a7m3mnp0dntmdtddlp4bjt6j23fosr3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.craftech360.avm.dev"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:729805354350:android:4a2cfc0ca44a245412fd7f",
-        "android_client_info": {
-          "package_name": "com.craftech360.avm.dev"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "729805354350-uh6eons6bd8ncejuanmsgu6memuvi5ar.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAdin4urfjAI0ty8Eg-5rf2gIiWERmTTI8"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "729805354350-5g44b5oac8a31h1ii7nk2uebmispmj0l.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "729805354350-0a7m3mnp0dntmdtddlp4bjt6j23fosr3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.craftech360.avm.dev"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:729805354350:android:7b24bf98b997a6ff12fd7f",
-        "android_client_info": {
-          "package_name": "com.friend.ios"
-        }
-      },
-      "oauth_client": [
         {
           "client_id": "729805354350-uh6eons6bd8ncejuanmsgu6memuvi5ar.apps.googleusercontent.com",
           "client_type": 3

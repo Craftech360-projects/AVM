@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -24,7 +23,6 @@ import 'package:friend_private/utils/memories/process.dart';
 import 'package:friend_private/utils/other/notifications.dart';
 import 'package:friend_private/utils/websockets.dart';
 import 'package:friend_private/widgets/custom_dialog_box.dart';
-import 'package:friend_private/widgets/dialog.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:location/location.dart';
 import 'package:uuid/uuid.dart';
@@ -91,16 +89,12 @@ class CapturePageState extends State<CapturePage>
     debugPrint("Entered Web Socket");
     // this will not work with opus for now, more complexity, unneeded rn
     BleAudioCodec codec = BleAudioCodec.pcm8;
-    // ?
-    // : await getAudioCodec(btDevice!.id)
-    // );
+
     await initWebSocket(
       codec: codec,
       sampleRate: sampleRate,
       onConnectionSuccess: () {
-        debugPrint("====> WEB SOCKET Connection Success");
         if (segments.isNotEmpty) {
-          debugPrint("====> Segment Not Empty");
           // means that it was a reconnection, so we need to reset
           streamStartedAtSecond = null;
           secondsMissedOnReconnect =
@@ -122,11 +116,9 @@ class CapturePageState extends State<CapturePage>
         setState(() {});
       },
       onMessageReceived: (List<TranscriptSegment> newSegments) {
-        debugPrint("====> Message Received");
         if (newSegments.isEmpty) return;
 
         if (segments.isEmpty) {
-          debugPrint('newSegments: ${newSegments.last}');
           // small bug -> when memory A creates, and memory B starts, memory B will clean a lot more seconds than available,
           //  losing from the audio the first part of the recording. All other parts are fine.
           audioStorage?.removeFramesRange(
@@ -145,7 +137,6 @@ class CapturePageState extends State<CapturePage>
             sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
-        debugPrint('Memory creation timer restarted');
         _memoryCreationTimer?.cancel();
         _memoryCreationTimer = Timer(
             const Duration(seconds: quietSecondsForMemoryCreation),
@@ -165,7 +156,6 @@ class CapturePageState extends State<CapturePage>
   }
 
   Future<void> initiateBytesStreamingProcessing() async {
-    debugPrint("====> Byte Streaming Initiated");
     if (btDevice == null) return;
     BleAudioCodec codec = await getAudioCodec(btDevice!.id);
     audioStorage = WavBytesUtil(codec: codec);
@@ -176,7 +166,6 @@ class CapturePageState extends State<CapturePage>
         audioStorage!.storeFramePacket(value);
         value.removeRange(0, 3);
         if (wsConnectionState == WebsocketConnectionStatus.connected) {
-          //debugPrint("Adding audio>>>>>>>>>>>>>,$value");
           websocketChannel?.sink.add(value);
         }
       },
@@ -227,29 +216,19 @@ class CapturePageState extends State<CapturePage>
     if (memoryCreating) return;
     // should clean variables here? and keep them locally?
     setState(() => memoryCreating = true);
-    File? file;
-    // if (audioStorage?.frames.isNotEmpty == true) {
-    //   try {
-    //     var secs = !forcedCreation ? quietSecondsForMemoryCreation : 0;
-    //     file =
-    //         (await audioStorage!.createWavFile(removeLastNSeconds: secs)).item1;
-    //     uploadFile(file);
-    //   } catch (e) {} // in case was a local recording and not a BLE recording
-    // }
-    Memory? memory = await processTranscriptContent(
+    Memory? memory;
+    memory = await processTranscriptContent(
       context,
       TranscriptSegment.segmentsAsString(segments),
       segments,
-      file!.path,
+      null,
       startedAt: currentTranscriptStartedAt,
       finishedAt: currentTranscriptFinishedAt,
       geolocation: await LocationService().getGeolocationDetails(),
       photos: photos,
-      // determinePhotosToKeep(photos);
       sendMessageToChat: sendMessageToChat,
     );
-    debugPrint(memory.toString());
-    // backup when useful memory created, maybe less later, 2k memories occupy 3MB in the json payload
+
     if (memory != null && !memory.discarded) executeBackupWithUid();
     context
         .read<MemoryBloc>()
@@ -263,22 +242,22 @@ class CapturePageState extends State<CapturePage>
         sendMessageToChat(Message(DateTime.now(), r, 'ai'), memory);
         createNotification(
           notificationId: 2,
-          title: 'New Memory Created! ${memory.structured.target!.getEmoji()}',
+          title:
+              'New Memory Created! ${memory?.structured.target?.getEmoji() ?? ''}',
           body: r,
         );
       });
     }
+
     await widget.refreshMemories();
     SharedPreferencesUtil().transcriptSegments = [];
     segments = [];
     setState(() => memoryCreating = false);
     audioStorage?.clearAudioBytes();
     setHasTranscripts(false);
-
     currentTranscriptStartedAt = null;
     currentTranscriptFinishedAt = null;
     elapsedSeconds = 0;
-
     streamStartedAtSecond = null;
     firstStreamReceivedAt = null;
     secondsMissedOnReconnect = null;
@@ -405,7 +384,7 @@ class CapturePageState extends State<CapturePage>
       scrollController: _scrollController,
       onDismissmissedCaptureMemory: (direction) {
         _createMemory();
-        setState(() {});
+        // setState(() {});
       },
     );
   }

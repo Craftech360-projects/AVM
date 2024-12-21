@@ -5,7 +5,7 @@ import 'package:friend_private/backend/database/transcript_segment.dart';
 import 'package:friend_private/core/theme/app_colors.dart';
 import 'package:friend_private/features/memory/bloc/memory_bloc.dart';
 import 'package:friend_private/src/common_widget/expandable_text.dart';
-import 'package:timelines/timelines.dart';
+import 'package:timelines_plus/timelines_plus.dart';
 
 class TranscriptTab extends StatelessWidget {
   final MemoryBloc memoryBloc;

@@ -52,6 +52,8 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
 
   @override
   Widget build(BuildContext context) {
+    String? codecType = SharedPreferencesUtil().getCodecType('NewCodec');
+
     return CustomScaffold(
       showBackBtn: true,
       showGearIcon: true,
@@ -97,87 +99,84 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
                 color: AppColors.greyMedium,
               ),
             ),
-          if (!developerEnabled) const SizedBox(height: 24),
+          if (!developerEnabled) h20,
           if (developerEnabled)
             Visibility(
               visible: developerEnabled,
-              child: ListView(
-                shrinkWrap: true,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
                 children: [
-                  CustomExpansionTile(
-                    title: 'Transcript Service',
-                    subtitle:
-                        SharedPreferencesUtil().getApiType('NewApiKey') ?? '',
-                    children: [
-                      ListTile(
-                        title: const Text('Deepgram'),
-                        onTap: () async {
-                          developerModeSelected(modeSelected: 'Deepgram');
-                          print(
-                              SharedPreferencesUtil().getApiType('NewApiKey'));
-                          await closeWebSocket();
+                  if (codecType == 'pcm')
+                    CustomExpansionTile(
+                      title: 'Transcript Service',
+                      subtitle:
+                          SharedPreferencesUtil().getApiType('NewApiKey') ?? '',
+                      children: [
+                        ListTile(
+                          title: const Text('Deepgram'),
+                          onTap: () async {
+                            developerModeSelected(modeSelected: 'Deepgram');
+                            print(SharedPreferencesUtil()
+                                .getApiType('NewApiKey'));
+                            await closeWebSocket();
 
-                          developerModeSelected(modeSelected: 'Deepgram');
-
-                          await initWebSocket(
-                            onConnectionClosed:
-                                (int? closeCode, String? closeReason) {
-                              setState(() {});
-                            },
-                            onConnectionSuccess: () {
-                              setState(() {});
-                            },
-                            onConnectionError: (p1) {},
-                            onConnectionFailed: (p1) {},
-                            onMessageReceived: (List<TranscriptSegment> p1) {},
-                          );
-                        },
-                      ),
-                      ListTile(
-                        title: const Text('Sarvam'),
-                        onTap: () async {
-                          await closeWebSocket();
-                          developerModeSelected(modeSelected: 'Sarvam');
-                          await initWebSocket(
-                            onConnectionClosed:
-                                (int? closeCode, String? closeReason) {
-                              setState(() {});
-                            },
-                            onConnectionSuccess: () {
-                              setState(() {});
-                            },
-                            onConnectionError: (p1) {},
-                            onConnectionFailed: (p1) {},
-                            onMessageReceived: (List<TranscriptSegment> p1) {},
-                          );
-                        },
-                      ),
-                      ListTile(
-                        title: const Text('Whisper'),
-                        onTap: () async {
-                          await closeWebSocket();
-                          developerModeSelected(modeSelected: 'Whisper');
-                          await initWebSocket(
-                            onConnectionClosed:
-                                (int? closeCode, String? closeReason) {
-                              setState(() {});
-                            },
-                            onConnectionSuccess: () {
-                              setState(() {});
-                            },
-                            onConnectionError: (p1) {},
-                            onConnectionFailed: (p1) {},
-                            onMessageReceived: (List<TranscriptSegment> p1) {},
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  const Divider(color: AppColors.purpleBright, height: 1),
-                  const SizedBox(height: 12),
+                            await initWebSocket(
+                              onConnectionClosed:
+                                  (int? closeCode, String? closeReason) {
+                                setState(() {});
+                              },
+                              onConnectionSuccess: () {
+                                setState(() {});
+                              },
+                              onConnectionError: (p1) {},
+                              onConnectionFailed: (p1) {},
+                              onMessageReceived:
+                                  (List<TranscriptSegment> p1) {},
+                            );
+                          },
+                        ),
+                        ListTile(
+                          title: const Text('Sarvam'),
+                          onTap: () async {
+                            await closeWebSocket();
+                            developerModeSelected(modeSelected: 'Sarvam');
+                            await initWebSocket(
+                              onConnectionClosed:
+                                  (int? closeCode, String? closeReason) {
+                                setState(() {});
+                              },
+                              onConnectionSuccess: () {
+                                setState(() {});
+                              },
+                              onConnectionError: (p1) {},
+                              onConnectionFailed: (p1) {},
+                              onMessageReceived:
+                                  (List<TranscriptSegment> p1) {},
+                            );
+                          },
+                        ),
+                        ListTile(
+                          title: const Text('Whisper'),
+                          onTap: () async {
+                            await closeWebSocket();
+                            developerModeSelected(modeSelected: 'Whisper');
+                            await initWebSocket(
+                              onConnectionClosed:
+                                  (int? closeCode, String? closeReason) {
+                                setState(() {});
+                              },
+                              onConnectionSuccess: () {
+                                setState(() {});
+                              },
+                              onConnectionError: (p1) {},
+                              onConnectionFailed: (p1) {},
+                              onMessageReceived:
+                                  (List<TranscriptSegment> p1) {},
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  h5,
                   CustomExpansionTile(
                     title: 'Prompt',
                     subtitle: isPromptSaved ? 'Customize Prompt' : 'Default',
@@ -214,6 +213,57 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
                       ),
                     ],
                   ),
+                  h5,
+                  CustomExpansionTile(
+                    title: 'Select Codec',
+                    subtitle: SharedPreferencesUtil()
+                        .getCodecType('NewCodec')
+                        .toUpperCase(),
+                    children: [
+                      ListTile(
+                        title: const Text('OPUS'),
+                        onTap: () async {
+                          codecSelected(modeSelected: 'opus');
+                          print(
+                              SharedPreferencesUtil().getCodecType('NewCodec'));
+                          await closeWebSocket();
+                          codecSelected(modeSelected: 'opus');
+
+                          await initWebSocket(
+                            onConnectionClosed:
+                                (int? closeCode, String? closeReason) {
+                              setState(() {});
+                            },
+                            onConnectionSuccess: () {
+                              setState(() {});
+                            },
+                            onConnectionError: (p1) {},
+                            onConnectionFailed: (p1) {},
+                            onMessageReceived: (List<TranscriptSegment> p1) {},
+                          );
+                        },
+                      ),
+                      ListTile(
+                        title: const Text('PCM'),
+                        onTap: () async {
+                          await closeWebSocket();
+                          codecSelected(modeSelected: 'pcm');
+                          await initWebSocket(
+                            onConnectionClosed:
+                                (int? closeCode, String? closeReason) {
+                              setState(() {});
+                            },
+                            onConnectionSuccess: () {
+                              setState(() {});
+                            },
+                            onConnectionError: (p1) {},
+                            onConnectionFailed: (p1) {},
+                            onMessageReceived: (List<TranscriptSegment> p1) {},
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -239,7 +289,18 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
     SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
     // SharedPreferencesUtil().isPromptSaved = false;
     const AlertDialog(
-      content: Text('To Reflect selected Changes\nApp Restarting...'),
+      content: Text('App will restart to apply selected changes.'),
+    );
+    Future.delayed(const Duration(seconds: 3));
+    // if (Platform.isAndroid) Restart.restartApp();
+  }
+
+  void codecSelected({required String modeSelected}) {
+    // print('Mode Selected $modeSelected');
+    SharedPreferencesUtil().saveCodecType('NewCodec', modeSelected);
+    // SharedPreferencesUtil().isPromptSaved = false;
+    const AlertDialog(
+      content: Text('App will restart to apply selected changes.'),
     );
     Future.delayed(const Duration(seconds: 3));
     // if (Platform.isAndroid) Restart.restartApp();

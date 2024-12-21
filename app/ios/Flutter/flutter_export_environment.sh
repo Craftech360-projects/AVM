@@ -1,15 +1,15 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
 export "FLUTTER_ROOT=/Library/flutter"
-export "FLUTTER_APPLICATION_PATH=/Users/craftech360/Desktop/AVM/app"
+export "FLUTTER_APPLICATION_PATH=/Users/craftech360/Desktop/avm2/AVM/app"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.20"
-export "FLUTTER_BUILD_NUMBER=86"
+export "FLUTTER_BUILD_NUMBER=87"
 export "DART_DEFINES=RkxVVFRFUl9BUFBfRkxBVk9SPXByb2Q="
 export "DART_OBFUSCATION=false"
 export "TRACK_WIDGET_CREATION=false"
 export "TREE_SHAKE_ICONS=true"
-export "PACKAGE_CONFIG=/Users/craftech360/Desktop/AVM/app/.dart_tool/package_config.json"
+export "PACKAGE_CONFIG=/Users/craftech360/Desktop/avm2/AVM/app/.dart_tool/package_config.json"
 export "FLAVOR=prod"

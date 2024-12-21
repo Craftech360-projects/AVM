@@ -31,20 +31,6 @@ String mapCodecToName(BleAudioCodec codec) {
   }
 }
 
-// String apiType='Sarvam';
-// void setDiffApi({required String newApiType}) {
-//   apiType = newApiType;
-
-// }
-
-// String _apiType = 'Sarvam';
-
-// String get apiType => _apiType;
-
-// set apiType(String newApiType) {
-//   _apiType = newApiType;
-//   print('apiType updated to: $_apiType');
-// }
 Future<IOWebSocketChannel?> streamingTranscript({
   required VoidCallback onWebsocketConnectionSuccess,
   required void Function(dynamic) onWebsocketConnectionFailed,
@@ -85,26 +71,14 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   debugPrint('Websocket Opening');
   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
   debugPrint(recordingsLanguage);
-  // final deepgramapikey = getDeepgramApiKeyForUsage();
-  // debugPrint("Deepgram API Key: ${SharedPreferencesUtil().deepgramApiKey}");
 
   const deepgramapikey = "e19942922008143bf76a75cb75b92853faa0b0da";
-  debugPrint("apikey , $deepgramapikey");
+  String? codecType = SharedPreferencesUtil().getCodecType('NewCodec');
 
-  // String encoding = "opus";
-
-  // if (codec == 'pcm8' || codec == 'pcm16') {
-  //   // encoding = 'linear16';
-  //   encoding = 'opus';
-  // } else {
-  //   encoding = 'linear16';
-  // }
-  //   print("encoding>>>>>----------------->>>>>>>>>>> , $encoding");
-
-  String encoding = "linear16";
+  String encoding = codecType == "opus" ? 'opus' : 'linear16';
   const String language = 'en-US';
-  const int sampleRate = 8000;
-  const String codec = 'pcm8';
+  final int sampleRate = codecType == "opus" ? 16000 : 8000;
+  final String codec = codecType;;
   const int channels = 1;
   final String apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
   Uri uri = Uri.parse(
@@ -115,7 +89,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
-          'ws://king-prawn-app-u3xwv.ondigitalocean.app?service=deepgram&language=$language&sample_rate=$sampleRate&codec=$codec&channels=$channels');
+        'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+      );
       break;
 
     case 'Sarvam':
@@ -147,27 +122,13 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     );
 
     await channel.ready;
-    // DateTime? lastAudioTime;
     await channel.ready;
 
     // KeepAlive mechanism
     Timer? keepAliveTimer;
-// Send KeepAlive every 7 seconds
     const silenceTimeout = Duration(seconds: 30); // Silence timeout
     DateTime? lastAudioTime;
 
-    // void startKeepAlive() {
-    //   keepAliveTimer = Timer.periodic(keepAliveInterval, (timer) async {
-    //     try {
-    //       await channel.ready; // Ensure the channel is ready
-    //       final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
-    //       channel.sink.add(keepAliveMsg);
-    //       // debugPrint('Sent KeepAlive message');
-    //     } catch (e) {
-    //       debugPrint('Error sending KeepAlive message: $e');
-    //     }
-    //   });
-    // }
 
     channel.stream.listen(
       (event) {
