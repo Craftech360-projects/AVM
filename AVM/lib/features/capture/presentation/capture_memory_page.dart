@@ -1,5 +1,7 @@
 import 'package:avm/backend/database/transcript_segment.dart';
+import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
+import 'package:avm/core/assets/app_images.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/capture/presentation/capture_page.dart';
@@ -51,12 +53,15 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false;
+  bool _switchValue = SharedPreferencesUtil().notificationPlugin;
 
   @override
   void initState() {
     super.initState();
     _memoryBloc = BlocProvider.of<MemoryBloc>(context);
     _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
+
+    _switchValue = SharedPreferencesUtil().notificationPlugin;
 
     _searchController.addListener(() {
       _memoryBloc.add(SearchMemory(query: _searchController.text));
@@ -80,6 +85,45 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _showPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(12),
+              shape: RoundedRectangleBorder(borderRadius: br8),
+              content: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Enable to get real time\nresponses from the bot',
+                      maxLines: 2,
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    w10,
+                    Switch(
+                      value: _switchValue,
+                      onChanged: (value) {
+                        setState(() {
+                          _switchValue = value;
+                        });
+                        SharedPreferencesUtil().notificationPlugin = value;
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -220,6 +264,20 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
               ),
             ),
           ),
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+          alignment: Alignment.centerRight,
+          child: FloatingActionButton(
+            elevation: 0.8,
+            backgroundColor: AppColors.purpleDark,
+            onPressed: _showPopup,
+            child: Image.asset(
+              AppImages.botIcon,
+              width: 45,
+              height: 45,
+            ),
+          ),
+        ),
       ],
     );
   }

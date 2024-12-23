@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
 
 class BatteryWidget extends StatelessWidget {
   final int batteryLevel;
@@ -36,8 +36,8 @@ class BatteryWidget extends StatelessWidget {
         ),
         h1,
         Container(
-          width: 13,
-          height: 22,
+          width: 12,
+          height: 20,
           decoration: BoxDecoration(
             border: Border.all(color: AppColors.black, width: 1.5),
             borderRadius: br2,

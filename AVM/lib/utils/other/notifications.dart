@@ -1,12 +1,12 @@
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/material.dart';
 import 'package:avm/backend/notify_on_kill.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/main.dart';
 import 'package:avm/pages/home/page.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter/material.dart';
 
 // could install the latest version due to podfile issues, so installed 0.8.3
 // https://pub.dev/packages/awesome_notifications/versions/0.8.3
@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 Future<void> initializeNotifications() async {
   bool initialized = await AwesomeNotifications().initialize(
       // set the icon to null if you want to use the default app icon
-      'resource://drawable/icon',
+      'resource://drawable/ic_stat_avm',
       [
         NotificationChannel(
             channelGroupKey: 'channel_group_key',
@@ -117,6 +117,41 @@ void createNotification({
 }
 
 clearNotification(int id) => AwesomeNotifications().cancel(id);
+void createMessagingNotification(String sender, String message) async {
+  bool allowed = await AwesomeNotifications().isNotificationAllowed();
+  if (!allowed) {
+    debugPrint('Notifications are not allowed.');
+    return;
+  }
+
+  AwesomeNotifications().createNotification(
+    content: NotificationContent(
+      id: 2, // Unique ID for messaging notifications
+      channelKey: 'channel',
+      title: sender,
+      body: message,
+      notificationLayout: NotificationLayout.Messaging,
+      largeIcon: 'resource://drawable/ic_stat_avm', // Replace with your app icon
+      payload: {
+        'sender': sender,
+        'message': message,
+      },
+    ),
+    actionButtons: [
+      // NotificationActionButton(
+      //   key: 'REPLY',
+      //   label: 'Reply',
+      //   autoDismissible: true,
+      //   requireInputText: true, // Allow the user to input text for replies
+      // ),
+      // NotificationActionButton(
+      //   key: 'MARK_AS_READ',
+      //   label: 'Mark as Read',
+      //   autoDismissible: true,
+      // ),
+    ],
+  );
+}
 
 class NotificationUtil {
   static ReceivePort? receivePort;
@@ -163,13 +198,22 @@ class NotificationUtil {
       '/capture': 1,
       '/memories': 0,
     };
-    var message =
-        'Action ${receivedAction.actionType?.name} received on ${receivedAction.actionLifeCycle?.name}';
-    debugPrint(message);
+    debugPrint(
+        'Action ${receivedAction.actionType?.name} received on ${receivedAction.actionLifeCycle?.name}');
     debugPrint(receivedAction.toMap().toString());
 
-    // Always ensure that all plugins was initialized
     WidgetsFlutterBinding.ensureInitialized();
+
+    // Handle messaging actions
+    if (receivedAction.buttonKeyPressed == 'REPLY') {
+      String? userReply = receivedAction.buttonKeyInput;
+      debugPrint('User replied: $userReply');
+      // Add logic to send the user's reply to the server or process it
+    } else if (receivedAction.buttonKeyPressed == 'MARK_AS_READ') {
+      debugPrint('Message marked as read');
+      // Add logic to mark the message as read
+    }
+
     final payload = receivedAction.payload;
     if (payload?.containsKey('navigateTo') ?? false) {
       SharedPreferencesUtil().subPageToShowFromNotification =
@@ -180,4 +224,29 @@ class NotificationUtil {
     MyApp.navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(builder: (context) => const HomePageWrapper()));
   }
+
+  // static Future<void> onActionReceivedMethodImpl(
+  //     ReceivedAction receivedAction) async {
+  //   final Map<String, int> screensWithRespectToPath = {
+  //     '/chat': 2,
+  //     '/capture': 1,
+  //     '/memories': 0,
+  //   };
+  //   var message =
+  //       'Action ${receivedAction.actionType?.name} received on ${receivedAction.actionLifeCycle?.name}';
+  //   debugPrint(message);
+  //   debugPrint(receivedAction.toMap().toString());
+
+  //   // Always ensure that all plugins was initialized
+  //   WidgetsFlutterBinding.ensureInitialized();
+  //   final payload = receivedAction.payload;
+  //   if (payload?.containsKey('navigateTo') ?? false) {
+  //     SharedPreferencesUtil().subPageToShowFromNotification =
+  //         payload?['navigateTo'] ?? '';
+  //   }
+  //   SharedPreferencesUtil().pageToShowFromNotification =
+  //       screensWithRespectToPath[payload?['path']] ?? 1;
+  //   MyApp.navigatorKey.currentState?.pushReplacement(
+  //       MaterialPageRoute(builder: (context) => const HomePageWrapper()));
+  // }
 }

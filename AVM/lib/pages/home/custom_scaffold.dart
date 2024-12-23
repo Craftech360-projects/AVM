@@ -10,7 +10,6 @@ import 'package:avm/pages/settings/presentation/pages/setting_page.dart';
 import 'package:avm/src/common_widget/icon_button.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomScaffold extends StatefulWidget {
   final Widget body;
@@ -97,7 +96,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
               backgroundColor: AppColors.white,
               child: GestureDetector(
                 child: CustomIconButton(
-                  size: 24.h,
+                  size: 25,
                   iconPath: AppImages.gearIcon,
                   onPressed: () {
                     Navigator.push(

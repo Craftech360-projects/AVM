@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:avm/backend/api_requests/api/prompt.dart';
 import 'package:avm/backend/database/memory.dart';
@@ -60,10 +61,12 @@ class CapturePageState extends State<CapturePage>
 
   BTDeviceStruct? btDevice;
   bool _hasTranscripts = false;
-  static const quietSecondsForMemoryCreation = 60;
+  static const defaultQuietSecondsForMemoryCreation = 60;
 
   List<TranscriptSegment> segments = [];
-
+  static final isNotificationEnabled =
+      SharedPreferencesUtil().notificationPlugin;
+  int quietSecondsForMemoryCreation = isNotificationEnabled ? 10 : 60;
   StreamSubscription? _bleBytesStream;
   WavBytesUtil? audioStorage;
 
@@ -83,6 +86,44 @@ class CapturePageState extends State<CapturePage>
   DateTime? firstStreamReceivedAt;
   int? secondsMissedOnReconnect;
 
+  Future<bool> getNotificationPluginValue() async {
+    // Implement the logic to get the notification plugin value
+    return SharedPreferencesUtil().notificationPlugin;
+  }
+
+  void _pluginNotification() async {
+    String transcript = TranscriptSegment.segmentsAsString(segments);
+    // Replace with actual transcript
+    String friendlyReplyJson = await generateFriendlyReply(transcript);
+    var friendlyReplyMap = jsonDecode(friendlyReplyJson);
+    debugPrint(friendlyReplyMap.toString());
+    String friendlyReply =
+        friendlyReplyMap['reply'] ?? 'Default friendly reply';
+    // createNotification(
+    //   title: 'Notification Title',
+    //   body: friendlyReply,
+    //   notificationId: 10,
+    // );
+    createMessagingNotification('AVM', friendlyReply);
+
+    await widget.refreshMemories();
+    SharedPreferencesUtil().transcriptSegments = [];
+    segments = [];
+    setState(() => memoryCreating = false);
+    audioStorage?.clearAudioBytes();
+    setHasTranscripts(false);
+
+    currentTranscriptStartedAt = null;
+    currentTranscriptFinishedAt = null;
+    elapsedSeconds = 0;
+
+    streamStartedAtSecond = null;
+    firstStreamReceivedAt = null;
+    secondsMissedOnReconnect = null;
+    photos = [];
+    conversationId = const Uuid().v4();
+  }
+
   Future<void> initiateWebsocket(
       [BleAudioCodec? audioCodec, int? sampleRate]) async {
     debugPrint("Entered Web Socket");
@@ -93,7 +134,10 @@ class CapturePageState extends State<CapturePage>
       codec: codec,
       sampleRate: sampleRate,
       onConnectionSuccess: () {
+        debugPrint(
+            "====> WEB SOCKET Connection Success>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         if (segments.isNotEmpty) {
+          debugPrint("====> Segment Not Empty");
           // means that it was a reconnection, so we need to reset
           streamStartedAtSecond = null;
           secondsMissedOnReconnect =
@@ -114,10 +158,12 @@ class CapturePageState extends State<CapturePage>
         // connection was okay, but then failed.
         setState(() {});
       },
-      onMessageReceived: (List<TranscriptSegment> newSegments) {
+      onMessageReceived: (List<TranscriptSegment> newSegments) async {
+        debugPrint("====> Message Received");
         if (newSegments.isEmpty) return;
 
         if (segments.isEmpty) {
+          debugPrint('newSegments: ${newSegments.last}');
           // small bug -> when memory A creates, and memory B starts, memory B will clean a lot more seconds than available,
           //  losing from the audio the first part of the recording. All other parts are fine.
           audioStorage?.removeFramesRange(
@@ -136,10 +182,20 @@ class CapturePageState extends State<CapturePage>
             sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
+        debugPrint(
+            'Memory creation timer restarted........notification pluign acive  status..,$isNotificationEnabled');
         _memoryCreationTimer?.cancel();
-        _memoryCreationTimer = Timer(
-            const Duration(seconds: quietSecondsForMemoryCreation),
-            () => _createMemory());
+
+        bool notificationPluginValue = await getNotificationPluginValue();
+        if (notificationPluginValue) {
+          _memoryCreationTimer =
+              Timer(Duration(seconds: 10), () => _pluginNotification());
+        } else {
+          _memoryCreationTimer = Timer(
+            Duration(seconds: 60),
+            () => _createMemory(),
+          );
+        }
         currentTranscriptStartedAt ??= DateTime.now();
         currentTranscriptFinishedAt = DateTime.now();
         if (_scrollController.hasClients) {

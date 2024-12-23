@@ -228,6 +228,9 @@ class SharedPreferencesUtil {
   String? getString(String key) {
     return _preferences?.getString(key);
   }
+  //Bot Notification Plugin
+  bool get notificationPlugin => getBool('notificationPlugin') ?? false;
+  set notificationPlugin(bool value) => saveBool('notificationPlugin', value);
 
   Future<bool> saveInt(String key, int value) async {
     return await _preferences?.setInt(key, value) ?? false;
@@ -249,9 +252,17 @@ class SharedPreferencesUtil {
     return await _preferences?.setString(key, value) ?? false;
   }
 
+  Future<bool> saveCodecType(String key, String value) async {
+    return await _preferences?.setString(key, value) ?? false;
+  }
+
   String? getApiType(String key) {
     return _preferences?.getString(key);
   }
+
+  String getCodecType(String key) {
+  return _preferences?.getString(key) ?? 'opus';
+}
 
   Future<bool> saveDouble(String key, double value) async {
     return await _preferences?.setDouble(key, value) ?? false;
@@ -366,16 +377,6 @@ class SharedPreferencesUtil {
   set zapierEnabled(bool value) => saveBool('zapierEnabled', value);
 
   bool get zapierEnabled => getBool('zapierEnabled') ?? false;
-
-// String get userName => getString('userName') ?? givenName; // the one the users sets
-//
-// set userName(String value) => saveString('userName', value);
-
-  // set locationPermissionRequested(bool value) =>
-  //     saveBool('locationPermissionRequested', value);
-
-  // bool get locationPermissionRequested =>
-  //     getBool('locationPermissionRequested') ?? false;
 }
 
 String getOpenAIApiKeyForUsage() => SharedPreferencesUtil().openAIApiKey.isEmpty

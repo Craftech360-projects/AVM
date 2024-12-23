@@ -189,7 +189,6 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
             .replaceAll('    ', '')
             .trim());
 
-
         return Tuple2(
             plugin, response.replaceAll('```', '').replaceAll('""', '').trim());
       } catch (e) {
@@ -283,6 +282,46 @@ Future<List<String>> getSemanticSummariesForEmbedding(String transcript) async {
       .map((e) => e.trim())
       .where((e) => e.isNotEmpty)
       .toList();
+}
+
+Future<String> generateFriendlyReply(String transcript) async {
+  var prompt = '''
+  Please analyze the following transcript and generate a friendly and engaging reply as if you were a close friend. 
+  The reply should be supportive, empathetic, and conversational. Make sure to address any concerns or questions raised in the transcript, 
+  and provide encouragement or advice where appropriate. Keep the tone casual and friendly.
+  
+  Example Transcript:
+  Speaker 1: Hi, how are you doing today?
+  Speaker 2: I'm good, thanks. I wanted to discuss our plans for the upcoming project.
+  Speaker 1: Sure, let's dive in.
+  Speaker 2: First, we need to outline the key deliverables and timelines. I think the initial prototype should be ready by the end of next month.
+  Speaker 1: That sounds reasonable. What about the budget? Do we have an estimate yet?
+  Speaker 2: We're looking at around \$50,000 for the initial phase. This includes development, testing, and some marketing.
+  Speaker 1: We should also consider potential risks, like delays in development or additional costs for unforeseen issues.
+  Speaker 2: Definitely. We need a risk management plan to address these possibilities.
+  ...
+  Speaker 1: That’s a good point. We should also consider the budget implications.
+  
+  Example of Desired Output:
+  Hey there! It sounds like you have a solid plan for the upcoming project. Getting the prototype ready by the end of next month is a great goal. 
+  The budget estimate of \$50,000 seems reasonable, and it's smart to include development, testing, and marketing costs. 
+  I totally agree that considering potential risks and having a risk management plan is crucial. Keep up the great work, and don't hesitate to reach out if you need any help!
+  
+  Respond in a JSON format with the following structure:
+  {
+    "reply": "Desired Output"
+  }
+  
+  Transcript:
+  $transcript
+  '''
+      .replaceAll('  ', '')
+      .trim();
+
+  debugPrint(prompt);
+  var response = await executeGptPrompt(prompt);
+
+  return response;
 }
 
 Future<String> postMemoryCreationNotification(Memory memory) async {

@@ -47,67 +47,6 @@ BorderRadius br15 = BorderRadius.circular(15);
 BorderRadius br20 = BorderRadius.circular(20);
 BorderRadius br30 = BorderRadius.circular(30);
 
-// AppBar commonAppBar(
-//   BuildContext context, {
-//   dynamic widget,
-//   String? title,
-//   bool showBackBtn = false,
-//   bool showGearIcon = false,
-//   bool showBatteryLevel = true,
-//   bool showDateTime = true,
-// }) {
-//   return AppBar(
-//     backgroundColor: AppColors.white,
-//     elevation: 0,
-//     leading: showBackBtn
-//         ? IconButton(
-//             onPressed: () {},
-//             icon: const Icon(Icons.arrow_back_ios_new_rounded))
-//         : null,
-//     title: showDateTime
-//         ? Text(title!,
-//             style: const TextStyle(
-//                 fontSize: 15,
-//                 fontWeight: FontWeight.w600,
-//                 color: AppColors.greyMedium))
-//         : null,
-//     actions: [
-//       if (showBatteryLevel) BatteryIndicator(batteryLevel: widget.batteryLevel),
-//       w5,
-//       if (showGearIcon)
-//         GestureDetector(
-//           onTap: () {
-//             Navigator.push(
-//               context,
-//               MaterialPageRoute(
-//                 builder: (context) => SettingPage(
-//                     device: widget.device, batteryLevel: widget.batteryLevel),
-//               ),
-//             );
-//           },
-//           child: CircleAvatar(
-//             backgroundColor: AppColors.white,
-//             child: CustomIconButton(
-//               size: 24.h,
-//               iconPath: AppImages.gearIcon,
-//               onPressed: () {
-//                 Navigator.push(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (context) => SettingPage(
-//                         device: widget.device,
-//                         batteryLevel: widget.batteryLevel),
-//                   ),
-//                 );
-//               },
-//             ),
-//           ),
-//         ),
-//       w10
-//     ],
-//   );
-// }
-
 //Snackbar
 void avmSnackBar(BuildContext context, String content) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -126,7 +65,7 @@ void avmSnackBar(BuildContext context, String content) {
       padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 12),
       behavior: SnackBarBehavior.floating,
       elevation: 1.5,
-      margin: const EdgeInsets.only(left: 18, top: 0, right: 18, bottom: 22),
+      margin: const EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 16),
       showCloseIcon: true,
       closeIconColor: AppColors.black,
     ),
