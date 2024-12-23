@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "729805354350-8hc5blr2ld5s04hvvhut4minrstnlsb1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.craftech360.avm",
+            "certificate_hash": "dd238f961933c6f7677d5c939b52bd33cddfa70a"
+          }
+        },
+        {
           "client_id": "729805354350-h0amkamvqj28g5mibeaeho75f4t38ea9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

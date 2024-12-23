@@ -1,3 +1,76 @@
+// {
+//   "version": "0.2.0",
+//   "configurations": [
+//     {
+//       "name": "avm (prod)",
+//       "cwd": "AVM",
+//       "request": "launch",
+//       "type": "dart",
+//       "args": [
+//         "--flavor",
+//         "prod"
+//       ],
+//       "flutterMode": "debug"
+//     },
+//     {
+//       "name": "avm (prod profile mode)",
+//       "cwd": "AVM",
+//       "request": "launch",
+//       "type": "dart",
+//       "args": [
+//         "--flavor",
+//         "prod"
+//       ],
+//       "flutterMode": "profile"
+//     },
+//     {
+//       "name": "avm (prod release mode)",
+//       "cwd": "AVM",
+//       "request": "launch",
+//       "type": "dart",
+//       "args": [
+//         "--flavor",
+//         "prod"
+//       ],
+//       "flutterMode": "release"
+//     },
+//     {
+//       "name": "avm (dev)",
+//       "cwd": "AVM",
+//       "request": "launch",
+//       "type": "dart",
+//       "args": [
+//         "--flavor",
+//         "dev"
+//       ],
+//       "flutterMode": "debug"
+//     },
+//     {
+//       "name": "avm (dev profile mode)",
+//       "cwd": "AVM",
+//       "request": "launch",
+//       "type": "dart",
+//       "args": [
+//         "--flavor",
+//         "dev"
+//       ],
+//       "flutterMode": "profile"
+//     },
+//     {
+//       "name": "avm (dev release mode)",
+//       "cwd": "AVM",
+//       "request": "launch",
+//       "type": "dart",
+//       "args": [
+//         "--flavor",
+//         "dev"
+//       ],
+//       "flutterMode": "release"
+//     }
+//   ]
+// }
+
+
 {
   "version": "0.2.0",
   "configurations": [

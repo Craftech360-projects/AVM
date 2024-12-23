@@ -67,5 +67,4 @@ class DefaultFirebaseOptions {
     iosClientId: '729805354350-ustaeisio9l9ndpim7ndmbii28vebkde.apps.googleusercontent.com',
     iosBundleId: 'com.craftech360.avm',
   );
-
 }

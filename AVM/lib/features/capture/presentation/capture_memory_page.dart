@@ -55,12 +55,50 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   bool _isScrolled = false;
   bool _switchValue = SharedPreferencesUtil().notificationPlugin;
 
+  void _showPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(12),
+              shape: RoundedRectangleBorder(borderRadius: br8),
+              content: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Enable to get real time\nresponses from the bot',
+                      maxLines: 2,
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    w10,
+                    Switch(
+                      value: _switchValue,
+                      onChanged: (value) {
+                        SharedPreferencesUtil().notificationPlugin = value;
+                        setState(() {
+                          _switchValue = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
     _memoryBloc = BlocProvider.of<MemoryBloc>(context);
     _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
-
     _switchValue = SharedPreferencesUtil().notificationPlugin;
 
     _searchController.addListener(() {
@@ -87,45 +125,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     super.dispose();
   }
 
-  void _showPopup() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              contentPadding: EdgeInsets.all(12),
-              shape: RoundedRectangleBorder(borderRadius: br8),
-              content: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Enable to get real time\nresponses from the bot',
-                      maxLines: 2,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    w10,
-                    Switch(
-                      value: _switchValue,
-                      onChanged: (value) {
-                        setState(() {
-                          _switchValue = value;
-                        });
-                        SharedPreferencesUtil().notificationPlugin = value;
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -148,10 +147,12 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                       const ScreenSkeleton();
 
                       await widget.onDismissmissedCaptureMemory(direction);
-                      if (context.mounted) Navigator.of(context).pop();
-                      setState(() {
-                        // Refresh the UI after memory is created
-                      });
+                      // if (context.mounted) {
+                      //   setState(() {
+                      //     // Refresh the UI after memory is created
+                      //   });
+                      //   Navigator.of(context).pop();
+                      // }
                     },
                     child: GreetingCard(
                       name: '',
