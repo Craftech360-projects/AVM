@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firmware Update Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #e9ecef;
+      border-radius: 4px;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Firmware Update Test</h1>
+    <form id="firmwareForm">
+      <label for="device_model">Device Model</label>
+      <input type="text" id="device_model" name="device_model" required>
+      
+      <label for="firmware_revision">Firmware Revision</label>
+      <input type="text" id="firmware_revision" name="firmware_revision" required>
+      
+      <label for="hardware_revision">Hardware Revision</label>
+      <input type="text" id="hardware_revision" name="hardware_revision" required>
+      
+      <label for="manufacturer_name">Manufacturer Name</label>
+      <input type="text" id="manufacturer_name" name="manufacturer_name" required>
+      
+      <button type="submit">Check for Updates</button>
+    </form>
+    
+    <div id="result" class="result" style="display: none;"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('firmwareForm');
+    const resultDiv = document.getElementById('result');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      // Get form data
+      const deviceModel = document.getElementById('device_model').value;
+      const firmwareRevision = document.getElementById('firmware_revision').value;
+      const hardwareRevision = document.getElementById('hardware_revision').value;
+      const manufacturerName = document.getElementById('manufacturer_name').value;
+
+      // Clear previous result
+      resultDiv.style.display = 'none';
+      resultDiv.innerHTML = '';
+
+      try {
+        // Fetch firmware details
+        const response = await fetch(`http://localhost:3000/v2/firmware/latest?device_model=${encodeURIComponent(deviceModel)}&firmware_revision=${encodeURIComponent(firmwareRevision)}&hardware_revision=${encodeURIComponent(hardwareRevision)}&manufacturer_name=${encodeURIComponent(manufacturerName)}`);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch firmware details.');
+        }
+
+        const firmware = await response.json();
+
+        // Display firmware details and download link
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `
+          <h3>Firmware Update Available</h3>
+          <p><strong>Version:</strong> ${firmware.version}</p>
+          <p><strong>Release Notes:</strong> ${firmware.release_notes}</p>
+          <p><strong>Release Date:</strong> ${firmware.release_date}</p>
+          <a href="${firmware.file_url}" download>Download Firmware</a>
+        `;
+      } catch (error) {
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+      }
+    });
+  </script>
+</body>
+</html>
