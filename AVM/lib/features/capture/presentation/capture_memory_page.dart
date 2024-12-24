@@ -141,31 +141,45 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                     key: ValueKey(item),
                     direction: DismissDirection.startToEnd,
                     onDismissed: (direction) async {
-                      setState(() {
-                        items.remove(item);
-                      });
-                      const ScreenSkeleton();
-
-                      await widget.onDismissmissedCaptureMemory(direction);
-                      // if (context.mounted) {
-                      //   setState(() {
-                      //     // Refresh the UI after memory is created
-                      //   });
-                      //   Navigator.of(context).pop();
-                      // }
+                      try {
+                        await widget.onDismissmissedCaptureMemory(direction);
+                        setState(() {
+                          items.remove(item);
+                        });
+                      } catch (e) {
+                        avmSnackBar(context,
+                            'Oops! Something went wrong.\nPlease try again.');
+                      }
                     },
-                    child: GreetingCard(
-                      name: '',
-                      isDisconnected: true,
-                      context: context,
-                      hasTranscripts: widget.hasTranscripts,
-                      wsConnectionState: widget.wsConnectionState,
-                      device: widget.device,
-                      internetStatus: widget.internetStatus,
-                      segments: widget.segments,
-                      memoryCreating: widget.memoryCreating,
-                      photos: widget.photos,
-                      scrollController: widget.scrollController,
+                    child: Column(
+                      children: [
+                        GreetingCard(
+                          name: '',
+                          isDisconnected: true,
+                          context: context,
+                          hasTranscripts: widget.hasTranscripts,
+                          wsConnectionState: widget.wsConnectionState,
+                          device: widget.device,
+                          internetStatus: widget.internetStatus,
+                          segments: widget.segments,
+                          memoryCreating: widget.memoryCreating,
+                          photos: widget.photos,
+                          scrollController: widget.scrollController,
+                        ),
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+                          child: Text(
+                            "Swipe right to create your memory ...",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColors.grey,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 })
@@ -183,7 +197,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                   photos: widget.photos,
                   scrollController: widget.scrollController,
                 ),
-
+              h10,
               //*--- Filter Button ---*//
               if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
                 Align(

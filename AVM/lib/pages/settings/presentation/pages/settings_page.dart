@@ -155,12 +155,12 @@ class _SettingPageState extends State<SettingPage> {
             child: Text(
               'Version: $version+$buildVersion',
               style: const TextStyle(
-                  color: Color.fromARGB(255, 150, 150, 150),
+                  color: AppColors.greyMedium2,
                   fontSize: 14,
-                  height: 3,
                   fontWeight: FontWeight.w500),
             ),
           ),
+          h20,
         ],
       ),
     );

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
@@ -23,7 +21,6 @@ class MemoryCardWidget extends StatelessWidget {
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: _memoryBloc,
       builder: (context, state) {
-        log('state of memory ${state.memories}');
         if (state.memories.isEmpty) {
           return const Center(
             child: Padding(

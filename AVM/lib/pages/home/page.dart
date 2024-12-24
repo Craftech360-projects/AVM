@@ -23,7 +23,7 @@ import 'package:avm/features/chat/presentation/chat_screen.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/main.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
-import 'package:avm/pages/settings/presentation/pages/setting_page.dart';
+import 'package:avm/pages/settings/presentation/pages/settings_page.dart';
 import 'package:avm/pages/skeleton/screen_skeleton.dart';
 import 'package:avm/scripts.dart';
 import 'package:avm/utils/audio/foreground.dart';

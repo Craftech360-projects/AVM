@@ -1,7 +1,7 @@
 import 'package:avm/features/wizard/pages/finalize_page.dart';
 import 'package:avm/features/wizard/pages/signin_page.dart';
 import 'package:avm/features/wizard/pages/wizard_page.dart';
-import 'package:avm/pages/settings/presentation/pages/setting_page.dart';
+import 'package:avm/pages/settings/presentation/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

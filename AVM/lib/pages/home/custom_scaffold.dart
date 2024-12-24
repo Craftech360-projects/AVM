@@ -6,7 +6,7 @@ import 'package:avm/core/assets/app_images.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/core/widgets/battery_widget.dart';
-import 'package:avm/pages/settings/presentation/pages/setting_page.dart';
+import 'package:avm/pages/settings/presentation/pages/settings_page.dart';
 import 'package:avm/src/common_widget/icon_button.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';

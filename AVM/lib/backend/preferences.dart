@@ -256,12 +256,20 @@ class SharedPreferencesUtil {
     return await _preferences?.setString(key, value) ?? false;
   }
 
+  Future<bool> updateKeywordDetectionStatus(String key, String value) async {
+    return await _preferences?.setString(key, value) ?? false;
+  }
+
   String? getApiType(String key) {
     return _preferences?.getString(key);
   }
 
   String getCodecType(String key) {
   return _preferences?.getString(key) ?? 'opus';
+}
+
+String getKeywordDetectionStatus(String key) {
+  return _preferences?.getString(key) ?? 'off';
 }
 
   Future<bool> saveDouble(String key, double value) async {

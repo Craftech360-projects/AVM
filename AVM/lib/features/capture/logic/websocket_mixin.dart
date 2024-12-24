@@ -134,38 +134,42 @@ mixin WebSocketMixin {
     required Function(List<TranscriptSegment>) onMessageReceived,
     required BleAudioCodec codec,
   }) {
-    _internetListener =
-        InternetConnection().onStatusChange.listen((InternetStatus status) {
-      _internetStatus = status;
-      switch (status) {
-        case InternetStatus.connected:
-          if (wsConnectionState != WebsocketConnectionStatus.connected &&
-              !_isConnecting) {
-            debugPrint(
-                'Internet connection restored. Attempting to reconnect WebSocket.');
-            _notifyInternetRestored();
+    // Only set up the listener if it hasn't been set up yet
+    if (!_internetListenerSetup) {
+      _internetListener =
+          InternetConnection().onStatusChange.listen((InternetStatus status) {
+        _internetStatus = status;
+        switch (status) {
+          case InternetStatus.connected:
+            if (wsConnectionState != WebsocketConnectionStatus.connected &&
+                !_isConnecting) {
+              debugPrint(
+                  'Internet connection restored. Attempting to reconnect WebSocket.');
+              _notifyInternetRestored();
+              _reconnectionTimer?.cancel();
+              _reconnectionAttempts = 0;
+              _attemptReconnection(
+                onConnectionSuccess: onConnectionSuccess,
+                onConnectionFailed: onConnectionFailed,
+                onConnectionClosed: onConnectionClosed,
+                onConnectionError: onConnectionError,
+                onMessageReceived: onMessageReceived,
+                codec: codec,
+              );
+            }
+            break;
+          case InternetStatus.disconnected:
+            debugPrint('Internet connection lost. Disconnecting WebSocket.');
+            _notifyInternetLost();
+            websocketChannel?.sink.close(1000, 'Internet connection lost');
             _reconnectionTimer?.cancel();
-            _reconnectionAttempts = 0;
-            _attemptReconnection(
-              onConnectionSuccess: onConnectionSuccess,
-              onConnectionFailed: onConnectionFailed,
-              onConnectionClosed: onConnectionClosed,
-              onConnectionError: onConnectionError,
-              onMessageReceived: onMessageReceived,
-              codec: codec,
-            );
-          }
-          break;
-        case InternetStatus.disconnected:
-          debugPrint('Internet connection lost. Disconnecting WebSocket.');
-          _notifyInternetLost();
-          websocketChannel?.sink.close(1000, 'Internet connection lost');
-          _reconnectionTimer?.cancel();
-          wsConnectionState = WebsocketConnectionStatus.notConnected;
-          onConnectionClosed(1000, 'Internet connection lost');
-          break;
-      }
-    });
+            wsConnectionState = WebsocketConnectionStatus.notConnected;
+            onConnectionClosed(1000, 'Internet connection lost');
+            break;
+        }
+      });
+      _internetListenerSetup = true;
+    }
   }
 
   void _scheduleReconnection({
@@ -275,6 +279,12 @@ mixin WebSocketMixin {
   }
 
   void closeWebSocket() {
+    // Ensure that the internet listener is set up before attempting to close the WebSocket
+    if (!_internetListenerSetup) {
+      debugPrint("Internet Listener is not set up yet");
+      return; // Or handle it by setting it up here
+    }
+
     websocketChannel?.sink.close(1000);
     _reconnectionTimer?.cancel();
     _internetListener.cancel();

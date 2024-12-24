@@ -3,7 +3,14 @@ import 'package:avm/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class TypingIndicator extends StatefulWidget {
-  const TypingIndicator({super.key});
+  final double? dotWidth;
+  final double? dotHeight;
+
+  const TypingIndicator({
+    super.key,
+    this.dotWidth,
+    this.dotHeight,
+  });
 
   @override
   TypingIndicatorState createState() => TypingIndicatorState();
@@ -51,17 +58,26 @@ class TypingIndicatorState extends State<TypingIndicator>
       children: [
         FadeTransition(
           opacity: _animation1,
-          child: const Dot(),
+          child: Dot(
+            width: widget.dotWidth,
+            height: widget.dotHeight,
+          ),
         ),
         w5,
         FadeTransition(
           opacity: _animation2,
-          child: const Dot(),
+          child: Dot(
+            width: widget.dotWidth,
+            height: widget.dotHeight,
+          ),
         ),
         w5,
         FadeTransition(
           opacity: _animation3,
-          child: const Dot(),
+          child: Dot(
+            width: widget.dotWidth,
+            height: widget.dotHeight,
+          ),
         ),
       ],
     );
@@ -69,13 +85,16 @@ class TypingIndicatorState extends State<TypingIndicator>
 }
 
 class Dot extends StatelessWidget {
-  const Dot({super.key});
+final double? width;
+  final double? height;
+
+  const Dot({super.key, this.width, this.height});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 7.5,
-      height: 7.5,
+      width: width ?? 7.5,
+      height: height ?? 7.5,
       decoration: const BoxDecoration(
         shape: BoxShape.circle,
         color: AppColors.grey,

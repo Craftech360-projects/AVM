@@ -330,6 +330,7 @@ class CapturePageState extends State<CapturePage>
     }
     audioStorage?.clearAudioBytes();
     setHasTranscripts(false);
+    print("setHasTranscripts(false) called");
     currentTranscriptStartedAt = null;
     currentTranscriptFinishedAt = null;
     elapsedSeconds = 0;
