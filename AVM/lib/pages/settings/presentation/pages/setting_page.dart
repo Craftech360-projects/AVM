@@ -1,3 +1,5 @@
+import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
@@ -69,11 +71,55 @@ class _SettingPageState extends State<SettingPage> {
             child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
               children: [
+                // CustomListTile(
+                //   onTap: () {
+                //     if (widget.device != null) {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) => ConnectedDevice(
+                //             device: widget.device,
+                //             batteryLevel: widget.batteryLevel,
+                //           ),
+                //         ),
+                //       );
+                //     } else {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (context) => FindDevicesPage(
+                //             goNext: () {},
+                //           ),
+                //         ),
+                //       );
+                //     }
+                //   },
+                //   title: Text(
+                //     widget.batteryLevel > 0
+                //         ? 'Battery Level: ${widget.batteryLevel}%'
+                //         : 'Device not connected',
+                //     style: const TextStyle(fontWeight: FontWeight.w500),
+                //   ),
+                //   trailing: const CircleAvatar(
+                //     backgroundColor: AppColors.greyLavender,
+                //     child: Icon(Icons.bluetooth_searching),
+                //   ),
+                // ),
                 CustomListTile(
                   onTap: () {
-                    if (widget.device != null) {
-                      Navigator.push(
-                        context,
+                    print('Battery Level: ${widget.batteryLevel}');
+                    print('Device: ${widget.device}');
+                    var deviceId =
+                        widget.device?.id ?? SharedPreferencesUtil().deviceId;
+                    var deviceName = widget.device?.name ??
+                        SharedPreferencesUtil().deviceName;
+                    var deviceConnected = widget.device != null;
+                    print('Device ID: $deviceId');
+                    print('Device Name: $deviceName');
+                    print('Device Connected: $deviceConnected');
+
+                    if (SharedPreferencesUtil().deviceId.isNotEmpty) {
+                      Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => ConnectedDevice(
                             device: widget.device,
@@ -81,26 +127,51 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                         ),
                       );
+                      MixpanelManager().batteryIndicatorClicked();
                     } else {
-                      Navigator.push(
-                        context,
+                      Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => FindDevicesPage(
                             goNext: () {},
                           ),
+                          // const ConnectDevicePage(),
                         ),
                       );
+                      MixpanelManager().connectFriendClicked();
                     }
                   },
-                  title: Text(
-                    widget.batteryLevel > 0
-                        ? 'Battery Level: ${widget.batteryLevel}%'
-                        : 'Device not connected',
-                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  title: Row(
+                    children: [
+                      if (widget.batteryLevel > 0) ...[
+                        Icon(
+                          Icons.bolt,
+                          color: widget.batteryLevel > 75
+                              ? const Color.fromARGB(255, 0, 255, 8)
+                              : widget.batteryLevel > 20
+                                  ? Colors.yellow.shade700
+                                  : Colors.red,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                      Text(
+                        widget.batteryLevel > 0
+                            ? 'Battery Level: ${widget.batteryLevel}%'
+                            : 'Device not connected',
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                    ],
                   ),
-                  trailing: const CircleAvatar(
+                  trailing: CircleAvatar(
                     backgroundColor: AppColors.greyLavender,
-                    child: Icon(Icons.bluetooth_searching),
+                    child: Icon(
+                      widget.batteryLevel > 0
+                          ? Icons.battery_full
+                          : Icons.bluetooth_searching,
+                      color: widget.batteryLevel > 20
+                          ? const Color.fromARGB(255, 0, 255, 8)
+                          : Colors.red,
+                    ),
                   ),
                 ),
                 h15,

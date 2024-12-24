@@ -12,7 +12,7 @@ dependencies:
   awesome_notifications: ^0.10.0
   awesome_notifications_core: ^0.10.0
   bloc: ^8.1.4
-  collection: ^1.19.0
+  collection: 1.19.0
   connectivity_plus: ^6.1.1
   crypto: ^3.0.6
   deepgram_speech_to_text: ^2.1.1

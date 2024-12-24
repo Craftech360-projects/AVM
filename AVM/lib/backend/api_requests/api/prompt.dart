@@ -2,8 +2,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:avm/backend/api_requests/api/llm.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/message.dart';
@@ -11,6 +9,8 @@ import 'package:avm/backend/database/prompt_provider.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/plugin.dart';
 import 'package:avm/utils/other/string_utils.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
 class SummaryResult {
@@ -78,7 +78,7 @@ Future<SummaryResult> summarizeMemory(
   if (transcript.isEmpty || transcript.split(' ').length < 7) {
     return SummaryResult(Structured('', ''), []);
   }
-  if (transcript.split(' ').length > 100) {
+  if (transcript.split(' ').length > 15) {
     // try lower count?
     forceProcess = true;
   }
@@ -286,33 +286,29 @@ Future<List<String>> getSemanticSummariesForEmbedding(String transcript) async {
 
 Future<String> generateFriendlyReply(String transcript) async {
   var prompt = '''
-  Please analyze the following transcript and generate a friendly and engaging reply as if you were a close friend. 
-  The reply should be supportive, empathetic, and conversational. Make sure to address any concerns or questions raised in the transcript, 
-  and provide encouragement or advice where appropriate. Keep the tone casual and friendly.
-  
-  Example Transcript:
-  Speaker 1: Hi, how are you doing today?
-  Speaker 2: I'm good, thanks. I wanted to discuss our plans for the upcoming project.
-  Speaker 1: Sure, let's dive in.
-  Speaker 2: First, we need to outline the key deliverables and timelines. I think the initial prototype should be ready by the end of next month.
-  Speaker 1: That sounds reasonable. What about the budget? Do we have an estimate yet?
-  Speaker 2: We're looking at around \$50,000 for the initial phase. This includes development, testing, and some marketing.
-  Speaker 1: We should also consider potential risks, like delays in development or additional costs for unforeseen issues.
-  Speaker 2: Definitely. We need a risk management plan to address these possibilities.
-  ...
-  Speaker 1: That’s a good point. We should also consider the budget implications.
-  
-  Example of Desired Output:
-  Hey there! It sounds like you have a solid plan for the upcoming project. Getting the prototype ready by the end of next month is a great goal. 
-  The budget estimate of \$50,000 seems reasonable, and it's smart to include development, testing, and marketing costs. 
-  I totally agree that considering potential risks and having a risk management plan is crucial. Keep up the great work, and don't hesitate to reach out if you need any help!
-  
-  Respond in a JSON format with the following structure:
+  You are his close friend. Your task is to provide friendly, funny and personalized comments on the conversation.
+Here are some guidelines to follow
+- Be informal, use humour, and make it personal, share your thoughts just like a good friend would.
+- Do not write in a formal tone, write as if you are talking to a friend, (use lowercase, slang, etc.).
+- Speak Directly to  him - no analysis or third-person commentary
+- Keep it under 300 chars
+- Use simple, everyday words  like you're talking to a friend
+- Reference specific details from what the user said
+- Be positive, supportive, and encouraging and don't be crying or overly emotional 
+- be chill and relaxed, like you're having a casual conversation 
+- respond like humans in a real conversation, not  like a robot
+- you can also use some slight humour, sarcasm, teasing or light, funny insults if it fits the context
+- you may also criticize or disagree with the user, but do it in a friendly, non -judgemental way
+- make sure not to get the user down or make them feel bad
+- do not ask any questions since you will not be able to understand the context in the next request
+- You can  keep it short if you want to, sometimes a short response is better
+
+Respond in a JSON format with the following structure:
   {
     "reply": "Desired Output"
   }
   
-  Transcript:
+  his conversation is:
   $transcript
   '''
       .replaceAll('  ', '')

@@ -1,11 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:avm/backend/api_requests/api/server.dart';
 import 'package:avm/backend/api_requests/cloud_storage.dart';
 import 'package:avm/backend/database/memory.dart';
@@ -17,6 +12,7 @@ import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/backend/schema/plugin.dart';
 import 'package:avm/core/assets/app_images.dart';
+import 'package:avm/features/capture/logic/websocket_mixin.dart';
 import 'package:avm/features/capture/presentation/capture_page.dart';
 import 'package:avm/features/chat/bloc/chat_bloc.dart';
 import 'package:avm/features/chat/presentation/chat_screen.dart';
@@ -34,6 +30,11 @@ import 'package:avm/utils/features/backups.dart';
 import 'package:avm/utils/other/notifications.dart';
 import 'package:avm/widgets/navbar.dart';
 import 'package:avm/widgets/upgrade_alert.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -47,7 +48,7 @@ class HomePageWrapper extends StatefulWidget {
 }
 
 class _HomePageWrapperState extends State<HomePageWrapper>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
+    with WidgetsBindingObserver, TickerProviderStateMixin, WebSocketMixin {
   ForegroundUtil foregroundUtil = ForegroundUtil();
   TabController? _controller;
   late bool _isLoading;
@@ -214,10 +215,16 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           setState(() => _device = null);
           InstabugLog.logInfo('AVM Device Disconnected');
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
-            createNotification(
-              title: 'AVM Device Disconnected',
-              body: 'Please reconnect to continue using your AVM.',
-            );
+            if (SharedPreferencesUtil().showDisconnectionNotification) {
+              print('Show Disconnection Notification: true');
+              createNotification(
+                title: 'AVM Device Disconnected',
+                body: 'Please reconnect to continue using your AVM.',
+              );
+              SharedPreferencesUtil().showDisconnectionNotification = false;
+            } else {
+              print('Show Disconnection Notification: false');
+            }
           }
           MixpanelManager().deviceDisconnected();
           foregroundUtil.stopForegroundTask();
@@ -234,7 +241,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   }
 
   _onConnected(BTDeviceStruct? connectedDevice,
-      {bool initiateConnectionListener = true}) {
+      {bool initiateConnectionListener = true}) async {
     debugPrint('_onConnected: $connectedDevice');
     if (connectedDevice == null) return;
     clearNotification(1);
@@ -246,6 +253,23 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     MixpanelManager().deviceConnected();
     SharedPreferencesUtil().deviceId = _device!.id;
     SharedPreferencesUtil().deviceName = _device!.name;
+
+    // Mark "Show Disconnection Notification" as true
+    SharedPreferencesUtil().showDisconnectionNotification = true;
+    // closeWebSocket();
+    // await initWebSocket(
+    //   onConnectionClosed: (int? closeCode, String? closeReason) {
+    //     setState(() {});
+    //   },
+    //   onConnectionSuccess: () {
+    //     setState(() {});
+    //   },
+    //   onConnectionError: (p1) {},
+    //   onConnectionFailed: (p1) {},
+    //   onMessageReceived: (List<TranscriptSegment> p1) {},
+    // );
+    //print('WebSocket Connected');
+
     _startForeground();
     setState(() {
       _device = connectedDevice;

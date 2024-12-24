@@ -15,10 +15,9 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      appBar: AppBar(
-        title: const Text('Connect Your AVM'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Connect Your AVM'),
+      // ),
       body: Center(
         child: SingleChildScrollView(
           child: Column(

@@ -20,6 +20,7 @@ class SharedPreferencesUtil {
     _preferences = await SharedPreferences.getInstance();
   }
 
+
   set uid(String value) => saveString('uid', value);
 
   String get uid => getString('uid') ?? '';
@@ -27,6 +28,14 @@ class SharedPreferencesUtil {
   set deviceId(String value) => saveString('deviceId', value);
 
   String get deviceId => getString('deviceId') ?? '';
+
+  //show device disconnect notification
+bool get showDisconnectionNotification =>
+    getBool('showDisconnectionNotification') ?? false;
+
+set showDisconnectionNotification(bool value) =>
+    saveBool('showDisconnectionNotification', value);
+
 
   // Notification Permission Tracking
   set notificationPermissionRequested(bool value) =>
