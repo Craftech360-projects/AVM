@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:friend_private/backend/auth.dart';
 import 'package:friend_private/backend/preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:instabug_http_client/instabug_http_client.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
@@ -46,14 +47,14 @@ Future<http.Response?> makeApiCall({
     } else {
       throw Exception('Unsupported HTTP method: $method');
     }
-  } catch (e) {
+  } catch (e, stackTrace) {
     debugPrint('HTTP request failed: $e');
-    // CrashReporting.reportHandledCrash(
-    //   e,
-    //   stackTrace,
-    //   userAttributes: {'url': url, 'method': method},
-    //   level: NonFatalExceptionLevel.warning,
-    // );
+    CrashReporting.reportHandledCrash(
+      e,
+      stackTrace,
+      userAttributes: {'url': url, 'method': method},
+      level: NonFatalExceptionLevel.warning,
+    );
     return null;
   } finally {}
 }

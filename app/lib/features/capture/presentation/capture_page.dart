@@ -156,9 +156,7 @@ class CapturePageState extends State<CapturePage>
         debugPrint(
             'Memory creation timer restarted........notification pluign acive  status..,$isNotificationEnabled');
         _memoryCreationTimer?.cancel();
-        // _memoryCreationTimer = Timer(
-        //     Duration(seconds: quietSecondsForMemoryCreation),
-        //     () => _createMemory());
+      
         bool notificationPluginValue = await getNotificationPluginValue();
         print("notificationPluginValue, $notificationPluginValue");
         if (notificationPluginValue) {
