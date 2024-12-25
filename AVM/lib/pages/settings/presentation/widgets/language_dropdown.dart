@@ -1,3 +1,4 @@
+import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,12 +34,14 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
-        color: AppColors.greyLavender,
-        borderRadius: BorderRadius.circular(12),
+        color: AppColors.commonPink,
+        borderRadius: br8,
       ),
       child: DropdownButtonHideUnderline(
         // This removes the underline
         child: DropdownButtonFormField<String>(
+          borderRadius: br8,
+          dropdownColor: AppColors.white,
           value: selectedLanguage,
           items: languages.map((e) {
             return DropdownMenuItem<String>(
@@ -57,13 +60,10 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
               selectedLanguage = value ?? selectedLanguage;
             });
           },
-          isDense: true,
           isExpanded: true,
           decoration: const InputDecoration(
-            contentPadding: EdgeInsets.zero,
             border: InputBorder.none,
           ),
-          dropdownColor: AppColors.white,
         ),
       ),
     );

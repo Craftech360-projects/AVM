@@ -7,7 +7,6 @@ class CustomExpansionTile extends StatefulWidget {
   final String title;
   final String? subtitle;
   final List<Widget> children;
-
   final Color expandedColor;
   final BorderRadiusGeometry borderRadius;
 
@@ -52,12 +51,11 @@ class CustomExpansionTileState extends State<CustomExpansionTile>
         borderRadius: widget.borderRadius,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          color: _isExpanded ? widget.expandedColor : AppColors.white,
+          color: _isExpanded ? widget.expandedColor : AppColors.commonPink,
           child: Column(
             children: [
               ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                // leading: widget.leadingIcon, // Leading icon
+                contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
                 title: Text(
                   widget.title,
                   style: TextStyle(
@@ -81,11 +79,8 @@ class CustomExpansionTileState extends State<CustomExpansionTile>
                 onTap: _handleTap,
               ),
               if (_isExpanded)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: widget.children,
-                  ),
+                Column(
+                  children: widget.children,
                 ),
             ],
           ),

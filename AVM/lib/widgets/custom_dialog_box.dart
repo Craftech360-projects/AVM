@@ -62,7 +62,6 @@ Future<bool> customDialogBox(BuildContext context,
           },
           icon: const Icon(Icons.close, color: AppColors.white),
           label: const Text('No'),
-       
         ),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -150,6 +149,10 @@ class CustomDialogWidget extends StatelessWidget {
   final IconData icon;
   final VoidCallback? yesPressed;
   final Color? iconColor;
+  final bool showTextField;
+  final TextEditingController? textFieldController;
+  final String? yesText;
+  final String? noText;
 
   const CustomDialogWidget({
     super.key,
@@ -157,6 +160,10 @@ class CustomDialogWidget extends StatelessWidget {
     required this.message,
     required this.icon,
     this.yesPressed,
+    this.textFieldController,
+    this.yesText,
+    this.noText,
+    this.showTextField = false,
     this.iconColor,
   });
 
@@ -164,7 +171,7 @@ class CustomDialogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: br12,
       ),
       backgroundColor: AppColors.white,
       title: FittedBox(
@@ -195,6 +202,28 @@ class CustomDialogWidget extends StatelessWidget {
               color: AppColors.blueGreyDark,
             ),
           ),
+          if (showTextField) ...[
+            h10,
+            TextField(
+              cursorColor: AppColors.black,
+              style: TextStyle(color: AppColors.white),
+              controller: textFieldController,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: AppColors.blueGreyDark.withValues(alpha: 0.5),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                border: OutlineInputBorder(
+                  borderRadius: br8,
+                  borderSide: BorderSide.none,
+                ),
+                hintText: 'Your name here...',
+                hintStyle: TextStyle(
+                  color: AppColors.white,
+                ),
+              ),
+            ),
+          ],
           h10,
         ],
       ),
@@ -202,6 +231,8 @@ class CustomDialogWidget extends StatelessWidget {
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+            minimumSize: const Size(60, 40),
             backgroundColor: AppColors.red,
             foregroundColor: AppColors.white,
             shape: RoundedRectangleBorder(
@@ -211,11 +242,16 @@ class CustomDialogWidget extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: const Icon(Icons.close, color: AppColors.white),
-          label: const Text('No'),
+          icon: const Icon(Icons.close, color: AppColors.white, size: 17),
+          label: Text(
+            noText ?? 'No',
+            style: TextStyle(fontSize: 13),
+          ),
         ),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+            minimumSize: const Size(80, 40),
             backgroundColor: AppColors.green,
             foregroundColor: AppColors.white,
             shape: RoundedRectangleBorder(
@@ -223,8 +259,11 @@ class CustomDialogWidget extends StatelessWidget {
             ),
           ),
           onPressed: yesPressed,
-          icon: const Icon(Icons.check, color: AppColors.white),
-          label: const Text('Yes'),
+          icon: const Icon(Icons.check, color: AppColors.white, size: 17),
+          label: Text(
+            yesText ?? 'Yes',
+            style: TextStyle(fontSize: 13),
+          ),
         ),
       ],
     );

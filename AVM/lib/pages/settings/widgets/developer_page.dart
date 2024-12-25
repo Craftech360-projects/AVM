@@ -2,12 +2,14 @@ import 'dart:developer';
 
 import 'package:avm/backend/database/prompt_provider.dart';
 import 'package:avm/backend/preferences.dart';
+import 'package:avm/core/assets/app_images.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/capture/logic/websocket_mixin.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/settings/widgets/custom_expandible_widget.dart';
 import 'package:avm/pages/settings/widgets/custom_prompt_page.dart';
+import 'package:avm/pages/settings/widgets/keywords_popup.dart';
 import 'package:flutter/material.dart';
 
 class DeveloperPage extends StatefulWidget {
@@ -24,11 +26,15 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
   String _currentKeywordStatus = '';
   bool _developerEnabled = false;
   bool _isPromptSaved = false;
+  final List<String> previouslySelected =
+      SharedPreferencesUtil().getSelectedKeywords();
+  Set<String> selectedKeywords = {};
 
   @override
   void initState() {
     super.initState();
     _loadPreferences();
+    selectedKeywords.addAll(previouslySelected);
   }
 
   void _loadPreferences() {
@@ -45,9 +51,11 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
     return CustomScaffold(
       showBackBtn: true,
       showGearIcon: true,
-      title: const Text(
-        "Developer Options",
-        style: TextStyle(fontWeight: FontWeight.w500),
+      title: Center(
+        child: const Text(
+          "Developer Options",
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
+        ),
       ),
       body: _buildBody(),
     );
@@ -89,6 +97,7 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
           Switch(
             activeTrackColor: AppColors.purpleDark,
             activeColor: AppColors.commonPink,
+            activeThumbImage: AssetImage(AppImages.appLogo),
             value: _developerEnabled,
             onChanged: _handleDeveloperModeToggle,
           ),
@@ -98,10 +107,11 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
   }
 
   Widget _buildDeveloperDescription() {
-    return const Text(
-      'By Enabling Developer Mode You can customize prompts & Transcript Services',
-      textAlign: TextAlign.start,
-      style: TextStyle(color: AppColors.greyMedium),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: const Text(
+          'By Enabling Developer Mode You can customize prompts & Transcript Services',
+          textAlign: TextAlign.center),
     );
   }
 
@@ -184,11 +194,16 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
   Widget _buildKeywordDetectionTile() {
     return CustomExpansionTile(
       title: 'Keyword Detection',
-      subtitle: _currentKeywordStatus,
+      subtitle: _currentKeywordStatus.toUpperCase(),
       children: [
-        for (final status in ['Enabled', 'Disabled'])
+        for (final status in ['ON', 'OFF'])
           ListTile(
-            title: Text(status),
+            dense: true,
+            contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+            title: Text(
+              status,
+              style: TextStyle(fontSize: 16),
+            ),
             onTap: () => updateKeywordDetectionStatus(modeSelected: status),
           ),
       ],
@@ -253,12 +268,48 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
     }
   }
 
-  void updateKeywordDetectionStatus({required String modeSelected}) {
-    SharedPreferencesUtil().updateKeywordDetectionStatus(
-        'newKeywordDetectionStatus', modeSelected);
-    setState(() {
-      _currentKeywordStatus = modeSelected;
-    });
+  void updateKeywordDetectionStatus({required String modeSelected}) async {
+    if (modeSelected == 'ON') {
+      final List<String>? userSelectedKeywords = await showDialog<List<String>>(
+        context: context,
+        builder: (context) =>
+            KeywordsDialog(initialSelectedKeywords: selectedKeywords),
+      );
+
+      // Check if user selected keywords and saved
+      if (userSelectedKeywords != null && userSelectedKeywords.isNotEmpty) {
+        // Save selected keywords to preferences
+        final keywordStatusSaved =
+            await SharedPreferencesUtil().updateKeywordDetectionStatus(
+          'newKeywordDetectionStatus',
+          modeSelected,
+        );
+
+        await SharedPreferencesUtil().preferences?.setStringList(
+              'selectedKeywords',
+              userSelectedKeywords,
+            );
+
+        if (keywordStatusSaved) {
+          setState(() {
+            _currentKeywordStatus = modeSelected;
+            selectedKeywords = userSelectedKeywords.toSet();
+          });
+        }
+      } else {
+        // Do not enable if no keywords selected
+        return;
+      }
+    } else {
+      // Disable keyword detection
+      await SharedPreferencesUtil().updateKeywordDetectionStatus(
+        'newKeywordDetectionStatus',
+        modeSelected,
+      );
+      setState(() {
+        _currentKeywordStatus = modeSelected;
+      });
+    }
   }
 
   @override

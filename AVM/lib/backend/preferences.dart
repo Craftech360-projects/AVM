@@ -9,6 +9,7 @@ class SharedPreferencesUtil {
   static final SharedPreferencesUtil _instance =
       SharedPreferencesUtil._internal();
   static SharedPreferences? _preferences;
+  SharedPreferences? get preferences => _preferences;
 
   factory SharedPreferencesUtil() {
     return _instance;
@@ -228,6 +229,7 @@ class SharedPreferencesUtil {
   String? getString(String key) {
     return _preferences?.getString(key);
   }
+
   //Bot Notification Plugin
   bool get notificationPlugin => getBool('notificationPlugin') ?? false;
   set notificationPlugin(bool value) => saveBool('notificationPlugin', value);
@@ -265,12 +267,21 @@ class SharedPreferencesUtil {
   }
 
   String getCodecType(String key) {
-  return _preferences?.getString(key) ?? 'opus';
-}
+    return _preferences?.getString(key) ?? 'opus';
+  }
 
-String getKeywordDetectionStatus(String key) {
-  return _preferences?.getString(key) ?? 'off';
-}
+  String getKeywordDetectionStatus(String key) {
+    return _preferences?.getString(key) ?? 'off';
+  }
+
+  Future<bool> saveSelectedKeywords(List<String> keywords) async {
+    return await _preferences?.setStringList('selectedKeywords', keywords) ??
+        false;
+  }
+
+  List<String> getSelectedKeywords() {
+    return _preferences?.getStringList('selectedKeywords') ?? [];
+  }
 
   Future<bool> saveDouble(String key, double value) async {
     return await _preferences?.setDouble(key, value) ?? false;

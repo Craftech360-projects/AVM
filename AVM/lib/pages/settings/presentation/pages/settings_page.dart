@@ -99,7 +99,7 @@ class _SettingPageState extends State<SettingPage> {
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   trailing: const CircleAvatar(
-                    backgroundColor: AppColors.greyLavender,
+                    backgroundColor: AppColors.commonPink,
                     child: Icon(Icons.bluetooth_searching),
                   ),
                 ),

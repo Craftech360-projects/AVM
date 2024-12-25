@@ -76,6 +76,9 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                     ),
                     w10,
                     Switch(
+                      activeTrackColor: AppColors.purpleDark,
+                      activeColor: AppColors.commonPink,
+                      activeThumbImage: AssetImage(AppImages.appLogo),
                       value: _switchValue,
                       onChanged: (value) {
                         SharedPreferencesUtil().notificationPlugin = value;

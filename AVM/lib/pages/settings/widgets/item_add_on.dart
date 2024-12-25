@@ -43,7 +43,7 @@ class ItemAddOn extends StatelessWidget {
                   child: const Center(
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: AppColors.grey,
+                      color: AppColors.black,
                       size: 16,
                     ),
                   ),
