@@ -224,6 +224,7 @@ class CapturePageState extends State<CapturePage>
   }
 
   Future<void> initiateBytesStreamingProcessing() async {
+    print('initiateBytesStreamingProcessing');
     if (btDevice == null) return;
     BleAudioCodec codec = await getAudioCodec(btDevice!.id);
     audioStorage = WavBytesUtil(codec: codec);
@@ -276,6 +277,7 @@ class CapturePageState extends State<CapturePage>
   void restartWebSocket() {
     closeWebSocket();
     initiateWebsocket();
+    initiateBytesStreamingProcessing();
   }
 
   void sendMessageToChat(Message message, Memory? memory) {

@@ -134,7 +134,6 @@ mixin WebSocketMixin {
     required Function(List<TranscriptSegment>) onMessageReceived,
     required BleAudioCodec codec,
   }) {
-    // Only set up the listener if it hasn't been set up yet
     if (!_internetListenerSetup) {
       _internetListener =
           InternetConnection().onStatusChange.listen((InternetStatus status) {
@@ -213,7 +212,7 @@ mixin WebSocketMixin {
       );
     });
     if (_reconnectionAttempts == 4 && !_hasNotifiedUser) {
-     // _notifyReconnectionFailure();
+      // _notifyReconnectionFailure();
       _hasNotifiedUser = true;
     }
   }
@@ -278,15 +277,25 @@ mixin WebSocketMixin {
     );
   }
 
-  void closeWebSocket() {
-    // Ensure that the internet listener is set up before attempting to close the WebSocket
-    if (!_internetListenerSetup) {
-      debugPrint("Internet Listener is not set up yet");
-      return; // Or handle it by setting it up here
-    }
+  Future<void> closeWebSocket() async {
+    try {
+      if (websocketChannel != null) {
+        await websocketChannel!.sink.close(1000, 'Closed by user');
+        websocketChannel = null;
+      }
+      _reconnectionTimer?.cancel();
+      await _internetListener.cancel();
 
-    websocketChannel?.sink.close(1000);
-    _reconnectionTimer?.cancel();
-    _internetListener.cancel();
+      // Reset connection state and variables
+      wsConnectionState = WebsocketConnectionStatus.notConnected;
+      websocketReconnecting = false;
+      _reconnectionAttempts = 0;
+      _isConnecting = false;
+      _hasNotifiedUser = false;
+
+      debugPrint('WebSocket connection closed successfully');
+    } catch (e) {
+      debugPrint('Error closing WebSocket connection: $e');
+    }
   }
 }

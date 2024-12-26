@@ -122,7 +122,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     );
 
     await channel.ready;
-    await channel.ready;
 
     // KeepAlive mechanism
     Timer? keepAliveTimer;
