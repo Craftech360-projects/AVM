@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:avm/backend/api_requests/api/other.dart';
-import 'package:avm/backend/api_requests/api/pinecone.dart';
+//import 'package:avm/backend/api_requests/api/pinecone.dart';
 import 'package:avm/backend/api_requests/api/prompt.dart';
 import 'package:avm/backend/api_requests/api/random_memory_img.dart';
 import 'package:avm/backend/database/geolocation.dart';
@@ -413,8 +413,7 @@ Future<Memory> finalizeMemoryRecord(
 
     // Add geolocation to memory
     memory.geolocation.target = geolocation;
-  } else {
-  }
+  } else {}
 
   // Add transcript segments
   memory.transcriptSegments.addAll(transcriptSegments);
@@ -444,11 +443,11 @@ Future<Memory> finalizeMemoryRecord(
   }
 
   // Process embeddings if not discarded
-  if (!discarded) {
-    getEmbeddingsFromInput(structured.toString()).then((vector) {
-      upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
-    });
-  }
+  // if (!discarded) {
+  //   getEmbeddingsFromInput(structured.toString()).then((vector) {
+  //     upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
+  //   });
+  // }
 
   // Optionally, track the memory creation
   // MixpanelManager().memoryCreated(memory);

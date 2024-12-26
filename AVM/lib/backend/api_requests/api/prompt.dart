@@ -78,7 +78,7 @@ Future<SummaryResult> summarizeMemory(
   if (transcript.isEmpty || transcript.split(' ').length < 7) {
     return SummaryResult(Structured('', ''), []);
   }
-  if (transcript.split(' ').length > 15) {
+  if (transcript.split(' ').length > 6) {
     // try lower count?
     forceProcess = true;
   }

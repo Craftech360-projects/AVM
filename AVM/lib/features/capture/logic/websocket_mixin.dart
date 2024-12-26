@@ -23,7 +23,7 @@ mixin WebSocketMixin {
   final int _maxReconnectDelay = 60;
   bool _isConnecting = false;
 
-  // final int _maxReconnectionAttempts = 3;
+  final int _maxReconnectionAttempts = 3;
   bool _hasNotifiedUser = false;
   bool _internetListenerSetup = false;
 
@@ -189,13 +189,13 @@ mixin WebSocketMixin {
     websocketReconnecting = true;
     _reconnectionAttempts++;
 
-    // if reconnection limits
-    // if (_reconnectionAttempts > _maxReconnectionAttempts) {
-    //   debugPrint('Max reconnection attempts reached');
-    //   _notifyReconnectionFailure();
-    //   websocketReconnecting = false;
-    //   return;
-    // }
+    //if reconnection limits
+    if (_reconnectionAttempts > _maxReconnectionAttempts) {
+      // debugPrint('Max reconnection attempts reached');
+      // _notifyReconnectionFailure();
+      websocketReconnecting = false;
+      return;
+    }
 
     int delaySeconds = _calculateReconnectDelay();
     debugPrint(
@@ -213,7 +213,7 @@ mixin WebSocketMixin {
       );
     });
     if (_reconnectionAttempts == 4 && !_hasNotifiedUser) {
-      _notifyReconnectionFailure();
+     // _notifyReconnectionFailure();
       _hasNotifiedUser = true;
     }
   }

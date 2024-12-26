@@ -49,7 +49,6 @@ Future<bool> executeBackupWithUid({String? uid}) async {
 Future<bool> executeManualBackupWithUid(uid) async {
   if (!SharedPreferencesUtil().backupsEnabled) return false;
 
-
   var memories = MemoryProvider().getMemories();
 
   if (memories.isEmpty) return true;
@@ -134,7 +133,6 @@ Future<List<Memory>> restoreFromBackup(
 }
 
 Future<bool> retrieveBackup(String? uid) async {
-
   try {
     final googleDriveService = GoogleDriveService();
     final backupData = await googleDriveService.restoreFromGoogleDrive();

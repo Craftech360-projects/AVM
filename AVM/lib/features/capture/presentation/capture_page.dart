@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:avm/backend/api_requests/api/prompt.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/message.dart';
@@ -302,23 +303,41 @@ class CapturePageState extends State<CapturePage>
       sendMessageToChat: sendMessageToChat,
     );
 
-    if (memory != null && !memory.discarded) executeBackupWithUid();
+    // if (memory != null && !memory.discarded) executeBackupWithUid();
     context
         .read<MemoryBloc>()
         .add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
     if (!memory.discarded &&
         SharedPreferencesUtil().postMemoryNotificationIsChecked) {
+      debugPrint('Memory is not discarded and notifications are enabled.');
+
+      // Log memory details
+      debugPrint('Memory Details: ${memory.toString()}');
+
       postMemoryCreationNotification(memory).then((r) {
+        debugPrint('Notification response received: $r');
         // this should be a plugin instead.
-        debugPrint('Notification response: $r');
-        if (r.isEmpty) return;
-        sendMessageToChat(Message(DateTime.now(), r, 'ai'), memory);
+
+        if (r.isEmpty) {
+          debugPrint('Notification response is empty. Exiting.');
+          return;
+        }
+        debugPrint('Sending message to chat with response: $r');
+        sendMessageToChat(
+          Message(DateTime.now(), r, 'ai'),
+          memory,
+        );
+
+        debugPrint('Creating notification with title and body.');
         createNotification(
           notificationId: 2,
           title:
               'New Memory Created! ${memory?.structured.target?.getEmoji() ?? ''}',
           body: r,
         );
+      }).catchError((error) {
+        // Log any errors that occur during the notification process
+        debugPrint('Error during postMemoryCreationNotification: $error');
       });
     }
 
