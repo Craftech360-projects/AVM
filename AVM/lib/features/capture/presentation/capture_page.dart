@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:avm/backend/api_requests/api/prompt.dart';
 import 'package:avm/backend/database/memory.dart';
@@ -8,6 +9,7 @@ import 'package:avm/backend/database/message_provider.dart';
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
+import 'package:avm/core/constants/constants.dart';
 import 'package:avm/features/capture/logic/openglass_mixin.dart';
 import 'package:avm/features/capture/presentation/capture_memory_page.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
@@ -60,12 +62,12 @@ class CapturePageState extends State<CapturePage>
 
   BTDeviceStruct? btDevice;
   bool _hasTranscripts = false;
-  static const defaultQuietSecondsForMemoryCreation = 60;
-
-  List<TranscriptSegment> segments = [];
   static final isNotificationEnabled =
       SharedPreferencesUtil().notificationPlugin;
-  int quietSecondsForMemoryCreation = isNotificationEnabled ? 10 : 60;
+  int quietSecondsForMemoryCreation = isNotificationEnabled ? 15 : 60;
+
+  List<TranscriptSegment> segments = [];
+
   StreamSubscription? _bleBytesStream;
   WavBytesUtil? audioStorage;
 
@@ -77,6 +79,7 @@ class CapturePageState extends State<CapturePage>
 
   InternetStatus? _internetStatus;
 
+  late StreamSubscription<InternetStatus> _internetListener;
   bool isGlasses = false;
   String conversationId =
       const Uuid().v4(); // used only for transcript segment plugins
@@ -85,63 +88,25 @@ class CapturePageState extends State<CapturePage>
   DateTime? firstStreamReceivedAt;
   int? secondsMissedOnReconnect;
 
-  ScaffoldMessengerState? _scaffoldMessenger;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _scaffoldMessenger = ScaffoldMessenger.of(context);
-  }
-
   Future<bool> getNotificationPluginValue() async {
     // Implement the logic to get the notification plugin value
     return SharedPreferencesUtil().notificationPlugin;
   }
 
-  void _pluginNotification() async {
-    String transcript = TranscriptSegment.segmentsAsString(segments);
-    // Replace with actual transcript
-    String friendlyReplyJson = await generateFriendlyReply(transcript);
-    var friendlyReplyMap = jsonDecode(friendlyReplyJson);
-    debugPrint(friendlyReplyMap.toString());
-    String friendlyReply =
-        friendlyReplyMap['reply'] ?? 'Default friendly reply';
-    // createNotification(
-    //   title: 'Notification Title',
-    //   body: friendlyReply,
-    //   notificationId: 10,
-    // );
-    createMessagingNotification('AVM', friendlyReply);
-
-    await widget.refreshMemories();
-    SharedPreferencesUtil().transcriptSegments = [];
-    segments = [];
-    if (mounted) {
-      setState(() => memoryCreating = false);
-    }
-    audioStorage?.clearAudioBytes();
-    setHasTranscripts(false);
-
-    currentTranscriptStartedAt = null;
-    currentTranscriptFinishedAt = null;
-    elapsedSeconds = 0;
-
-    streamStartedAtSecond = null;
-    firstStreamReceivedAt = null;
-    secondsMissedOnReconnect = null;
-    photos = [];
-    conversationId = const Uuid().v4();
-  }
-
   Future<void> initiateWebsocket(
       [BleAudioCodec? audioCodec, int? sampleRate]) async {
+    debugPrint("Entered Web Socket");
     // this will not work with opus for now, more complexity, unneeded rn
     BleAudioCodec codec = BleAudioCodec.pcm8;
-
+    // ?
+    // : await getAudioCodec(btDevice!.id)
+    // );
     await initWebSocket(
       codec: codec,
       sampleRate: sampleRate,
       onConnectionSuccess: () {
+        debugPrint(
+            "====> WEB SOCKET Connection Success>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         if (segments.isNotEmpty) {
           debugPrint("====> Segment Not Empty");
           // means that it was a reconnection, so we need to reset
@@ -149,30 +114,23 @@ class CapturePageState extends State<CapturePage>
           secondsMissedOnReconnect =
               (DateTime.now().difference(firstStreamReceivedAt!).inSeconds);
         }
-        if (mounted) {
-          setState(() {});
-        }
+        setState(() {});
       },
-      onConnectionFailed: (err) {
-        if (mounted) {
-          setState(() {
-            debugPrint("====> Connection Failed");
-          });
-        }
-      },
+      onConnectionFailed: (err) => setState(() {
+        debugPrint("====> Connection Failed");
+      }),
       onConnectionClosed: (int? closeCode, String? closeReason) {
         debugPrint("====> Connection Closed");
-        if (mounted) {
-          setState(() {});
-        }
+        // connection was closed, either on resetState, or by backend, or by some other reason.
+        setState(() {});
       },
       onConnectionError: (err) {
         debugPrint("====> Connection Error");
-        if (mounted) {
-          setState(() {});
-        }
+        // connection was okay, but then failed.
+        setState(() {});
       },
       onMessageReceived: (List<TranscriptSegment> newSegments) async {
+        debugPrint("====> Message Received");
         if (newSegments.isEmpty) return;
 
         if (segments.isEmpty) {
@@ -195,13 +153,18 @@ class CapturePageState extends State<CapturePage>
             sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
+        debugPrint(
+            'Memory creation timer restarted........notification pluign acive  status..,$isNotificationEnabled');
         _memoryCreationTimer?.cancel();
 
         bool notificationPluginValue = await getNotificationPluginValue();
+        print("notificationPluginValue, $notificationPluginValue");
         if (notificationPluginValue) {
+          print("notification plugin active");
           _memoryCreationTimer =
-              Timer(Duration(seconds: 10), () => _pluginNotification());
+              Timer(Duration(seconds: 15), () => _PluginNotification());
         } else {
+          print("memory creation plugin active");
           _memoryCreationTimer = Timer(
             Duration(seconds: 60),
             () => _createMemory(),
@@ -216,15 +179,48 @@ class CapturePageState extends State<CapturePage>
             curve: Curves.easeOut,
           );
         }
-        if (mounted) {
-          setState(() {});
-        }
+        setState(() {});
       },
     );
   }
 
+  void _PluginNotification() async {
+    String transcript = TranscriptSegment.segmentsAsString(segments);
+    // Replace with actual transcript
+    String friendlyReplyJson = await generateFriendlyReply(transcript);
+    var friendlyReplyMap = jsonDecode(friendlyReplyJson);
+    debugPrint(friendlyReplyMap.toString());
+    String friendlyReply =
+        friendlyReplyMap['reply'] ?? 'Default friendly reply';
+    print(friendlyReply);
+    // createNotification(
+    //   title: 'Notification Title',
+    //   body: friendlyReply,
+    //   notificationId: 10,
+    // );
+    createMessagingNotification('AVM', friendlyReply);
+
+    print('Notification activated');
+    await widget.refreshMemories();
+    SharedPreferencesUtil().transcriptSegments = [];
+    segments = [];
+    setState(() => memoryCreating = false);
+    audioStorage?.clearAudioBytes();
+    setHasTranscripts(false);
+
+    currentTranscriptStartedAt = null;
+    currentTranscriptFinishedAt = null;
+    elapsedSeconds = 0;
+
+    streamStartedAtSecond = null;
+    firstStreamReceivedAt = null;
+    secondsMissedOnReconnect = null;
+    photos = [];
+    conversationId = const Uuid().v4();
+  }
+
   Future<void> initiateBytesStreamingProcessing() async {
-    print('initiateBytesStreamingProcessing');
+    debugPrint("====> Byte Streaming Initiated");
     if (btDevice == null) return;
     BleAudioCodec codec = await getAudioCodec(btDevice!.id);
     audioStorage = WavBytesUtil(codec: codec);
@@ -235,8 +231,9 @@ class CapturePageState extends State<CapturePage>
         audioStorage!.storeFramePacket(value);
         value.removeRange(0, 3);
         if (wsConnectionState == WebsocketConnectionStatus.connected) {
+          //debugPrint("Adding audio>>>>>>>>>>>>>,$value");
           websocketChannel?.sink.add(value);
-        }
+        } else {}
       },
     );
   }
@@ -262,11 +259,7 @@ class CapturePageState extends State<CapturePage>
     if (!restartBytesProcessing && (segments.isNotEmpty || photos.isNotEmpty)) {
       _createMemory(forcedCreation: true);
     }
-    if (btDevice != null) {
-      if (mounted) {
-        setState(() => this.btDevice = btDevice);
-      }
-    }
+    if (btDevice != null) setState(() => this.btDevice = btDevice);
     if (restartBytesProcessing) {
       startOpenGlass();
       initiateBytesStreamingProcessing();
@@ -277,7 +270,6 @@ class CapturePageState extends State<CapturePage>
   void restartWebSocket() {
     closeWebSocket();
     initiateWebsocket();
-    initiateBytesStreamingProcessing();
   }
 
   void sendMessageToChat(Message message, Memory? memory) {
@@ -286,86 +278,141 @@ class CapturePageState extends State<CapturePage>
     widget.refreshMessages();
   }
 
+  // _createMemory({bool forcedCreation = false}) async {
+  //   print('Creating memory');
+  //   if (memoryCreating) return;
+  //   // should clean variables here? and keep them locally?
+  //   setState(() => memoryCreating = true);
+  //   File? file;
+  //   // if (audioStorage?.frames.isNotEmpty == true) {
+  //   //   try {
+  //   //     var secs = !forcedCreation ? quietSecondsForMemoryCreation : 0;
+  //   //     file =
+  //   //         (await audioStorage!.createWavFile(removeLastNSeconds: secs)).item1;
+  //   //     uploadFile(file);
+  //   //   } catch (e) {
+  //   //     file = null; // in case was a local recording and not a BLE recording
+  //   //   }
+  //   // }
+  //   Memory? memory = await processTranscriptContent(
+  //     context,
+  //     TranscriptSegment.segmentsAsString(segments),
+  //     segments,
+  //     file?.path ?? '',
+  //     startedAt: currentTranscriptStartedAt,
+  //     finishedAt: currentTranscriptFinishedAt,
+  //     geolocation: await LocationService().getGeolocationDetails(),
+  //     photos: photos,
+  //     // determinePhotosToKeep(photos);
+  //     sendMessageToChat: sendMessageToChat,
+  //   );
+  //   debugPrint(memory.toString());
+  //   // backup when useful memory created, maybe less later, 2k memories occupy 3MB in the json payload
+  //   if (memory != null && !memory.discarded) executeBackupWithUid();
+  //   context
+  //       .read<MemoryBloc>()
+  //       .add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
+  //   if (!memory.discarded &&
+  //       SharedPreferencesUtil().postMemoryNotificationIsChecked) {
+  //     postMemoryCreationNotification(memory).then((r) {
+  //       // this should be a plugin instead.
+  //       debugPrint('Notification response: $r');
+  //       if (r.isEmpty) return;
+  //       sendMessageToChat(Message(DateTime.now(), r, 'ai'), memory);
+  //       createNotification(
+  //         notificationId: 2,
+  //         title: 'New Memory Created! ${memory.structured.target!.getEmoji()}',
+  //         body: r,
+  //       );
+  //     });
+  //   }
+  //   await widget.refreshMemories();
+  //   SharedPreferencesUtil().transcriptSegments = [];
+  //   segments = [];
+  //   setState(() => memoryCreating = false);
+  //   audioStorage?.clearAudioBytes();
+  //   setHasTranscripts(false);
+
+  //   currentTranscriptStartedAt = null;
+  //   currentTranscriptFinishedAt = null;
+  //   elapsedSeconds = 0;
+
+  //   streamStartedAtSecond = null;
+  //   firstStreamReceivedAt = null;
+  //   secondsMissedOnReconnect = null;
+  //   photos = [];
+  //   conversationId = const Uuid().v4();
+  // }
+
   _createMemory({bool forcedCreation = false}) async {
+    print('Creating memory');
     if (memoryCreating) return;
-    // should clean variables here? and keep them locally?
-    if (mounted) {
-      setState(() => memoryCreating = true);
-    }
-    Memory? memory;
-    memory = await processTranscriptContent(
-      context,
-      TranscriptSegment.segmentsAsString(segments),
-      segments,
-      null,
-      startedAt: currentTranscriptStartedAt,
-      finishedAt: currentTranscriptFinishedAt,
-      geolocation: await LocationService().getGeolocationDetails(),
-      photos: photos,
-      sendMessageToChat: sendMessageToChat,
-    );
 
-    // if (memory != null && !memory.discarded) executeBackupWithUid();
-    context
-        .read<MemoryBloc>()
-        .add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
-    if (!memory.discarded &&
-        SharedPreferencesUtil().postMemoryNotificationIsChecked) {
-      debugPrint('Memory is not discarded and notifications are enabled.');
+  
+    File? file;
 
-      // Log memory details
-      debugPrint('Memory Details: ${memory.toString()}');
+    try {
+      // Memory creation logic
+      Memory? memory = await processTranscriptContent(
+        context,
+        TranscriptSegment.segmentsAsString(segments),
+        segments,
+        file?.path ?? '',
+        startedAt: currentTranscriptStartedAt,
+        finishedAt: currentTranscriptFinishedAt,
+        geolocation: await LocationService().getGeolocationDetails(),
+        photos: photos,
+        sendMessageToChat: sendMessageToChat,
+      );
+      debugPrint(memory.toString());
 
-      postMemoryCreationNotification(memory).then((r) {
-        debugPrint('Notification response received: $r');
-        // this should be a plugin instead.
+      if (memory != null && !memory.discarded) executeBackupWithUid();
+      context
+          .read<MemoryBloc>()
+          .add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
+      if (!memory.discarded &&
+          SharedPreferencesUtil().postMemoryNotificationIsChecked) {
+        postMemoryCreationNotification(memory).then((r) {
+          debugPrint('Notification response: $r');
+          if (r.isEmpty) return;
+          sendMessageToChat(Message(DateTime.now(), r, 'ai'), memory);
+          createNotification(
+            notificationId: 2,
+            title:
+                'New Memory Created! ${memory.structured.target!.getEmoji()}',
+            body: r,
+          );
+        });
+      }
 
-        if (r.isEmpty) {
-          debugPrint('Notification response is empty. Exiting.');
-          return;
-        }
-        debugPrint('Sending message to chat with response: $r');
-        sendMessageToChat(
-          Message(DateTime.now(), r, 'ai'),
-          memory,
-        );
+      await widget.refreshMemories();
+    } catch (e) {
+      debugPrint('Memory creation failed: $e');
+    } finally {
+      // Reset state regardless of success or failure
+      SharedPreferencesUtil().transcriptSegments = [];
+      segments = [];
+      setState(() {
+        memoryCreating = false;
+        audioStorage?.clearAudioBytes();
+        setHasTranscripts(false);
 
-        debugPrint('Creating notification with title and body.');
-        createNotification(
-          notificationId: 2,
-          title:
-              'New Memory Created! ${memory?.structured.target?.getEmoji() ?? ''}',
-          body: r,
-        );
-      }).catchError((error) {
-        // Log any errors that occur during the notification process
-        debugPrint('Error during postMemoryCreationNotification: $error');
+        currentTranscriptStartedAt = null;
+        currentTranscriptFinishedAt = null;
+        elapsedSeconds = 0;
+
+        streamStartedAtSecond = null;
+        firstStreamReceivedAt = null;
+        secondsMissedOnReconnect = null;
+        photos = [];
+        conversationId = const Uuid().v4();
       });
     }
-
-    await widget.refreshMemories();
-    SharedPreferencesUtil().transcriptSegments = [];
-    segments = [];
-    if (mounted) {
-      setState(() => memoryCreating = false);
-    }
-    audioStorage?.clearAudioBytes();
-    setHasTranscripts(false);
-    currentTranscriptStartedAt = null;
-    currentTranscriptFinishedAt = null;
-    elapsedSeconds = 0;
-    streamStartedAtSecond = null;
-    firstStreamReceivedAt = null;
-    secondsMissedOnReconnect = null;
-    photos = [];
-    conversationId = const Uuid().v4();
   }
 
   setHasTranscripts(bool hasTranscripts) {
     if (_hasTranscripts == hasTranscripts) return;
-    if (mounted) {
-      setState(() => _hasTranscripts = hasTranscripts);
-    }
+    setState(() => _hasTranscripts = hasTranscripts);
   }
 
   processCachedTranscript() async {
@@ -390,7 +437,6 @@ class CapturePageState extends State<CapturePage>
 
   @override
   void initState() {
-    super.initState();
     btDevice = widget.device;
     WavBytesUtil.clearTempWavFiles();
     initiateWebsocket();
@@ -415,14 +461,32 @@ class CapturePageState extends State<CapturePage>
         );
       }
     });
+    _internetListener =
+        InternetConnection().onStatusChange.listen((InternetStatus status) {
+      switch (status) {
+        case InternetStatus.connected:
+          _internetStatus = InternetStatus.connected;
+          break;
+        case InternetStatus.disconnected:
+          _internetStatus = InternetStatus.disconnected;
+          // so if you have a memory in progress, it doesn't get created, and you don't lose the remaining bytes.
+          _memoryCreationTimer?.cancel();
+          break;
+      }
+    });
+
+    super.initState();
   }
 
   @override
   void dispose() {
-    _memoryCreationTimer?.cancel();
-    _bleBytesStream?.cancel();
-    _scrollController.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    record.dispose();
+    _bleBytesStream?.cancel();
+    _memoryCreationTimer?.cancel();
+    closeWebSocket();
+    _internetListener.cancel();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -432,12 +496,8 @@ class CapturePageState extends State<CapturePage>
     if (!serviceEnabled) {
       debugPrint('Location service not enabled');
       if (mounted) {
-        _scaffoldMessenger?.showSnackBar(
-          SnackBar(
-            content: Text(
-                "Location services are disabled. Enable them for a better experience."),
-          ),
-        );
+        avmSnackBar(context,
+            "Location services are disabled. Enable them for a better experience.");
       }
     } else {
       PermissionStatus permissionGranted =
@@ -447,12 +507,8 @@ class CapturePageState extends State<CapturePage>
       } else if (permissionGranted == PermissionStatus.deniedForever) {
         debugPrint('Location permission denied forever');
         if (mounted) {
-          _scaffoldMessenger?.showSnackBar(
-            SnackBar(
-              content: Text(
-                  "If you change your mind, you can enable location services in your device settings."),
-            ),
-          );
+          avmSnackBar(context,
+              "If you change your mind, you can enable location services in your device settings.");
         }
       }
     }
@@ -461,6 +517,8 @@ class CapturePageState extends State<CapturePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    //ui>>>>>
     return CaptureMemoryPage(
       context: context,
       hasTranscripts: _hasTranscripts,
@@ -473,7 +531,7 @@ class CapturePageState extends State<CapturePage>
       scrollController: _scrollController,
       onDismissmissedCaptureMemory: (direction) {
         _createMemory();
-        // setState(() {});
+        setState(() {});
       },
     );
   }

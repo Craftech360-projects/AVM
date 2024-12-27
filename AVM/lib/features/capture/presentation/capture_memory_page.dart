@@ -4,6 +4,7 @@ import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/core/assets/app_images.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
+import 'package:avm/core/widgets/typing_indicator.dart';
 import 'package:avm/features/capture/presentation/capture_page.dart';
 import 'package:avm/features/capture/widgets/greeting_card.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
@@ -45,7 +46,8 @@ class CaptureMemoryPage extends StatefulWidget {
 }
 
 class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
-  final List<int> items = List.generate(1, (index) => index);
+  // final List<int> items = List.generate(1, (index) => index);
+  final List<bool> dismissedList = [false];
   late MemoryBloc _memoryBloc;
   bool _isNonDiscarded = true;
   final GlobalKey<CapturePageState> capturePageKey =
@@ -76,6 +78,9 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                     ),
                     w10,
                     Switch(
+                      activeTrackColor: AppColors.purpleDark,
+                      activeColor: AppColors.commonPink,
+                      activeThumbImage: AssetImage(AppImages.appLogo),
                       value: _switchValue,
                       onChanged: (value) {
                         SharedPreferencesUtil().notificationPlugin = value;
@@ -135,40 +140,73 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [
-              if (widget.hasTranscripts)
-                ...items.map((item) {
-                  return Dismissible(
-                    key: ValueKey(item),
-                    direction: DismissDirection.startToEnd,
-                    onDismissed: (direction) async {
-                      setState(() {
-                        items.remove(item);
-                      });
-                      const ScreenSkeleton();
-
-                      await widget.onDismissmissedCaptureMemory(direction);
-                      // if (context.mounted) {
-                      //   setState(() {
-                      //     // Refresh the UI after memory is created
-                      //   });
-                      //   Navigator.of(context).pop();
-                      // }
-                    },
-                    child: GreetingCard(
-                      name: '',
-                      isDisconnected: true,
-                      context: context,
-                      hasTranscripts: widget.hasTranscripts,
-                      wsConnectionState: widget.wsConnectionState,
-                      device: widget.device,
-                      internetStatus: widget.internetStatus,
-                      segments: widget.segments,
-                      memoryCreating: widget.memoryCreating,
-                      photos: widget.photos,
-                      scrollController: widget.scrollController,
-                    ),
-                  );
-                })
+              if (widget.memoryCreating && widget.hasTranscripts)
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  decoration: BoxDecoration(
+                    borderRadius: br8,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Creating new memory ...",
+                        style: TextStyle(
+                          color: AppColors.black,
+                        ),
+                      ),
+                      TypingIndicator(),
+                    ],
+                  ),
+                ),
+              if (!widget.memoryCreating && widget.hasTranscripts)
+                ...List.generate(
+                  dismissedList.length,
+                  (index) => !dismissedList[index]
+                      ? Dismissible(
+                          key: ValueKey(index),
+                          direction: DismissDirection.startToEnd,
+                          onDismissed: (direction) {
+                            setState(() {
+                              dismissedList[index] = true;
+                            });
+                            // Call additional logic for onDismissed if necessary.
+                            widget.onDismissmissedCaptureMemory(direction);
+                          },
+                          child: Column(
+                            children: [
+                              GreetingCard(
+                                name: '',
+                                isDisconnected: true,
+                                context: context,
+                                hasTranscripts: widget.hasTranscripts,
+                                wsConnectionState: widget.wsConnectionState,
+                                device: widget.device,
+                                internetStatus: widget.internetStatus,
+                                segments: widget.segments,
+                                memoryCreating: widget.memoryCreating,
+                                photos: widget.photos,
+                                scrollController: widget.scrollController,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 6),
+                                child: Text(
+                                  "Swipe right to create your memory ...",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: AppColors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                )
               else
                 GreetingCard(
                   name: '',
@@ -183,7 +221,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                   photos: widget.photos,
                   scrollController: widget.scrollController,
                 ),
-
+              h10,
               //*--- Filter Button ---*//
               if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
                 Align(

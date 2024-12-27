@@ -2,7 +2,6 @@ import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/core/theme/app_colors.dart';
-import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/utils/ble/connect.dart';
 import 'package:avm/widgets/device_widget.dart';
 import 'package:flutter/material.dart';
@@ -89,10 +88,20 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
     var deviceName = widget.device?.name ?? SharedPreferencesUtil().deviceName;
     var deviceConnected = widget.device != null;
 
-    return CustomScaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text(deviceConnected ? 'Connected Device' : 'Paired Device'),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        title: Text(deviceConnected ? 'Connected Device' : 'Paired Device',
+            style: TextStyle(
+                color: AppColors.grey,
+                fontSize: 20,
+                fontWeight: FontWeight.w500)),
+        backgroundColor: AppColors.white,
       ),
       body: FutureBuilder<_DeviceInfo>(
         future: _DeviceInfo.getDeviceInfo(widget.device),

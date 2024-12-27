@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:avm/backend/api_requests/api/shared.dart';
 import 'package:avm/backend/preferences.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 const apiKey = "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";
@@ -116,8 +116,8 @@ Future<dynamic> gptApiCall({
 
 Future<dynamic> llamaApiCall({
   required String message,
-  double temperature = 0.7,
-  int maxTokens = -1,
+  double temperature = 1,
+  int maxTokens = 32500,
 }) async {
   debugPrint("Inside LLaMA API call");
 
@@ -134,7 +134,7 @@ Future<dynamic> llamaApiCall({
   // Construct the body of the request
   final body = jsonEncode({
     // Replace with specific model identifier if needed
-    "model": "llama3-8b-8192",
+    "model": "llama-3.3-70b-versatile",
     'messages': [
       {'role': 'system', 'content': ''' '''},
       {
@@ -172,8 +172,8 @@ Future<dynamic> llamaApiCall({
 
 Future<dynamic> llamaPluginApiCall({
   required String message,
-  double temperature = 0.7,
-  int maxTokens = -1,
+  double temperature = 1,
+  int maxTokens = 32500,
 }) async {
   debugPrint("Inside LLaMA API call");
 
@@ -190,7 +190,7 @@ Future<dynamic> llamaPluginApiCall({
   // Construct the body of the request
   final body = jsonEncode({
     // Replace with specific model identifier if needed
-    "model": "llama3-8b-8192",
+    "model": "llama-3.3-70b-versatile",
     'messages': [
       {'role': 'system', 'content': ''' '''},
       {
@@ -244,8 +244,8 @@ Future<String> executeGptPrompt(String? prompt,
 
   String response = await llamaApiCall(
       message: prompt,
-      temperature: 0.9, // Adjust temperature as needed
-      maxTokens: 3000 // Adjust maxTokens as needed or set to -1 for default
+      temperature: 1, // Adjust temperature as needed
+      maxTokens: 32500 // Adjust maxTokens as needed or set to -1 for default
       );
   debugPrint(">>>>>>>>>>>>>>>>??? $response");
   // debugPrint('executeGptPrompt response: $response');
@@ -273,8 +273,8 @@ Future<String> executeGptPluginPrompt(String? prompt,
 
   String response = await llamaPluginApiCall(
       message: prompt,
-      temperature: 0.9, // Adjust temperature as needed
-      maxTokens: 3000 // Adjust maxTokens as needed or set to -1 for default
+      temperature: 1, // Adjust temperature as needed
+      maxTokens: 32500 // Adjust maxTokens as needed or set to -1 for default
       );
   debugPrint(">>>>>>>>>>>>>>>>??? $response");
   // debugPrint('executeGptPrompt response: $response');

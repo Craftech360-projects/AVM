@@ -1,7 +1,7 @@
 name: avm
 description: "A new Flutter project."
 publish_to: "none"
-version: 1.0.20+86
+version: 1.0.20+88
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -119,6 +119,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/vectors/
+    - assets/animations/
 
   fonts:
     - family: Montserrat

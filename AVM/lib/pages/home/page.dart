@@ -7,7 +7,6 @@ import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/memory_provider.dart';
 import 'package:avm/backend/database/message.dart';
 import 'package:avm/backend/database/message_provider.dart';
-import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
@@ -18,8 +17,6 @@ import 'package:avm/features/capture/presentation/capture_page.dart';
 import 'package:avm/features/chat/bloc/chat_bloc.dart';
 import 'package:avm/features/chat/presentation/chat_screen.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
-
-
 import 'package:avm/main.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/settings/presentation/pages/setting_page.dart';
@@ -74,7 +71,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   List<Plugin> plugins = [];
   final _upgrader = MyUpgrader(debugLogging: false, debugDisplayOnce: false);
-  
+
   void someMethod() {
     // Check if the CapturePageState is available
     if (capturePageKey.currentState != null) {
@@ -251,83 +248,25 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     debugPrint('_startForeground: $result');
   }
 
-  // _onConnected(BTDeviceStruct? connectedDevice,
-  //     {bool initiateConnectionListener = true}) async {
-  //   debugPrint('_onConnected: $connectedDevice');
-  //   if (connectedDevice == null) return;
-  //   clearNotification(1);
-  //   _device = connectedDevice;
-  //   if (initiateConnectionListener) _initiateConnectionListener();
-  //   _initiateBleBatteryListener();
-  //   capturePageKey.currentState
-  //       ?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
-  //   MixpanelManager().deviceConnected();
-  //   SharedPreferencesUtil().deviceId = _device!.id;
-  //   SharedPreferencesUtil().deviceName = _device!.name;
+  _onConnected(BTDeviceStruct? connectedDevice,
+      {bool initiateConnectionListener = true}) {
+    debugPrint('_onConnected: $connectedDevice');
+    if (connectedDevice == null) return;
+    clearNotification(1);
+    _device = connectedDevice;
+    if (initiateConnectionListener) _initiateConnectionListener();
+    _initiateBleBatteryListener();
+    capturePageKey.currentState
+        ?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
+    MixpanelManager().deviceConnected();
+    SharedPreferencesUtil().deviceId = _device!.id;
+    SharedPreferencesUtil().deviceName = _device!.name;
+    _startForeground();
 
-  //   // Mark "Show Disconnection Notification" as true
-  //   SharedPreferencesUtil().showDisconnectionNotification = true;
-  //   websocketChannel?.sink.close(1000);
-  //   await initWebSocket(
-  //     onConnectionClosed: (int? closeCode, String? closeReason) {
-  //       setState(() {});
-  //     },
-  //     onConnectionSuccess: () {
-  //       print('WebSocket Connected');
-  //       setState(() {});
-  //     },
-  //     onConnectionError: (p1) {},
-  //     onConnectionFailed: (p1) {},
-  //     onMessageReceived: (List<TranscriptSegment> p1) {},
-  //   );
-
-  //   _startForeground();
-  //   setState(() {
-  //     _device = connectedDevice;
-  //   });
-  // }
-  
- _onConnected(BTDeviceStruct? connectedDevice, {bool initiateConnectionListener = true}) async {
-  debugPrint('_onConnected: $connectedDevice');
-  if (connectedDevice == null) return;
-  clearNotification(1);
-  _device = connectedDevice;
-  
-  if (initiateConnectionListener) _initiateConnectionListener();
-  _initiateBleBatteryListener();
-  
-  // Reset the capture page state with the connected device
-  capturePageKey.currentState?.resetState(restartBytesProcessing: true, btDevice: connectedDevice);
-  
-  MixpanelManager().deviceConnected();
-  SharedPreferencesUtil().deviceId = _device!.id;
-  SharedPreferencesUtil().deviceName = _device!.name;
-
-  // Mark "Show Disconnection Notification" as true
-  SharedPreferencesUtil().showDisconnectionNotification = true;
-  closeWebSocket();
-  
-  // Allow some delay before initializing WebSocket connection
-  await Future.delayed(Duration(seconds: 4));
-  
-  await initWebSocket(
-    onConnectionClosed: (int? closeCode, String? closeReason) {
-      setState(() {});
-    },
-    onConnectionSuccess: () {
-      _startForeground();
-      print('WebSocket Connected');
-      setState(() {});
-      
-       if (capturePageKey.currentState != null) {
-      capturePageKey.currentState!.initiateBytesStreamingProcessing();
-    }
-    },
-    onConnectionError: (p1) {},
-    onConnectionFailed: (p1) {},
-    onMessageReceived: (List<TranscriptSegment> p1) {},
-  );
-}
+    setState(() {
+      _device = connectedDevice;
+    });
+  }
 
   _initiateBleBatteryListener() async {
     _bleBatteryLevelListener?.cancel();
