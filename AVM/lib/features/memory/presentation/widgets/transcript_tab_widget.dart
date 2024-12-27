@@ -7,12 +7,12 @@ import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/src/common_widget/expandable_text.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 
-class TranscriptTab extends StatelessWidget {
+class TranscriptTabWidget extends StatelessWidget {
   final MemoryBloc memoryBloc;
   final int memoryAtIndex;
   //final PageController pageController; // Added this parameter
 
-  const TranscriptTab({
+  const TranscriptTabWidget({
     super.key,
     required this.memoryBloc,
     required this.memoryAtIndex,

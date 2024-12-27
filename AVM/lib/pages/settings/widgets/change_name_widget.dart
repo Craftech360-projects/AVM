@@ -1,7 +1,7 @@
 import 'package:avm/backend/auth.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/core/constants/constants.dart';
-import 'package:avm/widgets/custom_dialog_box.dart';
+import 'package:avm/core/widgets/custom_dialog_box.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

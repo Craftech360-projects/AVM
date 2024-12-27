@@ -1,8 +1,8 @@
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
-import 'package:avm/features/memories/pages/memory_detail_page.dart';
-import 'package:avm/features/memories/widgets/memory_card.dart';
+import 'package:avm/features/memory/presentation/pages/memory_detail_page.dart';
+import 'package:avm/features/memory/presentation/widgets/memory_card_widget.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/pages/memories/widgets/empty_memories.dart';
 import 'package:flutter/material.dart';

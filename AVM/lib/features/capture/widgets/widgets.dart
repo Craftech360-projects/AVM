@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:avm/core/widgets/scanning_ui.dart';
+import 'package:avm/core/widgets/transcript.dart';
 import 'package:flutter/material.dart';
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/growthbook.dart';
@@ -13,11 +15,7 @@ import 'package:avm/pages/speaker_id/page.dart';
 import 'package:avm/utils/enums.dart';
 import 'package:avm/utils/other/temp.dart';
 import 'package:avm/utils/websockets.dart';
-import 'package:avm/widgets/device_widget.dart';
-import 'package:avm/widgets/dialog.dart';
-import 'package:avm/widgets/photos_grid.dart';
-import 'package:avm/widgets/scanning_ui.dart';
-import 'package:avm/widgets/transcript.dart';
+import 'package:avm/core/widgets/device_widget.dart';
 import 'package:gradient_borders/gradient_borders.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:lottie/lottie.dart';
@@ -335,22 +333,21 @@ getConnectionStateWidgets(
     GestureDetector(
       onTap: isWifiDisconnected || isWebsocketError
           ? () {
-              showDialog(
-                context: context,
-                builder: (c) => getDialog(
-                  context,
-                  () => Navigator.pop(context),
-                  () => Navigator.pop(context),
-                  isWifiDisconnected
-                      ? 'Internet Connection Lost'
-                      : 'Connection Issue',
-                  isWifiDisconnected
-                      ? 'Your device is offline. Transcription is paused until connection is restored.'
-                      : 'Unable to connect to the transcript service. Please restart the app or contact support if the problem persists.',
-                  okButtonText: 'Ok',
-                  singleButton: true,
-                ),
-              );
+              showDialog(context: context, builder: (c) => SizedBox()
+                  // getDialog(
+                  //   context,
+                  //   () => Navigator.pop(context),
+                  //   () => Navigator.pop(context),
+                  //   isWifiDisconnected
+                  //       ? 'Internet Connection Lost'
+                  //       : 'Connection Issue',
+                  //   isWifiDisconnected
+                  //       ? 'Your device is offline. Transcription is paused until connection is restored.'
+                  //       : 'Unable to connect to the transcript service. Please restart the app or contact support if the problem persists.',
+                  //   okButtonText: 'Ok',
+                  //   singleButton: true,
+                  // ),
+                  );
             }
           : null,
       child: SineWaveWidget(
@@ -500,7 +497,8 @@ getTranscriptWidget(
     );
   }
 
-  if (photos.isNotEmpty) return PhotosGridComponent(photos: photos);
+  if (photos.isNotEmpty) return SizedBox();  
+  // PhotosGridComponent(photos: photos);  =======> HERE
   return TranscriptWidget(segments: segments);
 }
 
@@ -522,19 +520,20 @@ connectionStatusWidgets(
       onTap: () {
         showDialog(
           context: context,
-          builder: (c) => getDialog(
-            context,
-            () => Navigator.pop(context),
-            () => Navigator.pop(context),
-            isWifiDisconnected
-                ? 'Internet Connection Lost'
-                : 'Connection Issue',
-            isWifiDisconnected
-                ? 'Your device is offline. Transcription is paused until connection is restored.'
-                : 'Unable to connect to the transcript service. Please restart the app or contact support if the problem persists.',
-            okButtonText: 'Ok',
-            singleButton: true,
-          ),
+          builder: (c) => SizedBox()
+          // getDialog(   ===============================> HERE
+          //   context,
+          //   () => Navigator.pop(context),
+          //   () => Navigator.pop(context),
+          //   isWifiDisconnected
+          //       ? 'Internet Connection Lost'
+          //       : 'Connection Issue',
+          //   isWifiDisconnected
+          //       ? 'Your device is offline. Transcription is paused until connection is restored.'
+          //       : 'Unable to connect to the transcript service. Please restart the app or contact support if the problem persists.',
+          //   okButtonText: 'Ok',
+          //   singleButton: true,
+          // ),
         );
       },
       child: Padding(

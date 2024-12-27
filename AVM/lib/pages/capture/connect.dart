@@ -42,6 +42,7 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
               ),
               const SizedBox(height: 58),
               FindDevicesPage(
+                isFromOnboarding: true,
                 goNext: () {
                   debugPrint('onConnected');
                   Navigator.of(context).pushReplacement(

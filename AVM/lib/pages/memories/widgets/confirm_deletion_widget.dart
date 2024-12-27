@@ -3,7 +3,7 @@ import 'package:avm/backend/api_requests/api/pinecone.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/memory_provider.dart';
 import 'package:avm/backend/mixpanel.dart';
-import 'package:avm/widgets/custom_dialog_box.dart';
+import 'package:avm/core/widgets/custom_dialog_box.dart';
 
 class ConfirmDeletionWidget extends StatefulWidget {
   final Memory memory;

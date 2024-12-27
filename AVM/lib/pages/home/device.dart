@@ -6,7 +6,7 @@ import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/onboarding/find_device/page.dart';
 import 'package:avm/utils/ble/connect.dart';
-import 'package:avm/widgets/device_widget.dart';
+import 'package:avm/core/widgets/device_widget.dart';
 
 class ConnectedDevice extends StatefulWidget {
   final BTDeviceStruct? device;
@@ -81,6 +81,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => FindDevicesPage(
+                        isFromOnboarding: false,
                         goNext: () {},
                       ),
                     ),

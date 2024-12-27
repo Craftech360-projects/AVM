@@ -1,198 +1,227 @@
+// ignore_for_file: unnecessary_null_comparison, duplicate_ignore
+
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:avm/backend/database/memory.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:avm/backend/database/memory.dart';
+import 'package:avm/features/memory/presentation/widgets/category_chip.dart';
+import 'package:avm/features/memory/presentation/widgets/overall_tab.dart';
+import 'package:avm/features/memory/presentation/widgets/tab_bar.dart';
+import 'package:avm/features/memory/presentation/widgets/transcript_tab_widget.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
-import 'package:avm/features/memory/presentation/widgets/action_tab.dart';
-import 'package:avm/features/memory/presentation/widgets/custom_tag.dart';
-import 'package:avm/features/memory/presentation/widgets/event_tab.dart';
-import 'package:avm/features/memory/presentation/widgets/summary_tab.dart';
-import 'package:avm/features/memory/presentation/widgets/transcript_tab.dart';
-import 'package:avm/pages/home/custom_scaffold.dart';
-import 'package:avm/pages/memory_detail/enable_title.dart';
 import 'package:avm/pages/memory_detail/share.dart';
 import 'package:avm/pages/memory_detail/widgets.dart';
 import 'package:avm/utils/memories/reprocess.dart';
-import 'package:avm/utils/other/temp.dart';
+import 'package:intl/intl.dart';
 
-class CustomMemoryDetailPage extends StatefulWidget {
-  const CustomMemoryDetailPage({
-    super.key,
-    required this.memoryBloc,
-    required this.memoryAtIndex,
-  });
-  final int memoryAtIndex;
+// class MemoryDetailPage extends StatefulWidget {
+//   const MemoryDetailPage({super.key});
+//   static const String name = 'memoryDetailPage';
+//   @override
+//   State<MemoryDetailPage> createState() => _MemoryDetailPageState();
+// }
+
+class MemoryDetailPage extends StatefulWidget {
   final MemoryBloc memoryBloc;
+  final int memoryAtIndex;
+
+  const MemoryDetailPage({
+    super.key,
+    required this.memoryBloc, // Add memoryBloc if necessary
+    required this.memoryAtIndex, // Add the index of the memory
+  });
+
+  static const String name = 'memoryDetailPage';
 
   @override
-  State<CustomMemoryDetailPage> createState() => _CustomMemoryDetailPageState();
+  State<MemoryDetailPage> createState() => _MemoryDetailPageState();
 }
 
-class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
+class _MemoryDetailPageState extends State<MemoryDetailPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  late Memory selectedMemory;
+  //log(selectedMemory);
   TextEditingController titleController = TextEditingController();
   TextEditingController overviewController = TextEditingController();
   PageController pageController = PageController();
 
   List<bool> pluginResponseExpanded = [];
   @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    selectedMemory = widget.memoryBloc.state.memories[widget.memoryAtIndex];
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  List<String> _getCategories(dynamic category) {
+    if (category == null) return [];
+
+    if (category is List) {
+      return category.map((e) => e.toString()).toList();
+    } else if (category is String) {
+      // If it's a string, check if it's a bracketed list
+      if (category.startsWith('[') && category.endsWith(']')) {
+        // Remove brackets and split by comma
+        return category
+            .substring(1, category.length - 1)
+            .split(',')
+            .map((e) => e.trim())
+            .toList();
+      }
+      return [category];
+    }
+
+    return [];
+  }
+
+  // Convert the transcript data to the required format
+  List<Map<String, String>> _getFormattedTranscript(Object? transcript) {
+    //   log("BBJHB, $transcript"); // Log the original transcript before processing
+
+    if (transcript == null) return [];
+
+    if (transcript is List) {
+      List<Map<String, String>> formattedTranscript = transcript.map((item) {
+        // Log the keys of the item to check if they are correct
+        //    log("Transcript Item: $item");
+
+        // Ensure 'speaker' and 'text' keys are present and are of type String
+        final speaker =
+            item['speaker']?.toString() ?? ''; // cast to String, fallback to ''
+        final text =
+            item['text']?.toString() ?? ''; // cast to String, fallback to ''
+
+        // Log the formatted speaker and text
+        // log("Formatted Item: speaker=$speaker, text=$text");
+
+        return {
+          'speaker': speaker,
+          'text': text,
+        };
+      }).toList();
+
+      // Log the final list after formatting
+      //log("Formatted Transcript: $formattedTranscript");
+
+      return formattedTranscript;
+    }
+    // print("null");
+    return [];
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 4,
-      initialIndex: 1,
-      child: CustomScaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(
-              onPressed: () {
-                showShareBottomSheet(
-                  context,
-                  widget.memoryBloc.state.memories[widget.memoryAtIndex],
-                  setState,
-                );
-              },
-              icon: const Icon(Icons.ios_share, size: 20),
+    final textTheme = Theme.of(context).textTheme;
+    // log(selectedMemory.toString());
+    final categories =
+        _getCategories(selectedMemory.structured.target?.category);
+    _getFormattedTranscript(selectedMemory.transcript);
+
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        backgroundColor: AppColors.white,
+        title: Text(
+            // ignore: unnecessary_null_comparison
+            selectedMemory.createdAt != null
+                ? '${DateFormat('d MMM').format(selectedMemory.createdAt)} -'
+                    ' ${DateFormat('h:mm a').format(selectedMemory.createdAt)}'
+                : 'No Date',
+            style: TextStyle(
+                color: AppColors.grey,
+                fontSize: 14,
+                fontWeight: FontWeight.w500)),
+        actions: [
+          IconButton(
+            onPressed: () {
+              showShareBottomSheet(
+                context,
+                widget.memoryBloc.state.memories[widget.memoryAtIndex],
+                setState,
+              );
+            },
+            icon: const Icon(Icons.ios_share, size: 24),
+          ),
+          IconButton(
+            onPressed: () {
+              showOptionsBottomSheet(
+                context,
+                setState,
+                widget.memoryBloc.state.memories[widget.memoryAtIndex],
+                _reProcessMemory,
+              );
+            },
+            icon: const Icon(Icons.more_vert_rounded, size: 25),
+          ),
+          w10,
+        ],
+      ),
+      body: Container(
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 22),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.3, 1.0],
+            colors: [AppColors.white, AppColors.commonPink],
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              selectedMemory.createdAt != null
+                  ? '${selectedMemory.structured.target?.title}'
+                  : "No title",
+              style:
+                  textTheme.labelLarge?.copyWith(fontSize: 20.h, height: 1.25),
             ),
-            IconButton(
-              onPressed: () {
-                showOptionsBottomSheet(
-                  context,
-                  setState,
-                  widget.memoryBloc.state.memories[widget.memoryAtIndex],
-                  _reProcessMemory,
-                );
-              },
-              icon: const Icon(Icons.more_horiz),
+            h5,
+            if (categories.isNotEmpty)
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
+                children: categories
+                    .map(
+                      (category) => CategoryChip(
+                        tagName: category,
+                      ),
+                    )
+                    .toList(),
+              ),
+            h20,
+            Expanded(
+              child: CustomTabBar(
+                tabs: const [
+                  Tab(text: 'Overall'),
+                  Tab(text: 'Transcript'),
+                ],
+                children: [
+                  OverallTab(
+                    target: selectedMemory.structured.target!,
+                    //pluginsResponse: selectedMemory.pluginsResponse
+                  ),
+                  //  TranscriptTab(target: selectedMemory.transcript!),
+                  TranscriptTabWidget(
+                    memoryBloc: widget.memoryBloc,
+                    memoryAtIndex: widget.memoryAtIndex, // Add this
+                    // pageController: widget
+                    //     .pageController, // Add this// Pass the formatted transcript
+                  ),
+                ],
+              ),
             ),
           ],
-          elevation: 0,
-          title: Text(
-              "${widget.memoryBloc.state.memories[widget.memoryAtIndex].structured.target!.getEmoji()}"),
-        ),
-        body: BlocBuilder<MemoryBloc, MemoryState>(
-          bloc: widget.memoryBloc,
-          builder: (context, state) {
-            final selectedMemory = state.memories[state.memoryIndex];
-    
-            final structured = selectedMemory.structured.target!;
-            final time = selectedMemory.startedAt == null
-                ? dateTimeFormat('h:mm a', selectedMemory.createdAt)
-                : '${dateTimeFormat('h:mm a', selectedMemory.startedAt)} to ${dateTimeFormat('h:mm a', selectedMemory.finishedAt)}';
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                h15,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    '${dateTimeFormat('MMM d,  yyyy', selectedMemory.createdAt)} '
-                    '${selectedMemory.startedAt == null ? 'at' : 'from'} $time',
-                    style: const TextStyle(color: AppColors.grey, fontSize: 16),
-                  ),
-                ),
-               h15,
-                selectedMemory.discarded
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          'Discarded Memory',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: EditableTitle(
-                          initialText: structured.title,
-                          onTextChanged: (String newTitle) {
-                            structured.title = newTitle;
-                            widget.memoryBloc
-                                .add(UpdatedMemory(structured: structured));
-                          },
-                          discarded: selectedMemory.discarded,
-                          style: Theme.of(context).textTheme.titleLarge!,
-                        ),
-                      ),
-                h10,
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Wrap(
-                    spacing: 6,
-                    runSpacing: 4,
-                    children:
-                        List.generate(structured.category.length, (index) {
-                      return CustomTag(
-                        tagName: structured.category[index],
-                      );
-                    }),
-                  ),
-                ),
-                h5,
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: br5,
-                    color: AppColors.black
-                  ),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                  // color: const Color.fromARGB(75, 242, 242, 242),
-    
-                  child: SizedBox(
-                    height: 40,
-                    child: TabBar(
-                      dividerColor: Colors.transparent,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 4),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      labelColor: AppColors.white,
-                      unselectedLabelColor: AppColors.grey,
-                      indicator: BoxDecoration(
-                        borderRadius: br5,
-                        color: AppColors.greyLight,
-                      ),
-                      indicatorWeight: 0,
-                      labelPadding: EdgeInsets.zero,
-                      tabs: const [
-                        Tab(text: 'Action'),
-                        Tab(text: 'Summary'),
-                        Tab(text: 'Events'),
-                        Tab(text: 'Transcript'),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      ActionTab(
-                        pageController: pageController,
-                        memoryAtIndex: state.memoryIndex,
-                        memoryBloc: widget.memoryBloc,
-                      ),
-                      // SummaryTab(
-                      //   memoryBloc: widget.memoryBloc,
-                      //   memoryAtIndex: state.memoryIndex,
-                      // ),
-                      SummaryTab(
-                        pageController: pageController,
-                        memoryAtIndex: state.memoryIndex,
-                        memoryBloc: widget.memoryBloc,
-                      ),
-                      EventTab(
-                        pageController: pageController,
-                        memoryAtIndex: state.memoryIndex,
-                        memoryBloc: widget.memoryBloc,
-                      ),
-                      TranscriptTab(
-                        pageController: pageController,
-                        memoryAtIndex: state.memoryIndex,
-                        memoryBloc: widget.memoryBloc,
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            );
-          },
         ),
       ),
     );
@@ -203,7 +232,10 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
     Memory? newMemory = await reProcessMemory(
       context,
       memory,
-      () => avmSnackBar(context, 'Memory processing failed! Please try again.'),
+      () => avmSnackBar(
+        context,
+        'Memory processing failed! Please try again.',
+      ),
       changeLoadingState,
     );
 

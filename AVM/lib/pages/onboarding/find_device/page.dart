@@ -12,18 +12,23 @@ import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/wizard/widgets/ble_animation.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/utils/ble/find.dart';
-import 'package:avm/widgets/dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'found_devices.dart';
 
 class FindDevicesPage extends StatefulWidget {
+  final bool isFromOnboarding;
   final VoidCallback goNext;
+  final VoidCallback? onSkip;
   final bool includeSkip;
 
   const FindDevicesPage(
-      {super.key, required this.goNext, this.includeSkip = true});
-  static const String routeName = '/FindDevicesPage';
+      {super.key,
+      required this.goNext,
+      this.includeSkip = true,
+      required this.isFromOnboarding,
+      this.onSkip});
+
   @override
   FindDevicesPageState createState() => FindDevicesPageState();
 }
@@ -60,19 +65,18 @@ class FindDevicesPageState extends State<FindDevicesPage>
           if (e is FlutterBluePlusException) {
             if (e.code == 11) {
               if (mounted) {
-                showDialog(
-                  context: context,
-                  builder: (c) => getDialog(
-                    context,
-                    () {
-                      Navigator.of(context).pop();
-                    },
-                    () {},
-                    'Enable Bluetooth',
-                    'Friend needs Bluetooth to connect to your wearable. Please enable Bluetooth and try again.',
-                    singleButton: true,
-                  ),
-                );
+                showDialog(context: context, builder: (c) => SizedBox()
+                    // getDialog(
+                    //   context,
+                    //   () {
+                    //     Navigator.of(context).pop();
+                    //   },
+                    //   () {},
+                    //   'Enable Bluetooth',
+                    //   'Friend needs Bluetooth to connect to your wearable. Please enable Bluetooth and try again.',
+                    //   singleButton: true,
+                    // ),
+                    );
               }
             }
           }

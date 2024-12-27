@@ -22,19 +22,19 @@
           }
         },
         {
+          "client_id": "729805354350-5g7a5ialdk2l4co72p1o45d3h3te16b2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.craftech360.avm",
+            "certificate_hash": "c917fe8a42b2e3aa70a61a8c78990859f626bbfd"
+          }
+        },
+        {
           "client_id": "729805354350-7fklltcn3coqfbrsp2erpvqamer7ghnu.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.craftech360.avm",
             "certificate_hash": "583ec41e2eb2f1d98ab5900a2825846d1dbdfb75"
-          }
-        },
-        {
-          "client_id": "729805354350-8hc5blr2ld5s04hvvhut4minrstnlsb1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.craftech360.avm",
-            "certificate_hash": "dd238f961933c6f7677d5c939b52bd33cddfa70a"
           }
         },
         {

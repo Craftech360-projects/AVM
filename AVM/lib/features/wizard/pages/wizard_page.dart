@@ -106,6 +106,7 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => FindDevicesPage(
+                              isFromOnboarding: true,
                               goNext: () {},
                             ),
                           ),

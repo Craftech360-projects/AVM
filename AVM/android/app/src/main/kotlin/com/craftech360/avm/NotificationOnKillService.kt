@@ -20,8 +20,8 @@ class NotificationOnKillService: Service() {
     private lateinit var description: String
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        title = intent?.getStringExtra("title") ?: "Default title"
-        description = intent?.getStringExtra("description") ?: "Default body"
+        title = intent?.getStringExtra("title") ?: ""
+        description = intent?.getStringExtra("description") ?: ""
 
         return START_STICKY
     }
@@ -29,9 +29,14 @@ class NotificationOnKillService: Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onTaskRemoved(rootIntent: Intent?) {
         try {
+            
+            if (title.isBlank() || description.isBlank()) {
+                Log.d("NotificationOnKillService", "Title or description is empty, notification will not be shown")
+                return
+            }
             val notificationIntent = packageManager.getLaunchIntentForPackage(packageName)
             val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
-
+    
             val notificationBuilder = NotificationCompat.Builder(this, "com.craftech360.avm")
                 .setSmallIcon(getSmallIconForNotification())
                 .setContentTitle(title)
@@ -59,11 +64,13 @@ class NotificationOnKillService: Service() {
         
 
     }
-    
     private fun getSmallIconForNotification(): Int {
-        return R.drawable.ic_stat_avm
+        return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            R.drawable.ic_stat_launcher
+        } else {
+            R.mipmap.launcher_icon
+        }
     }
-
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }

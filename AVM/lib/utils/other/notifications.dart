@@ -14,7 +14,7 @@ import 'package:avm/pages/home/page.dart';
 Future<void> initializeNotifications() async {
   bool initialized = await AwesomeNotifications().initialize(
       // set the icon to null if you want to use the default app icon
-      'resource://drawable/ic_stat_avm',
+      'resource://mipmap/ic_stat_launcher',
       [
         NotificationChannel(
             channelGroupKey: 'channel_group_key',
@@ -131,7 +131,7 @@ void createMessagingNotification(String sender, String message) async {
       title: sender,
       body: message,
       notificationLayout: NotificationLayout.Messaging,
-      largeIcon: 'resource://drawable/ic_stat_avm', // Replace with your app icon
+      largeIcon: 'resource://mipmap/ic_stat_launcher', // Replace with your app icon
       payload: {
         'sender': sender,
         'message': message,

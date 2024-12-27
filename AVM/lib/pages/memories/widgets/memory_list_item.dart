@@ -4,7 +4,7 @@ import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/memory_provider.dart';
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
-import 'package:avm/features/memory/presentation/pages/memory_detail_page.dart';
+import 'package:avm/features/memory/presentation/pages/custom_memory.dart';
 import 'package:intl/intl.dart';
 
 class MemoryListItem extends StatefulWidget {

@@ -32,8 +32,8 @@ import 'package:avm/utils/ble/connected.dart';
 import 'package:avm/utils/ble/scan.dart';
 import 'package:avm/utils/features/backups.dart';
 import 'package:avm/utils/other/notifications.dart';
-import 'package:avm/widgets/navbar.dart';
-import 'package:avm/widgets/upgrade_alert.dart';
+import 'package:avm/core/widgets/navbar.dart';
+import 'package:avm/core/widgets/upgrade_alert.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:upgrader/upgrader.dart';
 

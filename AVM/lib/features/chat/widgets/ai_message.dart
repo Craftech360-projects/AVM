@@ -12,7 +12,7 @@ import 'package:avm/backend/schema/plugin.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/chat/bloc/chat_bloc.dart';
-import 'package:avm/features/memories/pages/memory_detail_page.dart';
+import 'package:avm/features/memory/presentation/pages/memory_detail_page.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/utils/other/temp.dart';
 import 'package:intl/intl.dart';

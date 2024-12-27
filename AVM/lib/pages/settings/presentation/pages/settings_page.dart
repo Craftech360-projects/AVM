@@ -86,6 +86,7 @@ class _SettingPageState extends State<SettingPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => FindDevicesPage(
+                            isFromOnboarding: false,
                             goNext: () {},
                           ),
                         ),

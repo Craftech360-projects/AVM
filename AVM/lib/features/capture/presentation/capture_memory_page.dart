@@ -10,6 +10,7 @@ import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/features/memory/presentation/widgets/memory_card.dart';
 import 'package:avm/pages/skeleton/screen_skeleton.dart';
 import 'package:avm/utils/websockets.dart';
+import 'package:avm/core/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -45,11 +46,11 @@ class CaptureMemoryPage extends StatefulWidget {
 }
 
 class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
-  final List<int> items = List.generate(1, (index) => index);
+  // final List<int> items = List.generate(1, (index) => index);
+  final List<bool> dismissedList = [false];
   late MemoryBloc _memoryBloc;
   bool _isNonDiscarded = true;
-  final GlobalKey<CapturePageState> capturePageKey =
-      GlobalKey<CapturePageState>();
+  final GlobalKey<CapturePageState> capturePageKey = GlobalKey<CapturePageState>();
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false;
@@ -97,6 +98,14 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
     );
   }
 
+  void _resetDismissedList() {
+    setState(() {
+      for (int i = 0; i < dismissedList.length; i++) {
+        dismissedList[i] = false;
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -138,22 +147,40 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [
+              if (widget.memoryCreating)
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  decoration: BoxDecoration(
+                    borderRadius: br8,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Creating new memory ...",
+                        style: TextStyle(
+                          color: AppColors.black,
+                        ),
+                      ),
+                      TypingIndicator(),
+                    ],
+                  ),
+                ),
               if (widget.hasTranscripts)
-                ...items.map((item) {
-                  return Dismissible(
-                    key: ValueKey(item),
-                    direction: DismissDirection.startToEnd,
-                    onDismissed: (direction) async {
-                      try {
-                        await widget.onDismissmissedCaptureMemory(direction);
-                        setState(() {
-                          items.remove(item);
-                        });
-                      } catch (e) {
-                        avmSnackBar(context,
-                            'Oops! Something went wrong.\nPlease try again.');
-                      }
-                    },
+                ...List.generate(
+                  dismissedList.length,
+                  (index) => !dismissedList[index]
+                      ? Dismissible(
+                          key: ValueKey(index),
+                          direction: DismissDirection.startToEnd,
+                          onDismissed: (direction) {
+                            setState(() {
+                              dismissedList[index] = true;
+                            });
+                            // Call additional logic for onDismissed if necessary.
+                            widget.onDismissmissedCaptureMemory(direction);
+                          },
                     child: Column(
                       children: [
                         GreetingCard(
@@ -184,8 +211,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                         ),
                       ],
                     ),
-                  );
-                })
+                  ) : const SizedBox.shrink(),
+                )
               else
                 GreetingCard(
                   name: '',

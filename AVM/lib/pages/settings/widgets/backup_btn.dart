@@ -4,7 +4,7 @@ import 'package:avm/backend/preferences.dart';
 import 'package:avm/core/assets/app_images.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/utils/features/backups.dart';
-import 'package:avm/widgets/custom_dialog_box.dart';
+import 'package:avm/core/widgets/custom_dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';

@@ -132,13 +132,31 @@ Future<bool> deleteVector(String memoryId) async {
 }
 // update vectors when fields updated
 
+// Future<List<double>> getEmbeddingsFromInput(String input) async {
+//   var vector = await gptApiCall(
+//     model: 'text-embedding-3-large',
+//     urlSuffix: 'embeddings',
+//     contentToEmbed: input,
+//   );
+//   return vector
+//       .map<double>((item) => double.tryParse(item.toString()) ?? 0.0)
+//       .toList();
+// }
+
 Future<List<double>> getEmbeddingsFromInput(String input) async {
   var vector = await gptApiCall(
     model: 'text-embedding-3-large',
     urlSuffix: 'embeddings',
     contentToEmbed: input,
   );
+
+  if (vector == null) {
+    debugPrint('Error: Received null vector');
+    return [];
+  }
+
   return vector
       .map<double>((item) => double.tryParse(item.toString()) ?? 0.0)
       .toList();
 }
+

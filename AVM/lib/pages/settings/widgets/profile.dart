@@ -8,8 +8,8 @@ import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/settings/widgets/backup_btn.dart';
 import 'package:avm/pages/settings/widgets/change_name_widget.dart';
 import 'package:avm/pages/settings/widgets/restore_btn.dart';
-import 'package:avm/widgets/custom_dialog_box.dart';
-import 'package:avm/widgets/dialog.dart';
+import 'package:avm/core/widgets/custom_dialog_box.dart';
+import 'package:avm/core/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -157,15 +157,16 @@ class _ProfilePageState extends State<ProfilePage> {
         showDialog(
           context: context,
           builder: (ctx) {
-            return getDialog(
-              context,
-              () => Navigator.of(context).pop(),
-              () => launchUrl(Uri.parse('mailto:craftechapps@gmail.com')),
-              'Deleting Account?',
-              'Please send us an email at craftechapps@gmail.com',
-              okButtonText: 'Open Email',
-              singleButton: false,
-            );
+            return SizedBox();
+            // return getDialog(
+            //   context,
+            //   () => Navigator.of(context).pop(),
+            //   () => launchUrl(Uri.parse('mailto:craftechapps@gmail.com')),
+            //   'Deleting Account?',
+            //   'Please send us an email at craftechapps@gmail.com',
+            //   okButtonText: 'Open Email',
+            //   singleButton: false,
+            // );
           },
         );
       },

@@ -13,6 +13,7 @@ import 'package:avm/backend/database/prompt_provider.dart';
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/plugin.dart';
+import 'package:avm/core/constants/constants.dart';
 import 'package:avm/pages/capture/location_service.dart';
 import 'package:avm/utils/features/calendar.dart';
 import 'package:avm/utils/memories/integrations.dart';
@@ -346,38 +347,12 @@ Future<Memory> memoryCreationBlock(
         ),
       );
     } else if (structured.title.isNotEmpty) {
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-            'New memory created! 🚀',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-          ),
-          backgroundColor: const Color(0xFF6A1B9A), // Lavender color
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 70),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          duration: const Duration(seconds: 4),
-        ),
+      avmSnackBar(
+        context,
+        'New memory created!',
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-            'Memory stored as discarded! There\'s background noise 😄',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          backgroundColor: Colors.blueGrey,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 70),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          duration: const Duration(seconds: 4),
-        ),
-      );
+      avmSnackBar(context, "Memory stored as discarded! There's Background noise");
     }
   }
   return memory;
@@ -413,8 +388,7 @@ Future<Memory> finalizeMemoryRecord(
 
     // Add geolocation to memory
     memory.geolocation.target = geolocation;
-  } else {
-  }
+  } else {}
 
   // Add transcript segments
   memory.transcriptSegments.addAll(transcriptSegments);

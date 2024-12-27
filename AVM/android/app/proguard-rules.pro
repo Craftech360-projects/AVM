@@ -1,4 +1,40 @@
-# Flutter-Specific Rules
+# This is generated automatically by the Android Gradle plugin.
+-dontwarn com.google.android.play.core.splitcompat.SplitCompatApplication
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallException
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallManager
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallRequest$Builder
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallRequest
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallSessionState
+-dontwarn com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
+-dontwarn com.google.android.play.core.tasks.OnFailureListener
+-dontwarn com.google.android.play.core.tasks.OnSuccessListener
+-dontwarn com.google.android.play.core.tasks.Task
+
+# Keep AutoSafeParcelables
+-keep public class * extends org.microg.safeparcel.AutoSafeParcelable {
+    @org.microg.safeparcel.SafeParcelable.Field *;
+    @org.microg.safeparcel.SafeParceled *;
+}
+
+# Keep asInterface method cause it's accessed from SafeParcel
+-keepattributes InnerClasses
+-keepclassmembers interface * extends android.os.IInterface {
+    public static class *;
+}
+-keep public class * extends android.os.Binder { public static *; }
+
+# XML parser stuff
+-dontwarn org.xmlpull.v1.**
+-dontwarn org.kxml2.io.**
+-dontwarn android.content.res.**
+-dontwarn org.slf4j.impl.StaticLoggerBinder
+
+
+-keep class org.xmlpull.** { *; }
+-keepclassmembers class org.xmlpull.** { *; }
+
+#Flutter Wrapper
 -keep class io.flutter.app.** { *; }
 -keep class io.flutter.plugin.**  { *; }
 -keep class io.flutter.util.**  { *; }
@@ -6,47 +42,12 @@
 -keep class io.flutter.**  { *; }
 -keep class io.flutter.plugins.**  { *; }
 
-# Firebase Rules (add if you use Firebase services)
--keepattributes Signature
--keepattributes *Annotation*
+# For Awesome Notification Plugin
+-keep class com.google.common.reflect.TypeToken
+-keep class * extends com.google.common.reflect.TypeToken
+
+# You might not be using firebase
 -keep class com.google.firebase.** { *; }
--dontwarn com.google.firebase.**
-
-# Keep Firebase JSON serialized fields
--keepclassmembers class * {
-    @com.google.gson.annotations.SerializedName <fields>;
-}
-
-# Rules for your device calendar plugin
 -keep class com.builttoroam.devicecalendar.** { *; }
 
-# Gson or Serialization Library Rules (if used)
--keepclassmembers class * {
-   @com.google.gson.annotations.SerializedName <fields>;
-}
--dontwarn sun.misc.**
-
-# Rules for Glide (if used for image loading)
--keep class com.bumptech.glide.** { *; }
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public class * extends com.bumptech.glide.AppGlideModule
--keep public class * extends com.bumptech.glide.annotation.GlideModule
-
-# Keep Generated AutoValue Classes (if you use AutoValue or similar)
--keep @com.google.auto.value.AutoValue public class *
-
-# Generic Rules to Avoid Over-Shrinking
--dontwarn **.R
--dontwarn **.R$*
--dontwarn sun.misc.Unsafe
--dontwarn android.content.res.**
-
-# Keep Attributes
--keepattributes InnerClasses
--keepattributes Annotation
-
-# Multidex (if enabled)
--keep class androidx.multidex.** { *; }
-
-# Prevent Removal of Resources
--keep class **.R$* { *; }
+-keep class com.pravera.flutter_foreground_task.service.** { *; }

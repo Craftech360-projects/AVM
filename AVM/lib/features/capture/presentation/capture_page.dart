@@ -18,7 +18,7 @@ import 'package:avm/utils/memories/integrations.dart';
 import 'package:avm/utils/memories/process.dart';
 import 'package:avm/utils/other/notifications.dart';
 import 'package:avm/utils/websockets.dart';
-import 'package:avm/widgets/custom_dialog_box.dart';
+import 'package:avm/core/widgets/custom_dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,8 +77,7 @@ class CapturePageState extends State<CapturePage>
   InternetStatus? _internetStatus;
 
   bool isGlasses = false;
-  String conversationId =
-      const Uuid().v4(); // used only for transcript segment plugins
+  String conversationId = const Uuid().v4();
 
   double? streamStartedAtSecond;
   DateTime? firstStreamReceivedAt;
@@ -285,52 +284,72 @@ class CapturePageState extends State<CapturePage>
 
   _createMemory({bool forcedCreation = false}) async {
     if (memoryCreating) return;
-    // should clean variables here? and keep them locally?
+
     if (mounted) {
       setState(() => memoryCreating = true);
     }
-    Memory? memory;
-    memory = await processTranscriptContent(
-      context,
-      TranscriptSegment.segmentsAsString(segments),
-      segments,
-      null,
-      startedAt: currentTranscriptStartedAt,
-      finishedAt: currentTranscriptFinishedAt,
-      geolocation: await LocationService().getGeolocationDetails(),
-      photos: photos,
-      sendMessageToChat: sendMessageToChat,
-    );
 
-    if (memory != null && !memory.discarded) executeBackupWithUid();
-    context
-        .read<MemoryBloc>()
-        .add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
-    if (!memory.discarded &&
-        SharedPreferencesUtil().postMemoryNotificationIsChecked) {
-      postMemoryCreationNotification(memory).then((r) {
-        // this should be a plugin instead.
-        debugPrint('Notification response: $r');
-        if (r.isEmpty) return;
-        sendMessageToChat(Message(DateTime.now(), r, 'ai'), memory);
-        createNotification(
-          notificationId: 2,
-          title:
-              'New Memory Created! ${memory?.structured.target?.getEmoji() ?? ''}',
-          body: r,
-        );
-      });
+    Memory? memory;
+    try {
+      memory = await processTranscriptContent(
+        context,
+        TranscriptSegment.segmentsAsString(segments),
+        segments,
+        null,
+        startedAt: currentTranscriptStartedAt,
+        finishedAt: currentTranscriptFinishedAt,
+        geolocation: await LocationService().getGeolocationDetails(),
+        photos: photos,
+        sendMessageToChat: sendMessageToChat,
+      );
+    } catch (e) {
+      debugPrint('Error during memory creation: $e');
+    }
+
+    // Handle failure to create memory (if memory is null)
+    if (memory == null) {
+      debugPrint('Memory creation failed, resetting state...');
+      setHasTranscripts(false); // Reset transcripts as part of cleanup
+      if (mounted) {
+        setState(() => memoryCreating = false);
+      }
+      return; // Return early, stop further processing
+    }
+
+    if (!memory.discarded) {
+      executeBackupWithUid();
+      context
+          .read<MemoryBloc>()
+          .add(DisplayedMemory(isNonDiscarded: !memory.discarded));
+
+      if (!memory.discarded &&
+          SharedPreferencesUtil().postMemoryNotificationIsChecked) {
+        postMemoryCreationNotification(memory).then((r) {
+          debugPrint('Notification response: $r');
+          if (r.isEmpty) return;
+          sendMessageToChat(Message(DateTime.now(), r, 'ai'), memory);
+          createNotification(
+            notificationId: 2,
+            title:
+                'New Memory Created! ${memory?.structured.target?.getEmoji() ?? ''}',
+            body: r,
+          );
+        });
+      }
     }
 
     await widget.refreshMemories();
     SharedPreferencesUtil().transcriptSegments = [];
     segments = [];
+
+    // Reset the states
     if (mounted) {
       setState(() => memoryCreating = false);
     }
+
+    // Perform cleanup
     audioStorage?.clearAudioBytes();
     setHasTranscripts(false);
-    print("setHasTranscripts(false) called");
     currentTranscriptStartedAt = null;
     currentTranscriptFinishedAt = null;
     elapsedSeconds = 0;

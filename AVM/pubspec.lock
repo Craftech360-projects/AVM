@@ -487,34 +487,34 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_background_service
-      sha256: d32f078ec57647c9cfd6e1a8da9297f7d8f021d4dcc204a35aaad2cdbfe255f0
+      sha256: "8807ed792227be05329478870b92f2df62c7af96f49763f6d62ad39d2eac6ee6"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.10"
+    version: "5.0.7"
   flutter_background_service_android:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_background_service_android
-      sha256: "39da42dddf877beeef82bc2583130d8bedb4d0765e99ca9e7b4a32e8c6abd239"
+      sha256: fe06c4bd719b8ce8512d5724a229526155c1f54f734524b8e43f8212e98384a8
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.7"
+    version: "6.2.4"
   flutter_background_service_ios:
     dependency: transitive
     description:
       name: flutter_background_service_ios
-      sha256: "6037ffd45c4d019dab0975c7feb1d31012dd697e25edc05505a4a9b0c7dc9fba"
+      sha256: "45c8aca1e8850e5c45822152b06d5806aba9470517dcd2c291fce8ef99a44d60"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.3"
+    version: "5.0.2"
   flutter_background_service_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_background_service_platform_interface
-      sha256: ca74aa95789a8304f4d3f57f07ba404faa86bed6e415f83e8edea6ad8b904a41
+      sha256: "91dd3391c213e37094fbc3fb7f34319b99ea9df76036a5c054d6371be843b0ae"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.2"
+    version: "5.1.1"
   flutter_bloc:
     dependency: "direct main"
     description:
@@ -581,6 +581,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.4+3"
+  flutter_provider_utilities:
+    dependency: "direct main"
+    description:
+      name: flutter_provider_utilities
+      sha256: a532fad19357ca79f8eaf0f162a9fdda80eda165c61f0f9fb7f46129a30dacfa
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
   flutter_screenutil:
     dependency: "direct main"
     description:
@@ -809,6 +817,30 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  intercom_flutter:
+    dependency: "direct main"
+    description:
+      name: intercom_flutter
+      sha256: eddc843901480a78e20429e7637202e3ac03be18f02724ad288d17f1dfc64266
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.2.3"
+  intercom_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: intercom_flutter_platform_interface
+      sha256: "42cd30ff7fb987567d5e58092c3625e01ddb3d1831ec269df7567f333236aa51"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
+  intercom_flutter_web:
+    dependency: transitive
+    description:
+      name: intercom_flutter_web
+      sha256: "410f624093a30972c13df8775eaf84a8dd958629aadb90e5d367518cbea79f70"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.5"
   internet_connection_checker_plus:
     dependency: "direct main"
     description:
@@ -1067,13 +1099,14 @@ packages:
     source: git
     version: "3.0.1"
   opus_flutter_ios:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: opus_flutter_ios
-      sha256: c999bbe8b8f1a4073fb62de6cc04ecd3ab3acdefa6b8d78b03c0dac9c81ef0fa
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.1"
+      path: opus_flutter_ios
+      ref: dev
+      resolved-ref: "04696ff930a464bd47677026d45c3c3004f6daab"
+      url: "https://github.com/mdmohsin7/opus_flutter.git"
+    source: git
+    version: "3.0.0"
   opus_flutter_platform_interface:
     dependency: transitive
     description:

@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:avm/backend/preferences.dart';
-import 'package:avm/widgets/custom_dialog_box.dart';
+import 'package:avm/core/widgets/custom_dialog_box.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';

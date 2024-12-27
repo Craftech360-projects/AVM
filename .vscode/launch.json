@@ -3,7 +3,7 @@
 //   "configurations": [
 //     {
 //       "name": "avm (prod)",
-//       "cwd": "AVM",
+//       "cwd": "avm",
 //       "request": "launch",
 //       "type": "dart",
 //       "args": [
@@ -14,7 +14,7 @@
 //     },
 //     {
 //       "name": "avm (prod profile mode)",
-//       "cwd": "AVM",
+//       "cwd": "avm",
 //       "request": "launch",
 //       "type": "dart",
 //       "args": [
@@ -25,7 +25,7 @@
 //     },
 //     {
 //       "name": "avm (prod release mode)",
-//       "cwd": "AVM",
+//       "cwd": "avm",
 //       "request": "launch",
 //       "type": "dart",
 //       "args": [
@@ -36,7 +36,7 @@
 //     },
 //     {
 //       "name": "avm (dev)",
-//       "cwd": "AVM",
+//       "cwd": "avm",
 //       "request": "launch",
 //       "type": "dart",
 //       "args": [
@@ -47,7 +47,7 @@
 //     },
 //     {
 //       "name": "avm (dev profile mode)",
-//       "cwd": "AVM",
+//       "cwd": "avm",
 //       "request": "launch",
 //       "type": "dart",
 //       "args": [
@@ -58,7 +58,7 @@
 //     },
 //     {
 //       "name": "avm (dev release mode)",
-//       "cwd": "AVM",
+//       "cwd": "avm",
 //       "request": "launch",
 //       "type": "dart",
 //       "args": [
@@ -76,7 +76,7 @@
   "configurations": [
     {
       "name": "avm (prod)",
-      "cwd": "AVM",
+      "cwd": "avm",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -87,7 +87,7 @@
     },
     {
       "name": "avm (prod profile mode)",
-      "cwd": "AVM",
+      "cwd": "avm",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -98,7 +98,7 @@
     },
     {
       "name": "avm (prod release mode)",
-      "cwd": "AVM",
+      "cwd": "avm",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -109,7 +109,7 @@
     },
     {
       "name": "avm (dev)",
-      "cwd": "AVM",
+      "cwd": "avm",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -120,7 +120,7 @@
     },
     {
       "name": "avm (dev profile mode)",
-      "cwd": "AVM",
+      "cwd": "avm",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -131,7 +131,7 @@
     },
     {
       "name": "avm (dev release mode)",
-      "cwd": "AVM",
+      "cwd": "avm",
       "request": "launch",
       "type": "dart",
       "args": [

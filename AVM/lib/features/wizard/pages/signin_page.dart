@@ -189,7 +189,7 @@ class SigninPage extends StatelessWidget {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              showTermsDialog(context);
+                              // showTermsDialog(context);
                             },
                         ),
                         const TextSpan(text: ' and '),
@@ -201,7 +201,7 @@ class SigninPage extends StatelessWidget {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              showPrivacyPolicy(context);
+                              // showPrivacyPolicy(context);
                             },
                         ),
                       ],

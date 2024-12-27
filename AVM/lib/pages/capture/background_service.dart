@@ -5,6 +5,7 @@ import 'package:avm/backend/preferences.dart';
 import 'package:avm/utils/other/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 

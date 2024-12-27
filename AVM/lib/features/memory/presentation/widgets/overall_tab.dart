@@ -17,7 +17,7 @@ import 'package:avm/src/common_widget/expandable_text.dart';
 import 'package:avm/src/common_widget/list_tile.dart';
 import 'package:avm/utils/features/calendar.dart';
 import 'package:avm/utils/other/temp.dart';
-import 'package:avm/widgets/expandable_text.dart';
+import 'package:avm/core/widgets/expandable_text.dart';
 
 class OverallTab extends StatefulWidget {
   final Structured target;
