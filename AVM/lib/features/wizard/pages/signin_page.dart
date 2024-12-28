@@ -15,8 +15,6 @@ import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/wizard/pages/wizard_page.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/src/common_widget/elevated_button.dart';
-import 'package:avm/utils/legal/privacy_policy.dart';
-import 'package:avm/utils/legal/terms_and_condition.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SigninPage extends StatelessWidget {

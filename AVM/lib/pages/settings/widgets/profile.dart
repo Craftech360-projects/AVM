@@ -9,11 +9,9 @@ import 'package:avm/pages/settings/widgets/backup_btn.dart';
 import 'package:avm/pages/settings/widgets/change_name_widget.dart';
 import 'package:avm/pages/settings/widgets/restore_btn.dart';
 import 'package:avm/core/widgets/custom_dialog_box.dart';
-import 'package:avm/core/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});

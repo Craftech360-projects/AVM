@@ -17,7 +17,6 @@ import 'package:avm/pages/memory_detail/test_prompts.dart';
 import 'package:avm/pages/settings/widgets/calendar.dart';
 import 'package:avm/utils/features/calendar.dart';
 import 'package:avm/utils/other/temp.dart';
-import 'package:avm/core/widgets/dialog.dart';
 import 'package:avm/core/widgets/expandable_text.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:share_plus/share_plus.dart';
