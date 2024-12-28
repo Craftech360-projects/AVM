@@ -1,22 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/src/common_widget/expandable_text.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 
 class TranscriptTab extends StatelessWidget {
   final MemoryBloc memoryBloc;
   final int memoryAtIndex;
-  //final PageController pageController; // Added this parameter
 
   const TranscriptTab({
     super.key,
     required this.memoryBloc,
     required this.memoryAtIndex,
-    //required this.pageController, // Added this parameter
   });
 
   @override
@@ -26,6 +24,18 @@ class TranscriptTab extends StatelessWidget {
       builder: (context, state) {
         final transcriptSegments =
             state.memories[memoryAtIndex].transcriptSegments;
+        final started = state.memories[memoryAtIndex].startedAt ??
+            DateTime.now(); // Use startedAt or current time if null
+        print("started: $started");
+
+        // Calculate dummy timeline times
+        final segmentDuration =
+            Duration(seconds: 7); // Assume 5 seconds for each segment
+        final dummyTimes = List<DateTime>.generate(
+          transcriptSegments.length,
+          (index) => started.subtract(
+              segmentDuration * (transcriptSegments.length - 1 - index)),
+        );
 
         return Timeline.tileBuilder(
           physics: const BouncingScrollPhysics(),
@@ -37,6 +47,7 @@ class TranscriptTab extends StatelessWidget {
           builder: TimelineTileBuilder.connected(
             contentsBuilder: (context, index) => _TranscriptContent(
               segment: transcriptSegments[index],
+              time: dummyTimes[index], // Pass dummy time
             ),
             connectorBuilder: (_, index, __) {
               return SolidLineConnector(
@@ -61,28 +72,38 @@ class TranscriptTab extends StatelessWidget {
 
 class _TranscriptContent extends StatelessWidget {
   final TranscriptSegment segment;
+  final DateTime time; // Add time parameter
 
-  const _TranscriptContent({required this.segment});
+  const _TranscriptContent({
+    required this.segment,
+    required this.time,
+  });
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final hour =
+        time.hour % 12 == 0 ? 12 : time.hour % 12; // Handle 12-hour format
+    final period = time.hour >= 12 ? 'PM' : 'AM'; // Determine AM or PM
+    final timeString =
+        "${hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}:${time.second.toString().padLeft(2, '0')} $period";
+
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 05),
+            padding: const EdgeInsets.symmetric(horizontal: 5),
             child: Text(
-              segment.timestamp ?? '00:00:30',
+              timeString, // Use the formatted 12-hour time
               style: textTheme.titleMedium?.copyWith(
                 color: AppColors.black,
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 05),
+            padding: const EdgeInsets.symmetric(horizontal: 5),
             child: ExpandableText(
               leadingText: 'Speaker ${segment.speaker} : ',
               text: segment.text,
