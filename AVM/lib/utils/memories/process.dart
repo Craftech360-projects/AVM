@@ -14,6 +14,7 @@ import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/plugin.dart';
 import 'package:avm/pages/capture/location_service.dart';
+import 'package:avm/utils/features/backup_util.dart';
 import 'package:avm/utils/features/calendar.dart';
 import 'package:avm/utils/memories/integrations.dart';
 import 'package:flutter/material.dart';
@@ -346,6 +347,7 @@ Future<Memory> memoryCreationBlock(
         ),
       );
     } else if (structured.title.isNotEmpty) {
+      bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -353,7 +355,8 @@ Future<Memory> memoryCreationBlock(
             'New memory created! 🚀',
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
           ),
-          backgroundColor: const Color(0xFF6A1B9A), // Lavender color
+          backgroundColor:
+              const Color.fromARGB(255, 23, 18, 26), // Lavender color
           behavior: SnackBarBehavior.floating,
           margin: const EdgeInsets.fromLTRB(16, 0, 16, 70),
           shape: RoundedRectangleBorder(
@@ -362,6 +365,8 @@ Future<Memory> memoryCreationBlock(
           duration: const Duration(seconds: 4),
         ),
       );
+      print('Notification sent $backupsEnabled');
+      backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -16,6 +16,7 @@ import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/pages/capture/location_service.dart';
 import 'package:avm/utils/audio/wav_bytes.dart';
 import 'package:avm/utils/ble/communication.dart';
+import 'package:avm/utils/features/backup_util.dart';
 import 'package:avm/utils/features/backups.dart';
 import 'package:avm/utils/memories/integrations.dart';
 import 'package:avm/utils/memories/process.dart';
@@ -345,10 +346,10 @@ class CapturePageState extends State<CapturePage>
   // }
 
   _createMemory({bool forcedCreation = false}) async {
+    bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
     print('Creating memory');
     if (memoryCreating) return;
 
-  
     File? file;
 
     try {
@@ -364,25 +365,25 @@ class CapturePageState extends State<CapturePage>
         photos: photos,
         sendMessageToChat: sendMessageToChat,
       );
-      debugPrint(memory.toString());
+      debugPrint("hereeee..., ${memory.toString()}");
 
-      if (memory != null && !memory.discarded) executeBackupWithUid();
+      // if (memory != null && !memory.discarded) executeBackupWithUid();
       context
           .read<MemoryBloc>()
           .add(DisplayedMemory(isNonDiscarded: !memory!.discarded));
       if (!memory.discarded &&
           SharedPreferencesUtil().postMemoryNotificationIsChecked) {
-        postMemoryCreationNotification(memory).then((r) {
-          debugPrint('Notification response: $r');
-          if (r.isEmpty) return;
-          sendMessageToChat(Message(DateTime.now(), r, 'ai'), memory);
-          createNotification(
-            notificationId: 2,
-            title:
-                'New Memory Created! ${memory.structured.target!.getEmoji()}',
-            body: r,
-          );
-        });
+        // postMemoryCreationNotification(memory).then((r) {
+        //   debugPrint('Notification response: $r');
+        //   if (r.isEmpty) return;
+        //   sendMessageToChat(Message(DateTime.now(), r, 'ai'), memory);
+        createNotification(
+          notificationId: 2,
+          title: 'New Memory Created! ${memory.structured.target!.getEmoji()}',
+          body: 'Memory created successfully',
+        );
+        print('Notification sent $backupsEnabled');
+        backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
       }
 
       await widget.refreshMemories();

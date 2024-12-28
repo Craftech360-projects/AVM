@@ -7,11 +7,14 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  
+  logging: ^1.0.2  
   archive: ^3.6.1
   auto_size_text: ^3.0.0
   awesome_notifications: ^0.10.0
   awesome_notifications_core: ^0.10.0
   bloc: ^8.1.4
+  flutter_secure_storage: ^5.0.2
   collection: 1.19.0
   connectivity_plus: ^6.1.1
   crypto: ^3.0.6

@@ -172,7 +172,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       foregroundUtil.requestPermissionForAndroid();
     });
     _refreshMessages();
-    executeBackupWithUid();
+    // executeBackupWithUid();
     _initiateMemories();
     _initiatePlugins();
     _setupHasSpeakerProfile();
