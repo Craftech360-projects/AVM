@@ -307,7 +307,7 @@ class CapturePageState extends State<CapturePage>
 
     if (memory == null) {
       debugPrint('Memory creation failed, resetting state...');
-      setHasTranscripts(false); // Reset transcripts as part of cleanup
+      setHasTranscripts(false);
       if (mounted) {
         setState(() => memoryCreating = false);
       }
@@ -331,8 +331,6 @@ class CapturePageState extends State<CapturePage>
           title:
               'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
         );
-
-        //});
       }
       print('Notification sent $backupsEnabled');
       backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
@@ -382,7 +380,7 @@ class CapturePageState extends State<CapturePage>
       retrievedFromCache: true,
       sendMessageToChat: sendMessageToChat,
     ).then((m) {
-      // if (m != null && !m.discarded) executeBackupWithUid();
+      if (m != null && !m.discarded) executeBackupWithUid();
     });
     SharedPreferencesUtil().transcriptSegments = [];
     // include created at and finished at for this cached transcript

@@ -7,6 +7,7 @@ import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/core/widgets/typing_indicator.dart';
 import 'package:avm/features/capture/presentation/capture_page.dart';
 import 'package:avm/features/capture/widgets/greeting_card.dart';
+import 'package:avm/features/capture/widgets/real_time_bot.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/features/memory/presentation/widgets/memory_card.dart';
 import 'package:avm/pages/skeleton/screen_skeleton.dart';
@@ -45,9 +46,12 @@ class CaptureMemoryPage extends StatefulWidget {
   State<CaptureMemoryPage> createState() => _CaptureMemoryPageState();
 }
 
-class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
-  // final List<int> items = List.generate(1, (index) => index);
-  final List<bool> dismissedList = [false];
+class _CaptureMemoryPageState extends State<CaptureMemoryPage>
+    with TickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+  bool _isFlippingRight = true;
+  final List<int> items = List.generate(1, (index) => index);
   late MemoryBloc _memoryBloc;
   bool _isNonDiscarded = true;
   final GlobalKey<CapturePageState> capturePageKey =
@@ -64,32 +68,18 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
-              contentPadding: EdgeInsets.all(12),
+              contentPadding: const EdgeInsets.all(12),
               shape: RoundedRectangleBorder(borderRadius: br8),
               content: FittedBox(
                 fit: BoxFit.scaleDown,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Enable to get real time\nresponses from the bot',
-                      maxLines: 2,
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    w10,
-                    Switch(
-                      activeTrackColor: AppColors.purpleDark,
-                      activeColor: AppColors.commonPink,
-                      activeThumbImage: AssetImage(AppImages.appLogo),
-                      value: _switchValue,
-                      onChanged: (value) {
-                        SharedPreferencesUtil().notificationPlugin = value;
-                        setState(() {
-                          _switchValue = value;
-                        });
-                      },
-                    ),
-                  ],
+                child: buildPopupContent(
+                  setState,
+                  _switchValue,
+                  (bool value) {
+                    setState(() {
+                      _switchValue = value;
+                    });
+                  },
                 ),
               ),
             );
@@ -110,6 +100,35 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
       _memoryBloc.add(SearchMemory(query: _searchController.text));
     });
 
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    );
+
+    _animation = Tween<double>(begin: 0, end: 2 * 3.141592653589793).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Future.delayed(const Duration(seconds: 5), () {
+          if (mounted) {
+            setState(() {
+              _isFlippingRight = !_isFlippingRight;
+            });
+            _animationController.reset();
+            _animationController.forward();
+          }
+        });
+      }
+    });
+
+    // Start the first flip
+    _animationController.forward();
+
     _scrollController.addListener(() {
       if (_scrollController.offset > 0 && !_isScrolled) {
         setState(() {
@@ -124,9 +143,23 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   }
 
   @override
+  void didUpdateWidget(CaptureMemoryPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.hasTranscripts &&
+        oldWidget.hasTranscripts != widget.hasTranscripts) {
+      setState(() {
+        items.clear();
+        items.add(0);
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     _scrollController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -140,9 +173,9 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [
-              if (widget.memoryCreating && widget.hasTranscripts)
+              if (widget.memoryCreating)
                 Container(
-                  height: MediaQuery.of(context).size.height * 0.2,
+                  height: MediaQuery.of(context).size.height * 0.15,
                   decoration: BoxDecoration(
                     borderRadius: br8,
                   ),
@@ -156,56 +189,61 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                           color: AppColors.black,
                         ),
                       ),
+                      h10,
                       TypingIndicator(),
                     ],
                   ),
-                ),
-              if (!widget.memoryCreating && widget.hasTranscripts)
-                ...List.generate(
-                  dismissedList.length,
-                  (index) => !dismissedList[index]
-                      ? Dismissible(
-                          key: ValueKey(index),
-                          direction: DismissDirection.startToEnd,
-                          onDismissed: (direction) {
+                )
+              else if (widget.hasTranscripts)
+                ...items.map(
+                  (item) {
+                    return Dismissible(
+                        key: ValueKey(item),
+                        direction: DismissDirection.startToEnd,
+                        onDismissed: (direction) async {
+                          try {
+                            await widget
+                                .onDismissmissedCaptureMemory(direction);
+
                             setState(() {
-                              dismissedList[index] = true;
+                              items.remove(item);
                             });
-                            // Call additional logic for onDismissed if necessary.
-                            widget.onDismissmissedCaptureMemory(direction);
-                          },
-                          child: Column(
-                            children: [
-                              GreetingCard(
-                                name: '',
-                                isDisconnected: true,
-                                context: context,
-                                hasTranscripts: widget.hasTranscripts,
-                                wsConnectionState: widget.wsConnectionState,
-                                device: widget.device,
-                                internetStatus: widget.internetStatus,
-                                segments: widget.segments,
-                                memoryCreating: widget.memoryCreating,
-                                photos: widget.photos,
-                                scrollController: widget.scrollController,
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 6),
-                                child: Text(
-                                  "Swipe right to create your memory ...",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: AppColors.grey,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                          } catch (e) {
+                            avmSnackBar(context,
+                                'Oops! Something went wrong.\nPlease try again.');
+                          }
+                        },
+                        child: Column(
+                          children: [
+                            GreetingCard(
+                              name: '',
+                              isDisconnected: true,
+                              context: context,
+                              hasTranscripts: widget.hasTranscripts,
+                              wsConnectionState: widget.wsConnectionState,
+                              device: widget.device,
+                              internetStatus: widget.internetStatus,
+                              segments: widget.segments,
+                              memoryCreating: widget.memoryCreating,
+                              photos: widget.photos,
+                              scrollController: widget.scrollController,
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 6),
+                              child: Text(
+                                "Swipe right to create your memory ...",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: AppColors.grey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            ],
-                          ),
-                        )
-                      : const SizedBox.shrink(),
+                            ),
+                          ],
+                        ));
+                  },
                 )
               else
                 GreetingCard(
@@ -284,40 +322,63 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
           ),
         ),
         if (_isScrolled)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 35,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.25, 1.0],
-                  colors: [
-                    AppColors.white,
-                    AppColors.commonPink.withValues(alpha: 0.025),
-                  ],
-                ),
+          Positioned(top: 0, left: 0, right: 0, child: _buildScrollGradient()),
+        Positioned(
+          bottom: 14,
+          right: 08,
+          child: Column(
+            children: [
+              AnimatedBuilder(
+                animation: _animation,
+                builder: (context, child) {
+                  double flipValue = _isFlippingRight
+                      ? _animation.value // Normal flip
+                      : -_animation.value; // Reverse flip
+
+                  // Create a perspective effect for the 3D flip
+                  Matrix4 transform = Matrix4.identity()
+                    ..setEntry(3, 2, 0.001)
+                    ..rotateY(flipValue);
+
+                  return Transform(
+                    alignment: Alignment.center,
+                    transform: transform,
+                    child: FloatingActionButton(
+                      shape: const CircleBorder(),
+                      elevation: 8.0,
+                      backgroundColor: AppColors.purpleDark,
+                      onPressed: _showPopup,
+                      child: Image.asset(
+                        AppImages.botIcon,
+                        width: 45,
+                        height: 45,
+                      ),
+                    ),
+                  );
+                },
               ),
-            ),
-          ),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
-          alignment: Alignment.centerRight,
-          child: FloatingActionButton(
-            elevation: 0.8,
-            backgroundColor: AppColors.purpleDark,
-            onPressed: _showPopup,
-            child: Image.asset(
-              AppImages.botIcon,
-              width: 45,
-              height: 45,
-            ),
+              h10,
+              if (SharedPreferencesUtil().notificationPlugin) TypingIndicator(),
+            ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildScrollGradient() {
+    return Container(
+      height: 35,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.white,
+            AppColors.commonPink.withValues(alpha: 0.025)
+          ],
+        ),
+      ),
     );
   }
 }

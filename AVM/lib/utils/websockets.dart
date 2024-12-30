@@ -125,9 +125,44 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
     // KeepAlive mechanism
     Timer? keepAliveTimer;
+    const keepAliveInterval = Duration(seconds: 7);
     const silenceTimeout = Duration(seconds: 30); // Silence timeout
     DateTime? lastAudioTime;
+    void startKeepAlive() {
+      keepAliveTimer = Timer.periodic(keepAliveInterval, (timer) async {
+        try {
+          await channel.ready;
+          final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
+          channel.sink.add(keepAliveMsg);
+          debugPrint('Sent KeepAlive message');
+        } catch (e) {
+          debugPrint('Error sending KeepAlive message: $e');
+        }
+      });
+    }
 
+    void stopKeepAlive() {
+      keepAliveTimer?.cancel();
+    }
+
+    void checkSilence() {
+      if (lastAudioTime != null) {
+        Duration silenceDuration = DateTime.now().difference(lastAudioTime!);
+        debugPrint(
+            'Current silence duration: ${silenceDuration.inSeconds} seconds');
+
+        if (silenceDuration > silenceTimeout) {
+          debugPrint(
+              'Silence detected for more than 30 seconds. Stopping KeepAlive.');
+          stopKeepAlive();
+        }
+      } else {
+        debugPrint('No audio time recorded yet');
+      }
+    }
+
+    // Start the keepalive mechanism
+    startKeepAlive();
     channel.stream.listen(
       (event) {
         if (event == 'ping') return;
@@ -157,6 +192,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
                 onMessageReceived([segment]);
                 lastAudioTime = DateTime.now();
                 debugPrint('updated lastAudioTime: $lastAudioTime');
+                checkSilence();
               } else {
                 // debugPrint('Empty or invalid transcript');
               }
@@ -192,6 +228,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
             }
             lastAudioTime = DateTime.now();
             debugPrint('Transcript received from $speaker: $text');
+            // Check for silence after updating lastAudioTime
+            checkSilence();
           } else {
             debugPrint('Unknown event type: ${data['type']}');
           }
@@ -199,6 +237,14 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
           debugPrint('Error processing event: $e');
           debugPrint('Raw event: $event');
         }
+      },
+      onDone: () {
+        stopKeepAlive();
+        onWebsocketConnectionClosed(null, null);
+      },
+      onError: (error) {
+        stopKeepAlive();
+        onWebsocketConnectionError(error);
       },
     );
 
