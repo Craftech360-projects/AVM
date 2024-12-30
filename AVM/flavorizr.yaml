@@ -2,28 +2,28 @@ flavors:
   prod:
     app:
       name: "Altio"
-      icon: "assets/images/avm_app_icon.png"
+      icon: "assets/images/altio_app_icon.png"
     android:
       applicationId: "com.craftech360.avm"
-      icon: "assets/images/avm_app_icon.png"
+      icon: "assets/images/altio_app_icon.png"
       firebase:
         config: "avm/android/app/src/prod/google-services.json"
     ios:
       bundleId: "com.craftech360.avm"
-      icon: "assets/images/avm_app_icon.png"
+      icon: "assets/images/altio_app_icon.png"
       firebase:
         config: "avm/ios/Config/Prod/GoogleService-Info.plist"
   dev:
     app:
       name: "Altio Dev"
-      icon: "assets/images/avm_app_icon.png"
+      icon: "assets/images/altio_app_icon.png"
     android:
-      icon: "assets/images/avm_app_icon.png"
+      icon: "assets/images/altio_app_icon.png"
       applicationId: "com.craftech360.avm"
       firebase:
         config: "avm/android/app/src/dev/google-services.json"
     ios:
       bundleId: "com.craftech360.avm"
-      icon: "assets/images/avm_app_icon.png"
+      icon: "assets/images/altio_app_icon.png"
       firebase:
         config: "avm/ios/Config/Dev/GoogleService-Info.plist"

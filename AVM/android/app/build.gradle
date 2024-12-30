@@ -68,7 +68,7 @@ android {
 
     defaultConfig {
         applicationId = "com.craftech360.avm"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

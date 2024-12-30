@@ -1,13 +1,12 @@
 // Copyright (c) 2023 Larry Aasen. All rights reserved.
 
 import 'package:avm/backend/mixpanel.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:avm/core/widgets/custom_dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:upgrader/upgrader.dart';
 
 class MyUpgrader extends Upgrader {
   MyUpgrader({super.debugLogging, super.debugDisplayOnce});
-
 }
 
 class MyUpgradeAlert extends UpgradeAlert {
@@ -18,8 +17,6 @@ class MyUpgradeAlert extends UpgradeAlert {
     super.dialogStyle,
   });
 
-  /// Override the [createState] method to provide a custom class
-  /// with overridden methods.
   @override
   UpgradeAlertState createState() => MyUpgradeAlertState();
 }
@@ -36,64 +33,24 @@ class MyUpgradeAlertState extends UpgradeAlertState {
     required UpgraderMessages messages,
   }) {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          if (widget.dialogStyle == UpgradeDialogStyle.cupertino) {
-            return CupertinoAlertDialog(
-              key: key,
-              title: const Text(
-                'New Version Available  🎉',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-              content: SingleChildScrollView(
-                  child: ListBody(children: <Widget>[Text(message)])),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('No',
-                      style:
-                          TextStyle(color: Colors.grey.shade200, fontSize: 16)),
-                  onPressed: () {
-                    onUserIgnored(context, true);
-                    MixpanelManager().upgradeModalDismissed();
-                  },
-                ),
-                TextButton(
-                  child: const Text('Upgrade',
-                      style: TextStyle(color: Colors.white, fontSize: 16)),
-                  onPressed: () {
-                    onUserUpdated(context, !widget.upgrader.blocked());
-                    MixpanelManager().upgradeModalClicked();
-                  },
-                ),
-              ],
-            );
-          }
-          return AlertDialog(
-            key: key,
-            title: const Text(
-              'New Version Available  🎉',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-            content: SingleChildScrollView(
-                child: ListBody(children: <Widget>[Text(message)])),
-            actions: <Widget>[
-              TextButton(
-                child: Text('No',
-                    style:
-                        TextStyle(color: Colors.grey.shade200, fontSize: 16)),
-                onPressed: () {
-                  onUserIgnored(context, true);
-                },
-              ),
-              TextButton(
-                child: const Text('Upgrade',
-                    style: TextStyle(color: Colors.white, fontSize: 16)),
-                onPressed: () {
-                  onUserUpdated(context, !widget.upgrader.blocked());
-                },
-              ),
-            ],
-          );
-        });
+      context: context,
+      builder: (BuildContext context) {
+        return CustomDialogWidget(
+            title: "New version Available",
+            message: "A new version of Altio is available to download.",
+            icon: Icons.download_rounded,
+            noText: "Not now",
+            noPressed: () {
+              onUserIgnored(context, true);
+              MixpanelManager().upgradeModalDismissed();
+              Navigator.of(context).pop();
+            },
+            yesText: "Update",
+            yesPressed: () {
+              onUserUpdated(context, !widget.upgrader.blocked());
+              MixpanelManager().upgradeModalClicked();
+            });
+      },
+    );
   }
 }

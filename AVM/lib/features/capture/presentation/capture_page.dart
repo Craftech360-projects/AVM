@@ -105,7 +105,7 @@ class CapturePageState extends State<CapturePage>
     //   body: friendlyReply,
     //   notificationId: 10,
     // );
-    createMessagingNotification('AVM', friendlyReply);
+    createMessagingNotification('Altio', friendlyReply);
 
     await widget.refreshMemories();
     SharedPreferencesUtil().transcriptSegments = [];

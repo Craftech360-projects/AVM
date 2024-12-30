@@ -68,7 +68,7 @@ class NotificationOnKillService: Service() {
         return if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             R.drawable.ic_stat_launcher
         } else {
-            R.mipmap.launcher_icon
+            R.mipmap.ic_launcher
         }
     }
     override fun onBind(intent: Intent?): IBinder? {
