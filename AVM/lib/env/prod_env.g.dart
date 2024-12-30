@@ -9,19 +9,6 @@ part of 'prod_env.dart';
 // coverage:ignore-file
 // ignore_for_file: type=lint
 final class _ProdEnv {
-<<<<<<< HEAD
-  static final String? sentryDSNKey = null;
-
-  static final String? openAIAPIKey = null;
-
-  static final String? deepgramApiKey = null;
-
-  static final String? instabugApiKey = null;
-
-  static const List<int> _enviedkeypineconeApiKey = <int>[];
-
-  static const List<int> _envieddatapineconeApiKey = <int>[];
-=======
   static const List<int> _enviedkeysentryDSNKey = <int>[
     3295857207,
     2559948625,
@@ -393,7 +380,6 @@ final class _ProdEnv {
     2574926819,
     66559093,
   ];
->>>>>>> origin/fix/reconnectdevice
 
   static final String pineconeApiKey = String.fromCharCodes(List<int>.generate(
     _envieddatapineconeApiKey.length,
@@ -401,11 +387,6 @@ final class _ProdEnv {
     growable: false,
   ).map((int i) => _envieddatapineconeApiKey[i] ^ _enviedkeypineconeApiKey[i]));
 
-<<<<<<< HEAD
-  static const List<int> _enviedkeypineconeIndexUrl = <int>[];
-
-  static const List<int> _envieddatapineconeIndexUrl = <int>[];
-=======
   static const List<int> _enviedkeypineconeIndexUrl = <int>[
     832383870,
     150630586,
@@ -511,7 +492,6 @@ final class _ProdEnv {
     3206606330,
     3333890617,
   ];
->>>>>>> origin/fix/reconnectdevice
 
   static final String pineconeIndexUrl = String.fromCharCodes(
       List<int>.generate(
@@ -521,11 +501,6 @@ final class _ProdEnv {
   ).map((int i) =>
           _envieddatapineconeIndexUrl[i] ^ _enviedkeypineconeIndexUrl[i]));
 
-<<<<<<< HEAD
-  static const List<int> _enviedkeypineconeIndexNamespace = <int>[];
-
-  static const List<int> _envieddatapineconeIndexNamespace = <int>[];
-=======
   static const List<int> _enviedkeypineconeIndexNamespace = <int>[
     827544849,
     459316263,
@@ -537,7 +512,6 @@ final class _ProdEnv {
     459316308,
     236214999,
   ];
->>>>>>> origin/fix/reconnectdevice
 
   static final String pineconeIndexNamespace = String.fromCharCodes(
       List<int>.generate(
@@ -548,9 +522,6 @@ final class _ProdEnv {
           _envieddatapineconeIndexNamespace[i] ^
           _enviedkeypineconeIndexNamespace[i]));
 
-<<<<<<< HEAD
-  static final String? mixpanelProjectToken = null;
-=======
   static const List<int> _enviedkeymixpanelProjectToken = <int>[
     677955658,
     1987222818,
@@ -629,7 +600,6 @@ final class _ProdEnv {
   ).map((int i) =>
           _envieddatamixpanelProjectToken[i] ^
           _enviedkeymixpanelProjectToken[i]));
->>>>>>> origin/fix/reconnectdevice
 
   static final String? oneSignalAppId = null;
 

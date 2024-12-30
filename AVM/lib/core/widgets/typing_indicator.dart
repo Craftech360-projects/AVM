@@ -29,12 +29,7 @@ class TypingIndicatorState extends State<TypingIndicator>
 
     _controller = AnimationController(
       vsync: this,
-<<<<<<< HEAD
       duration: const Duration(seconds: 2), // Increased duration for slower animation
-=======
-      duration:
-          const Duration(seconds: 2), // Increased duration for slower animation
->>>>>>> origin/fix/reconnectdevice
     )..repeat();
 
     _animation1 = Tween<double>(begin: 0.3, end: 1.0).animate(
@@ -42,23 +37,11 @@ class TypingIndicatorState extends State<TypingIndicator>
     );
 
     _animation2 = Tween<double>(begin: 0.3, end: 1.0).animate(
-<<<<<<< HEAD
       CurvedAnimation(parent: _controller, curve: const Interval(0.3, 0.8)), // Delayed fade-in
     );
 
     _animation3 = Tween<double>(begin: 0.3, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: const Interval(0.6, 1.0)), // Further delayed fade-in
-=======
-      CurvedAnimation(
-          parent: _controller,
-          curve: const Interval(0.3, 0.8)), // Delayed fade-in
-    );
-
-    _animation3 = Tween<double>(begin: 0.3, end: 1.0).animate(
-      CurvedAnimation(
-          parent: _controller,
-          curve: const Interval(0.6, 1.0)), // Further delayed fade-in
->>>>>>> origin/fix/reconnectdevice
     );
   }
 
@@ -102,11 +85,7 @@ class TypingIndicatorState extends State<TypingIndicator>
 }
 
 class Dot extends StatelessWidget {
-<<<<<<< HEAD
 final double? width;
-=======
-  final double? width;
->>>>>>> origin/fix/reconnectdevice
   final double? height;
 
   const Dot({super.key, this.width, this.height});

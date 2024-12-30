@@ -1,16 +1,12 @@
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
+import 'package:avm/core/assets/app_images.dart';
+import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
+import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/utils/ble/connect.dart';
-<<<<<<< HEAD
-import 'package:avm/core/widgets/device_widget.dart';
-=======
-import 'package:avm/widgets/device_widget.dart';
 import 'package:flutter/material.dart';
-
-// Update with the actual path to your CustomScaffold file
->>>>>>> origin/fix/reconnectdevice
 
 class ConnectedDevice extends StatefulWidget {
   final BTDeviceStruct? device;
@@ -29,82 +25,6 @@ class _DeviceInfo {
   String hardwareRevision;
   String manufacturerName;
 
-<<<<<<< HEAD
-    return CustomScaffold(
-        showBackBtn: true,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const DeviceAnimationWidget(),
-            Text(
-              "Connected to:",
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-            ),
-            Text(
-              '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, deviceId.replaceAll(':', '').split('-').last.length > 6 ? 6 : deviceId.replaceAll(':', '').split('-').last.length)})',
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 20.0,
-                fontWeight: FontWeight.w500,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            h20,
-            widget.device != null
-                ? Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.black,
-                      borderRadius: br10,
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [],
-                    ),
-                  )
-                : const SizedBox.shrink(),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-              decoration: BoxDecoration(
-                color: AppColors.commonPink,
-                // border: Border.all(color: AppColors.purpleBright),
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: TextButton(
-                onPressed: () {
-                  if (widget.device != null) {
-                    bleDisconnectDevice(widget.device!);
-                  }
-                  Navigator.of(context).pop();
-                  SharedPreferencesUtil().deviceId = '';
-                  SharedPreferencesUtil().deviceName = '';
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        'Your AVM is ${widget.device == null ? "unpaired" : "disconnected"}'),
-                  ));
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FindDevicesPage(
-                        isFromOnboarding: false,
-                        goNext: () {},
-                      ),
-                    ),
-                  );
-                },
-                child: Text(
-                  widget.device == null ? "Unpair" : "Disconnect",
-                  style: const TextStyle(
-                      color: AppColors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-            ),
-          ],
-        ));
-=======
   _DeviceInfo(this.modelNumber, this.firmwareRevision, this.hardwareRevision,
       this.manufacturerName);
 
@@ -168,107 +88,95 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
     var deviceName = widget.device?.name ?? SharedPreferencesUtil().deviceName;
     var deviceConnected = widget.device != null;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: Text(deviceConnected ? 'Connected Device' : 'Paired Device',
-            style: TextStyle(
-                color: AppColors.grey,
-                fontSize: 20,
-                fontWeight: FontWeight.w500)),
-        backgroundColor: AppColors.white,
-      ),
+    return CustomScaffold(
+      showBackBtn: true,
+      showGearIcon: true,
+      title: Text(deviceConnected ? 'Connected Device' : 'No Device Connected',
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19)),
       body: FutureBuilder<_DeviceInfo>(
         future: _DeviceInfo.getDeviceInfo(widget.device),
         builder: (BuildContext context, AsyncSnapshot<_DeviceInfo> snapshot) {
-          return Column(
-            children: [
-              const SizedBox(height: 32),
-              const DeviceAnimationWidget(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, 6)})',
-                    style: const TextStyle(
-                      color: AppColors.purpleDark,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w500,
-                      height: 1.5,
-                    ),
-                    textAlign: TextAlign.center,
+          return Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(AppImages.appLogo, height: 120, width: 120),
+                Text(
+                  '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, 6)})',
+                  style: const TextStyle(
+                    color: AppColors.purpleDark,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                    height: 1.5,
                   ),
-                  const SizedBox(height: 12),
-                  if (snapshot.hasData)
-                    Column(
-                      children: [
-                        Text(
-                          '${snapshot.data?.modelNumber}, firmware ${snapshot.data?.firmwareRevision}',
-                          style: const TextStyle(
-                            color: AppColors.blueGreyDark,
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.w500,
-                            height: 1,
-                          ),
-                          textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
+                ),
+                h10,
+                if (snapshot.hasData)
+                  Column(
+                    children: [
+                      Text(
+                        '${snapshot.data?.modelNumber}, firmware ${snapshot.data?.firmwareRevision}',
+                        style: const TextStyle(
+                          color: AppColors.blueGreyDark,
+                          fontSize: 10.0,
+                          fontWeight: FontWeight.w500,
+                          height: 1,
                         ),
-                        const SizedBox(height: 12),
-                        Text(
-                          'by ${snapshot.data?.manufacturerName}',
-                          style: const TextStyle(
-                            color: AppColors.greyMedium,
-                            fontSize: 10.0,
-                            fontWeight: FontWeight.w500,
-                            height: 1,
-                          ),
-                          textAlign: TextAlign.center,
+                        textAlign: TextAlign.center,
+                      ),
+                      h15,
+                      Text(
+                        'by ${snapshot.data?.manufacturerName}',
+                        style: const TextStyle(
+                          color: AppColors.greyMedium,
+                          fontSize: 10.0,
+                          fontWeight: FontWeight.w500,
+                          height: 1,
                         ),
-                        const SizedBox(height: 12),
-                      ],
-                    ),
-                  widget.device != null
-                      ? Container(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 10,
-                                height: 10,
-                                decoration: BoxDecoration(
-                                  color: widget.batteryLevel > 75
-                                      ? const Color.fromARGB(255, 0, 255, 8)
-                                      : widget.batteryLevel > 20
-                                          ? Colors.yellow.shade700
-                                          : Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
+                        textAlign: TextAlign.center,
+                      ),
+                      h10,
+                    ],
+                  ),
+                widget.device != null
+                    ? Container(
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: br10,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: widget.batteryLevel > 75
+                                    ? AppColors.green
+                                    : widget.batteryLevel > 20
+                                        ? AppColors.orange
+                                            .withValues(alpha: 0.5)
+                                        : AppColors.red,
+                                shape: BoxShape.circle,
                               ),
-                              const SizedBox(width: 8.0),
-                              Text(
-                                '${widget.batteryLevel.toString()}% Battery',
-                                style: const TextStyle(
-                                  color: AppColors.purpleDark,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            ),
+                            const SizedBox(width: 8.0),
+                            Text(
+                              '${widget.batteryLevel.toString()}% Battery',
+                              style: const TextStyle(
+                                color: AppColors.purpleDark,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
-                          ))
-                      : const SizedBox.shrink()
-                ],
-              ),
-              const SizedBox(height: 32),
-              Container(
+                            ),
+                          ],
+                        ))
+                    : Container(),
+                Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                   decoration: BoxDecoration(
@@ -286,29 +194,31 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextButton(
-                      onPressed: () {
-                        if (widget.device != null) {
-                          bleDisconnectDevice(widget.device!);
-                        }
-                        Navigator.of(context).pop();
-                        SharedPreferencesUtil().deviceId = '';
-                        SharedPreferencesUtil().deviceName = '';
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              'Your AVM is ${widget.device == null ? "unpaired" : "disconnected"}   😔'),
-                        ));
-                        MixpanelManager().disconnectFriendClicked();
-                      },
-                      child: Text(
-                        widget.device == null ? "Unpair" : "Disconnect",
-                        style:
-                            const TextStyle(color: AppColors.red, fontSize: 16),
-                      )))
-            ],
+                    onPressed: () {
+                      if (widget.device != null) {
+                        bleDisconnectDevice(widget.device!);
+                      }
+                      Navigator.of(context).pop();
+                      SharedPreferencesUtil().deviceId = '';
+                      SharedPreferencesUtil().deviceName = '';
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            'Your AVM is ${widget.device == null ? "unpaired" : "disconnected"} 😔'),
+                      ));
+                      MixpanelManager().disconnectFriendClicked();
+                    },
+                    child: Text(
+                      widget.device == null ? "Unpair" : "Disconnect",
+                      style:
+                          const TextStyle(color: AppColors.red, fontSize: 16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
     );
->>>>>>> origin/fix/reconnectdevice
   }
 }

@@ -150,8 +150,8 @@ class CapturePageState extends State<CapturePage>
       },
       onConnectionFailed: (err) => setState(() {}),
       onConnectionClosed: (int? closeCode, String? closeReason) {
-        avmSnackBar(context,
-            "Connection was lost! Please check your internet connection.");
+        // avmSnackBar(context,
+        //     "Connection was lost! Please check your internet connection.");
       },
       onConnectionError: (err) {
         avmSnackBar(context,
@@ -186,11 +186,7 @@ class CapturePageState extends State<CapturePage>
             sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
-<<<<<<< HEAD
-
-=======
         print("HAS TRANSCRIPTS WHEN INPUT IS RECEIVED ===>: $_hasTranscripts");
->>>>>>> origin/fix/reconnectdevice
         _memoryCreationTimer?.cancel();
 
         bool notificationPluginValue = await getNotificationPluginValue();
@@ -292,10 +288,7 @@ class CapturePageState extends State<CapturePage>
 
     Memory? memory;
     try {
-<<<<<<< HEAD
-=======
-      print("Creating memory...");
->>>>>>> origin/fix/reconnectdevice
+      // print("Creating memory...");
       memory = await processTranscriptContent(
         context,
         TranscriptSegment.segmentsAsString(segments),
@@ -339,11 +332,8 @@ class CapturePageState extends State<CapturePage>
               'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
         );
       }
-<<<<<<< HEAD
-=======
       print('Notification sent $backupsEnabled');
       backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
->>>>>>> origin/fix/reconnectdevice
     }
 
     await widget.refreshMemories();

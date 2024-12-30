@@ -134,10 +134,6 @@ mixin WebSocketMixin {
     required Function(List<TranscriptSegment>) onMessageReceived,
     required BleAudioCodec codec,
   }) {
-<<<<<<< HEAD
-    // Only set up the listener if it hasn't been set up yet
-=======
->>>>>>> origin/fix/reconnectdevice
     if (!_internetListenerSetup) {
       _internetListener =
           InternetConnection().onStatusChange.listen((InternetStatus status) {
@@ -281,18 +277,6 @@ mixin WebSocketMixin {
     );
   }
 
-<<<<<<< HEAD
-  void closeWebSocket() {
-    // Ensure that the internet listener is set up before attempting to close the WebSocket
-    if (!_internetListenerSetup) {
-      debugPrint("Internet Listener is not set up yet");
-      return; // Or handle it by setting it up here
-    }
-
-    websocketChannel?.sink.close(1000);
-    _reconnectionTimer?.cancel();
-    _internetListener.cancel();
-=======
   Future<void> closeWebSocket() async {
     try {
       if (websocketChannel != null) {
@@ -313,6 +297,5 @@ mixin WebSocketMixin {
     } catch (e) {
       debugPrint('Error closing WebSocket connection: $e');
     }
->>>>>>> origin/fix/reconnectdevice
   }
 }

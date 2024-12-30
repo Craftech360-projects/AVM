@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
@@ -59,7 +61,7 @@ class _SettingPageState extends State<SettingPage> {
       title: const Center(
         child: Text(
           "Settings",
-          style: TextStyle(fontWeight: FontWeight.w500),
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
         ),
       ),
       showBackBtn: true,
@@ -107,16 +109,11 @@ class _SettingPageState extends State<SettingPage> {
                 // ),
                 CustomListTile(
                   onTap: () {
-                    print('Battery Level: ${widget.batteryLevel}');
-                    print('Device: ${widget.device}');
                     var deviceId =
                         widget.device?.id ?? SharedPreferencesUtil().deviceId;
                     var deviceName = widget.device?.name ??
                         SharedPreferencesUtil().deviceName;
                     var deviceConnected = widget.device != null;
-                    print('Device ID: $deviceId');
-                    print('Device Name: $deviceName');
-                    print('Device Connected: $deviceConnected');
 
                     if (SharedPreferencesUtil().deviceId.isNotEmpty) {
                       Navigator.of(context).push(
@@ -163,22 +160,9 @@ class _SettingPageState extends State<SettingPage> {
                       ),
                     ],
                   ),
-<<<<<<< HEAD:AVM/lib/pages/settings/presentation/pages/settings_page.dart
                   trailing: const CircleAvatar(
                     backgroundColor: AppColors.commonPink,
                     child: Icon(Icons.bluetooth_searching),
-=======
-                  trailing: CircleAvatar(
-                    backgroundColor: AppColors.greyLavender,
-                    child: Icon(
-                      widget.batteryLevel > 0
-                          ? Icons.battery_full
-                          : Icons.bluetooth_searching,
-                      color: widget.batteryLevel > 20
-                          ? const Color.fromARGB(255, 0, 255, 8)
-                          : Colors.red,
-                    ),
->>>>>>> origin/fix/reconnectdevice:AVM/lib/pages/settings/presentation/pages/setting_page.dart
                   ),
                 ),
                 h15,

@@ -27,18 +27,13 @@ import 'package:avm/utils/ble/communication.dart';
 import 'package:avm/utils/ble/connected.dart';
 import 'package:avm/utils/ble/scan.dart';
 import 'package:avm/utils/other/notifications.dart';
-<<<<<<< HEAD
 import 'package:avm/core/widgets/navbar.dart';
 import 'package:avm/core/widgets/upgrade_alert.dart';
-=======
-import 'package:avm/widgets/navbar.dart';
-import 'package:avm/widgets/upgrade_alert.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
->>>>>>> origin/fix/reconnectdevice
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -183,7 +178,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     _migrationScripts();
     authenticateGCP();
     if (SharedPreferencesUtil().deviceId.isNotEmpty) {
-      print("auto connect , #${SharedPreferencesUtil().deviceId}");
+      debugPrint("auto connect , #${SharedPreferencesUtil().deviceId}");
       scanAndConnectDevice().then(_onConnected);
     }
 
@@ -236,7 +231,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
               );
               SharedPreferencesUtil().showDisconnectionNotification = false;
             } else {
-              print('Show Disconnection Notification: false');
+              debugPrint('Show Disconnection Notification: false');
             }
           }
           MixpanelManager().deviceDisconnected();

@@ -78,11 +78,7 @@ Future<SummaryResult> summarizeMemory(
   if (transcript.isEmpty || transcript.split(' ').length < 7) {
     return SummaryResult(Structured('', ''), []);
   }
-<<<<<<< HEAD
-  if (transcript.split(' ').length > 15) {
-=======
   if (transcript.split(' ').length > 6) {
->>>>>>> origin/fix/reconnectdevice
     // try lower count?
     forceProcess = true;
   }

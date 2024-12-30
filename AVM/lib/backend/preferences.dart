@@ -276,7 +276,6 @@ class SharedPreferencesUtil {
   String getCodecType(String key) {
     return _preferences?.getString(key) ?? 'opus';
   }
-<<<<<<< HEAD
 
   String getKeywordDetectionStatus(String key) {
     return _preferences?.getString(key) ?? 'off';
@@ -290,8 +289,6 @@ class SharedPreferencesUtil {
   List<String> getSelectedKeywords() {
     return _preferences?.getStringList('selectedKeywords') ?? [];
   }
-=======
->>>>>>> origin/fix/reconnectdevice
 
   Future<bool> saveDouble(String key, double value) async {
     return await _preferences?.setDouble(key, value) ?? false;

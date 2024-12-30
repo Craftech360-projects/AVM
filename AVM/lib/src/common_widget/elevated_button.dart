@@ -1,3 +1,4 @@
+import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,9 @@ class CustomElevatedButton extends StatelessWidget {
       icon: icon,
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: br12,
+        ),
         backgroundColor: backgroundColor,
         elevation: 0,
       ),

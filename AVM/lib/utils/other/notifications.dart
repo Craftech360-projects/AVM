@@ -132,12 +132,8 @@ void createMessagingNotification(String sender, String message) async {
       title: sender,
       body: message,
       notificationLayout: NotificationLayout.Messaging,
-<<<<<<< HEAD
-      largeIcon: 'resource://mipmap/ic_stat_launcher', // Replace with your app icon
-=======
       largeIcon:
           'resource://drawable/ic_stat_avm', // Replace with your app icon
->>>>>>> origin/fix/reconnectdevice
       payload: {
         'sender': sender,
         'message': message,

@@ -348,11 +348,6 @@ Future<Memory> memoryCreationBlock(
         ),
       );
     } else if (structured.title.isNotEmpty) {
-<<<<<<< HEAD
-      avmSnackBar(
-        context,
-        'New memory created!',
-=======
       bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -370,12 +365,12 @@ Future<Memory> memoryCreationBlock(
           ),
           duration: const Duration(seconds: 4),
         ),
->>>>>>> origin/fix/reconnectdevice
       );
       print('Notification sent $backupsEnabled');
       backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
     } else {
-      avmSnackBar(context, "Memory stored as discarded! There's Background noise");
+      avmSnackBar(
+          context, "Memory stored as discarded! There's Background noise");
     }
   }
   return memory;

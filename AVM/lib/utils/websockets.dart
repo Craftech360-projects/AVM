@@ -76,13 +76,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   String? codecType = SharedPreferencesUtil().getCodecType('NewCodec');
 
   String encoding = codecType == "opus" ? 'opus' : 'linear16';
-<<<<<<< HEAD
-  final int sampleRate = codecType == "opus" ? 16000 : 8000;
-  const String language = 'en-US';
-=======
   const String language = 'en-US';
   final int sampleRate = codecType == "opus" ? 16000 : 8000;
->>>>>>> origin/fix/reconnectdevice
   final String codec = codecType;
   const int channels = 1;
   final String apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
@@ -127,19 +122,11 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     );
 
     await channel.ready;
-<<<<<<< HEAD
-    await channel.ready;
-
-    // KeepAlive mechanism
-    Timer? keepAliveTimer;
-    const silenceTimeout = Duration(seconds: 30); // Silence timeout
-=======
 
     // KeepAlive mechanism
     Timer? keepAliveTimer;
     const keepAliveInterval = Duration(seconds: 7);
     const silenceTimeout = Duration(seconds: 300); // Silence timeout
->>>>>>> origin/fix/reconnectdevice
     DateTime? lastAudioTime;
     void startKeepAlive() {
       keepAliveTimer = Timer.periodic(keepAliveInterval, (timer) async {
@@ -154,8 +141,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
       });
     }
 
-<<<<<<< HEAD
-=======
     void stopKeepAlive() {
       keepAliveTimer?.cancel();
     }
@@ -179,7 +164,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
     // Start the keepalive mechanism
     startKeepAlive();
->>>>>>> origin/fix/reconnectdevice
     channel.stream.listen(
       (event) {
         if (event == 'ping') return;
