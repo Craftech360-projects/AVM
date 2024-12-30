@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:avm/backend/api_requests/api/pinecone.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/memory_provider.dart';
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/widgets/custom_dialog_box.dart';
+import 'package:flutter/material.dart';
 
 class ConfirmDeletionWidget extends StatefulWidget {
   final Memory memory;
@@ -33,7 +32,8 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
       message: "Are you sure you want to delete this memory?",
       icon: Icons.delete_rounded,
       yesPressed: () async {
-        deleteVector(widget.memory.id.toString());
+        print("delete memory");
+
         MemoryProvider().deleteMemory(widget.memory);
         Navigator.pop(context);
         widget.onDelete?.call();
@@ -42,3 +42,4 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
     );
   }
 }
+  

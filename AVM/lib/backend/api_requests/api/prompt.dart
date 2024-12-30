@@ -362,7 +362,7 @@ Future<String> dailySummaryNotifications(List<Memory> memories) async {
   Remember $str is busy so this has to be very efficient and concise.
   Respond in at most 50 words.
   
-  Output your response in plain text, without markdown.
+  Output your response in json format.
   ```
   ${Memory.memoriesToString(memories, includeTranscript: true)}
   ```

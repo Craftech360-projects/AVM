@@ -1,8 +1,12 @@
 // ignore_for_file: unused_field, unused_local_variable
 
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:avm/backend/api_requests/api/prompt.dart';
+import 'package:avm/backend/database/memory_provider.dart';
 import 'package:avm/backend/database/message.dart';
+import 'package:avm/backend/database/message_provider.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
@@ -32,13 +36,58 @@ class _ChatScreenState extends State<ChatScreen>
   late ChatBloc _chatBloc;
   late AnimationController _animationController;
   late Animation<double> _animation;
+  _initDailySummary() {
+    var now = DateTime.now();
+    print("running >>>>>>>>>>>>>>>>>>>>>>>>>>>>???????????? ${now.hour}");
+    Timer.periodic(const Duration(minutes: 1), (timer) async {
+      // var now = DateTime.now();
+
+      // print("running >>>>>>>>>>>>>>>>>>>>>>>>>>>>???????????? ${now.hour}");
+      if (now.hour < 17) return;
+      // TODO: maybe a better way to optimize this. is it better to do on build state?
+      debugPrint('now: $now');
+      if (SharedPreferencesUtil().lastDailySummaryDay != '') {
+        var secondsFrom8pm = now
+            .difference(DateTime(now.year, now.month, now.day, 20))
+            .inSeconds;
+        var at = DateTime.parse(SharedPreferencesUtil().lastDailySummaryDay);
+        var secondsFromLast = now.difference(at).inSeconds;
+        debugPrint('secondsFrom8pm: $secondsFrom8pm');
+        debugPrint('secondsFromLast: $secondsFromLast');
+        if (secondsFromLast < secondsFrom8pm) {
+          timer.cancel();
+          return;
+        }
+      }
+      timer.cancel();
+      var memories = MemoryProvider().retrieveDayMemories(now);
+      if (memories.isEmpty) {
+        SharedPreferencesUtil().lastDailySummaryDay =
+            DateTime.now().toIso8601String();
+        return;
+      }
+
+      var message = Message(DateTime.now(), '', 'ai', type: 'daySummary');
+      MessageProvider().saveMessage(message);
+      // setState(() => widget.messages.add(message));
+
+      var result = await dailySummaryNotifications(memories);
+      SharedPreferencesUtil().lastDailySummaryDay =
+          DateTime.now().toIso8601String();
+      message.text = result;
+      message.memories.addAll(memories);
+      MessageProvider().updateMessage(message);
+      // setState(() => widget.messages.last = message);
+      // _moveListToBottom();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _chatBloc = BlocProvider.of<ChatBloc>(context);
     _chatBloc.add(LoadInitialChat());
-
+    // _initDailySummary();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToEnd();
     });
