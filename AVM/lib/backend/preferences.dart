@@ -20,7 +20,6 @@ class SharedPreferencesUtil {
     _preferences = await SharedPreferences.getInstance();
   }
 
-
   set uid(String value) => saveString('uid', value);
 
   String get uid => getString('uid') ?? '';
@@ -30,12 +29,11 @@ class SharedPreferencesUtil {
   String get deviceId => getString('deviceId') ?? '';
 
   //show device disconnect notification
-bool get showDisconnectionNotification =>
-    getBool('showDisconnectionNotification') ?? false;
+  bool get showDisconnectionNotification =>
+      getBool('showDisconnectionNotification') ?? false;
 
-set showDisconnectionNotification(bool value) =>
-    saveBool('showDisconnectionNotification', value);
-
+  set showDisconnectionNotification(bool value) =>
+      saveBool('showDisconnectionNotification', value);
 
   // Notification Permission Tracking
   set notificationPermissionRequested(bool value) =>
@@ -221,7 +219,7 @@ set showDisconnectionNotification(bool value) =>
     saveStringList('transcriptSegments', segments);
   }
 
-  bool get backupsEnabled => getBool('backupsEnabled2') ?? true;
+  bool get backupsEnabled => getBool('backupsEnabled2') ?? false;
 
   set backupsEnabled(bool value) => saveBool('backupsEnabled2', value);
 
@@ -237,6 +235,7 @@ set showDisconnectionNotification(bool value) =>
   String? getString(String key) {
     return _preferences?.getString(key);
   }
+
   //Bot Notification Plugin
   bool get notificationPlugin => getBool('notificationPlugin') ?? false;
   set notificationPlugin(bool value) => saveBool('notificationPlugin', value);
@@ -270,8 +269,8 @@ set showDisconnectionNotification(bool value) =>
   }
 
   String getCodecType(String key) {
-  return _preferences?.getString(key) ?? 'opus';
-}
+    return _preferences?.getString(key) ?? 'opus';
+  }
 
   Future<bool> saveDouble(String key, double value) async {
     return await _preferences?.setDouble(key, value) ?? false;
