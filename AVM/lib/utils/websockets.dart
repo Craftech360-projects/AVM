@@ -81,15 +81,18 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   final String codec = codecType;
   const int channels = 1;
   final String apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
+  // Uri uri = Uri.parse(
+  //   'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+  // );
   Uri uri = Uri.parse(
-    'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+    'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&language=$recordingsLanguage&model=nova-2-general&no_delay=true&endpointing=100&interim_results=false&smart_format=true&diarize=true',
   );
 
   debugPrint('apiType at dee$apiType');
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
-        'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+        'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&language=$recordingsLanguage&model=nova-2-general&no_delay=true&endpointing=100&interim_results=false&smart_format=true&diarize=true',
       );
       break;
 
@@ -106,7 +109,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     default:
       'Deepgram';
       uri = Uri.parse(
-        'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
+        'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&language=$recordingsLanguage&model=nova-2-general&no_delay=true&endpointing=100&interim_results=false&smart_format=true&diarize=true',
       );
   }
 
@@ -170,32 +173,42 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
         try {
           final data = jsonDecode(event);
-          //  print('websocket data satyam $event');
+          print('websocket data satyam $event');
           if (data['type'] == 'Metadata') {
             // Handle metadata event
           } else if (data['type'] == 'Results') {
-            //  print('deepgram sever selected');
+            print('deepgram server selected');
             // Handle results event
             final alternatives = data['channel']['alternatives'];
             if (alternatives is List && alternatives.isNotEmpty) {
               final transcript = alternatives[0]['transcript'];
-              if (transcript is String && transcript.isNotEmpty) {
-                final segment = TranscriptSegment(
-                  text: transcript,
-                  // speaker: 'SPEAKER_00',
-                  speaker: '1',
-
-                  isUser: false,
-                  start: (data['start'] as double?) ?? 0.0,
-                  end: ((data['start'] as double?) ?? 0.0) +
-                      ((data['duration'] as double?) ?? 0.0),
-                );
-                onMessageReceived([segment]);
+              final words = alternatives[0]['words'];
+              if (transcript is String &&
+                  transcript.isNotEmpty &&
+                  words is List) {
+                List<TranscriptSegment> segments = [];
+                for (var wordInfo in words) {
+                  final word = wordInfo['punctuated_word'] ?? wordInfo['word'];
+                  final speaker =
+                      wordInfo['speaker']?.toString() ?? 'SPEAKER_UNKNOWN';
+                  final start = wordInfo['start'] as double? ?? 0.0;
+                  final end = wordInfo['end'] as double? ?? 0.0;
+                  if (word is String && word.isNotEmpty) {
+                    segments.add(TranscriptSegment(
+                      text: word,
+                      speaker: speaker,
+                      isUser: false,
+                      start: start,
+                      end: end,
+                    ));
+                  }
+                }
+                onMessageReceived(segments);
                 lastAudioTime = DateTime.now();
                 debugPrint('updated lastAudioTime: $lastAudioTime');
                 checkSilence();
               } else {
-                // debugPrint('Empty or invalid transcript');
+                debugPrint('Empty or invalid transcript or words');
               }
             } else {
               debugPrint('No alternatives found in the result');

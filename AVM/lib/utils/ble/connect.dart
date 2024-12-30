@@ -14,7 +14,8 @@ Future<void> bleConnectDevice(String deviceId,
     }
 
     // Step 1: Connect with autoConnect
-    await device.connect(autoConnect: true, mtu: null);
+    await device.connect(
+        autoConnect: false, mtu: null); // Set autoConnect to false
     // Step 2: Listen to the connection state to ensure the device is connected
     await device.connectionState
         .where((state) => state == BluetoothConnectionState.connected)

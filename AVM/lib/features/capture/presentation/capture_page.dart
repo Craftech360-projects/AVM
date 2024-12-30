@@ -157,23 +157,75 @@ class CapturePageState extends State<CapturePage>
         avmSnackBar(context,
             "Connection was lost! Please check your internet connection.");
       },
-      onMessageReceived: (List<TranscriptSegment> newSegments) async {
+      // onMessageReceived: (List<TranscriptSegment> newSegments) async {
+      //   if (newSegments.isEmpty) return;
+
+      //   if (newSegments.isNotEmpty) {
+      //     debugPrint('newSegments:==> ${newSegments.last}');
+
+      //     audioStorage?.removeFramesRange(
+      //         fromSecond: 0, toSecond: newSegments[0].start.toInt());
+
+      //     firstStreamReceivedAt = DateTime.now();
+
+      //     setState(() {
+      //       segments.addAll(newSegments);
+      //       dismissedList = List.generate(segments.length, (index) => false);
+      //     });
+      //   }
+
+      //   streamStartedAtSecond ??= newSegments[0].start;
+
+      //   TranscriptSegment.combineSegments(
+      //     segments,
+      //     newSegments,
+      //     toRemoveSeconds: streamStartedAtSecond ?? 0,
+      //     toAddSeconds: secondsMissedOnReconnect ?? 0,
+      //   );
+      //   triggerTranscriptSegmentReceivedEvents(newSegments, conversationId,
+      //       sendMessageToChat: sendMessageToChat);
+      //   SharedPreferencesUtil().transcriptSegments = segments;
+      //   setHasTranscripts(true);
+      //   print("HAS TRANSCRIPTS WHEN INPUT IS RECEIVED ===>: $_hasTranscripts");
+      //   _memoryCreationTimer?.cancel();
+
+      //   bool notificationPluginValue = await getNotificationPluginValue();
+      //   if (notificationPluginValue) {
+      //     _memoryCreationTimer =
+      //         Timer(Duration(seconds: 10), () => _pluginNotification());
+      //   } else {
+      //     _memoryCreationTimer = Timer(
+      //       Duration(seconds: 60),
+      //       () => _createMemory(),
+      //     );
+      //   }
+
+      //   currentTranscriptStartedAt ??= DateTime.now();
+      //   currentTranscriptFinishedAt = DateTime.now();
+      //   if (_scrollController.hasClients) {
+      //     _scrollController.animateTo(
+      //       _scrollController.position.maxScrollExtent,
+      //       duration: const Duration(milliseconds: 100),
+      //       curve: Curves.easeOut,
+      //     );
+      //   }
+      //   if (mounted) {
+      //     setState(() {});
+      //   }
+      // },
+
+      onMessageReceived: (List<TranscriptSegment> newSegments) {
+        debugPrint("====> Message Received");
         if (newSegments.isEmpty) return;
 
-        if (newSegments.isNotEmpty) {
-          debugPrint('newSegments:==> ${newSegments.last}');
-
+        if (segments.isEmpty) {
+          debugPrint('newSegments: ${newSegments.last}');
+          // small bug -> when memory A creates, and memory B starts, memory B will clean a lot more seconds than available,
+          //  losing from the audio the first part of the recording. All other parts are fine.
           audioStorage?.removeFramesRange(
               fromSecond: 0, toSecond: newSegments[0].start.toInt());
-
           firstStreamReceivedAt = DateTime.now();
-
-          setState(() {
-            segments.addAll(newSegments);
-            dismissedList = List.generate(segments.length, (index) => false);
-          });
         }
-
         streamStartedAtSecond ??= newSegments[0].start;
 
         TranscriptSegment.combineSegments(
@@ -186,20 +238,11 @@ class CapturePageState extends State<CapturePage>
             sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
-        print("HAS TRANSCRIPTS WHEN INPUT IS RECEIVED ===>: $_hasTranscripts");
+        debugPrint('Memory creation timer restarted');
         _memoryCreationTimer?.cancel();
-
-        bool notificationPluginValue = await getNotificationPluginValue();
-        if (notificationPluginValue) {
-          _memoryCreationTimer =
-              Timer(Duration(seconds: 10), () => _pluginNotification());
-        } else {
-          _memoryCreationTimer = Timer(
-            Duration(seconds: 60),
-            () => _createMemory(),
-          );
-        }
-
+        _memoryCreationTimer = Timer(
+            const Duration(seconds: quietSecondsForMemoryCreation),
+            () => _createMemory());
         currentTranscriptStartedAt ??= DateTime.now();
         currentTranscriptFinishedAt = DateTime.now();
         if (_scrollController.hasClients) {
@@ -209,9 +252,7 @@ class CapturePageState extends State<CapturePage>
             curve: Curves.easeOut,
           );
         }
-        if (mounted) {
-          setState(() {});
-        }
+        setState(() {});
       },
     );
   }
