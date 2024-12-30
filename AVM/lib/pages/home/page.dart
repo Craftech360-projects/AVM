@@ -26,7 +26,6 @@ import 'package:avm/utils/audio/foreground.dart';
 import 'package:avm/utils/ble/communication.dart';
 import 'package:avm/utils/ble/connected.dart';
 import 'package:avm/utils/ble/scan.dart';
-import 'package:avm/utils/features/backups.dart';
 import 'package:avm/utils/other/notifications.dart';
 import 'package:avm/widgets/navbar.dart';
 import 'package:avm/widgets/upgrade_alert.dart';
@@ -179,6 +178,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     _migrationScripts();
     authenticateGCP();
     if (SharedPreferencesUtil().deviceId.isNotEmpty) {
+      print("auto connect , #${SharedPreferencesUtil().deviceId}");
       scanAndConnectDevice().then(_onConnected);
     }
 

@@ -126,7 +126,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     // KeepAlive mechanism
     Timer? keepAliveTimer;
     const keepAliveInterval = Duration(seconds: 7);
-    const silenceTimeout = Duration(seconds: 30); // Silence timeout
+    const silenceTimeout = Duration(seconds: 300); // Silence timeout
     DateTime? lastAudioTime;
     void startKeepAlive() {
       keepAliveTimer = Timer.periodic(keepAliveInterval, (timer) async {
@@ -146,6 +146,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     }
 
     void checkSilence() {
+      print("here");
       if (lastAudioTime != null) {
         Duration silenceDuration = DateTime.now().difference(lastAudioTime!);
         debugPrint(
