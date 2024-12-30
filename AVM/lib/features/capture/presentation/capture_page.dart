@@ -150,8 +150,8 @@ class CapturePageState extends State<CapturePage>
       },
       onConnectionFailed: (err) => setState(() {}),
       onConnectionClosed: (int? closeCode, String? closeReason) {
-        avmSnackBar(context,
-            "Connection was lost! Please check your internet connection.");
+        // avmSnackBar(context,
+        //     "Connection was lost! Please check your internet connection.");
       },
       onConnectionError: (err) {
         avmSnackBar(context,
