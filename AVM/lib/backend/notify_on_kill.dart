@@ -9,7 +9,7 @@ class NotifyOnKill {
       await platform.invokeMethod(
         'setNotificationOnKillService',
         {
-          'title': "AVM Device Disconnected",
+          'title': "AVM Device Disconnected...",
           'description':
               "Please keep your app opened to continue using your AVM.",
         },

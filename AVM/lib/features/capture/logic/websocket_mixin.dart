@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/material.dart';
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/utils/ble/communication.dart';
 import 'package:avm/utils/other/notifications.dart';
 import 'package:avm/utils/websockets.dart';
+import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -23,7 +23,7 @@ mixin WebSocketMixin {
   final int _maxReconnectDelay = 60;
   bool _isConnecting = false;
 
-  // final int _maxReconnectionAttempts = 3;
+  final int _maxReconnectionAttempts = 3;
   bool _hasNotifiedUser = false;
   bool _internetListenerSetup = false;
 
@@ -134,7 +134,10 @@ mixin WebSocketMixin {
     required Function(List<TranscriptSegment>) onMessageReceived,
     required BleAudioCodec codec,
   }) {
+<<<<<<< HEAD
     // Only set up the listener if it hasn't been set up yet
+=======
+>>>>>>> origin/fix/reconnectdevice
     if (!_internetListenerSetup) {
       _internetListener =
           InternetConnection().onStatusChange.listen((InternetStatus status) {
@@ -189,13 +192,13 @@ mixin WebSocketMixin {
     websocketReconnecting = true;
     _reconnectionAttempts++;
 
-    // if reconnection limits
-    // if (_reconnectionAttempts > _maxReconnectionAttempts) {
-    //   debugPrint('Max reconnection attempts reached');
-    //   _notifyReconnectionFailure();
-    //   websocketReconnecting = false;
-    //   return;
-    // }
+    //if reconnection limits
+    if (_reconnectionAttempts > _maxReconnectionAttempts) {
+      // debugPrint('Max reconnection attempts reached');
+      // _notifyReconnectionFailure();
+      websocketReconnecting = false;
+      return;
+    }
 
     int delaySeconds = _calculateReconnectDelay();
     debugPrint(
@@ -213,7 +216,7 @@ mixin WebSocketMixin {
       );
     });
     if (_reconnectionAttempts == 4 && !_hasNotifiedUser) {
-      _notifyReconnectionFailure();
+      // _notifyReconnectionFailure();
       _hasNotifiedUser = true;
     }
   }
@@ -278,6 +281,7 @@ mixin WebSocketMixin {
     );
   }
 
+<<<<<<< HEAD
   void closeWebSocket() {
     // Ensure that the internet listener is set up before attempting to close the WebSocket
     if (!_internetListenerSetup) {
@@ -288,5 +292,27 @@ mixin WebSocketMixin {
     websocketChannel?.sink.close(1000);
     _reconnectionTimer?.cancel();
     _internetListener.cancel();
+=======
+  Future<void> closeWebSocket() async {
+    try {
+      if (websocketChannel != null) {
+        await websocketChannel!.sink.close(1000, 'Closed by user');
+        websocketChannel = null;
+      }
+      _reconnectionTimer?.cancel();
+      await _internetListener.cancel();
+
+      // Reset connection state and variables
+      wsConnectionState = WebsocketConnectionStatus.notConnected;
+      websocketReconnecting = false;
+      _reconnectionAttempts = 0;
+      _isConnecting = false;
+      _hasNotifiedUser = false;
+
+      debugPrint('WebSocket connection closed successfully');
+    } catch (e) {
+      debugPrint('Error closing WebSocket connection: $e');
+    }
+>>>>>>> origin/fix/reconnectdevice
   }
 }

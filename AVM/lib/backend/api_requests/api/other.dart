@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:deepgram_speech_to_text/deepgram_speech_to_text.dart';
-import 'package:flutter/material.dart';
 import 'package:avm/backend/api_requests/api/shared.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/preferences.dart';
+import 'package:deepgram_speech_to_text/deepgram_speech_to_text.dart';
+import 'package:flutter/material.dart';
 
 Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
   debugPrint('deepgramTranscribe');
@@ -67,14 +67,15 @@ Future<String> webhookOnMemoryCreatedCall(Memory? memory,
     {bool returnRawBody = false}) async {
   if (memory == null) return '';
   debugPrint('devModeWebhookCall: $memory');
-  return triggerMemoryRequestAtEndpoint(
-    //SharedPreferencesUtil().webhookOnMemoryCreated,
-    //  'https://webhook-test.com/e2dd86c6594e8f3557246064cee207e3',
-    'https://hooks.zapier.com/hooks/catch/17966596/3et9fky/',
-    // 'https://based-hardware--plugins-api.modal.run/zapier/memories',
-    memory,
-    returnRawBody: returnRawBody,
-  );
+  // return triggerMemoryRequestAtEndpoint(
+  //   //SharedPreferencesUtil().webhookOnMemoryCreated,
+  //   //  'https://webhook-test.com/e2dd86c6594e8f3557246064cee207e3',
+  //   'https://hooks.zapier.com/hooks/catch/17966596/3et9fky/',
+  //   // 'https://based-hardware--plugins-api.modal.run/zapier/memories',
+  //   memory,
+  //   returnRawBody: returnRawBody,
+  // );
+  return '';
 }
 
 Future<String> zapWebhookOnMemoryCreatedCall(Memory? memory,

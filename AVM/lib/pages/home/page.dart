@@ -1,11 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:avm/backend/api_requests/api/server.dart';
 import 'package:avm/backend/api_requests/cloud_storage.dart';
 import 'package:avm/backend/database/memory.dart';
@@ -17,6 +12,7 @@ import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/backend/schema/plugin.dart';
 import 'package:avm/core/assets/app_images.dart';
+import 'package:avm/features/capture/logic/websocket_mixin.dart';
 import 'package:avm/features/capture/presentation/capture_page.dart';
 import 'package:avm/features/chat/bloc/chat_bloc.dart';
 import 'package:avm/features/chat/presentation/chat_screen.dart';
@@ -30,10 +26,19 @@ import 'package:avm/utils/audio/foreground.dart';
 import 'package:avm/utils/ble/communication.dart';
 import 'package:avm/utils/ble/connected.dart';
 import 'package:avm/utils/ble/scan.dart';
-import 'package:avm/utils/features/backups.dart';
 import 'package:avm/utils/other/notifications.dart';
+<<<<<<< HEAD
 import 'package:avm/core/widgets/navbar.dart';
 import 'package:avm/core/widgets/upgrade_alert.dart';
+=======
+import 'package:avm/widgets/navbar.dart';
+import 'package:avm/widgets/upgrade_alert.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+>>>>>>> origin/fix/reconnectdevice
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -47,7 +52,7 @@ class HomePageWrapper extends StatefulWidget {
 }
 
 class _HomePageWrapperState extends State<HomePageWrapper>
-    with WidgetsBindingObserver, TickerProviderStateMixin {
+    with WidgetsBindingObserver, TickerProviderStateMixin, WebSocketMixin {
   ForegroundUtil foregroundUtil = ForegroundUtil();
   TabController? _controller;
   late bool _isLoading;
@@ -70,6 +75,14 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   List<Plugin> plugins = [];
   final _upgrader = MyUpgrader(debugLogging: false, debugDisplayOnce: false);
+
+  void someMethod() {
+    // Check if the CapturePageState is available
+    if (capturePageKey.currentState != null) {
+      // Call the initiateBytesStreamingProcessing method
+      capturePageKey.currentState!.initiateBytesStreamingProcessing();
+    }
+  }
 
   _initiateMemories() async {
     memories = MemoryProvider()
@@ -163,13 +176,14 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       foregroundUtil.requestPermissionForAndroid();
     });
     _refreshMessages();
-    executeBackupWithUid();
+    // executeBackupWithUid();
     _initiateMemories();
     _initiatePlugins();
     _setupHasSpeakerProfile();
     _migrationScripts();
     authenticateGCP();
     if (SharedPreferencesUtil().deviceId.isNotEmpty) {
+      print("auto connect , #${SharedPreferencesUtil().deviceId}");
       scanAndConnectDevice().then(_onConnected);
     }
 
@@ -214,10 +228,16 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           setState(() => _device = null);
           InstabugLog.logInfo('AVM Device Disconnected');
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
-            createNotification(
-              title: 'AVM Device Disconnected',
-              body: 'Please reconnect to continue using your AVM.',
-            );
+            if (SharedPreferencesUtil().showDisconnectionNotification) {
+              print('Show Disconnection Notification: true');
+              createNotification(
+                title: 'AVM Device Disconnected',
+                body: 'Please reconnect to continue using your AVM.',
+              );
+              SharedPreferencesUtil().showDisconnectionNotification = false;
+            } else {
+              print('Show Disconnection Notification: false');
+            }
           }
           MixpanelManager().deviceDisconnected();
           foregroundUtil.stopForegroundTask();
@@ -247,6 +267,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     SharedPreferencesUtil().deviceId = _device!.id;
     SharedPreferencesUtil().deviceName = _device!.name;
     _startForeground();
+
     setState(() {
       _device = connectedDevice;
     });

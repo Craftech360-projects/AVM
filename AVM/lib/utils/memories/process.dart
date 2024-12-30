@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:avm/backend/api_requests/api/other.dart';
-import 'package:avm/backend/api_requests/api/pinecone.dart';
+//import 'package:avm/backend/api_requests/api/pinecone.dart';
 import 'package:avm/backend/api_requests/api/prompt.dart';
 import 'package:avm/backend/api_requests/api/random_memory_img.dart';
 import 'package:avm/backend/database/geolocation.dart';
@@ -15,6 +15,7 @@ import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/plugin.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/pages/capture/location_service.dart';
+import 'package:avm/utils/features/backup_util.dart';
 import 'package:avm/utils/features/calendar.dart';
 import 'package:avm/utils/memories/integrations.dart';
 import 'package:flutter/material.dart';
@@ -347,10 +348,32 @@ Future<Memory> memoryCreationBlock(
         ),
       );
     } else if (structured.title.isNotEmpty) {
+<<<<<<< HEAD
       avmSnackBar(
         context,
         'New memory created!',
+=======
+      bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'New memory created! 🚀',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          ),
+          backgroundColor:
+              const Color.fromARGB(255, 23, 18, 26), // Lavender color
+          behavior: SnackBarBehavior.floating,
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 70),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          duration: const Duration(seconds: 4),
+        ),
+>>>>>>> origin/fix/reconnectdevice
       );
+      print('Notification sent $backupsEnabled');
+      backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
     } else {
       avmSnackBar(context, "Memory stored as discarded! There's Background noise");
     }
@@ -418,11 +441,11 @@ Future<Memory> finalizeMemoryRecord(
   }
 
   // Process embeddings if not discarded
-  if (!discarded) {
-    getEmbeddingsFromInput(structured.toString()).then((vector) {
-      upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
-    });
-  }
+  // if (!discarded) {
+  //   getEmbeddingsFromInput(structured.toString()).then((vector) {
+  //     upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
+  //   });
+  // }
 
   // Optionally, track the memory creation
   // MixpanelManager().memoryCreated(memory);

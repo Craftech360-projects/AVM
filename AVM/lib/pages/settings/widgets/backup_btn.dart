@@ -117,7 +117,7 @@ class _BackupButtonState extends State<BackupButton> {
                 Icons.backup,
                 size: 22.h),
           ),
-          onTap: backupsEnabled ? _manualBackup : null,
+          onTap: backupsEnabled ? manualBackup : null,
         ),
         if (isManualBackupInProgress)
           const Padding(
@@ -156,11 +156,11 @@ class _BackupButtonState extends State<BackupButton> {
       backupsEnabled = true;
       SharedPreferencesUtil().backupsEnabled = true;
 
-      executeBackupWithUid();
+      // executeBackupWithUid();
     });
   }
 
-  void _manualBackup() async {
+  void manualBackup() async {
     setState(() => isManualBackupInProgress = true);
 
     try {

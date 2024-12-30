@@ -76,8 +76,13 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   String? codecType = SharedPreferencesUtil().getCodecType('NewCodec');
 
   String encoding = codecType == "opus" ? 'opus' : 'linear16';
+<<<<<<< HEAD
   final int sampleRate = codecType == "opus" ? 16000 : 8000;
   const String language = 'en-US';
+=======
+  const String language = 'en-US';
+  final int sampleRate = codecType == "opus" ? 16000 : 8000;
+>>>>>>> origin/fix/reconnectdevice
   final String codec = codecType;
   const int channels = 1;
   final String apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
@@ -122,13 +127,59 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     );
 
     await channel.ready;
+<<<<<<< HEAD
     await channel.ready;
 
     // KeepAlive mechanism
     Timer? keepAliveTimer;
     const silenceTimeout = Duration(seconds: 30); // Silence timeout
-    DateTime? lastAudioTime;
+=======
 
+    // KeepAlive mechanism
+    Timer? keepAliveTimer;
+    const keepAliveInterval = Duration(seconds: 7);
+    const silenceTimeout = Duration(seconds: 300); // Silence timeout
+>>>>>>> origin/fix/reconnectdevice
+    DateTime? lastAudioTime;
+    void startKeepAlive() {
+      keepAliveTimer = Timer.periodic(keepAliveInterval, (timer) async {
+        try {
+          await channel.ready;
+          final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
+          channel.sink.add(keepAliveMsg);
+          debugPrint('Sent KeepAlive message');
+        } catch (e) {
+          debugPrint('Error sending KeepAlive message: $e');
+        }
+      });
+    }
+
+<<<<<<< HEAD
+=======
+    void stopKeepAlive() {
+      keepAliveTimer?.cancel();
+    }
+
+    void checkSilence() {
+      print("here");
+      if (lastAudioTime != null) {
+        Duration silenceDuration = DateTime.now().difference(lastAudioTime!);
+        debugPrint(
+            'Current silence duration: ${silenceDuration.inSeconds} seconds');
+
+        if (silenceDuration > silenceTimeout) {
+          debugPrint(
+              'Silence detected for more than 30 seconds. Stopping KeepAlive.');
+          stopKeepAlive();
+        }
+      } else {
+        debugPrint('No audio time recorded yet');
+      }
+    }
+
+    // Start the keepalive mechanism
+    startKeepAlive();
+>>>>>>> origin/fix/reconnectdevice
     channel.stream.listen(
       (event) {
         if (event == 'ping') return;
@@ -158,6 +209,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
                 onMessageReceived([segment]);
                 lastAudioTime = DateTime.now();
                 debugPrint('updated lastAudioTime: $lastAudioTime');
+                checkSilence();
               } else {
                 // debugPrint('Empty or invalid transcript');
               }
@@ -193,6 +245,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
             }
             lastAudioTime = DateTime.now();
             debugPrint('Transcript received from $speaker: $text');
+            // Check for silence after updating lastAudioTime
+            checkSilence();
           } else {
             debugPrint('Unknown event type: ${data['type']}');
           }
@@ -200,6 +254,14 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
           debugPrint('Error processing event: $e');
           debugPrint('Raw event: $event');
         }
+      },
+      onDone: () {
+        stopKeepAlive();
+        onWebsocketConnectionClosed(null, null);
+      },
+      onError: (error) {
+        stopKeepAlive();
+        onWebsocketConnectionError(error);
       },
     );
 

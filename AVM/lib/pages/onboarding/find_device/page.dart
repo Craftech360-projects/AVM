@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/core/assets/app_images.dart';
@@ -12,6 +8,14 @@ import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/wizard/widgets/ble_animation.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/utils/ble/find.dart';
+<<<<<<< HEAD
+=======
+import 'package:avm/widgets/dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+>>>>>>> origin/fix/reconnectdevice
 import 'package:url_launcher/url_launcher.dart';
 
 import 'found_devices.dart';

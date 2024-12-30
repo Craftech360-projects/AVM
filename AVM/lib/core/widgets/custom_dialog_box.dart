@@ -148,7 +148,10 @@ class CustomDialogWidget extends StatelessWidget {
   final String message;
   final IconData icon;
   final VoidCallback? yesPressed;
+<<<<<<< HEAD
   final VoidCallback? noPressed;
+=======
+>>>>>>> origin/fix/reconnectdevice
   final Color? iconColor;
   final bool showTextField;
   final TextEditingController? textFieldController;
@@ -161,7 +164,10 @@ class CustomDialogWidget extends StatelessWidget {
     required this.message,
     required this.icon,
     this.yesPressed,
+<<<<<<< HEAD
     this.noPressed,
+=======
+>>>>>>> origin/fix/reconnectdevice
     this.textFieldController,
     this.yesText,
     this.noText,
@@ -242,7 +248,11 @@ class CustomDialogWidget extends StatelessWidget {
             ),
           ),
           onPressed: () {
+<<<<<<< HEAD
             noPressed ?? Navigator.of(context).pop();
+=======
+            Navigator.of(context).pop();
+>>>>>>> origin/fix/reconnectdevice
           },
           icon: const Icon(Icons.close, color: AppColors.white, size: 17),
           label: Text(

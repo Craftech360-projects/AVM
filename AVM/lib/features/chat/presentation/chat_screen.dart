@@ -2,9 +2,6 @@
 
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:avm/backend/database/message.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/core/constants/constants.dart';
@@ -12,6 +9,9 @@ import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/chat/bloc/chat_bloc.dart';
 import 'package:avm/features/chat/widgets/ai_message.dart';
 import 'package:avm/features/chat/widgets/user_message.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatScreen extends StatefulWidget {
   final FocusNode textFieldFocusNode;
@@ -93,11 +93,11 @@ class _ChatScreenState extends State<ChatScreen>
                         EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
                     child: Row(
                       children: [
-                        Text("Today",
-                            style: TextStyle(
-                                color: AppColors.purpleBright,
-                                fontWeight: FontWeight.w500)),
-                        w5,
+                        // Text("Today",
+                        //     style: TextStyle(
+                        //         color: AppColors.purpleBright,
+                        //         fontWeight: FontWeight.w500)),
+                        // w5,
                         Expanded(
                           child: Divider(
                             color: AppColors.purpleBright,

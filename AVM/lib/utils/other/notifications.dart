@@ -1,12 +1,12 @@
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter/material.dart';
 import 'package:avm/backend/notify_on_kill.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/main.dart';
 import 'package:avm/pages/home/page.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/material.dart';
 
 // could install the latest version due to podfile issues, so installed 0.8.3
 // https://pub.dev/packages/awesome_notifications/versions/0.8.3
@@ -98,7 +98,8 @@ void createNotification({
     isMorningNotification: isMorningNotification,
     isDailySummaryNotification: isDailySummaryNotification,
   );
-  if (interval == null && (isMorningNotification || isDailySummaryNotification)) {
+  if (interval == null &&
+      (isMorningNotification || isDailySummaryNotification)) {
     return;
   }
 
@@ -131,7 +132,12 @@ void createMessagingNotification(String sender, String message) async {
       title: sender,
       body: message,
       notificationLayout: NotificationLayout.Messaging,
+<<<<<<< HEAD
       largeIcon: 'resource://mipmap/ic_stat_launcher', // Replace with your app icon
+=======
+      largeIcon:
+          'resource://drawable/ic_stat_avm', // Replace with your app icon
+>>>>>>> origin/fix/reconnectdevice
       payload: {
         'sender': sender,
         'message': message,

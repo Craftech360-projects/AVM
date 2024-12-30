@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:avm/backend/preferences.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:avm/backend/preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -41,14 +41,12 @@ Future<UserCredential> signInWithApple() async {
   // If Apple provides email and name (only during the first sign-in), store them
   if (appleCredential.email != null) {
     SharedPreferencesUtil().email = appleCredential.email!;
-  } else {
-  }
+  } else {}
 
   if (appleCredential.givenName != null) {
     SharedPreferencesUtil().givenName = appleCredential.givenName!;
     SharedPreferencesUtil().familyName = appleCredential.familyName ?? '';
-  } else {
-  }
+  } else {}
   if (appleCredential.identityToken == null) {
     throw Exception('Identity token is null');
   }
@@ -130,7 +128,6 @@ Future<UserCredential> signInWithGoogle() async {
 }
 
 Future<UserCredential> signInWithGoogle2() async {
-
   // Trigger the Google Sign-In flow
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
   if (googleUser == null) {

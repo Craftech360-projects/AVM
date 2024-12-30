@@ -26,23 +26,66 @@ getOnMemoryCreationEvents(Memory memory) async {
   return await Future.wait(triggerPluginResult);
 }
 
+// getOnTranscriptSegmentReceivedEvents(
+//     List<TranscriptSegment> segment, String sessionId) async {
+//   var plugins = SharedPreferencesUtil()
+//       .pluginsList
+//       .where((element) =>
+//           element.externalIntegration?.triggersOn == 'transcript_processed' &&
+//           element.enabled)
+//       .toSet()
+//       .toList();
+//   List<Future<Tuple2<Plugin, String>>> triggerPluginResult =
+//       plugins.map((plugin) async {
+//     var url = plugin.externalIntegration!.webhookUrl;
+//     String message =
+//         await triggerTranscriptSegmentsRequest(url, sessionId, segment);
+//     return Tuple2(plugin, message);
+//   }).toList();
+//   return await Future.wait(triggerPluginResult);
+// }
+
 getOnTranscriptSegmentReceivedEvents(
     List<TranscriptSegment> segment, String sessionId) async {
+  // debugPrint('getOnTranscriptSegmentReceivedEvents called.');
+  // debugPrint('Session ID: $sessionId');
+  // debugPrint('Segment: ${segment.toString()}');
+
+  // Filter plugins based on conditions
   var plugins = SharedPreferencesUtil()
       .pluginsList
-      .where((element) =>
-          element.externalIntegration?.triggersOn == 'transcript_processed' &&
-          element.enabled)
+      .where((element) {
+        // debugPrint(
+        //     'Checking plugin: ${element.name}, Enabled: ${element.enabled}, Trigger: ${element.externalIntegration?.triggersOn}');
+        return element.externalIntegration?.triggersOn ==
+                'transcript_processed' &&
+            element.enabled;
+      })
       .toSet()
       .toList();
+
+  //debugPrint('Filtered plugins: ${plugins.map((e) => e.name).toList()}');
+
+  // Map each plugin to a Future
   List<Future<Tuple2<Plugin, String>>> triggerPluginResult =
       plugins.map((plugin) async {
     var url = plugin.externalIntegration!.webhookUrl;
+    // debugPrint(
+    //     'Triggering request for plugin: ${plugin.name}, Webhook URL: $url');
+
     String message =
         await triggerTranscriptSegmentsRequest(url, sessionId, segment);
+
+    //  debugPrint('Plugin: ${plugin.name}, Message: $message');
     return Tuple2(plugin, message);
   }).toList();
-  return await Future.wait(triggerPluginResult);
+
+  // Wait for all plugin triggers to complete
+  //debugPrint('Waiting for all plugin triggers to complete.');
+  var results = await Future.wait(triggerPluginResult);
+
+  //debugPrint('All plugin triggers completed. Results: ${results.toString()}');
+  return results;
 }
 
 triggerMemoryCreatedEvents(

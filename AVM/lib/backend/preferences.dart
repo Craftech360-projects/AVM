@@ -29,6 +29,13 @@ class SharedPreferencesUtil {
 
   String get deviceId => getString('deviceId') ?? '';
 
+  //show device disconnect notification
+  bool get showDisconnectionNotification =>
+      getBool('showDisconnectionNotification') ?? false;
+
+  set showDisconnectionNotification(bool value) =>
+      saveBool('showDisconnectionNotification', value);
+
   // Notification Permission Tracking
   set notificationPermissionRequested(bool value) =>
       saveBool('notificationPermissionRequested', value);
@@ -213,7 +220,7 @@ class SharedPreferencesUtil {
     saveStringList('transcriptSegments', segments);
   }
 
-  bool get backupsEnabled => getBool('backupsEnabled2') ?? true;
+  bool get backupsEnabled => getBool('backupsEnabled2') ?? false;
 
   set backupsEnabled(bool value) => saveBool('backupsEnabled2', value);
 
@@ -269,6 +276,7 @@ class SharedPreferencesUtil {
   String getCodecType(String key) {
     return _preferences?.getString(key) ?? 'opus';
   }
+<<<<<<< HEAD
 
   String getKeywordDetectionStatus(String key) {
     return _preferences?.getString(key) ?? 'off';
@@ -282,6 +290,8 @@ class SharedPreferencesUtil {
   List<String> getSelectedKeywords() {
     return _preferences?.getStringList('selectedKeywords') ?? [];
   }
+=======
+>>>>>>> origin/fix/reconnectdevice
 
   Future<bool> saveDouble(String key, double value) async {
     return await _preferences?.setDouble(key, value) ?? false;

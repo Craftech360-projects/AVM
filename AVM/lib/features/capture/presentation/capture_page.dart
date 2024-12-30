@@ -16,6 +16,7 @@ import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/pages/capture/location_service.dart';
 import 'package:avm/utils/audio/wav_bytes.dart';
 import 'package:avm/utils/ble/communication.dart';
+import 'package:avm/utils/features/backup_util.dart';
 import 'package:avm/utils/features/backups.dart';
 import 'package:avm/utils/memories/integrations.dart';
 import 'package:avm/utils/memories/process.dart';
@@ -185,7 +186,11 @@ class CapturePageState extends State<CapturePage>
             sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
+<<<<<<< HEAD
 
+=======
+        print("HAS TRANSCRIPTS WHEN INPUT IS RECEIVED ===>: $_hasTranscripts");
+>>>>>>> origin/fix/reconnectdevice
         _memoryCreationTimer?.cancel();
 
         bool notificationPluginValue = await getNotificationPluginValue();
@@ -216,6 +221,7 @@ class CapturePageState extends State<CapturePage>
   }
 
   Future<void> initiateBytesStreamingProcessing() async {
+    debugPrint("====> Byte Streaming Initiated");
     if (btDevice == null) return;
     BleAudioCodec codec = await getAudioCodec(btDevice!.id);
     audioStorage = WavBytesUtil(codec: codec);
@@ -274,6 +280,8 @@ class CapturePageState extends State<CapturePage>
   }
 
   _createMemory({bool forcedCreation = false}) async {
+    bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
+    print('Creating memory');
     if (memoryCreating) return;
 
     if (mounted) {
@@ -284,6 +292,10 @@ class CapturePageState extends State<CapturePage>
 
     Memory? memory;
     try {
+<<<<<<< HEAD
+=======
+      print("Creating memory...");
+>>>>>>> origin/fix/reconnectdevice
       memory = await processTranscriptContent(
         context,
         TranscriptSegment.segmentsAsString(segments),
@@ -327,6 +339,11 @@ class CapturePageState extends State<CapturePage>
               'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
         );
       }
+<<<<<<< HEAD
+=======
+      print('Notification sent $backupsEnabled');
+      backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
+>>>>>>> origin/fix/reconnectdevice
     }
 
     await widget.refreshMemories();
