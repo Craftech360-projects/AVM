@@ -76,6 +76,7 @@ class _ChatScreenState extends State<ChatScreen>
       message.text = result;
       message.memories.addAll(memories);
       MessageProvider().updateMessage(message);
+      _chatBloc.add(RefreshMessages());
     });
   }
 

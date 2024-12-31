@@ -40,16 +40,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       emit(state.copyWith(status: ChatStatus.loading));
 
-      // Fetch updated messages
+      // Re-fetch the updated messages
       List<Message> messages = messageProvider.getMessages();
       emit(state.copyWith(
         status: ChatStatus.loaded,
         messages: messages,
       ));
     } catch (error) {
+      log("Failed to refresh messages: $error");
       emit(state.copyWith(
         status: ChatStatus.failure,
-        errorMesage: error.toString(),
+        errorMesage: "Failed to refresh messages.",
       ));
     }
   }
