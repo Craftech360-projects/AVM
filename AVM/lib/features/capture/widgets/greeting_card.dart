@@ -1,12 +1,13 @@
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/preferences.dart';
-import 'package:avm/backend/schema/bt_device.dart';
+import 'package:avm/bloc/bluetooth_bloc.dart';
 import 'package:avm/core/assets/app_animations.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/capture/widgets/widgets.dart';
 import 'package:avm/utils/websockets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tuple/tuple.dart';
 
@@ -16,16 +17,12 @@ class GreetingCard extends StatelessWidget {
   final bool isDisconnected;
   final BuildContext context;
   final bool hasTranscripts;
-  // Changed from ConnectionState to WebsocketConnectionStatus
   final WebsocketConnectionStatus wsConnectionState;
-  final BTDeviceStruct? device; // Changed to match CaptureCard
-  final InternetStatus? internetStatus; // Made nullable to match CaptureCard
-  final List<TranscriptSegment>? segments; // Changed to match CaptureCard type
+  final InternetStatus? internetStatus;
+  final List<TranscriptSegment>? segments;
   final bool memoryCreating;
-  final List<Tuple2<String, String>>
-      photos; // Changed to match CaptureCard type
-  final ScrollController?
-      scrollController; // Made nullable to match CaptureCard
+  final List<Tuple2<String, String>> photos;
+  final ScrollController? scrollController;
 
   const GreetingCard({
     super.key,
@@ -34,7 +31,6 @@ class GreetingCard extends StatelessWidget {
     required this.context,
     required this.hasTranscripts,
     required this.wsConnectionState,
-    this.device,
     this.internetStatus,
     this.segments,
     this.memoryCreating = false,
@@ -45,8 +41,6 @@ class GreetingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isDeviceDisconnected = device == null;
-
     return GestureDetector(
       onTap: () {
         if (segments != null && segments!.isNotEmpty) {
@@ -72,7 +66,7 @@ class GreetingCard extends StatelessWidget {
                       memoryCreating,
                       segments ?? [],
                       photos,
-                      device,
+                      null, // device info will be handled by Bloc
                     ),
                   ),
                 )
@@ -97,7 +91,7 @@ class GreetingCard extends StatelessWidget {
               borderRadius: br12,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.black.withValues(alpha: 0.1),
+                  color: AppColors.black.withAlpha(25),
                   spreadRadius: 4,
                   blurRadius: 4,
                   offset: const Offset(2, 2),
@@ -153,22 +147,22 @@ class GreetingCard extends StatelessWidget {
                                 Container(
                                   width: 6,
                                   height: 6,
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: InternetStatus.connected ==
+                                    color: internetStatus ==
                                             InternetStatus.connected
                                         ? AppColors.green
                                         : AppColors.red,
                                   ),
                                 ),
                               w5,
-                              const Text(
+                              Text(
                                 'Internet',
                                 style: TextStyle(
-                                  color: InternetStatus.connected ==
-                                          InternetStatus.connected
-                                      ? Colors.black
-                                      : Colors.grey,
+                                  color:
+                                      internetStatus == InternetStatus.connected
+                                          ? Colors.black
+                                          : Colors.grey,
                                   fontSize: 14,
                                   height: 1.5,
                                   fontWeight: FontWeight.w600,
@@ -176,34 +170,49 @@ class GreetingCard extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                width: 6,
-                                height: 6,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: isDeviceDisconnected
-                                      ? Colors.red
-                                      : Colors.green,
-                                ),
-                              ),
-                              w5,
-                              Text(
-                                isDeviceDisconnected
-                                    ? 'Disconnected'
-                                    : '${device?.name ?? ''} ${device?.id.replaceAll(':', '').split('-').last.substring(0, 6) ?? ''}',
-                                style: TextStyle(
-                                  color: isDeviceDisconnected
-                                      ? AppColors.grey
-                                      : AppColors.black,
-                                  fontSize: 14,
-                                  height: 1.5,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                          BlocBuilder<BluetoothBloc, BluetoothState>(
+                            builder: (context, state) {
+                              bool isDeviceDisconnected =
+                                  state is BluetoothDisconnected;
+                              String deviceInfo = 'Disconnected';
+
+                              if (state is BluetoothConnected) {
+                                print('state.device: ${state.device}');
+                                deviceInfo =
+                                    '${state.device.name} ${(state.device.id.replaceAll(':', '').split('-').last.substring(0, 6))}';
+                              }
+
+                              print('Device Info: $deviceInfo');
+                              print('Is Device Disconnected: $isDeviceDisconnected');
+
+                              return Row(
+                                children: [
+                                  Container(
+                                    width: 6,
+                                    height: 6,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: isDeviceDisconnected
+                                          ? Colors.red
+                                          : Colors.green,
+                                    ),
+                                  ),
+                                  w5,
+                                  Text(
+                                    deviceInfo,
+                                    style: TextStyle(
+                                      color: isDeviceDisconnected
+                                          ? AppColors.grey
+                                          : AppColors.black,
+                                      fontSize: 14,
+                                      height: 1.5,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         ],
                       ),

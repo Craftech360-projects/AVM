@@ -102,9 +102,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SettingPage(
-                            device: widget.device,
-                            batteryLevel: widget.batteryLevel),
+                        builder: (context) => SettingPage(),
                       ),
                     );
                   },

@@ -11,6 +11,7 @@ import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/backend/schema/plugin.dart';
+import 'package:avm/bloc/bluetooth_bloc.dart';
 import 'package:avm/core/assets/app_images.dart';
 import 'package:avm/features/capture/logic/websocket_mixin.dart';
 import 'package:avm/features/capture/presentation/capture_page.dart';
@@ -23,7 +24,7 @@ import 'package:avm/pages/settings/presentation/pages/setting_page.dart';
 import 'package:avm/pages/skeleton/screen_skeleton.dart';
 import 'package:avm/scripts.dart';
 import 'package:avm/utils/audio/foreground.dart';
-import 'package:avm/utils/ble/communication.dart';
+// import 'package:avm/utils/ble/communication.dart';
 import 'package:avm/utils/ble/connected.dart';
 import 'package:avm/utils/ble/scan.dart';
 import 'package:avm/utils/other/notifications.dart';
@@ -179,7 +180,10 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     authenticateGCP();
     if (SharedPreferencesUtil().deviceId.isNotEmpty) {
       print("auto connect , #${SharedPreferencesUtil().deviceId}");
-      scanAndConnectDevice().then(_onConnected);
+      scanAndConnectDevice().then((device) {
+        _onConnected(device);
+        BlocProvider.of<BluetoothBloc>(context).startListening(device!.id);
+      });
     }
 
     createNotification(
@@ -215,12 +219,16 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     if (_connectionStateListener != null) return;
     //when disconnected manually need to remove this connection state listener
     _connectionStateListener = getConnectionStateListener(
-        deviceId: _device!.id,
-        onDisconnected: () {
+      deviceId: _device!.id,
+      onStateChanged: (state, device) {
+        if (state == BluetoothConnectionState.disconnected) {
           debugPrint('onDisconnected');
           capturePageKey.currentState
               ?.resetState(restartBytesProcessing: false);
-          setState(() => _device = null);
+          setState(() {
+            _device = null;
+            batteryLevel = -1; // Reset battery level
+          });
           InstabugLog.logInfo('AVM Device Disconnected');
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
             if (SharedPreferencesUtil().showDisconnectionNotification) {
@@ -236,9 +244,12 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           }
           MixpanelManager().deviceDisconnected();
           foregroundUtil.stopForegroundTask();
-        },
-        onConnected: ((d) =>
-            _onConnected(d, initiateConnectionListener: false)));
+        } else if (state == BluetoothConnectionState.connected &&
+            device != null) {
+          _onConnected(device, initiateConnectionListener: false);
+        }
+      },
+    );
   }
 
   _startForeground() async {

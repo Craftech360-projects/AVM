@@ -1,8 +1,7 @@
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
-import 'package:avm/backend/schema/bt_device.dart';
+import 'package:avm/bloc/bluetooth_bloc.dart';
 import 'package:avm/core/constants/constants.dart';
-import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/home/device.dart';
 import 'package:avm/pages/onboarding/find_device/page.dart';
@@ -15,18 +14,12 @@ import 'package:avm/pages/settings/widgets/profile.dart';
 import 'package:avm/src/common_widget/list_tile.dart';
 import 'package:avm/utils/other/temp.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingPage extends StatefulWidget {
-  final BTDeviceStruct? device;
-  final int batteryLevel;
-
-  const SettingPage({
-    this.device,
-    this.batteryLevel = -1,
-    super.key,
-  });
+  const SettingPage({super.key});
 
   static const String name = 'settingPage';
 
@@ -71,108 +64,78 @@ class _SettingPageState extends State<SettingPage> {
             child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
               children: [
-                // CustomListTile(
-                //   onTap: () {
-                //     if (widget.device != null) {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => ConnectedDevice(
-                //             device: widget.device,
-                //             batteryLevel: widget.batteryLevel,
-                //           ),
-                //         ),
-                //       );
-                //     } else {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => FindDevicesPage(
-                //             goNext: () {},
-                //           ),
-                //         ),
-                //       );
-                //     }
-                //   },
-                //   title: Text(
-                //     widget.batteryLevel > 0
-                //         ? 'Battery Level: ${widget.batteryLevel}%'
-                //         : 'Device not connected',
-                //     style: const TextStyle(fontWeight: FontWeight.w500),
-                //   ),
-                //   trailing: const CircleAvatar(
-                //     backgroundColor: AppColors.greyLavender,
-                //     child: Icon(Icons.bluetooth_searching),
-                //   ),
-                // ),
-                CustomListTile(
-                  onTap: () {
-                    print('Battery Level: ${widget.batteryLevel}');
-                    print('Device: ${widget.device}');
-                    var deviceId =
-                        widget.device?.id ?? SharedPreferencesUtil().deviceId;
-                    var deviceName = widget.device?.name ??
-                        SharedPreferencesUtil().deviceName;
-                    var deviceConnected = widget.device != null;
-                    print('Device ID: $deviceId');
-                    print('Device Name: $deviceName');
-                    print('Device Connected: $deviceConnected');
+                BlocBuilder<BluetoothBloc, BluetoothState>(
+                  builder: (context, state) {
+                    bool isDeviceDisconnected = state is BluetoothDisconnected;
+                    String deviceInfo = 'Device not connected';
+                    int batteryLevel = -1;
 
-                    if (SharedPreferencesUtil().deviceId.isNotEmpty) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ConnectedDevice(
-                            device: widget.device,
-                            batteryLevel: widget.batteryLevel,
-                          ),
-                        ),
-                      );
-                      MixpanelManager().batteryIndicatorClicked();
-                    } else {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => FindDevicesPage(
-                            goNext: () {},
-                          ),
-                          // const ConnectDevicePage(),
-                        ),
-                      );
-                      MixpanelManager().connectFriendClicked();
+                    if (state is BluetoothConnected) {
+                      print('state.device: ${state.device}');
+                      deviceInfo = 'Battery Level: ${state.batteryLevel}%';
+                      batteryLevel = state.batteryLevel;
                     }
-                  },
-                  title: Row(
-                    children: [
-                      if (widget.batteryLevel > 0) ...[
-                        Icon(
-                          Icons.bolt,
-                          color: widget.batteryLevel > 75
-                              ? const Color.fromARGB(255, 0, 255, 8)
-                              : widget.batteryLevel > 20
-                                  ? Colors.yellow.shade700
-                                  : Colors.red,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                      Text(
-                        widget.batteryLevel > 0
-                            ? 'Battery Level: ${widget.batteryLevel}%'
-                            : 'Device not connected',
-                        style: const TextStyle(fontWeight: FontWeight.w500),
+
+                    return CustomListTile(
+                      onTap: () {
+                        print('Battery Level: $batteryLevel');
+                        print(
+                            'Device: ${state is BluetoothConnected ? state.device : null}');
+                        var deviceId = state is BluetoothConnected
+                            ? state.device.id
+                            : SharedPreferencesUtil().deviceId;
+                        var deviceName = state is BluetoothConnected
+                            ? state.device.name
+                            : SharedPreferencesUtil().deviceName;
+                        var deviceConnected = state is BluetoothConnected;
+                        print('Device ID: $deviceId');
+                        print('Device Name: $deviceName');
+                        print('Device Connected: $deviceConnected');
+
+                        if (deviceConnected) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ConnectedDevice(
+                                device: state.device,
+                                batteryLevel: batteryLevel,
+                              ),
+                            ),
+                          );
+                          MixpanelManager().batteryIndicatorClicked();
+                        } else {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => FindDevicesPage(
+                                goNext: () {},
+                              ),
+                              // const ConnectDevicePage(),
+                            ),
+                          );
+                          MixpanelManager().connectFriendClicked();
+                        }
+                      },
+                      title: Row(
+                        children: [
+                          if (batteryLevel > 0) ...[
+                            Icon(
+                              Icons.bolt,
+                              color: batteryLevel > 75
+                                  ? const Color.fromARGB(255, 0, 255, 8)
+                                  : batteryLevel > 20
+                                      ? Colors.yellow.shade700
+                                      : Colors.red,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 8),
+                          ],
+                          Text(
+                            deviceInfo,
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  trailing: CircleAvatar(
-                    backgroundColor: AppColors.greyLavender,
-                    child: Icon(
-                      widget.batteryLevel > 0
-                          ? Icons.battery_full
-                          : Icons.bluetooth_searching,
-                      color: widget.batteryLevel > 20
-                          ? const Color.fromARGB(255, 0, 255, 8)
-                          : Colors.red,
-                    ),
-                  ),
+                    );
+                  },
                 ),
                 h15,
                 Text(

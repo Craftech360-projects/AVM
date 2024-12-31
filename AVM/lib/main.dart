@@ -1,14 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:avm/backend/api_requests/api/server.dart';
 import 'package:avm/backend/auth.dart';
 import 'package:avm/backend/database/box.dart';
@@ -18,6 +10,7 @@ import 'package:avm/backend/growthbook.dart';
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/plugin.dart';
+import 'package:avm/bloc/bluetooth_bloc.dart';
 import 'package:avm/core/theme/app_theme.dart';
 import 'package:avm/env/dev_env.dart';
 import 'package:avm/env/env.dart';
@@ -31,6 +24,14 @@ import 'package:avm/pages/splash/splash_screen.dart';
 import 'package:avm/src/config/simple_bloc_observer.dart';
 import 'package:avm/utils/features/calendar.dart';
 import 'package:avm/utils/other/notifications.dart';
+import 'package:collection/collection.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:opus_dart/opus_dart.dart';
@@ -70,7 +71,7 @@ void main() async {
   } catch (e) {
     log(e.toString());
   }
-  
+
   if (isAuth) MixpanelManager().identify();
 
   initOpus(await opus_flutter.load());
@@ -173,6 +174,10 @@ class MyAppState extends State<MyApp> {
                 MemoryProvider(),
               ),
             ),
+            BlocProvider(
+              create: (context) =>
+                  BluetoothBloc()..startListening('your_device_id'),
+            ),
           ],
           child: MaterialApp(
             navigatorObservers: [InstabugNavigatorObserver()],
@@ -192,6 +197,40 @@ class MyAppState extends State<MyApp> {
           ),
         );
       },
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final bluetoothBloc = BlocProvider.of<BluetoothBloc>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Bluetooth Connection'),
+      ),
+      body: BlocBuilder<BluetoothBloc, BluetoothState>(
+        builder: (context, state) {
+          if (state is BluetoothInitial) {
+            return Center(child: Text('No device connected'));
+          } else if (state is BluetoothConnected) {
+            return Center(child: Text('Connected to ${state.device.name}'));
+          } else if (state is BluetoothDisconnected) {
+            return Center(child: Text('Device disconnected'));
+          }
+          return Container();
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          bluetoothBloc.startListening('your_device_id');
+        },
+        tooltip: 'Connect',
+        child: Icon(Icons.bluetooth),
+      ),
     );
   }
 }
