@@ -1,18 +1,18 @@
 // ignore_for_file: unnecessary_null_comparison, duplicate_ignore
 
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
+import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/features/memory/presentation/widgets/category_chip.dart';
 import 'package:avm/features/memory/presentation/widgets/overall_tab.dart';
 import 'package:avm/features/memory/presentation/widgets/tab_bar.dart';
 import 'package:avm/features/memory/presentation/widgets/transcript_tab_widget.dart';
-import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/pages/memory_detail/share.dart';
 import 'package:avm/pages/memory_detail/widgets.dart';
 import 'package:avm/utils/memories/reprocess.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 // class MemoryDetailPage extends StatefulWidget {
@@ -148,7 +148,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 setState,
               );
             },
-            icon: const Icon(Icons.ios_share, size: 24),
+            icon: const Icon(Icons.share_rounded, size: 23),
           ),
           IconButton(
             onPressed: () {
@@ -159,9 +159,9 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 _reProcessMemory,
               );
             },
-            icon: const Icon(Icons.more_vert_rounded, size: 25),
+            icon: const Icon(Icons.more_horiz_rounded, size: 25),
           ),
-          w10,
+          // w10,
         ],
       ),
       body: Container(

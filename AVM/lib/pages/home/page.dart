@@ -224,7 +224,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           InstabugLog.logInfo('AVM Device Disconnected');
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
             if (SharedPreferencesUtil().showDisconnectionNotification) {
-              print('Show Disconnection Notification: true');
               createNotification(
                 title: 'AVM Device Disconnected',
                 body: 'Please reconnect to continue using your AVM.',

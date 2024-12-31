@@ -10,6 +10,7 @@ import 'package:avm/features/capture/widgets/greeting_card.dart';
 import 'package:avm/features/capture/widgets/real_time_bot.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/features/memory/presentation/widgets/memory_card.dart';
+import 'package:avm/pages/memories/widgets/empty_memories.dart';
 import 'package:avm/pages/skeleton/screen_skeleton.dart';
 import 'package:avm/utils/websockets.dart';
 import 'package:flutter/material.dart';
@@ -167,9 +168,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
       children: [
         SingleChildScrollView(
           padding: EdgeInsets.symmetric(vertical: 25, horizontal: 14),
-          controller: _scrollController,
-          physics: BouncingScrollPhysics(),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (widget.memoryCreating)
                 Container(
@@ -193,56 +193,56 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                   ),
                 )
               else if (widget.hasTranscripts)
-                ...items.map(
-                  (item) {
-                    return Dismissible(
-                        key: ValueKey(item),
-                        direction: DismissDirection.startToEnd,
-                        onDismissed: (direction) async {
-                          try {
-                            await widget
-                                .onDismissmissedCaptureMemory(direction);
+                ...items.map((item) {
+                  return Dismissible(
+                    key: ValueKey(item),
+                    direction: DismissDirection.startToEnd,
+                    onDismissed: (direction) async {
+                      try {
+                        await widget.onDismissmissedCaptureMemory(direction);
 
-                            setState(() {
-                              items.remove(item);
-                            });
-                          } catch (e) {
-                            avmSnackBar(context,
-                                'Oops! Something went wrong.\nPlease try again.');
-                          }
-                        },
-                        child: Column(
-                          children: [
-                            GreetingCard(
-                              name: '',
-                              isDisconnected: true,
-                              context: context,
-                              hasTranscripts: widget.hasTranscripts,
-                              wsConnectionState: widget.wsConnectionState,
-                              device: widget.device,
-                              internetStatus: widget.internetStatus,
-                              segments: widget.segments,
-                              memoryCreating: widget.memoryCreating,
-                              photos: widget.photos,
-                              scrollController: widget.scrollController,
+                        setState(() {
+                          items.remove(item);
+                        });
+                      } catch (e) {
+                        avmSnackBar(
+                          context,
+                          'Oops! Something went wrong.\nPlease try again.',
+                        );
+                      }
+                    },
+                    child: Column(
+                      children: [
+                        GreetingCard(
+                          name: '',
+                          isDisconnected: true,
+                          context: context,
+                          hasTranscripts: widget.hasTranscripts,
+                          wsConnectionState: widget.wsConnectionState,
+                          device: widget.device,
+                          internetStatus: widget.internetStatus,
+                          segments: widget.segments,
+                          memoryCreating: widget.memoryCreating,
+                          photos: widget.photos,
+                          scrollController: widget.scrollController,
+                        ),
+                        Container(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 12, horizontal: 6),
+                          child: Text(
+                            "Swipe right to create your memory ...",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColors.grey,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
                             ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 6),
-                              child: Text(
-                                "Swipe right to create your memory ...",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: AppColors.grey,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ));
-                  },
-                )
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                })
               else
                 GreetingCard(
                   name: '',
@@ -257,7 +257,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                   photos: widget.photos,
                   scrollController: widget.scrollController,
                 ),
-              h10,
+              h5,
               //*--- Filter Button ---*//
               if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
                 Align(
@@ -272,10 +272,10 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                       });
                     },
                     label: Text(
-                      _isNonDiscarded ? 'Show Discarded' : 'Hide Discarded',
+                      _isNonDiscarded ? 'SHOW DISCARDED' : 'HIDE DISCARDED',
                       style: const TextStyle(
                         color: AppColors.grey,
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -288,27 +288,34 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                     ),
                   ),
                 ),
-
-              //*--- MEMORY LIST ---*//
-
+              h10,
+              //*--- Show Memory Block or Empty Widget ---*//
               BlocConsumer<MemoryBloc, MemoryState>(
                 bloc: _memoryBloc,
                 builder: (context, state) {
-                  // print('>>>-${state.toString()}');
                   if (state.status == MemoryStatus.loading) {
-                    return const Center(
-                      child: ScreenSkeleton(),
-                    );
-                  } else if (state.status == MemoryStatus.failure) {
+                    return const Center(child: ScreenSkeleton());
+                  }
+
+                  if (state.status == MemoryStatus.failure) {
                     return const Center(
                       child: Text(
                         'Oops! Failed to load memories',
+                        style: TextStyle(color: AppColors.grey),
                       ),
                     );
-                  } else if (state.status == MemoryStatus.success) {
-                    return MemoryCardWidget(memoryBloc: _memoryBloc);
                   }
-                  return const SizedBox();
+
+                  if (state.memories.isEmpty) {
+                    return Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 08.0, vertical: 40.0),
+                      child: EmptyMemoriesWidget(),
+                    );
+                  }
+
+                  return MemoryCardWidget(memoryBloc: _memoryBloc);
                 },
                 listener: (context, state) {
                   if (state.status == MemoryStatus.failure) {
@@ -320,10 +327,15 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
           ),
         ),
         if (_isScrolled)
-          Positioned(top: 0, left: 0, right: 0, child: _buildScrollGradient()),
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: _buildScrollGradient(),
+          ),
         Positioned(
           bottom: 14,
-          right: 08,
+          right: 8,
           child: Column(
             children: [
               AnimatedBuilder(

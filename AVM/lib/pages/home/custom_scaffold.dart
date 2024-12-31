@@ -86,7 +86,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
             : null,
         title: widget.title,
         actions: [
-          if (widget.showBatteryLevel)
+          if (widget.showBatteryLevel && widget.batteryLevel != -1)
             SizedBox(
               width: 30,
               child: BatteryWidget(batteryLevel: widget.batteryLevel),

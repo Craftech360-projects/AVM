@@ -179,6 +179,7 @@ class CustomDialogWidget extends StatelessWidget {
       title: FittedBox(
         fit: BoxFit.scaleDown,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Icon(icon, color: iconColor ?? AppColors.blue),
             w10,
@@ -226,7 +227,6 @@ class CustomDialogWidget extends StatelessWidget {
               ),
             ),
           ],
-          h10,
         ],
       ),
       actionsAlignment: MainAxisAlignment.spaceEvenly,

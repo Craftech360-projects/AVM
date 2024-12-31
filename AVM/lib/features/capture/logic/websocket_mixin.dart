@@ -248,15 +248,7 @@ mixin WebSocketMixin {
     );
   }
 
-  void _notifyReconnectionFailure() {
-    clearNotification(2);
-    createNotification(
-      notificationId: 2,
-      title: 'Connection Issue 🚨',
-      body: 'Unable to connect to the transcript service.'
-          ' Please restart the app or contact support if the problem persists.',
-    );
-  } // should trigger a connection restored? as with internet?
+// should trigger a connection restored? as with internet?
 
   void _notifyInternetLost() {
     clearNotification(3);

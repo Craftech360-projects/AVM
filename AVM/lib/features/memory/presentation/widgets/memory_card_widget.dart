@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/features/chat/widgets/user_message.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class MemoryCard extends StatelessWidget {
@@ -13,8 +13,8 @@ class MemoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      borderRadius: 7.h + 12.h,
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      borderRadius: 7.h + 10.h,
+      padding: EdgeInsets.symmetric(vertical: 05, horizontal: 05),
       child: Row(
         children: [
           ClipRRect(

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:avm/core/assets/app_images.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
@@ -16,6 +14,7 @@ class CustomNavBar extends StatefulWidget {
     this.onTabChange,
     this.onMemorySearch,
   });
+
   final bool? isChat;
   final bool? isMemory;
   final Function(String)? onSendMessage;
@@ -36,40 +35,33 @@ class _CustomNavBarState extends State<CustomNavBar> {
   @override
   void initState() {
     super.initState();
-    _searchController.addListener(() {
-      if (widget.onMemorySearch != null && isMemoryVisible) {
-        widget.onMemorySearch!(_searchController.text);
-      }
-    });
-
+    _searchController.addListener(_onSearchChanged);
     isMemoryVisible = false;
     isChatVisible = false;
     isExpanded = false;
   }
 
+  void _onSearchChanged() {
+    if (widget.onMemorySearch != null && isMemoryVisible) {
+      widget.onMemorySearch!(_searchController.text);
+    }
+  }
+
   void toggleSearchVisibility() {
     setState(() {
-      if (!isExpanded) {
-        isExpanded = true;
-      }
+      isExpanded = true;
       isMemoryVisible = true;
       isChatVisible = false;
-      if (widget.onTabChange != null) {
-        widget.onTabChange!(0);
-      }
+      widget.onTabChange?.call(0);
     });
   }
 
   void toggleMessageVisibility() {
     setState(() {
-      if (!isExpanded) {
-        isExpanded = true;
-      }
+      isExpanded = true;
       isChatVisible = true;
       isMemoryVisible = false;
-      if (widget.onTabChange != null) {
-        widget.onTabChange!(1);
-      }
+      widget.onTabChange?.call(1);
     });
   }
 
@@ -83,25 +75,21 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   void _handleSendMessage() {
     final message = _messageController.text.trim();
-    if (message.isNotEmpty && widget.onSendMessage != null) {
-      widget.onSendMessage!(message);
+    if (message.isNotEmpty) {
+      widget.onSendMessage?.call(message);
       _messageController.clear();
     }
   }
 
   void _handleSearchMessage(String query) {
-    if (widget.onMemorySearch != null) {
-      widget.onMemorySearch!(query);
-    } else {
-      log("its empty");
-    }
+    widget.onMemorySearch?.call(query);
   }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 22.0, horizontal: 6.0),
+      padding: const EdgeInsets.symmetric(vertical: 22.0, horizontal: 08.0),
       child: GestureDetector(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 600),
@@ -125,131 +113,133 @@ class _CustomNavBarState extends State<CustomNavBar> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
-            // mainAxisSize: MainAxisSize.max,
             children: [
-              // AVA Icon
-              if (!isExpanded)
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w),
-                  child: GestureDetector(
-                    onTap: () {
-                      if (widget.onTabChange != null) {
-                        widget.onTabChange!(0); // Navigate to Tab 0
-                      }
-                    },
-                    child: Image.asset(
-                      AppImages.appLogo,
-                      height: 16.h,
-                    ),
-                  ),
-                ),
-              if (!isExpanded)
-                VerticalDivider(
-                  thickness: 0.5.w,
-                  width: 0,
-                  color: AppColors.brightGrey,
-                  endIndent: 8.h,
-                  indent: 8.h,
-                ),
-              if (isExpanded)
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: GestureDetector(
-                    onTap: () {
-                      if (isExpanded) {
-                        // Collapse the expanded section
-                        setState(() {
-                          isExpanded = false;
-                          isMemoryVisible = false;
-                          isChatVisible = false;
-                        });
-                      } else {
-                        setState(() {
-                          isExpanded = true;
-                        });
-                      }
-                    },
-                    child: Image.asset(
-                      AppImages.appLogo,
-                      height: 16.h,
-                    ),
-                  ),
-                ),
-
-              // Home Icon with collapse functionality
-              if (!isExpanded)
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: CustomIconButton(
-                    iconPath: AppImages.search,
-                    size: 24.h,
-                    onPressed: isExpanded ? collapse : toggleSearchVisibility,
-                  ),
-                ),
-              if (!isExpanded)
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w),
-                  child: CustomIconButton(
-                    iconPath: AppImages.message,
-                    size: 24.h,
-                    onPressed: isExpanded ? collapse : toggleMessageVisibility,
-                  ),
-                ),
-              // Expanded search/chat section
+              if (!isExpanded) _buildLogo(),
+              if (!isExpanded) _buildVerticalDivider(),
+              if (isExpanded) _buildHomeBtn(),
+              if (!isExpanded) _buildSearchButton(),
+              if (!isExpanded) _buildMessageButton(),
               if (isExpanded && (isMemoryVisible || isChatVisible))
-                Expanded(
-                  child: Container(
-                    height: 50.h,
-                    padding: EdgeInsets.symmetric(horizontal: 8.w),
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: br12,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: isChatVisible
-                                ? _messageController
-                                : (isMemoryVisible ? _searchController : null),
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding:
-                                  EdgeInsets.symmetric(vertical: 15.h),
-                              hintText: isChatVisible
-                                  ? 'Ask your AVM anything...'
-                                  : 'Search for memories...',
-                              hintStyle: textTheme.bodyMedium
-                                  ?.copyWith(color: AppColors.greyLight),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                        // Trailing (Button or Icon)
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.h),
-                          child: Container(
-                            color: AppColors.greyLavender,
-                            padding: EdgeInsets.all(4.h),
-                            child: CustomIconButton(
-                              size: 22.h,
-                              iconPath: AppImages.send,
-                              onPressed: isChatVisible
-                                  ? _handleSendMessage
-                                  : () => _handleSearchMessage(
-                                        _searchController.text.trim(),
-                                      ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                _buildExpandedSection(textTheme),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 15.w),
+      child: GestureDetector(
+        onTap: () => widget.onTabChange?.call(0),
+        child: Image.asset(
+          AppImages.appLogo,
+          height: 16.h,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVerticalDivider() {
+    return VerticalDivider(
+      thickness: 0.5.w,
+      width: 0,
+      color: AppColors.brightGrey,
+      endIndent: 8.h,
+      indent: 8.h,
+    );
+  }
+
+  Widget _buildHomeBtn() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: GestureDetector(
+        onTap: () {
+          if (widget.onTabChange != null) {
+            widget.onTabChange!(0);
+            collapse();
+          }
+        },
+        child: Image.asset(
+          AppImages.home,
+          width: 24.h,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: CustomIconButton(
+        iconPath: AppImages.search,
+        size: 24.h,
+        onPressed: toggleSearchVisibility,
+      ),
+    );
+  }
+
+  Widget _buildMessageButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      child: CustomIconButton(
+        iconPath: AppImages.message,
+        size: 24.h,
+        onPressed: toggleMessageVisibility,
+      ),
+    );
+  }
+
+  Widget _buildExpandedSection(TextTheme textTheme) {
+    return Expanded(
+      child: Container(
+        margin: EdgeInsets.symmetric(),
+        height: 50.h,
+        padding: EdgeInsets.fromLTRB(8, 2, 4, 2),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: br12,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: TextField(
+                controller: isChatVisible
+                    ? _messageController
+                    : (isMemoryVisible ? _searchController : null),
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.symmetric(vertical: 15.h),
+                  hintText: isChatVisible
+                      ? 'Ask your AVM anything...'
+                      : 'Search for memories...',
+                  hintStyle: textTheme.bodyMedium
+                      ?.copyWith(color: AppColors.greyLight),
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+            ClipRRect(
+              borderRadius: br8,
+              child: Container(
+                decoration: BoxDecoration(
+                    shape: BoxShape.rectangle, color: AppColors.white),
+                padding: EdgeInsets.all(4.h),
+                child: CustomIconButton(
+                  size: 24.h,
+                  iconPath: AppImages.send,
+                  onPressed: isChatVisible
+                      ? _handleSendMessage
+                      : () => _handleSearchMessage(
+                            _searchController.text.trim(),
+                          ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

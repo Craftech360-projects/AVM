@@ -349,25 +349,9 @@ Future<Memory> memoryCreationBlock(
       );
     } else if (structured.title.isNotEmpty) {
       bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-            'New memory created! 🚀',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-          ),
-          backgroundColor:
-              const Color.fromARGB(255, 23, 18, 26), // Lavender color
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 70),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          duration: const Duration(seconds: 4),
-        ),
-      );
-      print('Notification sent $backupsEnabled');
-      backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
+
+      avmSnackBar(context, "New memory was created");
+      backupsEnabled ? manualBackup(context) : null;
     } else {
       avmSnackBar(
           context, "Memory stored as discarded! There's Background noise");

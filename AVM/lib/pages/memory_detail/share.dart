@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:share_plus/share_plus.dart';
@@ -62,8 +62,7 @@ void _exportPDF(Memory memory, bool isTranscript) async {
         build: (pw.Context context) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
-            pw.Text(structured.title,
-                style: const pw.TextStyle(fontSize: 24)),
+            pw.Text(structured.title, style: const pw.TextStyle(fontSize: 24)),
             pw.SizedBox(height: 12),
             // pw.Text('Title: ${structured.title}',
             //     style: const pw.TextStyle(fontSize: 18)),
@@ -141,7 +140,7 @@ void showShareBottomSheet(
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16), topRight: Radius.circular(16)),
+          topLeft: Radius.circular(22), topRight: Radius.circular(22)),
     ),
     builder: (ctx) {
       return StatefulBuilder(

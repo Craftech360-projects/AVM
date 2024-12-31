@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:avm/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
 
 class EmptyMemoriesWidget extends StatefulWidget {
   const EmptyMemoriesWidget({super.key});
@@ -27,14 +27,12 @@ class _EmptyMemoriesWidgetState extends State<EmptyMemoriesWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        'No memories generated yet!',
-        style: TextStyle(
-            color: AppColors.greyMedium,
-            fontSize: 14,
-            fontWeight: FontWeight.w500),
-      ),
+    return Text(
+      'No memories found!',
+      style: TextStyle(
+          color: AppColors.greyMedium,
+          fontSize: 14,
+          fontWeight: FontWeight.w500),
     );
   }
 }

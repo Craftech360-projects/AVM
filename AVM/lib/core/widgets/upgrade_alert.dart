@@ -40,11 +40,6 @@ class MyUpgradeAlertState extends UpgradeAlertState {
             message: "A new version of Altio is available to download.",
             icon: Icons.download_rounded,
             noText: "Not now",
-            noPressed: () {
-              onUserIgnored(context, true);
-              MixpanelManager().upgradeModalDismissed();
-              Navigator.of(context).pop();
-            },
             yesText: "Update",
             yesPressed: () {
               onUserUpdated(context, !widget.upgrader.blocked());

@@ -484,19 +484,17 @@ void showOptionsBottomSheet(
                                     returnRawBody: true)
                                 .then((response) {
                               showDialog(
-                                context: context,
-                                builder: (c) => 
-                                SizedBox()
-                                // getDialog(
-                                //   context,
-                                //   () => Navigator.pop(context),
-                                //   () => Navigator.pop(context),
-                                //   'Result:',
-                                //   response,
-                                //   okButtonText: 'Ok',
-                                //   singleButton: true,
-                                // ),
-                              );
+                                  context: context, builder: (c) => SizedBox()
+                                  // getDialog(
+                                  //   context,
+                                  //   () => Navigator.pop(context),
+                                  //   () => Navigator.pop(context),
+                                  //   'Result:',
+                                  //   response,
+                                  //   okButtonText: 'Ok',
+                                  //   singleButton: true,
+                                  // ),
+                                  );
                               setModalState(
                                   () => loadingPluginIntegrationTest = false);
                             });

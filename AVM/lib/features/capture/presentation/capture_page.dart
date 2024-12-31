@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
 
-import 'package:avm/backend/api_requests/api/prompt.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/message.dart';
 import 'package:avm/backend/database/message_provider.dart';
@@ -93,40 +91,6 @@ class CapturePageState extends State<CapturePage>
     return SharedPreferencesUtil().notificationPlugin;
   }
 
-  void _pluginNotification() async {
-    String transcript = TranscriptSegment.segmentsAsString(segments);
-    // Replace with actual transcript
-    String friendlyReplyJson = await generateFriendlyReply(transcript);
-    var friendlyReplyMap = jsonDecode(friendlyReplyJson);
-    debugPrint(friendlyReplyMap.toString());
-    String friendlyReply =
-        friendlyReplyMap['reply'] ?? 'Default friendly reply';
-    // createNotification(
-    //   title: 'Notification Title',
-    //   body: friendlyReply,
-    //   notificationId: 10,
-    // );
-    createMessagingNotification('Altio', friendlyReply);
-
-    await widget.refreshMemories();
-    SharedPreferencesUtil().transcriptSegments = [];
-    segments = [];
-    if (mounted) {
-      setState(() => memoryCreating = false);
-    }
-    audioStorage?.clearAudioBytes();
-    setHasTranscripts(false);
-
-    currentTranscriptStartedAt = null;
-    currentTranscriptFinishedAt = null;
-    elapsedSeconds = 0;
-
-    streamStartedAtSecond = null;
-    firstStreamReceivedAt = null;
-    secondsMissedOnReconnect = null;
-    photos = [];
-    conversationId = const Uuid().v4();
-  }
 
   Future<void> initiateWebsocket(
       [BleAudioCodec? audioCodec, int? sampleRate]) async {
@@ -157,23 +121,75 @@ class CapturePageState extends State<CapturePage>
         avmSnackBar(context,
             "Connection was lost! Please check your internet connection.");
       },
-      onMessageReceived: (List<TranscriptSegment> newSegments) async {
+      // onMessageReceived: (List<TranscriptSegment> newSegments) async {
+      //   if (newSegments.isEmpty) return;
+
+      //   if (newSegments.isNotEmpty) {
+      //     debugPrint('newSegments:==> ${newSegments.last}');
+
+      //     audioStorage?.removeFramesRange(
+      //         fromSecond: 0, toSecond: newSegments[0].start.toInt());
+
+      //     firstStreamReceivedAt = DateTime.now();
+
+      //     setState(() {
+      //       segments.addAll(newSegments);
+      //       dismissedList = List.generate(segments.length, (index) => false);
+      //     });
+      //   }
+
+      //   streamStartedAtSecond ??= newSegments[0].start;
+
+      //   TranscriptSegment.combineSegments(
+      //     segments,
+      //     newSegments,
+      //     toRemoveSeconds: streamStartedAtSecond ?? 0,
+      //     toAddSeconds: secondsMissedOnReconnect ?? 0,
+      //   );
+      //   triggerTranscriptSegmentReceivedEvents(newSegments, conversationId,
+      //       sendMessageToChat: sendMessageToChat);
+      //   SharedPreferencesUtil().transcriptSegments = segments;
+      //   setHasTranscripts(true);
+      //   print("HAS TRANSCRIPTS WHEN INPUT IS RECEIVED ===>: $_hasTranscripts");
+      //   _memoryCreationTimer?.cancel();
+
+      //   bool notificationPluginValue = await getNotificationPluginValue();
+      //   if (notificationPluginValue) {
+      //     _memoryCreationTimer =
+      //         Timer(Duration(seconds: 10), () => _pluginNotification());
+      //   } else {
+      //     _memoryCreationTimer = Timer(
+      //       Duration(seconds: 60),
+      //       () => _createMemory(),
+      //     );
+      //   }
+
+      //   currentTranscriptStartedAt ??= DateTime.now();
+      //   currentTranscriptFinishedAt = DateTime.now();
+      //   if (_scrollController.hasClients) {
+      //     _scrollController.animateTo(
+      //       _scrollController.position.maxScrollExtent,
+      //       duration: const Duration(milliseconds: 100),
+      //       curve: Curves.easeOut,
+      //     );
+      //   }
+      //   if (mounted) {
+      //     setState(() {});
+      //   }
+      // },
+
+      onMessageReceived: (List<TranscriptSegment> newSegments) {
+        debugPrint("====> Message Received");
         if (newSegments.isEmpty) return;
 
-        if (newSegments.isNotEmpty) {
-          debugPrint('newSegments:==> ${newSegments.last}');
-
+        if (segments.isEmpty) {
+          debugPrint('newSegments: ${newSegments.last}');
+          // small bug -> when memory A creates, and memory B starts, memory B will clean a lot more seconds than available,
+          //  losing from the audio the first part of the recording. All other parts are fine.
           audioStorage?.removeFramesRange(
               fromSecond: 0, toSecond: newSegments[0].start.toInt());
-
           firstStreamReceivedAt = DateTime.now();
-
-          setState(() {
-            segments.addAll(newSegments);
-            dismissedList = List.generate(segments.length, (index) => false);
-          });
         }
-
         streamStartedAtSecond ??= newSegments[0].start;
 
         TranscriptSegment.combineSegments(
@@ -186,20 +202,11 @@ class CapturePageState extends State<CapturePage>
             sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
-        print("HAS TRANSCRIPTS WHEN INPUT IS RECEIVED ===>: $_hasTranscripts");
+        debugPrint('Memory creation timer restarted');
         _memoryCreationTimer?.cancel();
-
-        bool notificationPluginValue = await getNotificationPluginValue();
-        if (notificationPluginValue) {
-          _memoryCreationTimer =
-              Timer(Duration(seconds: 10), () => _pluginNotification());
-        } else {
-          _memoryCreationTimer = Timer(
-            Duration(seconds: quietSecondsForMemoryCreation),
-            () => _createMemory(),
-          );
-        }
-
+        _memoryCreationTimer = Timer(
+            const Duration(seconds: quietSecondsForMemoryCreation),
+            () => _createMemory());
         currentTranscriptStartedAt ??= DateTime.now();
         currentTranscriptFinishedAt = DateTime.now();
         if (_scrollController.hasClients) {
@@ -209,9 +216,7 @@ class CapturePageState extends State<CapturePage>
             curve: Curves.easeOut,
           );
         }
-        if (mounted) {
-          setState(() {});
-        }
+        setState(() {});
       },
     );
   }
@@ -277,7 +282,7 @@ class CapturePageState extends State<CapturePage>
 
   _createMemory({bool forcedCreation = false}) async {
     bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
-    print('Creating memory');
+    // debugPrint('Creating memory');
     if (memoryCreating) return;
 
     if (mounted) {
@@ -332,8 +337,8 @@ class CapturePageState extends State<CapturePage>
               'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
         );
       }
-      print('Notification sent $backupsEnabled');
-      backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
+      // debugPrint('Notification sent $backupsEnabled');
+      backupsEnabled ? manualBackup(context) : null;
     }
 
     await widget.refreshMemories();
@@ -362,7 +367,7 @@ class CapturePageState extends State<CapturePage>
     if (_hasTranscripts == hasTranscripts) return;
     if (mounted) {
       setState(() => _hasTranscripts = hasTranscripts);
-      print("Has transcripts:======> $_hasTranscripts");
+      // debugPrint("Has transcripts:======> $_hasTranscripts");
     }
   }
 

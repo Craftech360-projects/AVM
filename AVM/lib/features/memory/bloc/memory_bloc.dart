@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/memory_provider.dart';
 import 'package:avm/features/capture/models/filter_item.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'memory_event.dart';
 part 'memory_state.dart';
@@ -66,10 +66,16 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
     ));
   }
 
-  FutureOr<void> _deletedMemory(event, emit) {
+  FutureOr<void> _deletedMemory(
+      DeletedMemory event, Emitter<MemoryState> emit) async {
     try {
+      emit(state.copyWith(
+        status: MemoryStatus.loading,
+      ));
+
       MemoryProvider().deleteMemory(event.memory);
-      _displayedMemory;
+
+      add(DisplayedMemory());
     } catch (error) {
       emit(
         state.copyWith(

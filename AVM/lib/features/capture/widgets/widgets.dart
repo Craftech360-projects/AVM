@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/core/widgets/scanning_ui.dart';
 import 'package:avm/core/widgets/transcript.dart';
 import 'package:flutter/material.dart';
@@ -493,7 +494,7 @@ getTranscriptWidget(
   if (memoryCreating) {
     return const Padding(
       padding: EdgeInsets.only(top: 80),
-      child: Center(child: CircularProgressIndicator(color: Colors.white)),
+      child: Center(child: CircularProgressIndicator(color: AppColors.purpleDark)),
     );
   }
 

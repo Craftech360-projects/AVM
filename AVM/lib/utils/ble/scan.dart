@@ -48,7 +48,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 // }
 
 Future<BTDeviceStruct?> scanAndConnectDevice(
-    {bool autoConnect = true, bool timeout = false}) async {
+    {bool autoConnect = false, bool timeout = false}) async {
   debugPrint('scanAndConnectDevice');
   var deviceId = SharedPreferencesUtil().deviceId;
   debugPrint('scanAndConnectDevice $deviceId');
