@@ -16,6 +16,7 @@ import 'package:avm/env/dev_env.dart';
 import 'package:avm/env/env.dart';
 import 'package:avm/env/prod_env.dart';
 import 'package:avm/features/chat/bloc/chat_bloc.dart';
+import 'package:avm/features/connectivity/bloc/connectivity_bloc.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/firebase_options_dev.dart' as dev;
 import 'package:avm/firebase_options_prod.dart' as prod;
@@ -177,6 +178,9 @@ class MyAppState extends State<MyApp> {
             BlocProvider(
               create: (context) =>
                   BluetoothBloc()..startListening('your_device_id'),
+            ),
+            BlocProvider<ConnectivityBloc>(
+              create: (context) => ConnectivityBloc(),
             ),
           ],
           child: MaterialApp(

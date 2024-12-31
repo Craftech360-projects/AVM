@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tuple/tuple.dart';
+import 'package:avm/features/connectivity/bloc/connectivity_bloc.dart';
 
 class GreetingCard extends StatelessWidget {
   final String name;
@@ -41,203 +42,212 @@ class GreetingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        if (segments != null && segments!.isNotEmpty) {
-          showModalBottomSheet(
-            useSafeArea: true,
-            isScrollControlled: true,
-            context: context,
-            builder: (context) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.close),
-                  ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: getTranscriptWidget(
-                      memoryCreating,
-                      segments ?? [],
-                      photos,
-                      null, // device info will be handled by Bloc
-                    ),
-                  ),
-                )
-              ],
-            ),
-          );
-        }
-      },
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                stops: [0.3, 1.0],
-                colors: [
-                  Color.fromARGB(255, 112, 186, 255),
-                  Color(0xFFCDB4DB),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: br12,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.black.withAlpha(25),
-                  spreadRadius: 4,
-                  blurRadius: 4,
-                  offset: const Offset(2, 2),
-                ),
-              ],
-            ),
-            child: Card(
-              elevation: 0,
-              color: Colors.transparent,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
+    return BlocBuilder<ConnectivityBloc, ConnectivityState>(
+      builder: (context, connectivityState) {
+        return GestureDetector(
+          onTap: () {
+            if (segments != null && segments!.isNotEmpty) {
+              showModalBottomSheet(
+                useSafeArea: true,
+                isScrollControlled: true,
+                context: context,
+                builder: (context) => Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.close),
+                      ),
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: getTranscriptWidget(
+                          memoryCreating,
+                          segments ?? [],
+                          photos,
+                          null, // device info will be handled by Bloc
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+          },
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    stops: [0.3, 1.0],
+                    colors: [
+                      Color.fromARGB(255, 112, 186, 255),
+                      Color(0xFFCDB4DB),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: br12,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.black.withAlpha(25),
+                      spreadRadius: 4,
+                      blurRadius: 4,
+                      offset: const Offset(2, 2),
+                    ),
+                  ],
+                ),
+                child: Card(
+                  elevation: 0,
+                  color: Colors.transparent,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Hi! ${SharedPreferencesUtil().givenName}',
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.white,
-                                ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Hi! ${SharedPreferencesUtil().givenName}',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.white,
+                                    ),
+                                  ),
+                                  h5,
+                                  const Text(
+                                    'Change is inevitable. Always strive for the next big thing!',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              h5,
-                              const Text(
-                                'Change is inevitable. Always strive for the next big thing!',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            ),
+                          ],
+                        ),
+                        h10,
+                        Container(height: 1.5, color: AppColors.purpleDark),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  if (connectivityState is ConnectivityConnected)
+                                    Container(
+                                      width: 6,
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.green,
+                                      ),
+                                    )
+                                  else if (connectivityState is ConnectivityDisconnected)
+                                    Container(
+                                      width: 6,
+                                      height: 6,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.red,
+                                      ),
+                                    ),
+                                  w5,
+                                  Text(
+                                    'Internet',
+                                    style: TextStyle(
+                                      color: connectivityState is ConnectivityConnected
+                                          ? Colors.black
+                                          : Colors.grey,
+                                      fontSize: 14,
+                                      height: 1.5,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              BlocBuilder<BluetoothBloc, BluetoothState>(
+                                builder: (context, state) {
+                                  bool isDeviceDisconnected =
+                                      state is BluetoothDisconnected;
+                                  String deviceInfo = 'Disconnected';
+
+                                  if (state is BluetoothConnected) {
+                                    print('state.device: ${state.device}');
+                                    deviceInfo =
+                                        '${state.device.name} ${(state.device.id.replaceAll(':', '').split('-').last.substring(0, 6))}';
+                                  }
+
+                                  print('Device Info: $deviceInfo');
+                                  print('Is Device Disconnected: $isDeviceDisconnected');
+
+                                  return Row(
+                                    children: [
+                                      Container(
+                                        width: 6,
+                                        height: 6,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: isDeviceDisconnected
+                                              ? Colors.red
+                                              : Colors.green,
+                                        ),
+                                      ),
+                                      w5,
+                                      Text(
+                                        deviceInfo,
+                                        style: TextStyle(
+                                          color: isDeviceDisconnected
+                                              ? AppColors.grey
+                                              : AppColors.black,
+                                          fontSize: 14,
+                                          height: 1.5,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    h10,
-                    Container(height: 1.5, color: AppColors.purpleDark),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              if (internetStatus != null)
-                                Container(
-                                  width: 6,
-                                  height: 6,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: internetStatus ==
-                                            InternetStatus.connected
-                                        ? AppColors.green
-                                        : AppColors.red,
-                                  ),
-                                ),
-                              w5,
-                              Text(
-                                'Internet',
-                                style: TextStyle(
-                                  color:
-                                      internetStatus == InternetStatus.connected
-                                          ? Colors.black
-                                          : Colors.grey,
-                                  fontSize: 14,
-                                  height: 1.5,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                          BlocBuilder<BluetoothBloc, BluetoothState>(
-                            builder: (context, state) {
-                              bool isDeviceDisconnected =
-                                  state is BluetoothDisconnected;
-                              String deviceInfo = 'Disconnected';
-
-                              if (state is BluetoothConnected) {
-                                print('state.device: ${state.device}');
-                                deviceInfo =
-                                    '${state.device.name} ${(state.device.id.replaceAll(':', '').split('-').last.substring(0, 6))}';
-                              }
-
-                              print('Device Info: $deviceInfo');
-                              print('Is Device Disconnected: $isDeviceDisconnected');
-
-                              return Row(
-                                children: [
-                                  Container(
-                                    width: 6,
-                                    height: 6,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: isDeviceDisconnected
-                                          ? Colors.red
-                                          : Colors.green,
-                                    ),
-                                  ),
-                                  w5,
-                                  Text(
-                                    deviceInfo,
-                                    style: TextStyle(
-                                      color: isDeviceDisconnected
-                                          ? AppColors.grey
-                                          : AppColors.black,
-                                      fontSize: 14,
-                                      height: 1.5,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          if (segments != null && segments!.isNotEmpty)
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.03,
-              right: MediaQuery.of(context).size.width * 0.003,
-              child: Column(
-                children: [
-                  Image.asset(
-                    AppAnimations.fingerSwipe,
-                    width: 130,
-                    repeat: ImageRepeat.repeat,
+              if (segments != null && segments!.isNotEmpty)
+                Positioned(
+                  top: MediaQuery.of(context).size.height * 0.03,
+                  right: MediaQuery.of(context).size.width * 0.003,
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        AppAnimations.fingerSwipe,
+                        width: 130,
+                        repeat: ImageRepeat.repeat,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-        ],
-      ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
