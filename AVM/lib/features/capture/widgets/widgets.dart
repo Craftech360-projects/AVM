@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/core/widgets/scanning_ui.dart';
-import 'package:avm/core/widgets/transcript.dart';
 import 'package:flutter/material.dart';
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/growthbook.dart';
@@ -500,7 +499,7 @@ getTranscriptWidget(
 
   if (photos.isNotEmpty) return SizedBox();  
   // PhotosGridComponent(photos: photos);  =======> HERE
-  return TranscriptWidget(segments: segments);
+  // return TranscriptWidget(segments: segments);
 }
 
 connectionStatusWidgets(

@@ -182,11 +182,11 @@ class _CustomMemoryDetailPageState extends State<CustomMemoryDetailPage> {
                         memoryAtIndex: state.memoryIndex,
                         memoryBloc: widget.memoryBloc,
                       ),
-                      TranscriptTab(
-                        pageController: pageController,
-                        memoryAtIndex: state.memoryIndex,
-                        memoryBloc: widget.memoryBloc,
-                      ),
+                      // TranscriptTab(
+                      //   pageController: pageController,
+                      //   memoryAtIndex: state.memoryIndex,
+                      //   memoryBloc: widget.memoryBloc,
+                      // ),
                     ],
                   ),
                 )

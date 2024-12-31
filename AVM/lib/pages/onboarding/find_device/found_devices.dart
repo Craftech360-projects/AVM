@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/core/constants/constants.dart';
@@ -13,6 +11,8 @@ import 'package:avm/src/common_widget/elevated_button.dart';
 import 'package:avm/utils/ble/communication.dart';
 import 'package:avm/utils/ble/connect.dart';
 import 'package:avm/utils/other/temp.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FoundDevices extends StatefulWidget {
   final List<BTDeviceStruct> deviceList;
@@ -112,13 +112,13 @@ class FoundDevicesState extends State<FoundDevices>
                       fontSize: 12,
                       color: AppColors.black),
                 ),
-          if (widget.deviceList.isNotEmpty) const SizedBox(height: 16),
+          if (widget.deviceList.isNotEmpty) h15,
           if (!_isConnected) ..._devicesList(),
           if (_isConnected)
             Container(
               decoration: BoxDecoration(
                   border: Border.all(color: AppColors.black),
-                  borderRadius: br30),
+                  borderRadius: br12),
               height: 50.h,
               width: double.maxFinite,
               child: CustomElevatedButton(
@@ -168,11 +168,11 @@ class FoundDevicesState extends State<FoundDevices>
   List<Widget> _devicesList() {
     return widget.deviceList
         .map((device) => Padding(
-              padding: const EdgeInsets.only(bottom: 12.0), // Add space here
+              padding: const EdgeInsets.only(bottom: 12.0),
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.black),
-                  borderRadius: br30,
+                  borderRadius: br12,
                 ),
                 height: 55.h,
                 width: double.maxFinite,

@@ -65,18 +65,11 @@ class FindDevicesPageState extends State<FindDevicesPage>
           if (e is FlutterBluePlusException) {
             if (e.code == 11) {
               if (mounted) {
-                showDialog(context: context, builder: (c) => SizedBox()
-                    // getDialog(
-                    //   context,
-                    //   () {
-                    //     Navigator.of(context).pop();
-                    //   },
-                    //   () {},
-                    //   'Enable Bluetooth',
-                    //   'Friend needs Bluetooth to connect to your wearable. Please enable Bluetooth and try again.',
-                    //   singleButton: true,
-                    // ),
-                    );
+                showDialog(
+                    context: context,
+                    builder: (c) => SizedBox(
+                          child: Text("Bluetooth ON?"),
+                        ));
               }
             }
           }

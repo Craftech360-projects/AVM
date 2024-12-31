@@ -68,45 +68,10 @@ class _SettingPageState extends State<SettingPage> {
       showBatteryLevel: true,
       body: Column(
         children: [
-          // ListView wrapped in Expanded to fill remaining space
           Expanded(
             child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
               children: [
-                // CustomListTile(
-                //   onTap: () {
-                //     if (widget.device != null) {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => ConnectedDevice(
-                //             device: widget.device,
-                //             batteryLevel: widget.batteryLevel,
-                //           ),
-                //         ),
-                //       );
-                //     } else {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (context) => FindDevicesPage(
-                //             goNext: () {},
-                //           ),
-                //         ),
-                //       );
-                //     }
-                //   },
-                //   title: Text(
-                //     widget.batteryLevel > 0
-                //         ? 'Battery Level: ${widget.batteryLevel}%'
-                //         : 'Device not connected',
-                //     style: const TextStyle(fontWeight: FontWeight.w500),
-                //   ),
-                //   trailing: const CircleAvatar(
-                //     backgroundColor: AppColors.greyLavender,
-                //     child: Icon(Icons.bluetooth_searching),
-                //   ),
-                // ),
                 CustomListTile(
                   onTap: () {
                     var deviceId =
@@ -150,7 +115,7 @@ class _SettingPageState extends State<SettingPage> {
                                   : Colors.red,
                           size: 16,
                         ),
-                        const SizedBox(width: 8),
+                        w10,
                       ],
                       Text(
                         widget.batteryLevel > 0

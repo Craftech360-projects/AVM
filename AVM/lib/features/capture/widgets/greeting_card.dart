@@ -4,28 +4,25 @@ import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/core/assets/app_animations.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
-import 'package:avm/features/capture/widgets/widgets.dart';
+import 'package:avm/core/widgets/transcript.dart';
 import 'package:avm/utils/websockets.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tuple/tuple.dart';
 
-class GreetingCard extends StatelessWidget {
+class GreetingCard extends StatefulWidget {
   final String name;
   final String? avatarUrl;
   final bool isDisconnected;
   final BuildContext context;
   final bool hasTranscripts;
-  // Changed from ConnectionState to WebsocketConnectionStatus
   final WebsocketConnectionStatus wsConnectionState;
-  final BTDeviceStruct? device; // Changed to match CaptureCard
-  final InternetStatus? internetStatus; // Made nullable to match CaptureCard
-  final List<TranscriptSegment>? segments; // Changed to match CaptureCard type
+  final BTDeviceStruct? device;
+  final InternetStatus? internetStatus;
+  final List<TranscriptSegment>? segments;
   final bool memoryCreating;
-  final List<Tuple2<String, String>>
-      photos; // Changed to match CaptureCard type
-  final ScrollController?
-      scrollController; // Made nullable to match CaptureCard
+  final List<Tuple2<String, String>> photos;
+  final ScrollController? scrollController;
 
   const GreetingCard({
     super.key,
@@ -44,12 +41,34 @@ class GreetingCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    bool isDeviceDisconnected = device == null;
+  State<GreetingCard> createState() => _GreetingCardState();
+}
 
+class _GreetingCardState extends State<GreetingCard> {
+  @override
+  void initState() {
+    super.initState();
+    debugPrint(
+        'GreetingCard initialized with segments: ${widget.segments?.length}');
+  }
+
+  @override
+  void didUpdateWidget(covariant GreetingCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.segments != oldWidget.segments) {
+      debugPrint(
+          'GreetingCard segments updated from ${oldWidget.segments?.length} to ${widget.segments?.length}');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    bool isDeviceDisconnected = widget.device == null;
+    debugPrint(
+        "Rebuilding GreetingCard: ${widget.segments?.length} segments in GC");
     return GestureDetector(
       onTap: () {
-        if (segments != null && segments!.isNotEmpty) {
+        if (widget.segments != null && widget.segments!.isNotEmpty) {
           showModalBottomSheet(
             useSafeArea: true,
             isScrollControlled: true,
@@ -68,12 +87,7 @@ class GreetingCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: SingleChildScrollView(
-                    child: getTranscriptWidget(
-                      memoryCreating,
-                      segments ?? [],
-                      photos,
-                      device,
-                    ),
+                    child: TranscriptWidget(segments: widget.segments ?? []),
                   ),
                 )
               ],
@@ -149,26 +163,26 @@ class GreetingCard extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              if (internetStatus != null)
+                              if (widget.internetStatus != null)
                                 Container(
                                   width: 6,
                                   height: 6,
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: InternetStatus.connected ==
+                                    color: widget.internetStatus ==
                                             InternetStatus.connected
                                         ? AppColors.green
                                         : AppColors.red,
                                   ),
                                 ),
                               w5,
-                              const Text(
+                              Text(
                                 'Internet',
                                 style: TextStyle(
-                                  color: InternetStatus.connected ==
+                                  color: widget.internetStatus ==
                                           InternetStatus.connected
-                                      ? Colors.black
-                                      : Colors.grey,
+                                      ? AppColors.black
+                                      : AppColors.greyMedium,
                                   fontSize: 14,
                                   height: 1.5,
                                   fontWeight: FontWeight.w600,
@@ -184,18 +198,18 @@ class GreetingCard extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: isDeviceDisconnected
-                                      ? Colors.red
-                                      : Colors.green,
+                                      ? AppColors.red
+                                      : AppColors.green,
                                 ),
                               ),
                               w5,
                               Text(
                                 isDeviceDisconnected
                                     ? 'Disconnected'
-                                    : '${device?.name ?? ''} ${device?.id.replaceAll(':', '').split('-').last.substring(0, 6) ?? ''}',
+                                    : '${widget.device?.name ?? ''} ${widget.device?.id.replaceAll(':', '').split('-').last.substring(0, 6) ?? ''}',
                                 style: TextStyle(
                                   color: isDeviceDisconnected
-                                      ? AppColors.grey
+                                      ? AppColors.greyMedium
                                       : AppColors.black,
                                   fontSize: 14,
                                   height: 1.5,
@@ -213,7 +227,7 @@ class GreetingCard extends StatelessWidget {
               ),
             ),
           ),
-          if (segments != null && segments!.isNotEmpty)
+          if (widget.segments != null && widget.segments!.isNotEmpty)
             Positioned(
               top: MediaQuery.of(context).size.height * 0.03,
               right: MediaQuery.of(context).size.width * 0.003,
