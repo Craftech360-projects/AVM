@@ -91,6 +91,7 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
       deviceId: deviceId,
       onStateChanged: (state, device) {
         if (state == BluetoothConnectionState.disconnected) {
+          add(BluetoothDeviceDisconnected());
           print('BluetoothDeviceDisconnected');
           if (retryCount < maxRetries) {
             retryCount++;

@@ -1,7 +1,6 @@
 // ignore_for_file: unnecessary_null_comparison, duplicate_ignore
 
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:avm/backend/database/geolocation.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
@@ -10,9 +9,12 @@ import 'package:avm/features/memories/widgets/overall_tab.dart';
 import 'package:avm/features/memories/widgets/tab_bar.dart';
 import 'package:avm/features/memories/widgets/transcript_tab.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
+import 'package:avm/objectbox.g.dart';
 import 'package:avm/pages/memory_detail/share.dart';
 import 'package:avm/pages/memory_detail/widgets.dart';
 import 'package:avm/utils/memories/reprocess.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 // class MemoryDetailPage extends StatefulWidget {
@@ -53,6 +55,19 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     selectedMemory = widget.memoryBloc.state.memories[widget.memoryAtIndex];
+    // Add this line to print geolocation data
+    printGeolocationData(selectedMemory.geolocation);
+  }
+
+  void printGeolocationData(ToOne<Geolocation> geolocation) {
+    if (geolocation.target != null) {
+      print('Geolocation Data:');
+      print('Latitude: ${geolocation.target!.latitude}');
+      print('Longitude: ${geolocation.target!.longitude}');
+      // Add more fields if necessary
+    } else {
+      print('Geolocation is null');
+    }
   }
 
   @override
@@ -124,7 +139,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     final categories =
         _getCategories(selectedMemory.structured.target?.category);
     _getFormattedTranscript(selectedMemory.transcript);
-
+    // Remove the old print statement
+    // print(selectedMemory.geolocation);
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -209,9 +225,9 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 children: [
                   OverallTab(
                     target: selectedMemory.structured.target!,
+                    geolocation: selectedMemory.geolocation.target, // Pass geolocation
                     //pluginsResponse: selectedMemory.pluginsResponse
                   ),
-                  //  TranscriptTab(target: selectedMemory.transcript!),
                   TranscriptTab(
                     memoryBloc: widget.memoryBloc,
                     memoryAtIndex: widget.memoryAtIndex, // Add this

@@ -356,19 +356,28 @@ Future<String> dailySummaryNotifications(List<Memory> memories) async {
       ? 'the user'
       : SharedPreferencesUtil().givenName;
   var prompt = '''
-  The following are a list of $str's memories from today, with the transcripts with its respective structuring, that $str had during his day.
-  $str wants to get a summary of the key action items he has to take based on his today's memories.
+  The following are a list of $str's memories from today, with the transcripts and their respective structuring, that $str had during the day.
+  $str wants to get a detailed summary of the key action items he has to take based on today's memories.
 
-  Remember $str is busy so this has to be very efficient and concise.
-  Respond in at most 50 words.
-  
-  Output your response in json format.
+  Please provide a summary that includes:
+  - A brief overview of the day's events.
+  - Key action items with specific details and deadlines if mentioned.
+  - Any important notes or observations.
+  - Recommendations or next steps based on the memories.
+
+  Remember, $str is busy, so this has to be very efficient and concise.
+  Respond in at most 150 words.
+
+  Output your response in plain text format.
   ```
   ${Memory.memoriesToString(memories, includeTranscript: true)}
   ```
   ''';
   debugPrint(prompt);
-  var result = await executeGptPrompt(prompt);
+
+  //var result = await executeGptPrompt(prompt);
+
+  var result = await executeGptPromptPlainText(prompt);
   debugPrint('dailySummaryNotifications result: $result');
   return result.replaceAll('```', '').trim();
 }

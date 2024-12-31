@@ -1,10 +1,6 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:avm/backend/database/geolocation.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/memory_provider.dart';
 import 'package:avm/backend/preferences.dart';
@@ -18,14 +14,22 @@ import 'package:avm/src/common_widget/list_tile.dart';
 import 'package:avm/utils/features/calendar.dart';
 import 'package:avm/utils/other/temp.dart';
 import 'package:avm/widgets/expandable_text.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class OverallTab extends StatefulWidget {
   final Structured target;
+  final dynamic pluginsResponse;
+  final Geolocation? geolocation;
 
-  final dynamic
-      pluginsResponse; // Replace `Memory` with the actual data type you have
-
-  const OverallTab({super.key, required this.target, this.pluginsResponse});
+  const OverallTab(
+      {super.key,
+      required this.target,
+      this.pluginsResponse,
+      this.geolocation});
 
   @override
   OverallTabState createState() => OverallTabState();
@@ -96,7 +100,6 @@ class OverallTabState extends State<OverallTab> {
                   ),
                   title: Text(
                     event.title,
-                    // Replace this with the correct event property if needed
                     style: textTheme.bodyLarge?.copyWith(
                       color: AppColors.grey,
                     ),
@@ -104,7 +107,6 @@ class OverallTabState extends State<OverallTab> {
                   subtitle: Padding(
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
-                      ''
                       '${dateTimeFormat('MMM d, yyyy', event.startsAt)} at ${dateTimeFormat('h:mm a', event.startsAt)} ~ ${event.duration} minutes.',
                       style:
                           const TextStyle(color: AppColors.grey, fontSize: 15),
@@ -203,6 +205,54 @@ class OverallTabState extends State<OverallTab> {
               );
             }),
           h30,
+
+          /// Geolocation Section
+          // if (widget.geolocation != null &&
+          //     widget.geolocation!.latitude != null &&
+          //     widget.geolocation!.longitude != null)
+          //   GestureDetector(
+          //     onTap: () async {
+          //       final availableMaps = await MapLauncher.installedMaps;
+          //       if (availableMaps.isNotEmpty) {
+          //         await availableMaps.first.showMarker(
+          //           coords: Coords(widget.geolocation!.latitude!,
+          //               widget.geolocation!.longitude!),
+          //           title: "Memory Location",
+          //         );
+          //       } else {
+          //         ScaffoldMessenger.of(context).showSnackBar(
+          //           const SnackBar(
+          //             content: Text('No map applications available'),
+          //           ),
+          //         );
+          //       }
+          //     },
+          //     child: Center(
+          //       child: Column(
+          //         children: [
+          //           Image.network(
+          //             'https://maps.googleapis.com/maps/api/staticmap?center=${widget.geolocation!.latitude},${widget.geolocation!.longitude}&zoom=14&size=400x200&markers=color:red%7C${widget.geolocation!.latitude},${widget.geolocation!.longitude}&key=YOUR_API_KEY',
+          //             fit: BoxFit.cover,
+          //             errorBuilder: (context, error, stackTrace) {
+          //               return Column(
+          //                 mainAxisAlignment: MainAxisAlignment.center,
+          //                 children: [
+          //                   Icon(Icons.error, color: AppColors.red, size: 50),
+          //                   SizedBox(height: 8),
+          //                   Text(
+          //                     'Failed to load map image',
+          //                     style: textTheme.bodyLarge?.copyWith(
+          //                       color: AppColors.grey,
+          //                     ),
+          //                   ),
+          //                 ],
+          //               );
+          //             },
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
         ],
       ),
     );
@@ -305,7 +355,8 @@ class OverallTabState extends State<OverallTab> {
                             Clipboard.setData(ClipboardData(
                                 text: utf8.decode(
                                     pluginResponse.content.trim().codeUnits)));
-                            var calEnabled = SharedPreferencesUtil().calendarEnabled;
+                            var calEnabled =
+                                SharedPreferencesUtil().calendarEnabled;
                             avmSnackBar(
                                 context,
                                 !calEnabled
@@ -317,9 +368,8 @@ class OverallTabState extends State<OverallTab> {
                     : const SizedBox.shrink(),
                 ExpandableTextWidget(
                   text: utf8.decode(pluginResponse.content.trim().codeUnits),
-                  // isExpanded: pluginResponseExpanded[i],
                   isExpanded: pluginResponseExpanded[i],
-                  toggleExpand: () => onItemToggled(i), // Updates the state
+                  toggleExpand: () => onItemToggled(i),
                   style: const TextStyle(
                     color: AppColors.black,
                     fontSize: 15,

@@ -5,12 +5,12 @@ import 'package:avm/core/assets/app_animations.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/capture/widgets/widgets.dart';
+import 'package:avm/features/connectivity/bloc/connectivity_bloc.dart';
 import 'package:avm/utils/websockets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tuple/tuple.dart';
-import 'package:avm/features/connectivity/bloc/connectivity_bloc.dart';
 
 class GreetingCard extends StatelessWidget {
   final String name;
@@ -146,7 +146,8 @@ class GreetingCard extends StatelessWidget {
                             children: [
                               Row(
                                 children: [
-                                  if (connectivityState is ConnectivityConnected)
+                                  if (connectivityState
+                                      is ConnectivityConnected)
                                     Container(
                                       width: 6,
                                       height: 6,
@@ -155,7 +156,8 @@ class GreetingCard extends StatelessWidget {
                                         color: AppColors.green,
                                       ),
                                     )
-                                  else if (connectivityState is ConnectivityDisconnected)
+                                  else if (connectivityState
+                                      is ConnectivityDisconnected)
                                     Container(
                                       width: 6,
                                       height: 6,
@@ -168,7 +170,8 @@ class GreetingCard extends StatelessWidget {
                                   Text(
                                     'Internet',
                                     style: TextStyle(
-                                      color: connectivityState is ConnectivityConnected
+                                      color: connectivityState
+                                              is ConnectivityConnected
                                           ? Colors.black
                                           : Colors.grey,
                                       fontSize: 14,
@@ -185,13 +188,12 @@ class GreetingCard extends StatelessWidget {
                                   String deviceInfo = 'Disconnected';
 
                                   if (state is BluetoothConnected) {
-                                    print('state.device: ${state.device}');
                                     deviceInfo =
                                         '${state.device.name} ${(state.device.id.replaceAll(':', '').split('-').last.substring(0, 6))}';
+                                    isDeviceDisconnected = false;
+                                  } else {
+                                    isDeviceDisconnected = true;
                                   }
-
-                                  print('Device Info: $deviceInfo');
-                                  print('Is Device Disconnected: $isDeviceDisconnected');
 
                                   return Row(
                                     children: [

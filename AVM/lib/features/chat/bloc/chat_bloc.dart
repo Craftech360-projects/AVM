@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:avm/backend/api_requests/api/prompt.dart';
 import 'package:avm/backend/api_requests/stream_api_response.dart';
 import 'package:avm/backend/database/memory.dart';
@@ -12,6 +10,8 @@ import 'package:avm/backend/database/message_provider.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/plugin.dart';
 import 'package:avm/utils/rag.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
@@ -27,6 +27,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SendInitialPluginMessage>(_onSendInitialPluginMessage);
     on<SendMessage>(_onSendMessage);
     on<RefreshMessages>(_refreshMessages);
+    on<UpdateChat>((event, emit) async {
+      final updatedMessages =
+          MessageProvider().getMessages(); // Fetch updated messages
+      emit(state.copyWith(messages: updatedMessages));
+    });
   }
 
   /// Refresh messages and update the state

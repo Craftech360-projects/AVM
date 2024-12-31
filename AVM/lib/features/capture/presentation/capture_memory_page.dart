@@ -11,6 +11,7 @@ import 'package:avm/features/capture/widgets/real_time_bot.dart';
 import 'package:avm/features/connectivity/bloc/connectivity_bloc.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/features/memory/presentation/widgets/memory_card.dart';
+import 'package:avm/pages/memories/widgets/empty_memories.dart';
 import 'package:avm/pages/skeleton/screen_skeleton.dart';
 import 'package:avm/utils/websockets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -335,21 +336,29 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                     BlocConsumer<MemoryBloc, MemoryState>(
                       bloc: _memoryBloc,
                       builder: (context, state) {
-                        // print('>>>-${state.toString()}');
                         if (state.status == MemoryStatus.loading) {
-                          return const Center(
-                            child: ScreenSkeleton(),
-                          );
-                        } else if (state.status == MemoryStatus.failure) {
+                          return const Center(child: ScreenSkeleton());
+                        }
+
+                        if (state.status == MemoryStatus.failure) {
                           return const Center(
                             child: Text(
                               'Oops! Failed to load memories',
+                              style: TextStyle(color: AppColors.grey),
                             ),
                           );
-                        } else if (state.status == MemoryStatus.success) {
-                          return MemoryCardWidget(memoryBloc: _memoryBloc);
                         }
-                        return const SizedBox();
+
+                        if (state.memories.isEmpty) {
+                          return Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 08.0, vertical: 40.0),
+                            child: EmptyMemoriesWidget(),
+                          );
+                        }
+
+                        return MemoryCardWidget(memoryBloc: _memoryBloc);
                       },
                       listener: (context, state) {
                         if (state.status == MemoryStatus.failure) {

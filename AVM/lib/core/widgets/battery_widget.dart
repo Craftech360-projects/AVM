@@ -54,15 +54,6 @@ class BatteryWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              if (batteryLevel > 0)
-                Align(
-                  alignment: Alignment.center,
-                  child: Icon(
-                    Icons.flash_on_rounded,
-                    size: 11,
-                    color: AppColors.black,
-                  ),
-                ),
             ],
           ),
         ),

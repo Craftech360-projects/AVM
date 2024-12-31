@@ -42,8 +42,8 @@ class _ChatScreenState extends State<ChatScreen>
     Timer.periodic(const Duration(minutes: 1), (timer) async {
       // var now = DateTime.now();
 
-      // print("running >>>>>>>>>>>>>>>>>>>>>>>>>>>>???????????? ${now.hour}");
-      if (now.hour < 17) return;
+      print("running >>>>>>>>>>>>>>>>>>>>>>>>>>>>???????????? ${now.hour}");
+      if (now.hour < 20) return;
       // TODO: maybe a better way to optimize this. is it better to do on build state?
       debugPrint('now: $now');
       if (SharedPreferencesUtil().lastDailySummaryDay != '') {
@@ -69,7 +69,6 @@ class _ChatScreenState extends State<ChatScreen>
 
       var message = Message(DateTime.now(), '', 'ai', type: 'daySummary');
       MessageProvider().saveMessage(message);
-      // setState(() => widget.messages.add(message));
 
       var result = await dailySummaryNotifications(memories);
       SharedPreferencesUtil().lastDailySummaryDay =
@@ -77,8 +76,6 @@ class _ChatScreenState extends State<ChatScreen>
       message.text = result;
       message.memories.addAll(memories);
       MessageProvider().updateMessage(message);
-      // setState(() => widget.messages.last = message);
-      // _moveListToBottom();
     });
   }
 
@@ -87,7 +84,7 @@ class _ChatScreenState extends State<ChatScreen>
     super.initState();
     _chatBloc = BlocProvider.of<ChatBloc>(context);
     _chatBloc.add(LoadInitialChat());
-    // _initDailySummary();
+    _initDailySummary();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToEnd();
     });
@@ -121,98 +118,100 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    return Stack(
-      children: [
-        BlocBuilder<ChatBloc, ChatState>(
-          bloc: _chatBloc,
-          buildWhen: (previous, current) =>
-              previous.messages?.length != current.messages?.length,
-          builder: (context, state) {
-            if (state.status == ChatStatus.loaded) {
-              WidgetsBinding.instance.addPostFrameCallback(
-                (_) {
-                  _scrollToEnd();
-                },
-              );
+    return Scaffold(
+      body: Stack(
+        children: [
+          BlocBuilder<ChatBloc, ChatState>(
+            bloc: _chatBloc,
+            buildWhen: (previous, current) =>
+                previous.messages?.length != current.messages?.length,
+            builder: (context, state) {
+              if (state.status == ChatStatus.loaded) {
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (_) {
+                    _scrollToEnd();
+                  },
+                );
 
-              return Column(
-                children: [
-                  const Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
-                    child: Row(
-                      children: [
-                        // Text("Today",
-                        //     style: TextStyle(
-                        //         color: AppColors.purpleBright,
-                        //         fontWeight: FontWeight.w500)),
-                        // w5,
-                        Expanded(
-                          child: Divider(
-                            color: AppColors.purpleBright,
-                            thickness: 0.5,
+                return Column(
+                  children: [
+                    const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
+                      child: Row(
+                        children: [
+                          // Text("Today",
+                          //     style: TextStyle(
+                          //         color: AppColors.purpleBright,
+                          //         fontWeight: FontWeight.w500)),
+                          // w5,
+                          Expanded(
+                            child: Divider(
+                              color: AppColors.purpleBright,
+                              thickness: 0.5,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // ListView for messages
-                  Expanded(
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.only(
-                        left: 20,
-                        right: 20,
-                        bottom: 130,
-                        top: 20,
+                        ],
                       ),
-                      itemCount: state.messages?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        final message = state.messages?[index];
-
-                        h10;
-
-                        if (message?.senderEnum == MessageSender.ai) {
-                          log(message.toString());
-                          return Column(
-                            children: [
-                              AIMessage(
-                                message: message!,
-                                sendMessage: (msg) {
-                                  // Handle send message
-                                },
-                                displayOptions: state.messages!.length <= 1,
-                                memories: message.memories,
-                                pluginSender: SharedPreferencesUtil()
-                                    .pluginsList
-                                    .firstWhereOrNull(
-                                        (e) => e.id == message.pluginId),
-                              ),
-                              h10,
-                            ],
-                          );
-                        } else {
-                          return Column(
-                            children: [
-                              UserCard(
-                                message: message,
-                              ),
-                              h10,
-                            ],
-                          );
-                        }
-                      },
                     ),
-                  ),
-                ],
-              );
-            }
-            return const SizedBox.shrink();
-          },
-        ),
-        //*-- Ask AVM --*//
-      ],
+
+                    // ListView for messages
+                    Expanded(
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          bottom: 130,
+                          top: 20,
+                        ),
+                        itemCount: state.messages?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          final message = state.messages?[index];
+
+                          h10;
+
+                          if (message?.senderEnum == MessageSender.ai) {
+                            log(message.toString());
+                            return Column(
+                              children: [
+                                AIMessage(
+                                  message: message!,
+                                  sendMessage: (msg) {
+                                    // Handle send message
+                                  },
+                                  displayOptions: state.messages!.length <= 1,
+                                  memories: message.memories,
+                                  pluginSender: SharedPreferencesUtil()
+                                      .pluginsList
+                                      .firstWhereOrNull(
+                                          (e) => e.id == message.pluginId),
+                                ),
+                                h10,
+                              ],
+                            );
+                          } else {
+                            return Column(
+                              children: [
+                                UserCard(
+                                  message: message,
+                                ),
+                                h10,
+                              ],
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          //*-- Ask AVM --*//
+        ],
+      ),
     );
   }
 }
