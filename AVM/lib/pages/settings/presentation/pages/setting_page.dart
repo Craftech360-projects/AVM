@@ -2,6 +2,7 @@ import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/bloc/bluetooth_bloc.dart';
 import 'package:avm/core/constants/constants.dart';
+import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/home/device.dart';
 import 'package:avm/pages/onboarding/find_device/page.dart';
@@ -117,21 +118,30 @@ class _SettingPageState extends State<SettingPage> {
                       title: Row(
                         children: [
                           if (batteryLevel > 0) ...[
-                            Icon(
-                              Icons.bolt,
-                              color: batteryLevel > 75
-                                  ? const Color.fromARGB(255, 0, 255, 8)
-                                  : batteryLevel > 20
-                                      ? Colors.yellow.shade700
-                                      : Colors.red,
-                              size: 16,
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: AppColors.orange,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Icons.electric_bolt,
+                                size: 13,
+                                color: AppColors.white,
+                              ),
                             ),
-                            const SizedBox(width: 8),
+                            w10
                           ],
                           Text(
                             deviceInfo,
                             style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
+                          Spacer(),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: AppColors.black,
+                          )
                         ],
                       ),
                     );

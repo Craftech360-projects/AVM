@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
@@ -8,7 +10,6 @@ import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/utils/ble/connect.dart';
 import 'package:flutter/material.dart';
 
-// Update with the actual path to your CustomScaffold file
 class ConnectedDevice extends StatefulWidget {
   final BTDeviceStruct? device;
   final int batteryLevel;
@@ -129,24 +130,24 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Container(
-                                  width: 10,
-                                  height: 10,
+                                  width: 20,
+                                  height: 20,
                                   decoration: BoxDecoration(
-                                    color: widget.batteryLevel > 75
-                                        ? AppColors.green
-                                        : widget.batteryLevel > 20
-                                            ? AppColors.orange
-                                                .withValues(alpha: 0.5)
-                                            : AppColors.red,
+                                    color: AppColors.orange,
                                     shape: BoxShape.circle,
                                   ),
+                                  child: Icon(
+                                    Icons.electric_bolt,
+                                    size: 13,
+                                    color: AppColors.white,
+                                  ),
                                 ),
-                                const SizedBox(width: 8.0),
+                                w5,
                                 Text(
                                   '${widget.batteryLevel.toString()}% Battery',
                                   style: const TextStyle(
                                     color: AppColors.purpleDark,
-                                    fontSize: 14,
+                                    fontSize: 13,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -154,17 +155,18 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                             ),
                           )
                         : Container(),
+                    h10,
                     InkWell(
                       onTap: () {
                         if (widget.device != null) {
                           bleDisconnectDevice(widget.device!);
                         }
-                        Navigator.of(context).pop();
                         SharedPreferencesUtil().deviceId = '';
                         SharedPreferencesUtil().deviceName = '';
                         avmSnackBar(context,
                             'Your AVM device has been ${widget.device == null ? "unpaired" : "disconnected"} successfully.');
                         MixpanelManager().disconnectFriendClicked();
+                        Navigator.of(context).pop();
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -174,7 +176,6 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                           borderRadius: br12,
                         ),
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
