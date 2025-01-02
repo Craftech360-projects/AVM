@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/memory_provider.dart';
 import 'package:avm/features/capture/models/filter_item.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'memory_event.dart';
 part 'memory_state.dart';
@@ -17,39 +17,101 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
     on<UpdatedMemory>(_updatedMemory);
     on<MemoryIndexChanged>(_memoryChanged);
     on<FilterMemory>((event, emit) {
-      switch (event.filterItem.filterType) {
-        case 'Show All':
-          // For 'Show All', we want to display all memories.
-          emit(state.copyWith(
-            status: MemoryStatus.success,
-            memories: state.memories, // Keep all memories in the list
-          ));
-          break;
+      final allMemories = MemoryProvider()
+          .getMemories(); // Fetch memories from the state directly
 
-        case 'Technology':
-          // Filter for 'Technology' category
-          final filteredMemories = state.memories
-              .where((e) => e.structured.target?.category == 'Technology')
-              .toList();
-          emit(state.copyWith(
-            status: MemoryStatus.success,
-            memories: filteredMemories,
-          ));
-          break;
+      List<Memory> filteredMemories = allMemories; // Start with all memories
+      print(allMemories.length);
 
-        default:
-          // Handle other cases or fallback logic here if necessary.
-          emit(state.copyWith(
-            status: MemoryStatus.success,
-            memories: state
-                .memories, // Optionally emit all memories or unchanged state
-          ));
-          break;
+      // Log the filter type
+      print('Filter type: ${event.filterItem.filterType}');
+
+      // Handle different filter types
+      if (event.filterItem.filterType == "Show All") {
+        // Reset to all memories
+        print("length, ${allMemories.length}");
+        emit(state.copyWith(
+          status: MemoryStatus.success,
+          memories: allMemories, // Reset to all memories
+        ));
+      } else if (event.filterItem.filterType == "Today") {
+        // Filter memories for today
+        filteredMemories = allMemories.where((memory) {
+          final createdAt = memory.createdAt;
+          final today = DateTime.now();
+          return createdAt.year == today.year &&
+              createdAt.month == today.month &&
+              createdAt.day == today.day;
+        }).toList();
+        emit(state.copyWith(
+          status: MemoryStatus.success,
+          memories: filteredMemories,
+        ));
+      } else if (event.filterItem.filterType == "This Week") {
+        // Filter memories for this week
+        final startOfWeek =
+            DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
+        final endOfWeek = startOfWeek.add(Duration(days: 6));
+
+        filteredMemories = allMemories.where((memory) {
+          final createdAt = memory.createdAt;
+          return createdAt.isAfter(startOfWeek) &&
+              createdAt.isBefore(endOfWeek);
+        }).toList();
+        emit(state.copyWith(
+          status: MemoryStatus.success,
+          memories: filteredMemories,
+        ));
+      } else if (event.filterItem.filterType == "DateRange") {
+        // Filter memories between a date range
+        final startDate = event.filterItem.startDate!;
+        final endDate = event.filterItem.endDate!;
+
+        filteredMemories = allMemories.where((memory) {
+          final createdAt = memory.createdAt;
+          return createdAt.isAfter(startDate) && createdAt.isBefore(endDate);
+        }).toList();
+        emit(state.copyWith(
+          status: MemoryStatus.success,
+          memories: filteredMemories,
+        ));
       }
-
-      // Handle the toggle status of non-discarded items (outside switch)
-      add(DisplayedMemory(isNonDiscarded: event.filterItem.filterStatus));
     });
+
+    // on<FilterMemory>((event, emit) {
+    //   switch (event.filterItem.filterType) {
+    //     case 'Show All':
+    //       // For 'Show All', we want to display all memories.
+    //       emit(state.copyWith(
+    //         status: MemoryStatus.success,
+    //         memories: state.memories, // Keep all memories in the list
+    //       ));
+    //       break;
+
+    //     case 'Technology':
+    //       // Filter for 'Technology' category
+    //       final filteredMemories = state.memories
+    //           .where((e) => e.structured.target?.category == 'Technology')
+    //           .toList();
+    //       emit(state.copyWith(
+    //         status: MemoryStatus.success,
+    //         memories: filteredMemories,
+    //       ));
+    //       break;
+
+    //     default:
+    //       // Handle other cases or fallback logic here if necessary.
+    //       emit(state.copyWith(
+    //         status: MemoryStatus.success,
+    //         memories: state
+    //             .memories, // Optionally emit all memories or unchanged state
+    //       ));
+    //       break;
+    //   }
+
+    //   // Handle the toggle status of non-discarded items (outside switch)
+    //   add(DisplayedMemory(isNonDiscarded: event.filterItem.filterStatus));
+    // });
   }
   FutureOr<void> _memoryChanged(event, emit) async {
     final int? newIndex = await event.memoryIndex;

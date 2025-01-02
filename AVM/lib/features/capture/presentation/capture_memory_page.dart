@@ -5,6 +5,7 @@ import 'package:avm/core/assets/app_images.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/core/widgets/typing_indicator.dart';
+import 'package:avm/features/capture/models/filter_item.dart';
 import 'package:avm/features/capture/presentation/capture_page.dart';
 import 'package:avm/features/capture/widgets/greeting_card.dart';
 import 'package:avm/features/capture/widgets/real_time_bot.dart';
@@ -337,9 +338,85 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
 
                           // New "Filter" button on the right end
                           TextButton.icon(
-                            onPressed: () {
-                              // Add your filter logic here
-                              print('Filter button clicked');
+                            onPressed: () async {
+                              // Show a filter selection dialog
+                              final selectedFilter =
+                                  await showDialog<FilterItem>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Select Filter'),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        // Existing filters
+                                        ListTile(
+                                          title: const Text("Today's Memory"),
+                                          onTap: () {
+                                            Navigator.pop(
+                                                context,
+                                                FilterItem(
+                                                    filterType: "Today"));
+                                          },
+                                        ),
+                                        ListTile(
+                                          title:
+                                              const Text("This Week's Memory"),
+                                          onTap: () {
+                                            Navigator.pop(
+                                                context,
+                                                FilterItem(
+                                                    filterType: "This Week"));
+                                          },
+                                        ),
+                                        ListTile(
+                                          title: const Text(
+                                              "Memory Between Dates"),
+                                          onTap: () async {
+                                            final DateTimeRange? dateRange =
+                                                await showDateRangePicker(
+                                              context: context,
+                                              firstDate: DateTime(2000),
+                                              lastDate: DateTime.now(),
+                                            );
+                                            if (dateRange != null) {
+                                              Navigator.pop(
+                                                context,
+                                                FilterItem(
+                                                  filterType: "DateRange",
+                                                  startDate: dateRange.start,
+                                                  endDate: dateRange.end,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                        // Add the "Show All" option
+                                        ListTile(
+                                          title: const Text("Show All"),
+                                          onTap: () {
+                                            Navigator.pop(
+                                                context,
+                                                FilterItem(
+                                                    filterType: "Show All"));
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+
+                              if (selectedFilter != null) {
+                                // Dispatch the filter event to the MemoryBloc
+                                context.read<MemoryBloc>().add(
+                                      FilterMemory(
+                                        filterItem: selectedFilter,
+                                        startDate: selectedFilter.startDate,
+                                        endDate: selectedFilter.endDate,
+                                      ),
+                                    );
+                              }
                             },
                             label: const Text(
                               'Filter',

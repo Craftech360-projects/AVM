@@ -45,9 +45,15 @@ class MemoryIndexChanged extends MemoryEvent {
 
 class FilterMemory extends MemoryEvent {
   final FilterItem filterItem;
+  final DateTime? startDate; // Start date for date range filter
+  final DateTime? endDate; // End date for date range filter
+
   const FilterMemory({
     required this.filterItem,
+    this.startDate,
+    this.endDate,
   });
+
   @override
-  List<Object> get props => [filterItem];
+  List<Object> get props => [filterItem, startDate ?? '', endDate ?? ''];
 }
