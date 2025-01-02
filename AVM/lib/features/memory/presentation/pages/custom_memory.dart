@@ -8,7 +8,6 @@ import 'package:avm/features/memory/presentation/widgets/action_tab.dart';
 import 'package:avm/features/memory/presentation/widgets/custom_tag.dart';
 import 'package:avm/features/memory/presentation/widgets/event_tab.dart';
 import 'package:avm/features/memory/presentation/widgets/summary_tab.dart';
-import 'package:avm/features/memory/presentation/widgets/transcript_tab.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/memory_detail/enable_title.dart';
 import 'package:avm/pages/memory_detail/share.dart';

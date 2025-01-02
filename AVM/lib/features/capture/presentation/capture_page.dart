@@ -73,7 +73,6 @@ class CapturePageState extends State<CapturePage>
   DateTime? currentTranscriptFinishedAt;
   static const quietSecondsForMemoryCreation = 60;
   InternetStatus? _internetStatus;
-
   bool isGlasses = false;
   String conversationId = const Uuid().v4();
 
@@ -90,7 +89,6 @@ class CapturePageState extends State<CapturePage>
     // Implement the logic to get the notification plugin value
     return SharedPreferencesUtil().notificationPlugin;
   }
-
 
   Future<void> initiateWebsocket(
       [BleAudioCodec? audioCodec, int? sampleRate]) async {
@@ -458,6 +456,7 @@ class CapturePageState extends State<CapturePage>
 
   @override
   Widget build(BuildContext context) {
+    
     super.build(context);
     return CaptureMemoryPage(
       context: context,
@@ -474,5 +473,6 @@ class CapturePageState extends State<CapturePage>
         setState(() {});
       },
     );
+    print("======> Internet Status: $_internetStatus");
   }
 }

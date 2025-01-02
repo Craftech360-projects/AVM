@@ -163,18 +163,17 @@ class _GreetingCardState extends State<GreetingCard> {
                         children: [
                           Row(
                             children: [
-                              if (widget.internetStatus != null)
-                                Container(
-                                  width: 6,
-                                  height: 6,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: widget.internetStatus ==
-                                            InternetStatus.connected
-                                        ? AppColors.green
-                                        : AppColors.red,
-                                  ),
+                              Container(
+                                width: 6,
+                                height: 6,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: widget.internetStatus ==
+                                          InternetStatus.connected
+                                      ? AppColors.green
+                                      : AppColors.red,
                                 ),
+                              ),
                               w5,
                               Text(
                                 'Internet',
