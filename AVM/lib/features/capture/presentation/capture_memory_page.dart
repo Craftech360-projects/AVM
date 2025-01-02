@@ -371,7 +371,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                         ),
                                         ListTile(
                                           title: const Text(
-                                              "Memory Between Dates"),
+                                              "Date Range Selection"),
                                           onTap: () async {
                                             final DateTimeRange? dateRange =
                                                 await showDateRangePicker(
