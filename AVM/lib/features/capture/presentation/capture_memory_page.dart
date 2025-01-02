@@ -299,36 +299,63 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                     //*--- Filter Button ---*//
                     if (_isNonDiscarded ||
                         _memoryBloc.state.memories.isNotEmpty)
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              _isNonDiscarded = !_isNonDiscarded;
-                              _memoryBloc.add(
-                                DisplayedMemory(
-                                    isNonDiscarded: _isNonDiscarded),
-                              );
-                            });
-                          },
-                          label: Text(
-                            _isNonDiscarded
-                                ? 'Show Discarded'
-                                : 'Hide Discarded',
-                            style: const TextStyle(
-                              color: AppColors.grey,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Existing Align widget for the "Show/Hide Discarded" button
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton.icon(
+                              onPressed: () {
+                                setState(() {
+                                  _isNonDiscarded = !_isNonDiscarded;
+                                  _memoryBloc.add(
+                                    DisplayedMemory(
+                                        isNonDiscarded: _isNonDiscarded),
+                                  );
+                                });
+                              },
+                              label: Text(
+                                _isNonDiscarded
+                                    ? 'Show Discarded'
+                                    : 'Hide Discarded',
+                                style: const TextStyle(
+                                  color: AppColors.grey,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              icon: Icon(
+                                _isNonDiscarded
+                                    ? Icons.cancel_outlined
+                                    : Icons.filter_list,
+                                size: 16,
+                                color: AppColors.grey,
+                              ),
                             ),
                           ),
-                          icon: Icon(
-                            _isNonDiscarded
-                                ? Icons.cancel_outlined
-                                : Icons.filter_list,
-                            size: 16,
-                            color: AppColors.grey,
+
+                          // New "Filter" button on the right end
+                          TextButton.icon(
+                            onPressed: () {
+                              // Add your filter logic here
+                              print('Filter button clicked');
+                            },
+                            label: const Text(
+                              'Filter',
+                              style: TextStyle(
+                                color: AppColors.grey,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            icon: const Icon(
+                              Icons.filter_alt_outlined,
+                              size: 16,
+                              color: AppColors.grey,
+                            ),
                           ),
-                        ),
+                        ],
                       ),
 
                     //*--- MEMORY LIST ---*//

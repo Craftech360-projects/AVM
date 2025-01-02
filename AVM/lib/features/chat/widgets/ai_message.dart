@@ -1,10 +1,6 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/message.dart';
 import 'package:avm/backend/mixpanel.dart';
@@ -15,6 +11,10 @@ import 'package:avm/features/chat/bloc/chat_bloc.dart';
 import 'package:avm/features/memories/pages/memory_detail_page.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/utils/other/temp.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class AIMessage extends StatelessWidget {
@@ -97,7 +97,7 @@ class AIMessage extends StatelessWidget {
               const SizedBox(height: 6),
               message.typeEnum == MessageType.daySummary
                   ? Text(
-                      '📅  Day Summary ~ ${dateTimeFormat('MMM, dd', DateTime.now())}',
+                      'Day Summary ~ ${dateTimeFormat('MMM, dd', message.createdAt)}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
