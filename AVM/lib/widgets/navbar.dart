@@ -194,8 +194,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
   Widget _buildExpandedSection(TextTheme textTheme) {
     return Expanded(
       child: Container(
-        margin: EdgeInsets.symmetric(),
-        height: 50.h,
+        margin: EdgeInsets.symmetric(vertical: 4),
+        height: 55.h,
         padding: EdgeInsets.fromLTRB(8, 2, 4, 2),
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -207,12 +207,16 @@ class _CustomNavBarState extends State<CustomNavBar> {
           children: [
             Expanded(
               child: TextField(
+                style: TextStyle(fontSize: 14, height: 1.2),
+                textAlign: TextAlign.start,
+                textAlignVertical: TextAlignVertical.center,
+                maxLines: 3,
+                minLines: 1,
                 controller: isChatVisible
                     ? _messageController
                     : (isMemoryVisible ? _searchController : null),
                 decoration: InputDecoration(
                   isDense: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 15.h),
                   hintText: isChatVisible
                       ? 'Ask your AVM anything...'
                       : 'Search for memories...',

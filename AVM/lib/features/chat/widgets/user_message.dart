@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:avm/backend/database/message.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class CustomCard extends StatelessWidget {
@@ -26,16 +26,7 @@ class CustomCard extends StatelessWidget {
             color: AppColors.white,
             borderRadius: BorderRadius.circular(borderRadius),
             border: Border.all(
-                color: AppColors.greyMedium.withValues(alpha: 0.5), width: 1)
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: AppColors.grey.withValues(alpha: 0.2),
-            //     spreadRadius: 8,
-            //     blurRadius: 8,
-            //     offset: const Offset(2, 2),
-            //   ),
-            // ],
-            ),
+                color: AppColors.greyMedium.withValues(alpha: 0.5), width: 1)),
         child: Padding(
           padding: padding,
           child: child,
@@ -56,7 +47,7 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-
+    final size = MediaQuery.of(context).size;
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: 8.w,
@@ -64,15 +55,14 @@ class UserCard extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Flexible(
             child: ConstrainedBox(
-              constraints:
-                  BoxConstraints(maxWidth: 0.75.sw), // Limit message width
+              constraints: BoxConstraints(minWidth: size.width * 0.25),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.purpleDark, // Or your theme's primary color
+                  color: AppColors.purpleDark,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(5.r),
                     topRight: Radius.circular(20.r),
@@ -92,7 +82,7 @@ class UserCard extends StatelessWidget {
                   vertical: 12.h,
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Message text
                     Text(
@@ -101,7 +91,6 @@ class UserCard extends StatelessWidget {
                         color: AppColors.white,
                         height: 1.4,
                       ),
-                      textAlign: TextAlign.left,
                     ),
                     h5,
                     // Timestamp

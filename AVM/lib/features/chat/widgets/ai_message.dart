@@ -87,17 +87,17 @@ class AIMessage extends StatelessWidget {
               topLeft: Radius.circular(20.r),
               topRight: Radius.circular(20.r),
               bottomLeft: Radius.circular(20.r),
-              bottomRight: Radius.circular(5.r),
+              bottomRight: Radius.circular(3.r),
             ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 6),
+              h5,
               message.typeEnum == MessageType.daySummary
                   ? Text(
-                      'Day Summary ~ ${dateTimeFormat('MMM, dd', message.createdAt)}',
+                      '📅 Day Summary ~ ${dateTimeFormat('MMM, dd', DateTime.now())}',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
@@ -128,7 +128,7 @@ class AIMessage extends StatelessWidget {
               if (message.id == 1 && displayOptions)
                 ..._getInitialOptions(context),
               if (memories.isNotEmpty) ...[
-                const SizedBox(height: 16),
+                h15,
                 for (var memory in (memories.length > 3
                     ? memories.reversed.toList().sublist(0, 3)
                     : memories.reversed.toList())) ...[
@@ -166,7 +166,7 @@ class AIMessage extends StatelessWidget {
                         width: double.maxFinite,
                         decoration: BoxDecoration(
                           color: AppColors.greyOffWhite,
-                          borderRadius: BorderRadius.circular(12.0),
+                          borderRadius: br12,
                         ),
                         child: Row(
                           children: [
@@ -178,16 +178,16 @@ class AIMessage extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            w10,
                             ...[
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
                                     DateFormat('HH:mm').format(
-                                        message.createdAt), // Format time
-                                    style: textTheme.bodySmall?.copyWith(
-                                      color: Colors.white70,
+                                        memory.createdAt), // Format time
+                                    style: TextStyle(
+                                      color: AppColors.black,
                                       fontSize: 12.sp,
                                     ),
                                   ),
@@ -200,7 +200,10 @@ class AIMessage extends StatelessWidget {
                                 ],
                               ),
                             ],
-                            const Icon(Icons.arrow_right_alt)
+                            const Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 12,
+                            )
                           ],
                         ),
                       ),
