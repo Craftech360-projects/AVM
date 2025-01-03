@@ -47,16 +47,6 @@ class OverallTabState extends State<OverallTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           h10,
-          if (widget.geolocation != null)
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  print(
-                      'Latitude: ${widget.geolocation!.latitude}, Longitude: ${widget.geolocation!.longitude} Address: ${widget.geolocation!.address}');
-                },
-                child: Text('Print Geolocation'),
-              ),
-            ),
 
           /// AI Summary
           CustomListTile(
