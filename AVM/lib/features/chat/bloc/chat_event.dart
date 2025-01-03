@@ -15,3 +15,4 @@ class SendInitialPluginMessage extends ChatEvent {
 
   SendInitialPluginMessage(this.plugin);
 }
+  class UpdateChat extends ChatEvent {}

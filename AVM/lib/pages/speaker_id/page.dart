@@ -39,9 +39,16 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
   _initiateConnectionListener() async {
     if (_connectionStateListener != null) return;
     _connectionStateListener = getConnectionStateListener(
-        deviceId: _device!.id,
-        onDisconnected: () => setState(() => _device = null),
-        onConnected: ((d) => setState(() => _device = d)));
+      deviceId: _device!.id,
+      onStateChanged: (state, device) {
+        if (state == BluetoothConnectionState.disconnected) {
+          setState(() => _device = null);
+        } else if (state == BluetoothConnectionState.connected &&
+            device != null) {
+          setState(() => _device = device);
+        }
+      },
+    );
   }
 
   @override

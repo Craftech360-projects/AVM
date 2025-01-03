@@ -8,18 +8,20 @@ import 'package:avm/core/widgets/typing_indicator.dart';
 import 'package:avm/features/capture/presentation/capture_page.dart';
 import 'package:avm/features/capture/widgets/greeting_card.dart';
 import 'package:avm/features/capture/widgets/real_time_bot.dart';
+import 'package:avm/features/connectivity/bloc/connectivity_bloc.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/features/memory/presentation/widgets/memory_card.dart';
 import 'package:avm/pages/memories/widgets/empty_memories.dart';
 import 'package:avm/pages/skeleton/screen_skeleton.dart';
 import 'package:avm/utils/websockets.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tuple/tuple.dart';
 
 class CaptureMemoryPage extends StatefulWidget {
-  const CaptureMemoryPage({
+  CaptureMemoryPage({
     super.key,
     required this.context,
     required this.hasTranscripts,
@@ -36,7 +38,7 @@ class CaptureMemoryPage extends StatefulWidget {
   final bool hasTranscripts;
   final BTDeviceStruct? device;
   final WebsocketConnectionStatus wsConnectionState;
-  final InternetStatus? internetStatus;
+  InternetStatus? internetStatus;
   final List<TranscriptSegment>? segments;
   final bool memoryCreating;
   final List<Tuple2<String, String>> photos;
@@ -61,6 +63,21 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false;
   bool _switchValue = SharedPreferencesUtil().notificationPlugin;
+
+  InternetStatus? _mapConnectivityResultToInternetStatus(
+      ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.wifi:
+      case ConnectivityResult.mobile:
+      case ConnectivityResult.ethernet:
+      case ConnectivityResult.vpn:
+        return InternetStatus.connected;
+      case ConnectivityResult.bluetooth:
+      case ConnectivityResult.none:
+      case ConnectivityResult.other:
+        return InternetStatus.disconnected;
+      }
+  }
 
   void _showPopup() {
     showDialog(
@@ -139,6 +156,16 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
         });
       }
     });
+
+    // Listen to connectivity changes
+    BlocProvider.of<ConnectivityBloc>(context).stream.listen((state) {
+      if (state is ConnectivityStatusChanged) {
+        setState(() {
+          widget.internetStatus =
+              _mapConnectivityResultToInternetStatus(state.status);
+        });
+      }
+    });
   }
 
   @override
@@ -164,215 +191,226 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 25, horizontal: 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocProvider<ConnectivityBloc>(
+      create: (context) => ConnectivityBloc(),
+      child: BlocBuilder<ConnectivityBloc, ConnectivityState>(
+        builder: (context, connectivityState) {
+          return Stack(
             children: [
-              if (widget.memoryCreating)
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  decoration: BoxDecoration(
-                    borderRadius: br8,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Creating new memory ...",
-                        style: TextStyle(
-                          color: AppColors.black,
+              SingleChildScrollView(
+                padding: EdgeInsets.symmetric(vertical: 25, horizontal: 14),
+                controller: _scrollController,
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    if (widget.memoryCreating)
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.15,
+                        decoration: BoxDecoration(
+                          borderRadius: br8,
                         ),
-                      ),
-                      h10,
-                      TypingIndicator(),
-                    ],
-                  ),
-                )
-              else if (widget.hasTranscripts)
-                ...items.map((item) {
-                  return Dismissible(
-                    key: ValueKey(item),
-                    direction: DismissDirection.startToEnd,
-                    onDismissed: (direction) async {
-                      try {
-                        await widget.onDismissmissedCaptureMemory(direction);
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Creating new memory ...",
+                              style: TextStyle(
+                                color: AppColors.black,
+                              ),
+                            ),
+                            h10,
+                            TypingIndicator(),
+                          ],
+                        ),
+                      )
+                    else if (widget.hasTranscripts)
+                      ...items.map(
+                        (item) {
+                          return Dismissible(
+                              key: ValueKey(item),
+                              direction: DismissDirection.startToEnd,
+                              onDismissed: (direction) async {
+                                try {
+                                  await widget
+                                      .onDismissmissedCaptureMemory(direction);
 
-                        setState(() {
-                          items.remove(item);
-                        });
-                      } catch (e) {
-                        avmSnackBar(
-                          context,
-                          'Oops! Something went wrong.\nPlease try again.',
-                        );
-                      }
-                    },
-                    child: Column(
-                      children: [
-                        GreetingCard(
-                          name: '',
-                          isDisconnected: true,
-                          context: context,
-                          hasTranscripts: widget.hasTranscripts,
-                          wsConnectionState: widget.wsConnectionState,
-                          device: widget.device,
-                          internetStatus: widget.internetStatus,
-                          segments: widget.segments,
-                          memoryCreating: widget.memoryCreating,
-                          photos: widget.photos,
-                          scrollController: widget.scrollController,
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.symmetric(vertical: 12, horizontal: 6),
-                          child: Text(
-                            "Swipe right to create your memory ...",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
+                                  setState(() {
+                                    items.remove(item);
+                                  });
+                                } catch (e) {
+                                  avmSnackBar(context,
+                                      'Oops! Something went wrong.\nPlease try again.');
+                                }
+                              },
+                              child: Column(
+                                children: [
+                                  GreetingCard(
+                                    name: '',
+                                    isDisconnected: true,
+                                    context: context,
+                                    hasTranscripts: widget.hasTranscripts,
+                                    wsConnectionState: widget.wsConnectionState,
+                                    internetStatus:
+                                        _mapConnectivityResultToInternetStatus(
+                                            connectivityState.status),
+                                    segments: widget.segments,
+                                    memoryCreating: widget.memoryCreating,
+                                    photos: widget.photos,
+                                    scrollController: widget.scrollController,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 6),
+                                    child: Text(
+                                      "Swipe right to create your memory ...",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: AppColors.grey,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ));
+                        },
+                      )
+                    else
+                      GreetingCard(
+                        name: '',
+                        isDisconnected: true,
+                        context: context,
+                        hasTranscripts: widget.hasTranscripts,
+                        wsConnectionState: widget.wsConnectionState,
+                        internetStatus: _mapConnectivityResultToInternetStatus(
+                            connectivityState.status),
+                        segments: widget.segments,
+                        memoryCreating: widget.memoryCreating,
+                        photos: widget.photos,
+                        scrollController: widget.scrollController,
+                      ),
+                    h10,
+                    //*--- Filter Button ---*//
+                    if (_isNonDiscarded ||
+                        _memoryBloc.state.memories.isNotEmpty)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              _isNonDiscarded = !_isNonDiscarded;
+                              _memoryBloc.add(
+                                DisplayedMemory(
+                                    isNonDiscarded: _isNonDiscarded),
+                              );
+                            });
+                          },
+                          label: Text(
+                            _isNonDiscarded
+                                ? 'Show Discarded'
+                                : 'Hide Discarded',
+                            style: const TextStyle(
                               color: AppColors.grey,
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
+                          icon: Icon(
+                            _isNonDiscarded
+                                ? Icons.cancel_outlined
+                                : Icons.filter_list,
+                            size: 16,
+                            color: AppColors.grey,
+                          ),
                         ),
-                      ],
+                      ),
+
+                    //*--- MEMORY LIST ---*//
+
+                    BlocConsumer<MemoryBloc, MemoryState>(
+                      bloc: _memoryBloc,
+                      builder: (context, state) {
+                        if (state.status == MemoryStatus.loading) {
+                          return const Center(child: ScreenSkeleton());
+                        }
+
+                        if (state.status == MemoryStatus.failure) {
+                          return const Center(
+                            child: Text(
+                              'Oops! Failed to load memories',
+                              style: TextStyle(color: AppColors.grey),
+                            ),
+                          );
+                        }
+
+                        if (state.memories.isEmpty) {
+                          return Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 08.0, vertical: 40.0),
+                            child: EmptyMemoriesWidget(),
+                          );
+                        }
+
+                        return MemoryCardWidget(memoryBloc: _memoryBloc);
+                      },
+                      listener: (context, state) {
+                        if (state.status == MemoryStatus.failure) {
+                          avmSnackBar(context, 'Error: ${state.failure}');
+                        }
+                      },
                     ),
-                  );
-                })
-              else
-                GreetingCard(
-                  name: '',
-                  isDisconnected: true,
-                  context: context,
-                  hasTranscripts: widget.hasTranscripts,
-                  wsConnectionState: widget.wsConnectionState,
-                  device: widget.device,
-                  internetStatus: widget.internetStatus,
-                  segments: widget.segments,
-                  memoryCreating: widget.memoryCreating,
-                  photos: widget.photos,
-                  scrollController: widget.scrollController,
+                  ],
                 ),
-              h5,
-              //*--- Filter Button ---*//
-              if (_isNonDiscarded || _memoryBloc.state.memories.isNotEmpty)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        _isNonDiscarded = !_isNonDiscarded;
-                        _memoryBloc.add(
-                          DisplayedMemory(isNonDiscarded: _isNonDiscarded),
+              ),
+              if (_isScrolled)
+                Positioned(
+                    top: 0, left: 0, right: 0, child: _buildScrollGradient()),
+              Positioned(
+                bottom: 14,
+                right: 08,
+                child: Column(
+                  children: [
+                    AnimatedBuilder(
+                      animation: _animation,
+                      builder: (context, child) {
+                        double flipValue = _isFlippingRight
+                            ? _animation.value // Normal flip
+                            : -_animation.value; // Reverse flip
+
+                        // Create a perspective effect for the 3D flip
+                        Matrix4 transform = Matrix4.identity()
+                          ..setEntry(3, 2, 0.001)
+                          ..rotateY(flipValue);
+
+                        return Transform(
+                          alignment: Alignment.center,
+                          transform: transform,
+                          child: FloatingActionButton(
+                            shape: const CircleBorder(),
+                            elevation: 8.0,
+                            backgroundColor: AppColors.purpleDark,
+                            onPressed: _showPopup,
+                            child: Image.asset(
+                              AppImages.botIcon,
+                              width: 45,
+                              height: 45,
+                            ),
+                          ),
                         );
-                      });
-                    },
-                    label: Text(
-                      _isNonDiscarded ? 'SHOW DISCARDED' : 'HIDE DISCARDED',
-                      style: const TextStyle(
-                        color: AppColors.grey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      },
                     ),
-                    icon: Icon(
-                      _isNonDiscarded
-                          ? Icons.cancel_outlined
-                          : Icons.filter_list,
-                      size: 16,
-                      color: AppColors.grey,
-                    ),
-                  ),
+                    h10,
+                    if (SharedPreferencesUtil().notificationPlugin)
+                      TypingIndicator(),
+                  ],
                 ),
-              h10,
-              //*--- Show Memory Block or Empty Widget ---*//
-              BlocConsumer<MemoryBloc, MemoryState>(
-                bloc: _memoryBloc,
-                builder: (context, state) {
-                  if (state.status == MemoryStatus.loading) {
-                    return const Center(child: ScreenSkeleton());
-                  }
-
-                  if (state.status == MemoryStatus.failure) {
-                    return const Center(
-                      child: Text(
-                        'Oops! Failed to load memories',
-                        style: TextStyle(color: AppColors.grey),
-                      ),
-                    );
-                  }
-
-                  if (state.memories.isEmpty) {
-                    return Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 08.0, vertical: 40.0),
-                      child: EmptyMemoriesWidget(),
-                    );
-                  }
-
-                  return MemoryCardWidget(memoryBloc: _memoryBloc);
-                },
-                listener: (context, state) {
-                  if (state.status == MemoryStatus.failure) {
-                    avmSnackBar(context, 'Error: ${state.failure}');
-                  }
-                },
               ),
             ],
-          ),
-        ),
-        if (_isScrolled)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: _buildScrollGradient(),
-          ),
-        Positioned(
-          bottom: 14,
-          right: 8,
-          child: Column(
-            children: [
-              AnimatedBuilder(
-                animation: _animation,
-                builder: (context, child) {
-                  double flipValue = _isFlippingRight
-                      ? _animation.value // Normal flip
-                      : -_animation.value; // Reverse flip
-
-                  // Create a perspective effect for the 3D flip
-                  Matrix4 transform = Matrix4.identity()
-                    ..setEntry(3, 2, 0.001)
-                    ..rotateY(flipValue);
-
-                  return Transform(
-                    alignment: Alignment.center,
-                    transform: transform,
-                    child: FloatingActionButton(
-                      shape: const CircleBorder(),
-                      elevation: 8.0,
-                      backgroundColor: AppColors.purpleDark,
-                      onPressed: _showPopup,
-                      child: Image.asset(
-                        AppImages.botIcon,
-                        width: 45,
-                        height: 45,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              h10,
-              if (SharedPreferencesUtil().notificationPlugin) TypingIndicator(),
-            ],
-          ),
-        ),
-      ],
+          );
+        },
+      ),
     );
   }
 

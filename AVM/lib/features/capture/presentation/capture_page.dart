@@ -473,6 +473,5 @@ class CapturePageState extends State<CapturePage>
         setState(() {});
       },
     );
-    print("======> Internet Status: $_internetStatus");
   }
 }

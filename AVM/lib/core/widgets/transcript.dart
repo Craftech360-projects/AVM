@@ -49,10 +49,9 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
         "Rebuilding TranscriptWidget: ${widget.segments.length} segments in TW");
     return Container(
       margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
-      padding: EdgeInsets.all(6.0),
       decoration: BoxDecoration(
-        color: AppColors.blue.withValues(alpha: 0.4),
-        borderRadius: br12,
+        border: Border.all(color: AppColors.purpleDark),
+        borderRadius: br8,
       ),
       child: ListView.separated(
         padding: EdgeInsets.zero,
@@ -65,10 +64,11 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
           return Align(
             alignment: Alignment.topLeft,
             child: Container(
+              width: double.infinity,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: AppColors.commonPink,
-                borderRadius: br12,
+                borderRadius: br8,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,7 +99,7 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
                       style: const TextStyle(
                         color: AppColors.blue,
                         fontWeight: FontWeight.w500,
-                        fontSize: 12,
+                        fontSize: 13,
                       ),
                     ),
                   ),

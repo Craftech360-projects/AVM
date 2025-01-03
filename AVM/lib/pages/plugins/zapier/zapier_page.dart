@@ -72,7 +72,7 @@ class _ZapierPageState extends State<ZapierPage> {
           h5,
           const Text(
             'Zapier can automate workflows by connecting your app to other services. Enable to configure your integration settings.',
-            textAlign: TextAlign.start,
+            textAlign: TextAlign.center,
           ),
           h20,
           if (zapierEnabled) ..._zapierIntegrationOptions(),

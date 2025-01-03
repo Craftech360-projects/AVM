@@ -62,7 +62,7 @@ void avmSnackBar(BuildContext context, String content) {
         ),
       ),
       shape: RoundedRectangleBorder(borderRadius: br8),
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+      padding: const EdgeInsets.symmetric(vertical: 04, horizontal: 08),
       behavior: SnackBarBehavior.floating,
       elevation: 1.5,
       margin: const EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 16),

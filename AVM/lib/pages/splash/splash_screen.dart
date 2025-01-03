@@ -54,8 +54,7 @@ class SplashScreenState extends State<SplashScreen>
           duration: const Duration(milliseconds: 1500),
           child: Image.asset(
             AppImages.appLogo,
-            width: 120,
-            height: 120,
+            width: 100,
           ),
         ),
       ),

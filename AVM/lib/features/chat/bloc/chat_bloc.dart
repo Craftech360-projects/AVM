@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:avm/backend/api_requests/api/prompt.dart';
 import 'package:avm/backend/api_requests/stream_api_response.dart';
 import 'package:avm/backend/database/memory.dart';
@@ -12,6 +10,8 @@ import 'package:avm/backend/database/message_provider.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/plugin.dart';
 import 'package:avm/utils/rag.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
@@ -27,6 +27,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SendInitialPluginMessage>(_onSendInitialPluginMessage);
     on<SendMessage>(_onSendMessage);
     on<RefreshMessages>(_refreshMessages);
+    on<UpdateChat>((event, emit) async {
+      final updatedMessages = MessageProvider().getMessages();
+      emit(state.copyWith(messages: updatedMessages));
+    });
   }
 
   /// Refresh messages and update the state
@@ -35,16 +39,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     try {
       emit(state.copyWith(status: ChatStatus.loading));
 
-      // Fetch updated messages
+      // Re-fetch the updated messages
       List<Message> messages = messageProvider.getMessages();
       emit(state.copyWith(
         status: ChatStatus.loaded,
         messages: messages,
       ));
     } catch (error) {
+      log("Failed to refresh messages: $error");
       emit(state.copyWith(
         status: ChatStatus.failure,
-        errorMesage: error.toString(),
+        errorMesage: "Failed to refresh messages.",
       ));
     }
   }
@@ -101,6 +106,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> _onSendMessage(
       SendMessage event, Emitter<ChatState> emit) async {
     try {
+      // Show loader while message is processed
       emit(state.copyWith(status: ChatStatus.loading));
 
       var aiMessage = _prepareStreaming(event.message);
@@ -122,7 +128,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         () async {
           aiMessage.memories.addAll(memories);
           messageProvider.updateMessage(aiMessage);
-          add(RefreshMessages()); // Refresh after the stream
+          add(RefreshMessages());
+          emit(state.copyWith(status: ChatStatus.loaded));
         },
       );
     } catch (error) {

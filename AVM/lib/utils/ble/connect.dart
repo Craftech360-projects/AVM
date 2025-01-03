@@ -10,12 +10,12 @@ Future<void> bleConnectDevice(String deviceId,
   try {
     // for android seems like the reconnect or resetState is not working
     if (!autoConnect) {
-      return await device.connect(autoConnect: false, mtu: null);
+      return await device.connect(autoConnect: true, mtu: null);
     }
 
     // Step 1: Connect with autoConnect
     await device.connect(
-        autoConnect: false, mtu: null); // Set autoConnect to false
+        autoConnect: true, mtu: null); // Set autoConnect to false
     // Step 2: Listen to the connection state to ensure the device is connected
     await device.connectionState
         .where((state) => state == BluetoothConnectionState.connected)

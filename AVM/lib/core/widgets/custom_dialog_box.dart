@@ -39,7 +39,8 @@ Future<bool> customDialogBox(BuildContext context,
           Text(
             message,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
+              height: 1.2,
               color: AppColors.blueGreyDark,
             ),
           ),
@@ -116,14 +117,15 @@ void showPermissionDeniedDialog(
           Text(
             message,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
+              height: 1.2,
               color: AppColors.blueGreyDark,
             ),
           ),
           h10,
         ],
       ),
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -201,7 +203,8 @@ class CustomDialogWidget extends StatelessWidget {
           Text(
             message,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
+              height: 1.2,
               color: AppColors.blueGreyDark,
             ),
           ),
@@ -229,7 +232,7 @@ class CustomDialogWidget extends StatelessWidget {
           ],
         ],
       ),
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(

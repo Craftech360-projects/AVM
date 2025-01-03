@@ -5,8 +5,8 @@ import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/utils/ble/communication.dart';
 import 'package:avm/utils/other/notifications.dart';
 import 'package:avm/utils/websockets.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:web_socket_channel/io.dart';
 
 mixin WebSocketMixin {
@@ -16,8 +16,8 @@ mixin WebSocketMixin {
   IOWebSocketChannel? websocketChannel;
   int _reconnectionAttempts = 0;
   Timer? _reconnectionTimer;
-  late StreamSubscription<InternetStatus> _internetListener;
-  InternetStatus _internetStatus = InternetStatus.connected;
+  late StreamSubscription<List<ConnectivityResult>> _internetListener;
+  ConnectivityResult _internetStatus = ConnectivityResult.wifi;
 
   final int _initialReconnectDelay = 1;
   final int _maxReconnectDelay = 60;
@@ -51,7 +51,7 @@ mixin WebSocketMixin {
       _internetListenerSetup = true;
     }
 
-    if (_internetStatus == InternetStatus.disconnected) {
+    if (_internetStatus == ConnectivityResult.none) {
       debugPrint(
           'No internet connection. Waiting for connection to be restored.');
       _isConnecting = false;
@@ -135,11 +135,16 @@ mixin WebSocketMixin {
     required BleAudioCodec codec,
   }) {
     if (!_internetListenerSetup) {
-      _internetListener =
-          InternetConnection().onStatusChange.listen((InternetStatus status) {
+      _internetListener = Connectivity()
+          .onConnectivityChanged
+          .listen((List<ConnectivityResult> statuses) {
+        final status = statuses.first;
         _internetStatus = status;
         switch (status) {
-          case InternetStatus.connected:
+          case ConnectivityResult.wifi:
+          case ConnectivityResult.mobile:
+          case ConnectivityResult.ethernet:
+          case ConnectivityResult.vpn:
             if (wsConnectionState != WebsocketConnectionStatus.connected &&
                 !_isConnecting) {
               debugPrint(
@@ -157,13 +162,16 @@ mixin WebSocketMixin {
               );
             }
             break;
-          case InternetStatus.disconnected:
+          case ConnectivityResult.none:
+          case ConnectivityResult.other:
             debugPrint('Internet connection lost. Disconnecting WebSocket.');
             _notifyInternetLost();
             websocketChannel?.sink.close(1000, 'Internet connection lost');
             _reconnectionTimer?.cancel();
             wsConnectionState = WebsocketConnectionStatus.notConnected;
             onConnectionClosed(1000, 'Internet connection lost');
+            break;
+          case ConnectivityResult.bluetooth:
             break;
         }
       });
@@ -180,7 +188,7 @@ mixin WebSocketMixin {
     required BleAudioCodec codec,
   }) {
     if (websocketReconnecting ||
-        _internetStatus == InternetStatus.disconnected ||
+        _internetStatus == ConnectivityResult.none ||
         _isConnecting) {
       return;
     }
@@ -231,7 +239,7 @@ mixin WebSocketMixin {
     required Function(List<TranscriptSegment>) onMessageReceived,
     required BleAudioCodec codec,
   }) async {
-    if (_internetStatus == InternetStatus.disconnected) {
+    if (_internetStatus == ConnectivityResult.none) {
       debugPrint('Cannot attempt reconnection: No internet connection');
       return;
     }

@@ -161,12 +161,12 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                         if (widget.device != null) {
                           bleDisconnectDevice(widget.device!);
                         }
-                        // Navigator.of(context).pop();
                         SharedPreferencesUtil().deviceId = '';
                         SharedPreferencesUtil().deviceName = '';
                         avmSnackBar(context,
                             'Your AVM device has been ${widget.device == null ? "unpaired" : "disconnected"} successfully.');
                         MixpanelManager().disconnectFriendClicked();
+                        Navigator.of(context).pop();
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(

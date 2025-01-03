@@ -21,18 +21,7 @@ class MemoryCardWidget extends StatelessWidget {
     return BlocBuilder<MemoryBloc, MemoryState>(
       bloc: _memoryBloc,
       builder: (context, state) {
-        if (state.status == MemoryStatus.loading) {
-          return Text(
-            'Deleting Memory...',
-            style: TextStyle(fontSize: 15, color: AppColors.greyMedium),
-          );
-        }
-
-        // if (state.memories.isEmpty) {
-        //   return const Center(
-        //     child: EmptyMemoriesWidget(),
-        //   );
-        // }
+        // log('state of memory ${state.memories}');
         return Column(
           children: List.generate(
             state.memories.length,
