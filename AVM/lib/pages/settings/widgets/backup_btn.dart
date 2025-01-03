@@ -1,6 +1,7 @@
 import 'package:avm/backend/api_requests/api/server.dart';
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
+import 'package:avm/core/assets/app_images.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/utils/features/backups.dart';
 import 'package:avm/widgets/custom_dialog_box.dart';
@@ -72,14 +73,13 @@ class _BackupButtonState extends State<BackupButton> {
     return Column(
       children: [
         ListTile(
-          contentPadding: const EdgeInsets.fromLTRB(4, 0, 24, 0),
+          contentPadding: EdgeInsets.zero,
           title: const Text('Backups & Restore',
               style: TextStyle(fontWeight: FontWeight.w600)),
           trailing: Switch(
             activeTrackColor: AppColors.purpleDark,
-            inactiveTrackColor: AppColors.grey,
-            activeColor: Colors.white,
-            inactiveThumbColor: Colors.white,
+            activeColor: AppColors.commonPink,
+            activeThumbImage: AssetImage(AppImages.appLogo),
             value: backupsEnabled,
             onChanged: (bool value) {
               setState(() {
@@ -95,7 +95,7 @@ class _BackupButtonState extends State<BackupButton> {
 
         // Manual Backup Button
         ListTile(
-          contentPadding: const EdgeInsets.fromLTRB(4, 0, 24, 0),
+          contentPadding: EdgeInsets.zero,
           title: Text(
             'Manual Backup',
             style: TextStyle(

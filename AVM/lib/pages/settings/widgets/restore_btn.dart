@@ -1,4 +1,5 @@
 import 'package:avm/backend/preferences.dart';
+import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/utils/features/backups.dart';
 import 'package:flutter/material.dart';
@@ -28,25 +29,17 @@ class RestoreButtonState extends State<RestoreButton> {
         setState(() {
           isRestoreInProgress = false;
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(success
-                ? 'Backup restored successfully!'
-                : 'Failed to restore backup'),
-          ),
-        );
+       
+        avmSnackBar(context, success
+            ? 'Backup restored successfully!'
+            : 'Failed to restore backup');
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           isRestoreInProgress = false;
         });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Error occurred while restoring backup'),
-          ),
-        );
+        avmSnackBar(context, 'Error occurred while restoring backup');
       }
     }
   }
@@ -57,7 +50,7 @@ class RestoreButtonState extends State<RestoreButton> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-          contentPadding: const EdgeInsets.fromLTRB(4, 0, 24, 0),
+          contentPadding: EdgeInsets.zero,
           title: const Text(
             'Restore Latest Backup',
             style: TextStyle(fontWeight: FontWeight.w600),

@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:avm/backend/database/memory_provider.dart';
 import 'package:avm/backend/preferences.dart';
+import 'package:avm/core/constants/constants.dart';
 import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/pages/settings/widgets/calendar.dart';
 import 'package:avm/utils/features/calendar.dart';
 import 'package:avm/utils/other/temp.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EventTab extends StatefulWidget {
   const EventTab(
@@ -112,13 +113,12 @@ class _EventTabState extends State<EventTab> {
                                     .isNotEmpty;
                                 if (!calEnabled || !calSelected) {
                                   routeToPage(context, const CalendarPage());
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(!calEnabled
-                                          ? 'Enable calendar integration to add events'
-                                          : 'Select a calendar to add events to'),
-                                    ),
-                                  );
+                                  avmSnackBar(
+                                      context,
+                                      !calEnabled
+                                          ? "Enable calendar integration to add events"
+                                          : "Select a calendar to add events to");
+
                                   return;
                                 }
                                 MemoryProvider().setEventCreated(event);
@@ -129,11 +129,7 @@ class _EventTabState extends State<EventTab> {
                                   event.duration,
                                   description: event.description,
                                 );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Event added to calendar'),
-                                  ),
-                                );
+                                avmSnackBar(context, "Event added to calendar");
                               },
                         icon: Icon(event.created ? Icons.check : Icons.add,
                             color: Colors.white),

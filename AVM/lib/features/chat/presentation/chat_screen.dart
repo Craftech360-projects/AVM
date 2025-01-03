@@ -36,7 +36,6 @@ class _ChatScreenState extends State<ChatScreen>
   late ChatBloc _chatBloc;
   late AnimationController _animationController;
   bool _isScrolled = false;
-  // ignore: unused_field
   late Animation<double> _animation;
   late Timer _dailySummaryTimer;
 

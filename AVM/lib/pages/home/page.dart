@@ -179,7 +179,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     _migrationScripts();
     authenticateGCP();
     if (SharedPreferencesUtil().deviceId.isNotEmpty) {
-      print("auto connect , #${SharedPreferencesUtil().deviceId}");
       scanAndConnectDevice().then((device) {
         _onConnected(device);
         BlocProvider.of<BluetoothBloc>(context).startListening(device!.id);
@@ -232,14 +231,12 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           InstabugLog.logInfo('AVM Device Disconnected');
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
             if (SharedPreferencesUtil().showDisconnectionNotification) {
-              print('Show Disconnection Notification: true');
               createNotification(
                 title: 'AVM Device Disconnected',
                 body: 'Please reconnect to continue using your AVM.',
               );
               SharedPreferencesUtil().showDisconnectionNotification = false;
             } else {
-              print('Show Disconnection Notification: false');
             }
           }
           MixpanelManager().deviceDisconnected();

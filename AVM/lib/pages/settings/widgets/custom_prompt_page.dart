@@ -2,6 +2,7 @@ import 'package:avm/backend/database/prompt.dart';
 import 'package:avm/backend/database/prompt_provider.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/core/theme/app_colors.dart';
+import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/settings/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
@@ -33,17 +34,6 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
             calender: _calenderController.text),
       );
       SharedPreferencesUtil().isPromptSaved = true;
-//     SharedPreferencesUtil().saveSelectedPrompt('title', _titleController.text);
-//     SharedPreferencesUtil().saveSelectedPrompt('overview', _overviewController.text);
-//     SharedPreferencesUtil().saveSelectedPrompt('actionItems', _actionItemController.text);
-//     SharedPreferencesUtil().saveSelectedPrompt('category', _categoryController.text);
-//     SharedPreferencesUtil().saveSelectedPrompt('calendar', _calenderController.text);
-      // summarizeMemory(
-      //   '',
-      //   [],
-      //   customPromptDetails: customPromptDetails,
-      // );
-
 
       _promptController.clear();
       _titleController.clear();
@@ -58,20 +48,12 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: const Color(0xFFE6F5FA),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 246, 253, 255),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context); // Return to the previous screen
-          },
-        ),
-        centerTitle: true,
-        //   backgroundColor: const Color(0xFFE6F5FA),
-        elevation: 0,
-        title: const Text('Customize Prompt'),
+    return CustomScaffold(
+      showBackBtn: true,
+      showGearIcon: true,
+      title: Center(
+        child: Text("Custom Prompt",
+            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 19)),
       ),
       body: Container(
         decoration: const BoxDecoration(

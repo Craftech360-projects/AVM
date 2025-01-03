@@ -136,10 +136,7 @@ List<Widget> getSummaryWidgets(
                     Clipboard.setData(ClipboardData(
                         text:
                             '- ${structured.actionItems.map((e) => e.description).join('\n- ')}'));
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Action items copied to clipboard'),
-                      duration: Duration(seconds: 2),
-                    ));
+                    avmSnackBar(context, "Action items copied to clipboard");
                     MixpanelManager()
                         .copiedMemoryDetails(memory, source: 'Action Items');
                   },
@@ -214,11 +211,12 @@ List<Widget> getSummaryWidgets(
                       SharedPreferencesUtil().calendarId.isNotEmpty;
                   if (!calEnabled || !calSelected) {
                     routeToPage(context, const CalendarPage());
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(!calEnabled
-                          ? 'Enable calendar integration to add events'
-                          : 'Select a calendar to add events to'),
-                    ));
+
+                    avmSnackBar(
+                        context,
+                        !calEnabled
+                            ? "Enable calendar integration to add events"
+                            : "Select a calendar to add events to");
                     return;
                   }
                   MemoryProvider().setEventCreated(event);
@@ -229,9 +227,7 @@ List<Widget> getSummaryWidgets(
                     event.duration,
                     description: event.description,
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                    content: Text('Event added to calendar'),
-                  ));
+                  avmSnackBar(context, 'Event added to calendar');
                 },
           icon: Icon(event.created ? Icons.check : Icons.add,
               color: Colors.white),

@@ -15,9 +15,7 @@ enum ExportType { txt, pdf, markdown }
 
 void _copyTranscript(BuildContext context, Memory memory) {
   Clipboard.setData(ClipboardData(text: memory.transcript));
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text('Transcript copied to clipboard')),
-  );
+  avmSnackBar(context, "Transcript copied to clipboard");
   HapticFeedback.lightImpact();
 }
 
@@ -26,10 +24,7 @@ void _copySummary(BuildContext context, Memory memory) {
     final summary = memory.structured.target!.toString();
     Clipboard.setData(ClipboardData(text: summary));
     HapticFeedback.lightImpact();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Summary copied to clipboard')),
-    );
+    avmSnackBar(context, "Summary copied to clipboard");
   }
 }
 

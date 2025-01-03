@@ -48,7 +48,6 @@ Future<bool> executeBackupWithUid({String? uid}) async {
 
 Future<Object> executeManualBackupWithUid(uid) async {
   if (!SharedPreferencesUtil().backupsEnabled) return false;
-  print("uid>>>>>>$uid");
   var memories = MemoryProvider().getMemories();
 
   if (memories.isEmpty) return true;
@@ -59,7 +58,6 @@ Future<Object> executeManualBackupWithUid(uid) async {
   try {
     debugPrint("Starting manual backup with UID: $uid");
     final googleDriveService = GoogleDriveService();
-    print(googleDriveService);
     Map<String, dynamic> result =
         await googleDriveService.uploadBackupToGoogleDrive(rawData);
     debugPrint("Manual backup result: $result");

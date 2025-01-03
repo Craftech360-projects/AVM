@@ -150,7 +150,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     }
 
     void checkSilence() {
-      print("here");
       if (lastAudioTime != null) {
         Duration silenceDuration = DateTime.now().difference(lastAudioTime!);
         debugPrint(
@@ -174,11 +173,9 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
 
         try {
           final data = jsonDecode(event);
-          print('websocket data satyam $event');
           if (data['type'] == 'Metadata') {
             // Handle metadata event
           } else if (data['type'] == 'Results') {
-            print('deepgram server selected');
             // Handle results event
             final alternatives = data['channel']['alternatives'];
             if (alternatives is List && alternatives.isNotEmpty) {

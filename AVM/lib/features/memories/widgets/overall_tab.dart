@@ -122,13 +122,11 @@ class OverallTabState extends State<OverallTab> {
                                 SharedPreferencesUtil().calendarId.isNotEmpty;
                             if (!calEnabled || !calSelected) {
                               routeToPage(context, const CalendarPage());
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(!calEnabled
-                                      ? 'Enable calendar integration to add events'
-                                      : 'Select a calendar to add events to'),
-                                ),
-                              );
+                              avmSnackBar(
+                                  context,
+                                  !calEnabled
+                                      ? "Enable calendar integration to add events"
+                                      : "Select a calendar to add events to");
                               return;
                             }
                             MemoryProvider().setEventCreated(event);
@@ -139,11 +137,7 @@ class OverallTabState extends State<OverallTab> {
                               event.duration,
                               description: event.description,
                             );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Event added to calendar'),
-                              ),
-                            );
+                            avmSnackBar(context, "Event added to calendar");
                           },
                     icon: Icon(event.created ? Icons.check : Icons.add,
                         color: AppColors.black),
@@ -220,11 +214,7 @@ class OverallTabState extends State<OverallTab> {
           //           title: "Memory Location",
           //         );
           //       } else {
-          //         ScaffoldMessenger.of(context).showSnackBar(
-          //           const SnackBar(
-          //             content: Text('No map applications available'),
-          //           ),
-          //         );
+          // avmSnackBar(context, "No map applications available");
           //       }
           //     },
           //     child: Center(

@@ -93,6 +93,7 @@ class CapturePageState extends State<CapturePage>
     return SharedPreferencesUtil().notificationPlugin;
   }
 
+  // ignore: unused_element
   void _pluginNotification() async {
     String transcript = TranscriptSegment.segmentsAsString(segments);
     // Replace with actual transcript
@@ -318,7 +319,6 @@ class CapturePageState extends State<CapturePage>
 
   _createMemory({bool forcedCreation = false}) async {
     bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
-    print('Creating memory');
     if (memoryCreating) return;
 
     if (mounted) {
@@ -329,7 +329,6 @@ class CapturePageState extends State<CapturePage>
 
     Memory? memory;
     try {
-      print("Creating memory...");
       memory = await processTranscriptContent(
         context,
         TranscriptSegment.segmentsAsString(segments),
@@ -373,7 +372,6 @@ class CapturePageState extends State<CapturePage>
               'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
         );
       }
-      print('Notification sent $backupsEnabled');
       backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
     }
 
@@ -403,7 +401,6 @@ class CapturePageState extends State<CapturePage>
     if (_hasTranscripts == hasTranscripts) return;
     if (mounted) {
       setState(() => _hasTranscripts = hasTranscripts);
-      print("Has transcripts:======> $_hasTranscripts");
     }
   }
 

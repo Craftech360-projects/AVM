@@ -21,15 +21,12 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
           .getMemories(); // Fetch memories from the state directly
 
       List<Memory> filteredMemories = allMemories; // Start with all memories
-      print(allMemories.length);
 
       // Log the filter type
-      print('Filter type: ${event.filterItem.filterType}');
 
       // Handle different filter types
       if (event.filterItem.filterType == "Show All") {
         // Reset to all memories
-        print("length, ${allMemories.length}");
         emit(state.copyWith(
           status: MemoryStatus.success,
           memories: allMemories, // Reset to all memories

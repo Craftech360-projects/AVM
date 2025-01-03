@@ -3,6 +3,7 @@ import 'package:avm/utils/features/backups.dart';
 import 'package:flutter/material.dart';
 
 Future<void> manualBackup(BuildContext context) async {
+  // ignore: unused_local_variable
   bool isManualBackupInProgress = true;
 
   try {

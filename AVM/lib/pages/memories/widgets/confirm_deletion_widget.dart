@@ -32,7 +32,6 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
       message: "Are you sure you want to delete this memory?",
       icon: Icons.delete_rounded,
       yesPressed: () async {
-        print("delete memory");
 
         MemoryProvider().deleteMemory(widget.memory);
         Navigator.pop(context);

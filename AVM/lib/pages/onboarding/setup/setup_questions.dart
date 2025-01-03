@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:avm/backend/mixpanel.dart';
+import 'package:avm/core/constants/constants.dart';
 import 'package:avm/pages/speaker_id/page.dart';
+import 'package:flutter/material.dart';
 
 class SetupQuestionsPage extends StatefulWidget {
   const SetupQuestionsPage({super.key});
@@ -107,12 +108,8 @@ class _SetupQuestionsPageState extends State<SetupQuestionsPage> {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
                         builder: (c) => const SpeakerIdPage(onbording: true)));
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text(
-                          'You haven\'t answered all the questions yet! 🥺',
-                          style: TextStyle(color: Colors.white)),
-                      duration: Duration(seconds: 2),
-                    ));
+                    avmSnackBar(context,
+                        'You haven\'t answered all the questions yet! 🥺');
                   }
                 },
                 shape: RoundedRectangleBorder(

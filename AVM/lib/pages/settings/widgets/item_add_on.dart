@@ -29,7 +29,7 @@ class ItemAddOn extends StatelessWidget {
                   title ?? '',
                   style: const TextStyle(
                       color: AppColors.black,
-                      fontSize: 18,
+                      fontSize: 17,
                       fontWeight: FontWeight.w500),
                 ),
                 const Spacer(),

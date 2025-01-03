@@ -26,7 +26,6 @@ class TranscriptTab extends StatelessWidget {
             state.memories[memoryAtIndex].transcriptSegments;
         final started = state.memories[memoryAtIndex].startedAt ??
             DateTime.now(); // Use startedAt or current time if null
-        print("started: $started");
 
         // Calculate dummy timeline times
         final segmentDuration =

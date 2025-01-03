@@ -61,12 +61,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
 
   void printGeolocationData(ToOne<Geolocation> geolocation) {
     if (geolocation.target != null) {
-      print('Geolocation Data:');
-      print('Latitude: ${geolocation.target!.latitude}');
-      print('Longitude: ${geolocation.target!.longitude}');
       // Add more fields if necessary
     } else {
-      print('Geolocation is null');
     }
   }
 

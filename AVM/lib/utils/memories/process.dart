@@ -13,6 +13,7 @@ import 'package:avm/backend/database/prompt_provider.dart';
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/plugin.dart';
+import 'package:avm/core/constants/constants.dart';
 import 'package:avm/pages/capture/location_service.dart';
 import 'package:avm/utils/features/backup_util.dart';
 import 'package:avm/utils/features/calendar.dart';
@@ -269,29 +270,13 @@ Future<Memory> memoryCreationBlock(
     if (summarizeResult == null) {
       failed = true;
       summarizeResult = SummaryResult(
-        Structured('', '',
-            emoji: '😢', category: ['failed']), // Wrap 'failed' in a list
+        Structured('', '', emoji: '😢', category: ['failed']),
         [],
       );
       if (!retrievedFromCache) {
         InstabugLog.logError('Unable to create memory structure.');
-        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text(
-              'Unexpected error creating your memory. Please check your discarded memories.',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            backgroundColor: const Color(0xFF6A1B9A), // Purple color
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.fromLTRB(16, 0, 16, 70),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            duration: const Duration(seconds: 4),
-          ),
-        );
+        avmSnackBar(context,
+            "Unexpected error creating your memory. Please check your discarded memories.");
       }
     }
   }
@@ -330,59 +315,15 @@ Future<Memory> memoryCreationBlock(
 
   if (!retrievedFromCache) {
     if (structured.title.isEmpty && !failed) {
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-            "Audio processing failed due to noise. Please try again in a quieter place!",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
-          ),
-          backgroundColor: const Color(0xFFFAF0E6), // Light grey
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 70),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          duration: const Duration(seconds: 4),
-        ),
-      );
+      avmSnackBar(context,
+          "Audio processing failed due to noise. Please try again in a quieter place!");
     } else if (structured.title.isNotEmpty) {
       bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-            'New memory created! 🚀',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-          ),
-          backgroundColor:
-              const Color.fromARGB(255, 23, 18, 26), // Lavender color
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 70),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          duration: const Duration(seconds: 4),
-        ),
-      );
-      print('Notification sent $backupsEnabled');
-      backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
+      avmSnackBar(context, "New memory created!");
+      backupsEnabled ? manualBackup(context) : null;
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text(
-            'Memory stored as discarded! There\'s background noise 😄',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          backgroundColor: Colors.blueGrey,
-          behavior: SnackBarBehavior.floating,
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 70),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          duration: const Duration(seconds: 4),
-        ),
-      );
+      avmSnackBar(
+          context, "Memory stored as discarded due to background noise.");
     }
   }
   return memory;

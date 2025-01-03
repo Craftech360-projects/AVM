@@ -39,7 +39,8 @@ Future<bool> customDialogBox(BuildContext context,
           Text(
             message,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
+              height: 1.2,
               color: AppColors.blueGreyDark,
             ),
           ),
@@ -116,14 +117,15 @@ void showPermissionDeniedDialog(
           Text(
             message,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
+              height: 1.2,
               color: AppColors.blueGreyDark,
             ),
           ),
           h10,
         ],
       ),
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -148,6 +150,7 @@ class CustomDialogWidget extends StatelessWidget {
   final String message;
   final IconData icon;
   final VoidCallback? yesPressed;
+  final VoidCallback? noPressed;
   final Color? iconColor;
   final bool showTextField;
   final TextEditingController? textFieldController;
@@ -160,6 +163,7 @@ class CustomDialogWidget extends StatelessWidget {
     required this.message,
     required this.icon,
     this.yesPressed,
+    this.noPressed,
     this.textFieldController,
     this.yesText,
     this.noText,
@@ -177,6 +181,7 @@ class CustomDialogWidget extends StatelessWidget {
       title: FittedBox(
         fit: BoxFit.scaleDown,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Icon(icon, color: iconColor ?? AppColors.blue),
             w10,
@@ -198,7 +203,8 @@ class CustomDialogWidget extends StatelessWidget {
           Text(
             message,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 15,
+              height: 1.2,
               color: AppColors.blueGreyDark,
             ),
           ),
@@ -224,10 +230,9 @@ class CustomDialogWidget extends StatelessWidget {
               ),
             ),
           ],
-          h10,
         ],
       ),
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actionsAlignment: MainAxisAlignment.spaceAround,
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -240,7 +245,7 @@ class CustomDialogWidget extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            Navigator.of(context).pop();
+            noPressed ?? Navigator.of(context).pop();
           },
           icon: const Icon(Icons.close, color: AppColors.white, size: 17),
           label: Text(

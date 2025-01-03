@@ -1,4 +1,5 @@
 import 'package:avm/backend/preferences.dart';
+import 'package:avm/core/assets/app_images.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
@@ -29,13 +30,15 @@ class _ZapierPageState extends State<ZapierPage> {
       showBackBtn: true,
       showGearIcon: true,
       title: const Center(
-        child: Text(
-          "Zapier Options",
-          style: TextStyle(fontWeight: FontWeight.w500),
+        child: Center(
+          child: Text(
+            "Zapier Options",
+            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
+          ),
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         children: [
           SizedBox(
             width: double.infinity,
@@ -57,6 +60,9 @@ class _ZapierPageState extends State<ZapierPage> {
                   ],
                 ),
                 Switch(
+                  activeTrackColor: AppColors.purpleDark,
+                  activeColor: AppColors.commonPink,
+                  activeThumbImage: AssetImage(AppImages.appLogo),
                   value: zapierEnabled,
                   onChanged: _onSwitchChanged,
                 ),
@@ -66,10 +72,7 @@ class _ZapierPageState extends State<ZapierPage> {
           h5,
           const Text(
             'Zapier can automate workflows by connecting your app to other services. Enable to configure your integration settings.',
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              color: AppColors.greyMedium,
-            ),
+            textAlign: TextAlign.center,
           ),
           h20,
           if (zapierEnabled) ..._zapierIntegrationOptions(),
@@ -82,28 +85,21 @@ class _ZapierPageState extends State<ZapierPage> {
     final textTheme = Theme.of(context).textTheme;
     return [
       Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         margin: EdgeInsets.symmetric(vertical: 12.0),
-        padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: AppColors.greyLavender,
-          borderRadius: br12,
+          color: AppColors.commonPink,
+          borderRadius: br8,
         ),
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 4.h),
-            child: Text(
-              'Integration Options',
-              style: textTheme.titleSmall?.copyWith(fontSize: 16.h),
-            ),
-          ),
+        child: Text(
+          textAlign: TextAlign.center,
+          'Integration Options',
+          style: textTheme.titleSmall?.copyWith(fontSize: 16.h),
         ),
       ),
       Text(
         'Enter your Zapier webhook URL and select the type of workflows you want to automate.',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: AppColors.grey,
-        ),
+        textAlign: TextAlign.start,
       ),
       h20,
       TextField(
@@ -111,30 +107,35 @@ class _ZapierPageState extends State<ZapierPage> {
         controller: webhookController,
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
-            borderRadius: br12,
+            borderRadius: br8,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: br12,
+            borderRadius: br8,
             borderSide: const BorderSide(color: AppColors.grey),
           ),
           hintText: "Zapier Webhook URL",
           border: OutlineInputBorder(
-            borderRadius: br12,
+            borderRadius: br8,
           ),
         ),
       ),
       h15,
       ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.purpleDark,
+          shape: RoundedRectangleBorder(
+            borderRadius: br8,
+          ),
+        ),
         onPressed: _saveWebhook,
         child: const Text(
           'Save Webhook',
           style: TextStyle(
-              color: AppColors.black,
+              color: AppColors.white,
               fontWeight: FontWeight.w600,
-              fontSize: 17),
+              fontSize: 16),
         ),
       ),
-      h15,
     ];
   }
 

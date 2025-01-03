@@ -66,7 +66,7 @@ Future<BTDeviceStruct?> scanAndConnectDevice(
     }
 
     // Check if Bluetooth is available and on
-    if (!await FlutterBluePlus.isAvailable) {
+    if (!await FlutterBluePlus.isSupported) {
       debugPrint('Bluetooth is not available');
       return null;
     }

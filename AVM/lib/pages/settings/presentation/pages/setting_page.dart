@@ -130,12 +130,13 @@ class _SettingPageState extends State<SettingPage> {
                           ],
                           Text(
                             deviceInfo,
-                            style: const TextStyle(fontWeight: FontWeight.w500),
+                            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
                           ),
                           Spacer(),
                           Icon(
                             Icons.arrow_forward_ios_rounded,
                             color: AppColors.black,
+                            size: 16,
                           )
                         ],
                       ),

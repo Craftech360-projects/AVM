@@ -322,11 +322,10 @@ class _SummaryTabState extends State<SummaryTab> {
                 //                   event.duration,
                 //                   description: event.description,
                 //                 );
-                //                 ScaffoldMessenger.of(context).showSnackBar(
-                //                   const SnackBar(
-                //                     content:
-                //                         Text('Event added to calendar'),
-                //                   ),
+                //                
+                //                    avmSnackbar(
+                //                     context, 'Event added to calendar'),
+                //                   
                 //                 );
                 //               },
                 //         icon: Icon(event.created ? Icons.check : Icons.add,

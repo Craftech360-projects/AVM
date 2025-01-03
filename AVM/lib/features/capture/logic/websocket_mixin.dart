@@ -39,6 +39,15 @@ mixin WebSocketMixin {
     if (_isConnecting) return;
     _isConnecting = true;
 
+    // Clear any existing notifications first
+    clearNotification(2);
+    clearNotification(3);
+
+    // Check initial connectivity before setup
+    final connectivity = Connectivity();
+    final statuses = await connectivity.checkConnectivity();
+    _internetStatus = statuses as ConnectivityResult;
+
     if (!_internetListenerSetup) {
       _setupInternetListener(
         onConnectionSuccess: onConnectionSuccess,
@@ -134,7 +143,7 @@ mixin WebSocketMixin {
     required Function(List<TranscriptSegment>) onMessageReceived,
     required BleAudioCodec codec,
   }) {
-    if (!_internetListenerSetup) {
+    _internetListener.cancel().then((_) {
       _internetListener = Connectivity()
           .onConnectivityChanged
           .listen((List<ConnectivityResult> statuses) {
@@ -176,7 +185,9 @@ mixin WebSocketMixin {
         }
       });
       _internetListenerSetup = true;
-    }
+    }).catchError((e) {
+      debugPrint('Error canceling previous listener: $e');
+    });
   }
 
   void _scheduleReconnection({
@@ -256,6 +267,7 @@ mixin WebSocketMixin {
     );
   }
 
+  // ignore: unused_element
   void _notifyReconnectionFailure() {
     clearNotification(2);
     createNotification(
@@ -287,6 +299,9 @@ mixin WebSocketMixin {
 
   Future<void> closeWebSocket() async {
     try {
+      clearNotification(2);
+      clearNotification(3);
+
       if (websocketChannel != null) {
         await websocketChannel!.sink.close(1000, 'Closed by user');
         websocketChannel = null;
@@ -300,6 +315,7 @@ mixin WebSocketMixin {
       _reconnectionAttempts = 0;
       _isConnecting = false;
       _hasNotifiedUser = false;
+      _internetListenerSetup = false;
 
       debugPrint('WebSocket connection closed successfully');
     } catch (e) {
