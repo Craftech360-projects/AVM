@@ -30,7 +30,7 @@ class _ProfilePageState extends State<ProfilePage> {
       title: const Center(
         child: Text(
           "Profile",
-          style: TextStyle(fontWeight: FontWeight.w500),
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
         ),
       ),
       showBackBtn: true,

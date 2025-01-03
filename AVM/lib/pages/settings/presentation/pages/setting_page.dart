@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/bloc/bluetooth_bloc.dart';
@@ -53,7 +55,7 @@ class _SettingPageState extends State<SettingPage> {
       title: const Center(
         child: Text(
           "Settings",
-          style: TextStyle(fontWeight: FontWeight.w500),
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
         ),
       ),
       showBackBtn: true,
@@ -72,16 +74,12 @@ class _SettingPageState extends State<SettingPage> {
                     int batteryLevel = -1;
 
                     if (state is BluetoothConnected) {
-                      print('state.device: ${state.device}');
                       deviceInfo = 'Battery Level: ${state.batteryLevel}%';
                       batteryLevel = state.batteryLevel;
                     }
 
                     return CustomListTile(
                       onTap: () {
-                        print('Battery Level: $batteryLevel');
-                        print(
-                            'Device: ${state is BluetoothConnected ? state.device : null}');
                         var deviceId = state is BluetoothConnected
                             ? state.device.id
                             : SharedPreferencesUtil().deviceId;
@@ -89,9 +87,6 @@ class _SettingPageState extends State<SettingPage> {
                             ? state.device.name
                             : SharedPreferencesUtil().deviceName;
                         var deviceConnected = state is BluetoothConnected;
-                        print('Device ID: $deviceId');
-                        print('Device Name: $deviceName');
-                        print('Device Connected: $deviceConnected');
 
                         if (deviceConnected) {
                           Navigator.of(context).push(

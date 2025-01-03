@@ -9,6 +9,7 @@ class SharedPreferencesUtil {
   static final SharedPreferencesUtil _instance =
       SharedPreferencesUtil._internal();
   static SharedPreferences? _preferences;
+  SharedPreferences? get preferences => _preferences;
 
   factory SharedPreferencesUtil() {
     return _instance;
@@ -264,6 +265,10 @@ class SharedPreferencesUtil {
     return await _preferences?.setString(key, value) ?? false;
   }
 
+  Future<bool> updateKeywordDetectionStatus(String key, String value) async {
+    return await _preferences?.setString(key, value) ?? false;
+  }
+
   String? getApiType(String key) {
     return _preferences?.getString(key);
   }
@@ -286,6 +291,14 @@ class SharedPreferencesUtil {
 
   List<String>? getStringList(String key) {
     return _preferences?.getStringList(key);
+  }
+
+  String getKeywordDetectionStatus(String key) {
+    return _preferences?.getString(key) ?? 'off';
+  }
+
+  List<String> getSelectedKeywords() {
+    return _preferences?.getStringList('selectedKeywords') ?? [];
   }
 
   Future<bool> saveSelectedPrompt(String key, String selectedValue) async {

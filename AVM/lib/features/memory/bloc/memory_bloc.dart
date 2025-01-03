@@ -135,10 +135,16 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
     ));
   }
 
-  FutureOr<void> _deletedMemory(event, emit) {
+  FutureOr<void> _deletedMemory(
+      DeletedMemory event, Emitter<MemoryState> emit) async {
     try {
+      emit(state.copyWith(
+        status: MemoryStatus.loading,
+      ));
+
       MemoryProvider().deleteMemory(event.memory);
-      _displayedMemory;
+
+      add(DisplayedMemory());
     } catch (error) {
       emit(
         state.copyWith(

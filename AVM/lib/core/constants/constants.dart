@@ -51,23 +51,23 @@ BorderRadius br30 = BorderRadius.circular(30);
 void avmSnackBar(BuildContext context, String content) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      backgroundColor: const Color.fromARGB(255, 226, 199, 252),
+      backgroundColor: AppColors.purpleDark,
       content: Text(
         content,
         style: const TextStyle(
           fontFamily: "Montserrat",
-          fontSize: 17,
+          fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: AppColors.black,
+          color: AppColors.white,
         ),
       ),
-      shape: RoundedRectangleBorder(borderRadius: br12),
-      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 12),
+      shape: RoundedRectangleBorder(borderRadius: br8),
+      padding: const EdgeInsets.symmetric(vertical: 04, horizontal: 08),
       behavior: SnackBarBehavior.floating,
       elevation: 1.5,
       margin: const EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 16),
       showCloseIcon: true,
-      closeIconColor: AppColors.black,
+      closeIconColor: AppColors.white,
     ),
   );
 }

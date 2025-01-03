@@ -39,7 +39,7 @@ class _CalendarPageState extends State<CalendarPage> {
       showBackBtn: true,
       title: const Text(
         "Calendar Settings",
-        style: TextStyle(fontWeight: FontWeight.w500),
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
       ),
       showGearIcon: true,
       body: ListView(

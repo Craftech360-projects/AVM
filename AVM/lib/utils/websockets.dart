@@ -72,7 +72,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
   debugPrint(recordingsLanguage);
 
-  const deepgramapikey = "e19942922008143bf76a75cb75b92853faa0b0da";
+  const deepgramapikey = "5a04d9c8dfa5cf9bbe3ab6913194a42332308413";  
+  // const deepgramapikey = "e19942922008143bf76a75cb75b92853faa0b0da";
   String? codecType = SharedPreferencesUtil().getCodecType('NewCodec');
 
   String encoding = codecType == "opus" ? 'opus' : 'linear16';

@@ -10,14 +10,14 @@ class ScreenSkeleton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
       child: Column(
         children: [
-          const Skeleton(height: 200, width: double.infinity),
+          const Skeleton(height: 150, width: double.infinity),
           h30,
           Expanded(
             child: ListView.builder(
               itemCount: 4,
               itemBuilder: (context, index) => const Column(
                 children: [
-                  Skeleton(height: 80, width: double.infinity),
+                  Skeleton(height: 60, width: double.infinity),
                   h20,
                 ],
               ),
