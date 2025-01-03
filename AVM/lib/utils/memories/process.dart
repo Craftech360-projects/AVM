@@ -54,12 +54,7 @@ Future<Memory?> processTranscriptContent(
       geolocation,
       photos,
     );
-
-    // triggerIntegrations: triggerIntegrations,
-    // language: language,
-    // audioFile: audioFile,
-    // source: source,
-    // processingMemoryId: processingMemoryId,
+    log("Memory created: ${memory.geolocation.target != null ? 'Lat: ${memory.geolocation.target!.latitude}, Lon: ${memory.geolocation.target!.longitude}, Address: ${memory.geolocation.target!.address}' : 'No geolocation'}");
     MemoryProvider().saveMemory(memory);
     triggerMemoryCreatedEvents(memory, sendMessageToChat: sendMessageToChat);
     return memory;

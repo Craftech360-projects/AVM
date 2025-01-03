@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 class OverallTab extends StatefulWidget {
   final Structured target;
@@ -46,6 +47,16 @@ class OverallTabState extends State<OverallTab> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           h10,
+          if (widget.geolocation != null)
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  print(
+                      'Latitude: ${widget.geolocation!.latitude}, Longitude: ${widget.geolocation!.longitude} Address: ${widget.geolocation!.address}');
+                },
+                child: Text('Print Geolocation'),
+              ),
+            ),
 
           /// AI Summary
           CustomListTile(
@@ -199,50 +210,70 @@ class OverallTabState extends State<OverallTab> {
               );
             }),
           h30,
-
-          /// Geolocation Section
-          // if (widget.geolocation != null &&
-          //     widget.geolocation!.latitude != null &&
-          //     widget.geolocation!.longitude != null)
-          //   GestureDetector(
-          //     onTap: () async {
-          //       final availableMaps = await MapLauncher.installedMaps;
-          //       if (availableMaps.isNotEmpty) {
-          //         await availableMaps.first.showMarker(
-          //           coords: Coords(widget.geolocation!.latitude!,
-          //               widget.geolocation!.longitude!),
-          //           title: "Memory Location",
-          //         );
-          //       } else {
-          // avmSnackBar(context, "No map applications available");
-          //       }
-          //     },
-          //     child: Center(
-          //       child: Column(
-          //         children: [
-          //           Image.network(
-          //             'https://maps.googleapis.com/maps/api/staticmap?center=${widget.geolocation!.latitude},${widget.geolocation!.longitude}&zoom=14&size=400x200&markers=color:red%7C${widget.geolocation!.latitude},${widget.geolocation!.longitude}&key=YOUR_API_KEY',
-          //             fit: BoxFit.cover,
-          //             errorBuilder: (context, error, stackTrace) {
-          //               return Column(
-          //                 mainAxisAlignment: MainAxisAlignment.center,
-          //                 children: [
-          //                   Icon(Icons.error, color: AppColors.red, size: 50),
-          //                   SizedBox(height: 8),
-          //                   Text(
-          //                     'Failed to load map image',
-          //                     style: textTheme.bodyLarge?.copyWith(
-          //                       color: AppColors.grey,
-          //                     ),
-          //                   ),
-          //                 ],
-          //               );
-          //             },
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
+          // Address Section
+          if (widget.geolocation != null && widget.geolocation!.address != null)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Created at:',
+                    style: textTheme.titleMedium,
+                  ),
+                  SizedBox(height: 5.h),
+                  Text(
+                    widget.geolocation!.address!,
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: AppColors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          // Geolocation Section
+          if (widget.geolocation != null &&
+              widget.geolocation!.latitude != null &&
+              widget.geolocation!.longitude != null)
+            GestureDetector(
+              onTap: () async {
+                final availableMaps = await MapLauncher.installedMaps;
+                if (availableMaps.isNotEmpty) {
+                  await availableMaps.first.showMarker(
+                    coords: Coords(widget.geolocation!.latitude!,
+                        widget.geolocation!.longitude!),
+                    title: "Memory Location",
+                  );
+                } else {
+                  avmSnackBar(context, "No map applications available");
+                }
+              },
+              child: Center(
+                child: Column(
+                  children: [
+                    Image.network(
+                      'https://maps.googleapis.com/maps/api/staticmap?center=${widget.geolocation!.latitude},${widget.geolocation!.longitude}&zoom=14&size=400x200&markers=color:red%7C${widget.geolocation!.latitude},${widget.geolocation!.longitude}&key=AIzaSyDWJIATVb9XFFr4qgaKpoEFBXIbxMYa250',
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.error, color: AppColors.red, size: 50),
+                            SizedBox(height: 8),
+                            Text(
+                              'Failed to load map image',
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: AppColors.grey,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
         ],
       ),
     );
