@@ -7,6 +7,7 @@ import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/connectivity/bloc/connectivity_bloc.dart';
 import 'package:avm/utils/websockets.dart';
 import 'package:avm/widgets/transcript.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -19,13 +20,13 @@ class GreetingCard extends StatefulWidget {
   final BuildContext context;
   final bool hasTranscripts;
   final WebsocketConnectionStatus wsConnectionState;
-  final InternetStatus? internetStatus;
+  InternetStatus? internetStatus;
   final List<TranscriptSegment>? segments;
   final bool memoryCreating;
   final List<Tuple2<String, String>> photos;
   final ScrollController? scrollController;
 
-  const GreetingCard({
+  GreetingCard({
     super.key,
     required this.name,
     required this.isDisconnected,
@@ -44,7 +45,32 @@ class GreetingCard extends StatefulWidget {
   State<GreetingCard> createState() => _GreetingCardState();
 }
 
+InternetStatus _mapConnectivityResultToInternetStatus(
+    ConnectivityResult result) {
+  switch (result) {
+    case ConnectivityResult.wifi:
+    case ConnectivityResult.mobile:
+      return InternetStatus.connected;
+    case ConnectivityResult.none:
+    default:
+      return InternetStatus.disconnected;
+  }
+}
+
 class _GreetingCardState extends State<GreetingCard> {
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ConnectivityBloc>(context).stream.listen((state) {
+      if (state is ConnectivityStatusChanged) {
+        setState(() {
+          widget.internetStatus =
+              _mapConnectivityResultToInternetStatus(state.status);
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ConnectivityBloc, ConnectivityState>(
