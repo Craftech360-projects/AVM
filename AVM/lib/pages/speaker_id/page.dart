@@ -26,7 +26,7 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
   List<SpeakerIdSample> _samples = [];
 
   BTDeviceStruct? _device;
-  StreamSubscription<OnConnectionStateChangedEvent>? _connectionStateListener;
+  StreamSubscription<BluetoothConnectionState>? _connectionStateListener;
 
   _init() async {
     _device = await scanAndConnectDevice();

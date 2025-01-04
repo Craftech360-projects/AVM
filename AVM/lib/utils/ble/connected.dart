@@ -22,32 +22,33 @@ Future<BTDeviceStruct?> getConnectedDevice() async {
   return null;
 }
 
-StreamSubscription<OnConnectionStateChangedEvent> getConnectionStateListener({
+StreamSubscription<BluetoothConnectionState>? getConnectionStateListener({
   required String deviceId,
-  required Function(BluetoothConnectionState, BTDeviceStruct?) onStateChanged,
+  required void Function(BluetoothConnectionState state, BTDeviceStruct? device)
+      onStateChanged,
 }) {
-  return FlutterBluePlus.events.onConnectionStateChanged.listen((event) async {
-    debugPrint(
-        'onConnectionStateChanged>>>>---->: ${event.device.remoteId.str} ${event.connectionState} ${event.device.platformName}');
-    if (event.device.remoteId.str == deviceId) {
-      if (event.connectionState == BluetoothConnectionState.disconnected) {
-        onStateChanged(BluetoothConnectionState.disconnected, null);
-      } else if (event.connectionState == BluetoothConnectionState.connected) {
-        try {
-          var deviceInfo = BTDeviceStruct(
-            id: event.device.remoteId.str,
-            name: event.device.platformName,
-            rssi: await event.device.readRssi(),
-            // add firmware version
-          );
-          onStateChanged(BluetoothConnectionState.connected, deviceInfo);
-        } catch (e) {
-          debugPrint('Error reading characteristic: $e');
-          onStateChanged(BluetoothConnectionState.disconnected, null);
-        }
+  try {
+    final device = FlutterBluePlus.connectedDevices
+        .firstWhere((d) => d.remoteId.str == deviceId);
+
+    return device.connectionState.listen((BluetoothConnectionState state) {
+      print('Connection state changed: $state');
+      if (state == BluetoothConnectionState.connected) {
+        onStateChanged(
+            state,
+            BTDeviceStruct(
+              id: device.remoteId.str,
+              name: device.platformName,
+            ));
+      } else {
+        onStateChanged(state, null);
       }
-    }
-  });
+    });
+  } catch (e) {
+    debugPrint('Device not found in connected devices: $deviceId');
+    onStateChanged(BluetoothConnectionState.disconnected, null);
+    return null;
+  }
 }
 
 Future<StreamSubscription<List<int>>?> getBleBatteryLevelListener(

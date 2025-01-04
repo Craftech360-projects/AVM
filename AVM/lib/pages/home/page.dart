@@ -63,7 +63,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   GlobalKey<CapturePageState> capturePageKey = GlobalKey();
   // GlobalKey<ChatPageState> chatPageKey = GlobalKey();
-  StreamSubscription<OnConnectionStateChangedEvent>? _connectionStateListener;
+  StreamSubscription<BluetoothConnectionState>? _connectionStateListener;
   StreamSubscription<List<int>>? _bleBatteryLevelListener;
 
   int batteryLevel = -1;

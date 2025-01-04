@@ -68,6 +68,8 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
     });
 
     on<BluetoothDeviceDisconnected>((event, emit) {
+
+    print('BluetoothDeviceDisconnected>>>>>>>>>>>>');
       emit(BluetoothDisconnected());
       _resetBatteryLevel(emit);
     });
@@ -81,7 +83,7 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
     });
   }
 
-  StreamSubscription<OnConnectionStateChangedEvent>? connectionSubscription;
+  StreamSubscription<BluetoothConnectionState>? connectionSubscription;
   StreamSubscription<List<int>>? batteryLevelListener;
   int retryCount = 0;
   final int maxRetries = 3;
