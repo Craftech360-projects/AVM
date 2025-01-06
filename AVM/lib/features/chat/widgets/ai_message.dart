@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/message.dart';
@@ -8,8 +6,8 @@ import 'package:avm/backend/schema/plugin.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/features/chat/bloc/chat_bloc.dart';
+import 'package:avm/features/memories/bloc/memory_bloc.dart';
 import 'package:avm/features/memories/pages/memory_detail_page.dart';
-import 'package:avm/features/memory/bloc/memory_bloc.dart';
 import 'package:avm/utils/other/temp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,39 +33,20 @@ class AIMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isMemoriesEmpty = memories.isEmpty;
+    bool isLoading = message.text.isEmpty;
 
-    // Print message and memories
-    // print('Incoming message: ${message.text}');
-    for (var element in memories) {
-      if (element.structured.target != null) {
-        // print('Memory at AI: ${element.structured.target!.title}');
-      } else {
-        // print('Memory is null');
-      }
-    }
-    for (var element in memories) {
-      // print('memories at ai ${element.structured.target!.title}');
-    }
-
-    final textTheme = Theme.of(context).textTheme;
     return Row(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // If pluginSender exists, show its image, else show a placeholder
         pluginSender != null
             ? CircleAvatar(
                 radius: 16,
                 backgroundImage: NetworkImage(pluginSender!.getImageUrl()),
               )
             : Container(
-                decoration: const BoxDecoration(
-                    // image: DecorationImage(
-                    //   image: AssetImage("assets/images/background.png"),
-                    //   fit: BoxFit.cover,
-                    // ),
-                    // borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                    ),
+                decoration: const BoxDecoration(),
                 height: 32.h,
                 width: 32.w,
                 child: const Stack(
@@ -95,38 +74,35 @@ class AIMessage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               h5,
-              message.typeEnum == MessageType.daySummary
-                  ? Text(
-                      '📅 Day Summary ~ ${dateTimeFormat('MMM, dd', DateTime.now())}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.black,
-                        decoration: TextDecoration.underline,
-                      ),
-                    )
-                  : const SizedBox(),
-              message.typeEnum == MessageType.daySummary
-                  ? h15
-                  : const SizedBox(),
-              SelectionArea(
+              if (message.typeEnum == MessageType.daySummary)
+                Text(
+                  '📅 Day Summary ~ ${dateTimeFormat('MMM, dd', DateTime.now())}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                ),
+              if (isLoading)
+                const Center(child: CircularProgressIndicator())
+              else
+                SelectionArea(
                   child: AutoSizeText(
-                message.text.isEmpty
-                    ? '...'
-                    : message.text
-                        .replaceAll(r'\n', '\n')
-                        .replaceAll('**', '')
-                        .replaceAll('\\"', '"'),
-                style: const TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.white),
-              )),
-              // if (isMemoriesEmpty) ..._getInitialOptions(context),
+                    message.text.isEmpty
+                        ? '...'
+                        : message.text
+                            .replaceAll(r'\n', '\n')
+                            .replaceAll('**', '')
+                            .replaceAll('\\"', '"'),
+                    style: const TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              // Show copy button only if it's not the first message
               if (message.id != 1) _getCopyButton(context),
               if (message.id == 1 && displayOptions) const SizedBox(height: 8),
               if (message.id == 1 && displayOptions)
                 ..._getInitialOptions(context),
+              // Show memories if available
               if (memories.isNotEmpty) ...[
                 h15,
                 for (var memory in (memories.length > 3
@@ -141,13 +117,6 @@ class AIMessage extends StatelessWidget {
                         int memoryIndex =
                             memories.reversed.toList().indexOf(memory);
 
-                        // BlocProvider.of<MemoryBloc>(context)
-                        //     .add(MemoryIndexChanged(memoryIndex: memoryIndex));
-                        // await Navigator.of(context).push(MaterialPageRoute(
-                        //     builder: (c) => CustomMemoryDetailPage(
-                        //           memoryBloc: context.read<MemoryBloc>(),
-                        //           memoryAtIndex: memoryIndex,
-                        //         )));
                         BlocProvider.of<MemoryBloc>(context)
                             .add(MemoryIndexChanged(memoryIndex: memoryIndex));
                         Navigator.of(context).push(
@@ -158,7 +127,6 @@ class AIMessage extends StatelessWidget {
                             ),
                           ),
                         );
-                        // maybe refresh memories here too
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -179,31 +147,22 @@ class AIMessage extends StatelessWidget {
                               ),
                             ),
                             w10,
-                            ...[
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    DateFormat('HH:mm').format(
-                                        memory.createdAt), // Format time
-                                    style: TextStyle(
-                                      color: AppColors.black,
-                                      fontSize: 12.sp,
-                                    ),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  DateFormat('HH:mm').format(memory.createdAt),
+                                  style: TextStyle(
+                                    color: AppColors.black,
+                                    fontSize: 12.sp,
                                   ),
-                                  // SizedBox(width: 4.w),
-                                  // // Icon(
-                                  // //   Icons.done_all, // Or your preferred status icon
-                                  // //   size: 14.sp,
-                                  // //   color: Colors.white70,
-                                  // // ),
-                                ],
-                              ),
-                            ],
-                            const Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 12,
-                            )
+                                ),
+                                const Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  size: 12,
+                                )
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -267,8 +226,6 @@ class AIMessage extends StatelessWidget {
       ),
       onTap: () {
         try {
-          // sendMessage(optionText);
-          // BlocProvider.of<ChatBloc>(context).add(SendMessage(optionText));
           BlocProvider.of<ChatBloc>(context).add(SendMessage(optionText));
         } catch (e) {
           debugPrint("error,$e");

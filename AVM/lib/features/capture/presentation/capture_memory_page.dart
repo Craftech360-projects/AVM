@@ -7,12 +7,13 @@ import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/core/widgets/typing_indicator.dart';
 import 'package:avm/features/capture/models/filter_item.dart';
 import 'package:avm/features/capture/presentation/capture_page.dart';
+import 'package:avm/features/capture/widgets/filter_widget.dart';
 import 'package:avm/features/capture/widgets/greeting_card.dart';
 import 'package:avm/features/capture/widgets/real_time_bot.dart';
-import 'package:avm/features/connectivity/bloc/connectivity_bloc.dart';
-import 'package:avm/features/memory/bloc/memory_bloc.dart';
-import 'package:avm/features/memory/presentation/widgets/memory_card.dart';
-import 'package:avm/pages/memories/widgets/empty_memories.dart';
+import 'package:avm/features/connectivity_bloc/connectivity_bloc.dart';
+import 'package:avm/features/memories/bloc/memory_bloc.dart';
+import 'package:avm/features/memories/widgets/empty_memories.dart';
+import 'package:avm/features/memories/widgets/memory_card_widget.dart';
 import 'package:avm/pages/skeleton/screen_skeleton.dart';
 import 'package:avm/utils/websockets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -21,6 +22,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tuple/tuple.dart';
 
+// ignore: must_be_immutable
 class CaptureMemoryPage extends StatefulWidget {
   CaptureMemoryPage({
     super.key,
@@ -63,6 +65,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false;
+  FilterItem? _selectedFilter;
   bool _switchValue = SharedPreferencesUtil().notificationPlugin;
 
   InternetStatus? _mapConnectivityResultToInternetStatus(
@@ -336,16 +339,16 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                           // New "Filter" button on the right end
                           TextButton.icon(
                             onPressed: () async {
-                              // Show a filter selection dialog
                               final selectedFilter =
                                   await showDialog<FilterItem>(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
                                     contentPadding: EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 08),
+                                        vertical: 12, horizontal: 8),
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: br12),
+                                        borderRadius:
+                                            BorderRadius.circular(12)),
                                     backgroundColor: AppColors.commonPink,
                                     title: Row(
                                       mainAxisAlignment:
@@ -353,9 +356,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                       children: [
                                         Icon(Icons.filter_alt_outlined,
                                             color: AppColors.blue),
-                                        w10,
+                                        SizedBox(width: 10),
                                         Text(
-                                          maxLines: 2,
                                           "Choose Filter",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
@@ -372,66 +374,42 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                           color: AppColors.purpleDark,
                                           thickness: 1.5,
                                         ),
-                                        ListTile(
-                                          contentPadding: EdgeInsets.zero,
-                                          title: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 10, horizontal: 12),
-                                              decoration: BoxDecoration(
-                                                  color: AppColors.white,
-                                                  border: Border.all(
-                                                      color:
-                                                          AppColors.greyLight),
-                                                  borderRadius: br12),
-                                              child:
-                                                  const Text("Today's Memory")),
+                                        FilterOptionWidget(
+                                          title: "Today's Memory",
+                                          isSelected:
+                                              _selectedFilter?.filterType ==
+                                                  "Today",
                                           onTap: () {
                                             Navigator.pop(
                                                 context,
-                                                FilterItem(
-                                                    filterType: "Today"));
+                                                _selectedFilter?.filterType ==
+                                                        "Today"
+                                                    ? null
+                                                    : FilterItem(
+                                                        filterType: "Today"));
                                           },
                                         ),
-
-                                        ListTile(
-                                          contentPadding: EdgeInsets.zero,
-                                          title: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 10, horizontal: 12),
-                                              decoration: BoxDecoration(
-                                                  color: AppColors.white,
-                                                  border: Border.all(
-                                                      color:
-                                                          AppColors.greyLight),
-                                                  borderRadius: br12),
-                                              child: const Text(
-                                                  "This Week's Memory")),
+                                        FilterOptionWidget(
+                                          title: "This Week's Memory",
+                                          isSelected:
+                                              _selectedFilter?.filterType ==
+                                                  "This Week",
                                           onTap: () {
                                             Navigator.pop(
                                                 context,
-                                                FilterItem(
-                                                    filterType: "This Week"));
+                                                _selectedFilter?.filterType ==
+                                                        "This Week"
+                                                    ? null
+                                                    : FilterItem(
+                                                        filterType:
+                                                            "This Week"));
                                           },
                                         ),
-                                        ListTile(
-                                          contentPadding: EdgeInsets.zero,
-                                          title: Container(
-                                            margin: EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 10, horizontal: 12),
-                                            decoration: BoxDecoration(
-                                                color: AppColors.white,
-                                                border: Border.all(
-                                                    color: AppColors.greyLight),
-                                                borderRadius: br12),
-                                            child: const Text(
-                                                "Date Range Selection"),
-                                          ),
+                                        FilterOptionWidget(
+                                          title: "Date Range Selection",
+                                          isSelected:
+                                              _selectedFilter?.filterType ==
+                                                  "DateRange",
                                           onTap: () async {
                                             final DateTimeRange? dateRange =
                                                 await showDateRangePicker(
@@ -442,35 +420,33 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                             if (dateRange != null) {
                                               Navigator.pop(
                                                 context,
-                                                FilterItem(
-                                                  filterType: "DateRange",
-                                                  startDate: dateRange.start,
-                                                  endDate: dateRange.end,
-                                                ),
+                                                _selectedFilter?.filterType ==
+                                                        "DateRange"
+                                                    ? null
+                                                    : FilterItem(
+                                                        filterType: "DateRange",
+                                                        startDate:
+                                                            dateRange.start,
+                                                        endDate: dateRange.end,
+                                                      ),
                                               );
                                             }
                                           },
                                         ),
-                                        // Add the "Show All" option
-                                        ListTile(
-                                          contentPadding: EdgeInsets.zero,
-                                          title: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 10, horizontal: 12),
-                                              decoration: BoxDecoration(
-                                                  color: AppColors.white,
-                                                  border: Border.all(
-                                                      color:
-                                                          AppColors.greyLight),
-                                                  borderRadius: br12),
-                                              child: const Text("Show All")),
+                                        FilterOptionWidget(
+                                          title: "Show All",
+                                          isSelected:
+                                              _selectedFilter?.filterType ==
+                                                  "Show All",
                                           onTap: () {
                                             Navigator.pop(
                                                 context,
-                                                FilterItem(
-                                                    filterType: "Show All"));
+                                                _selectedFilter?.filterType ==
+                                                        "Show All"
+                                                    ? null
+                                                    : FilterItem(
+                                                        filterType:
+                                                            "Show All"));
                                           },
                                         ),
                                       ],
@@ -479,8 +455,11 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                 },
                               );
 
+                              setState(() {
+                                _selectedFilter = selectedFilter;
+                              });
+
                               if (selectedFilter != null) {
-                                // Dispatch the filter event to the MemoryBloc
                                 context.read<MemoryBloc>().add(
                                       FilterMemory(
                                         filterItem: selectedFilter,

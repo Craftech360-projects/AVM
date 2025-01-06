@@ -7,7 +7,7 @@ import 'package:avm/core/constants/constants.dart';
 import 'package:avm/features/wizard/bloc/wizard_bloc.dart';
 import 'package:avm/features/wizard/widgets/onboarding_button.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
-import 'package:avm/pages/onboarding/find_device/page.dart';
+import 'package:avm/pages/onboarding/page.dart';
 
 class OnboardingPage extends StatelessWidget {
   // Change to StatelessWidget

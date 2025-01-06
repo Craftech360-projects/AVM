@@ -1,6 +1,6 @@
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/core/theme/app_colors.dart';
-import 'package:avm/features/memory/bloc/memory_bloc.dart';
+import 'package:avm/features/memories/bloc/memory_bloc.dart';
 import 'package:avm/src/common_widget/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

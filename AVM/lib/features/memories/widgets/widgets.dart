@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:avm/backend/api_requests/api/other.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/memory_provider.dart';
@@ -11,14 +8,17 @@ import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/plugin.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
-import 'package:avm/pages/memories/widgets/confirm_deletion_widget.dart';
-import 'package:avm/pages/memory_detail/enable_title.dart';
-import 'package:avm/pages/memory_detail/test_prompts.dart';
+import 'package:avm/features/memories/widgets/confirm_deletion_widget.dart';
+import 'package:avm/features/memories/widgets/enable_title.dart';
+import 'package:avm/features/memories/widgets/test_prompts.dart';
 import 'package:avm/pages/settings/widgets/calendar.dart';
 import 'package:avm/utils/features/calendar.dart';
 import 'package:avm/utils/other/temp.dart';
 import 'package:avm/widgets/dialog.dart';
 import 'package:avm/widgets/expandable_text.dart';
+import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -568,7 +568,6 @@ void showOptionsBottomSheet(
                                         child: ConfirmDeletionWidget(
                                             memory: memory,
                                             onDelete: () {
-                                              Navigator.pop(context, true);
                                               Navigator.pop(context, true);
                                             }),
                                       );

@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/backend/database/memory_provider.dart';
 import 'package:avm/backend/mixpanel.dart';
-import 'package:avm/features/memory/bloc/memory_bloc.dart';
-import 'package:avm/features/memory/presentation/pages/memory_detail_page.dart';
+import 'package:avm/features/memories/pages/memory_detail_page.dart';
+import 'package:avm/features/memories/bloc/memory_bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class MemoryListItem extends StatefulWidget {
@@ -54,7 +54,7 @@ class _MemoryListItemState extends State<MemoryListItem> {
         MixpanelManager()
             .memoryListItemClicked(widget.memory, widget.memoryIdx);
         await Navigator.of(context).push(MaterialPageRoute(
-            builder: (c) => CustomMemoryDetailPage(
+            builder: (c) => MemoryDetailPage(
                   memoryBloc: context.read<MemoryBloc>(),
                   memoryAtIndex: widget.memoryIdx,
                 )));

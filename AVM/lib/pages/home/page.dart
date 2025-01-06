@@ -11,13 +11,13 @@ import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/backend/schema/plugin.dart';
-import 'package:avm/bloc/bluetooth_bloc.dart';
 import 'package:avm/core/assets/app_images.dart';
+import 'package:avm/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:avm/features/capture/logic/websocket_mixin.dart';
 import 'package:avm/features/capture/presentation/capture_page.dart';
 import 'package:avm/features/chat/bloc/chat_bloc.dart';
 import 'package:avm/features/chat/presentation/chat_screen.dart';
-import 'package:avm/features/memory/bloc/memory_bloc.dart';
+import 'package:avm/features/memories/bloc/memory_bloc.dart';
 import 'package:avm/main.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/settings/presentation/pages/setting_page.dart';
@@ -236,8 +236,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                 body: 'Please reconnect to continue using your AVM.',
               );
               SharedPreferencesUtil().showDisconnectionNotification = false;
-            } else {
-            }
+            } else {}
           }
           MixpanelManager().deviceDisconnected();
           foregroundUtil.stopForegroundTask();
@@ -360,6 +359,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                           onSendMessage: (message) {
                             BlocProvider.of<ChatBloc>(context)
                                 .add(SendMessage(message));
+                            FocusScope.of(context).unfocus();
                           },
                           onMemorySearch: (query) {
                             BlocProvider.of<MemoryBloc>(context).add(

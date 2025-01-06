@@ -1,20 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:avm/backend/database/memory.dart';
 import 'package:avm/core/constants/constants.dart';
-import 'package:avm/features/chat/widgets/user_message.dart';
+import 'package:avm/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class MemoryCard extends StatelessWidget {
   final Memory memory;
+  final bool isSelected;
+  final VoidCallback onSelect;
 
-  const MemoryCard({super.key, required this.memory});
+  const MemoryCard({super.key, required this.memory, required this.isSelected, required this.onSelect});
 
   @override
   Widget build(BuildContext context) {
-    return CustomCard(
-      borderRadius: 7.h + 12.h,
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 06),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.grey),
+        borderRadius: br12,
+      ),
+      padding: EdgeInsets.symmetric(vertical: 08, horizontal: 06),
       child: Row(
         children: [
           ClipRRect(
@@ -37,10 +43,10 @@ class MemoryCard extends StatelessWidget {
           w10,
           Expanded(
             child: Column(
+            mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(memory.structured.target?.title ?? 'No Title',
-                    // Using memory.title
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -56,6 +62,13 @@ class MemoryCard extends StatelessWidget {
               ],
             ),
           ),
+          if (isSelected)
+            Checkbox(
+              value: isSelected,
+              onChanged: (value) {
+                onSelect();
+              },
+            ),
         ],
       ),
     );

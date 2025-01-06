@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/bt_device.dart';
 import 'package:avm/core/constants/constants.dart';
@@ -12,7 +10,8 @@ import 'package:avm/pages/home/page.dart';
 import 'package:avm/src/common_widget/elevated_button.dart';
 import 'package:avm/utils/ble/communication.dart';
 import 'package:avm/utils/ble/connect.dart';
-import 'package:avm/utils/other/temp.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FoundDevices extends StatefulWidget {
   final List<BTDeviceStruct> deviceList;
@@ -53,8 +52,10 @@ class FoundDevicesState extends State<FoundDevices>
 
       if (mounted) {
         if (SharedPreferencesUtil().onboardingCompleted) {
-          // previous users
-          routeToPage(context, const HomePageWrapper(), replace: true);
+          setState(() {});
+          Navigator.pop(context);
+          // // previous users
+          // routeToPage(context, const HomePageWrapper(), replace: true);
         } else {
           SharedPreferencesUtil().onboardingCompleted = true;
           Navigator.of(context).pushReplacement(

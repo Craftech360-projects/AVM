@@ -10,14 +10,14 @@ import 'package:avm/backend/growthbook.dart';
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
 import 'package:avm/backend/schema/plugin.dart';
-import 'package:avm/bloc/bluetooth_bloc.dart';
+import 'package:avm/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:avm/core/theme/app_theme.dart';
 import 'package:avm/env/dev_env.dart';
 import 'package:avm/env/env.dart';
 import 'package:avm/env/prod_env.dart';
 import 'package:avm/features/chat/bloc/chat_bloc.dart';
-import 'package:avm/features/connectivity/bloc/connectivity_bloc.dart';
-import 'package:avm/features/memory/bloc/memory_bloc.dart';
+import 'package:avm/features/connectivity_bloc/connectivity_bloc.dart';
+import 'package:avm/features/memories/bloc/memory_bloc.dart';
 import 'package:avm/firebase_options_dev.dart' as dev;
 import 'package:avm/firebase_options_prod.dart' as prod;
 import 'package:avm/flavors.dart';
@@ -201,40 +201,6 @@ class MyAppState extends State<MyApp> {
           ),
         );
       },
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final bluetoothBloc = BlocProvider.of<BluetoothBloc>(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Bluetooth Connection'),
-      ),
-      body: BlocBuilder<BluetoothBloc, BluetoothState>(
-        builder: (context, state) {
-          if (state is BluetoothInitial) {
-            return Center(child: Text('No device connected'));
-          } else if (state is BluetoothConnected) {
-            return Center(child: Text('Connected to ${state.device.name}'));
-          } else if (state is BluetoothDisconnected) {
-            return Center(child: Text('Device disconnected'));
-          }
-          return Container();
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          bluetoothBloc.startListening('your_device_id');
-        },
-        tooltip: 'Connect',
-        child: Icon(Icons.bluetooth),
-      ),
     );
   }
 }

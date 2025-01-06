@@ -92,28 +92,40 @@ class OverallTabState extends State<OverallTab> {
               int index = entry.key + 1;
               var event = entry.value;
               h10;
-              return ListTile(
-                  leading: Text(
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     '$index.',
                     style: textTheme.bodyLarge?.copyWith(
-                      color: AppColors.grey,
+                      color: AppColors.black,
                     ),
                   ),
-                  title: Text(
-                    event.title,
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: AppColors.grey,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            event.title,
+                            style: textTheme.bodyLarge?.copyWith(
+                              color: AppColors.grey,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              '${dateTimeFormat('MMM d, yyyy', event.startsAt)} at ${dateTimeFormat('h:mm a', event.startsAt)} ~ ${event.duration} minutes.',
+                              style: const TextStyle(
+                                  color: AppColors.grey, fontSize: 15),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  subtitle: Padding(
-                    padding: const EdgeInsets.only(top: 4.0),
-                    child: Text(
-                      '${dateTimeFormat('MMM d, yyyy', event.startsAt)} at ${dateTimeFormat('h:mm a', event.startsAt)} ~ ${event.duration} minutes.',
-                      style:
-                          const TextStyle(color: AppColors.grey, fontSize: 15),
-                    ),
-                  ),
-                  trailing: IconButton(
+                  IconButton(
                     onPressed: event.created
                         ? null
                         : () {
@@ -142,7 +154,9 @@ class OverallTabState extends State<OverallTab> {
                           },
                     icon: Icon(event.created ? Icons.check : Icons.add,
                         color: AppColors.black),
-                  ));
+                  ),
+                ],
+              );
             }),
           h20,
 
@@ -170,100 +184,114 @@ class OverallTabState extends State<OverallTab> {
             )
           else
             ...actionItems.map((actionItem) {
-              return CustomListTile(
-                minLeadingWidth: 0.w,
+              return GestureDetector(
                 onTap: () {
                   setState(() {
                     actionItem.completed = !actionItem.completed;
                     MemoryProvider().updateActionItem(actionItem);
                   });
                 },
-                leading: Container(
-                  width: 6.h,
-                  height: 6.w,
-                  decoration: const BoxDecoration(
-                    color: AppColors.grey,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                title: Text(
-                  actionItem.description,
-                  style: textTheme.bodyLarge?.copyWith(
-                    color: actionItem.completed
-                        ? AppColors.greyLight
-                        : AppColors.grey,
-                    decoration: actionItem.completed
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none,
-                  ),
-                ),
-              );
-            }),
-          h30,
-          // Address Section
-          if (widget.geolocation != null && widget.geolocation!.address != null)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Created at:',
-                    style: textTheme.titleMedium,
-                  ),
-                  SizedBox(height: 5.h),
-                  Text(
-                    widget.geolocation!.address!,
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: AppColors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          // Geolocation Section
-          if (widget.geolocation != null &&
-              widget.geolocation!.latitude != null &&
-              widget.geolocation!.longitude != null)
-            GestureDetector(
-              onTap: () async {
-                final availableMaps = await MapLauncher.installedMaps;
-                if (availableMaps.isNotEmpty) {
-                  await availableMaps.first.showMarker(
-                    coords: Coords(widget.geolocation!.latitude!,
-                        widget.geolocation!.longitude!),
-                    title: "Memory Location",
-                  );
-                } else {
-                  avmSnackBar(context, "No map applications available");
-                }
-              },
-              child: Center(
-                child: Column(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.network(
-                      'https://maps.googleapis.com/maps/api/staticmap?center=${widget.geolocation!.latitude},${widget.geolocation!.longitude}&zoom=14&size=400x200&markers=color:red%7C${widget.geolocation!.latitude},${widget.geolocation!.longitude}&key=AIzaSyDWJIATVb9XFFr4qgaKpoEFBXIbxMYa250',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.error, color: AppColors.red, size: 50),
-                            SizedBox(height: 8),
-                            Text(
-                              'Failed to load map image',
-                              style: textTheme.bodyLarge?.copyWith(
-                                color: AppColors.grey,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                    Text(
+                      '• ',
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: AppColors.black,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        actionItem.description,
+                        style: textTheme.bodyLarge?.copyWith(
+                          color: actionItem.completed
+                              ? AppColors.greyLight
+                              : AppColors.grey,
+                          decoration: actionItem.completed
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
+              );
+            }),
+          h10,
+
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: AppColors.grey), borderRadius: br8),
+            margin: EdgeInsets.symmetric(vertical: 20),
+            padding: EdgeInsets.symmetric(vertical: 06, horizontal: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (widget.geolocation != null &&
+                    widget.geolocation!.address != null)
+                  Text(
+                    'Location 📍',
+                    style: TextStyle(
+                      color: AppColors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                Divider(
+                  color: AppColors.purpleDark,
+                  thickness: 1,
+                ),
+                Text(
+                  widget.geolocation!.address!,
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: AppColors.grey,
+                  ),
+                ),
+                h10,
+                if (widget.geolocation != null &&
+                    widget.geolocation!.latitude != null &&
+                    widget.geolocation!.longitude != null)
+                  GestureDetector(
+                    onTap: () async {
+                      final availableMaps = await MapLauncher.installedMaps;
+                      if (availableMaps.isNotEmpty) {
+                        await availableMaps.first.showMarker(
+                          coords: Coords(widget.geolocation!.latitude!,
+                              widget.geolocation!.longitude!),
+                          title: "Memory Location",
+                        );
+                      } else {
+                        avmSnackBar(context,
+                            "No application was found to open map in your device!");
+                      }
+                    },
+                    child: ClipRRect(
+                      borderRadius: br12,
+                      child: Image.network(
+                        'https://maps.googleapis.com/maps/api/staticmap?center=${widget.geolocation!.latitude},${widget.geolocation!.longitude}&zoom=14&size=400x200&markers=color:red%7C${widget.geolocation!.latitude},${widget.geolocation!.longitude}&key=AIzaSyDWJIATVb9XFFr4qgaKpoEFBXIbxMYa250',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.error,
+                                  color: AppColors.black, size: 50),
+                              h10,
+                              Text(
+                                'Failed to load map image',
+                                style: textTheme.bodyLarge?.copyWith(
+                                  color: AppColors.black,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+              ],
             ),
+          ),
         ],
       ),
     );

@@ -12,7 +12,7 @@ import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/widgets/custom_dialog_box.dart';
 import 'package:avm/features/capture/logic/openglass_mixin.dart';
 import 'package:avm/features/capture/presentation/capture_memory_page.dart';
-import 'package:avm/features/memory/bloc/memory_bloc.dart';
+import 'package:avm/features/memories/bloc/memory_bloc.dart';
 import 'package:avm/pages/capture/location_service.dart';
 import 'package:avm/utils/audio/wav_bytes.dart';
 import 'package:avm/utils/ble/communication.dart';

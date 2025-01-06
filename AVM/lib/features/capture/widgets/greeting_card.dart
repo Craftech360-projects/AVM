@@ -1,10 +1,10 @@
 import 'package:avm/backend/database/transcript_segment.dart';
 import 'package:avm/backend/preferences.dart';
-import 'package:avm/bloc/bluetooth_bloc.dart';
+import 'package:avm/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:avm/core/assets/app_animations.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
-import 'package:avm/features/connectivity/bloc/connectivity_bloc.dart';
+import 'package:avm/features/connectivity_bloc/connectivity_bloc.dart';
 import 'package:avm/utils/websockets.dart';
 import 'package:avm/widgets/transcript.dart';
 import 'package:flutter/material.dart';

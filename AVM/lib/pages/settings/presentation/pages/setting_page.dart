@@ -2,13 +2,13 @@
 
 import 'package:avm/backend/mixpanel.dart';
 import 'package:avm/backend/preferences.dart';
-import 'package:avm/bloc/bluetooth_bloc.dart';
+import 'package:avm/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:avm/core/constants/constants.dart';
 import 'package:avm/core/theme/app_colors.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/home/device.dart';
-import 'package:avm/pages/onboarding/find_device/page.dart';
-import 'package:avm/pages/plugins/zapier/zapier_page.dart';
+import 'package:avm/pages/onboarding/page.dart';
+import 'package:avm/pages/settings/widgets/zapier_page.dart';
 import 'package:avm/pages/settings/presentation/widgets/language_dropdown.dart';
 import 'package:avm/pages/settings/widgets/calendar.dart';
 import 'package:avm/pages/settings/widgets/developer_page.dart';

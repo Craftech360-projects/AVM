@@ -8,10 +8,10 @@ import 'package:avm/features/memories/widgets/category_chip.dart';
 import 'package:avm/features/memories/widgets/overall_tab.dart';
 import 'package:avm/features/memories/widgets/tab_bar.dart';
 import 'package:avm/features/memories/widgets/transcript_tab.dart';
-import 'package:avm/features/memory/bloc/memory_bloc.dart';
+import 'package:avm/features/memories/bloc/memory_bloc.dart';
 import 'package:avm/objectbox.g.dart';
-import 'package:avm/pages/memory_detail/share.dart';
-import 'package:avm/pages/memory_detail/widgets.dart';
+import 'package:avm/features/memories/widgets/share.dart';
+import 'package:avm/features/memories/widgets/widgets.dart';
 import 'package:avm/utils/memories/reprocess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -62,8 +62,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
   void printGeolocationData(ToOne<Geolocation> geolocation) {
     if (geolocation.target != null) {
       // Add more fields if necessary
-    } else {
-    }
+    } else {}
   }
 
   @override
@@ -221,7 +220,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 children: [
                   OverallTab(
                     target: selectedMemory.structured.target!,
-                    geolocation: selectedMemory.geolocation.target, // Pass geolocation
+                    geolocation:
+                        selectedMemory.geolocation.target, // Pass geolocation
                     //pluginsResponse: selectedMemory.pluginsResponse
                   ),
                   TranscriptTab(

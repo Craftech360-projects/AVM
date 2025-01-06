@@ -28,8 +28,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SendMessage>(_onSendMessage);
     on<RefreshMessages>(_refreshMessages);
     on<UpdateChat>((event, emit) async {
-      final updatedMessages =
-          MessageProvider().getMessages(); // Fetch updated messages
+      final updatedMessages = MessageProvider().getMessages();
       emit(state.copyWith(messages: updatedMessages));
     });
   }
@@ -69,7 +68,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         _callbackFunctionChatStreaming(ai),
         () async {
           messageProvider.updateMessage(ai);
-          add(LoadInitialChat()); // Reload the chat after streaming
+          add(LoadInitialChat());
         },
       );
     } catch (error) {
@@ -80,7 +79,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  /// Load initial messages when the screen is loaded
   Future<void> _onLoadedMessages(
       LoadInitialChat event, Emitter<ChatState> emit) async {
     try {
@@ -111,12 +109,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       var aiMessage = _prepareStreaming(event.message);
 
-      // Retrieve the RAG context
       final ragInfo = await retrieveRAGContext(event.message);
       String ragContext = ragInfo[0];
       List<Memory> memories = ragInfo[1].cast<Memory>();
 
-      // Create a prompt using the RAG context
       var prompt = qaRagPrompt(
         ragContext,
         await messageProvider.retrieveMostRecentMessages(limit: 10),
@@ -128,7 +124,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         () async {
           aiMessage.memories.addAll(memories);
           messageProvider.updateMessage(aiMessage);
-          add(RefreshMessages()); // Refresh after the stream
+          add(RefreshMessages());
+          emit(state.copyWith(status: ChatStatus.loaded));
         },
       );
     } catch (error) {
@@ -153,8 +150,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       Message aiMessage) {
     return (String content) async {
       aiMessage.text = '${aiMessage.text}$content';
-      await messageProvider
-          .updateMessage(aiMessage); // Ensure update is awaited
+      await messageProvider.updateMessage(aiMessage);
     };
   }
 

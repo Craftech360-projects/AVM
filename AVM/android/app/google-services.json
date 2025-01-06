@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "729805354350-0l3lr56pn65gs7c13b300i6tou71eg4g.apps.googleusercontent.com",
+          "client_id": "729805354350-5g7a5ialdk2l4co72p1o45d3h3te16b2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.craftech360.avm",
-            "certificate_hash": "be8e63a1ccd777d661c0ba89c21e13af06328772"
+            "certificate_hash": "c917fe8a42b2e3aa70a61a8c78990859f626bbfd"
           }
         },
         {
@@ -27,30 +27,6 @@
           "android_info": {
             "package_name": "com.craftech360.avm",
             "certificate_hash": "583ec41e2eb2f1d98ab5900a2825846d1dbdfb75"
-          }
-        },
-        {
-          "client_id": "729805354350-8hc5blr2ld5s04hvvhut4minrstnlsb1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.craftech360.avm",
-            "certificate_hash": "dd238f961933c6f7677d5c939b52bd33cddfa70a"
-          }
-        },
-        {
-          "client_id": "729805354350-h0amkamvqj28g5mibeaeho75f4t38ea9.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.craftech360.avm",
-            "certificate_hash": "255e47698bb133d929eb8e14ae09b651f65a42d7"
-          }
-        },
-        {
-          "client_id": "729805354350-v9d5hasgv9lg2sf3bmr8k9gl8us8q84f.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.craftech360.avm",
-            "certificate_hash": "e173dad1d00256f4d77cbd7916fb822bee9d7c06"
           }
         },
         {

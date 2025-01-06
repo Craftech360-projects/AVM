@@ -1,7 +1,7 @@
 import 'package:avm/features/capture/widgets/ripple_animation.dart';
 import 'package:avm/pages/home/custom_scaffold.dart';
 import 'package:avm/pages/home/page.dart';
-import 'package:avm/pages/onboarding/find_device/page.dart';
+import 'package:avm/pages/onboarding/page.dart';
 import 'package:flutter/material.dart';
 
 class ConnectDevicePage extends StatefulWidget {
