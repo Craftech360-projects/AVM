@@ -4,15 +4,15 @@ import 'package:objectbox/objectbox.dart';
 @Entity()
 class Prompt {
   @Id()
-  int id = 0; 
-  
+  int id = 0;
+
   String prompt;
   String title;
   String overview;
   String actionItem;
   String category;
-  String calender; 
-  
+  String calender;
+
   Prompt({
     required this.prompt,
     required this.title,
@@ -45,8 +45,6 @@ class Prompt {
       calender: map['calender'] as String,
     );
   }
-
- 
 
   @override
   String toString() {

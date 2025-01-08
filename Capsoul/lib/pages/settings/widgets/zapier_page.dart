@@ -142,7 +142,7 @@ class _ZapierPageState extends State<ZapierPage> {
   _onSwitchChanged(bool value) async {
     SharedPreferencesUtil().zapierEnabled = value;
     if (!value) {
-      SharedPreferencesUtil().zapierWebhookUrl = ''; // Clear URL when disabled
+      SharedPreferencesUtil().zapierWebhookUrl = '';
     }
     setState(() {
       zapierEnabled = value;
@@ -152,7 +152,6 @@ class _ZapierPageState extends State<ZapierPage> {
   _saveWebhook() {
     if (!zapierEnabled) {
       avmSnackBar(context, "Enable Zapier integration to save webhook URL.");
-
       return;
     }
     SharedPreferencesUtil().zapierWebhookUrl = webhookController.text;

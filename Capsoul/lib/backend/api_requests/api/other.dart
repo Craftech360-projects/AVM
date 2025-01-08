@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:capsoul/backend/api_requests/api/shared.dart';
 import 'package:capsoul/backend/database/memory.dart';
 import 'package:capsoul/backend/database/transcript_segment.dart';
 import 'package:capsoul/backend/preferences.dart';
 import 'package:deepgram_speech_to_text/deepgram_speech_to_text.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
   debugPrint('deepgramTranscribe');
@@ -85,24 +85,32 @@ Future<String> zapWebhookOnMemoryCreatedCall(Memory? memory,
   // Retrieve preferences
   final isZapierEnabled = SharedPreferencesUtil().zapierEnabled;
   final webhookUrl = SharedPreferencesUtil().zapierWebhookUrl;
+
   // Check if Zapier integration is enabled and the webhook URL is valid
-  if (!isZapierEnabled || (webhookUrl.isEmpty)) {
+  if (!isZapierEnabled || webhookUrl.isEmpty) {
     debugPrint('Zapier integration is disabled or webhook URL is missing.');
     return '';
   }
 
-  debugPrint('zap webcall: $memory');
+  debugPrint('Sending data to Zapier webhook: $memory');
+
+  // Prepare data payload for the webhook
+  final data = {
+    'title': memory.transcript, // Replace with your actual memory structure
+    'description':
+        memory.transcriptSegments, // Replace with your actual memory structure
+    'timestamp': DateTime.now().toIso8601String(),
+  };
 
   return triggerMemoryRequestAtEndpoint(
     webhookUrl, // Use the webhook URL from SharedPreferences
-    memory,
+    data as Memory,
     returnRawBody: returnRawBody,
   );
 }
 
 Future<String> webhookOnTranscriptReceivedCall(
     List<TranscriptSegment> segments, String sessionId) async {
-  debugPrint('webhookOnTranscriptReceivedCall: $segments');
   return triggerTranscriptSegmentsRequest(
       SharedPreferencesUtil().webhookOnTranscriptReceived, sessionId, segments);
 }
@@ -166,6 +174,72 @@ Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory,
     return '';
   }
 }
+
+Future<void> sendTaskToZapier(
+    String title, String description, String time) async {
+  final isZapierEnabled = SharedPreferencesUtil().zapierEnabled;
+  final webhookUrl = SharedPreferencesUtil().zapierWebhookUrl;
+  print("Webhook Enabled ? ===> $isZapierEnabled");
+  print("Webhook URL ===> $webhookUrl");
+
+  if (!isZapierEnabled || webhookUrl.isEmpty) {
+    debugPrint('Zapier integration is disabled or webhook URL is missing.');
+    return;
+  }
+
+  final startTime = DateTime.parse(time);
+  final endTime = startTime.add(Duration(minutes: 30));
+
+  final data = {
+    'title': title,
+    'description': description,
+    'start_time': startTime.toIso8601String(),
+    'end_time': endTime.toIso8601String(),
+  };
+  print("Payload ===> $data");
+
+  try {
+    final response = await http.post(
+      Uri.parse(webhookUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(data),
+    );
+
+    print("Payload Response ===> ${response.statusCode}");
+
+    if (response.statusCode == 200) {
+      print("Reminder was added to calendar");
+    } else {
+      debugPrint('Failed to send task to Zapier: ${response.body}');
+    }
+  } catch (e) {
+    debugPrint('Error sending task to Zapier: $e');
+  }
+}
+
+// Future<String> triggerMemoryRequestAtEndpoint(
+//     String webhookUrl, Map<String, dynamic> data,
+//     {bool returnRawBody = false}) async {
+//   try {
+//     final response = await http.post(
+//       Uri.parse(webhookUrl),
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: jsonEncode(data),
+//     );
+
+//     if (response.statusCode == 200) {
+//       return returnRawBody ? response.body : 'Success';
+//     } else {
+//       debugPrint('Failed to send data to Zapier: ${response.body}');
+//       return 'Error';
+//     }
+//   } catch (e) {
+//     debugPrint('Error sending data to Zapier: $e');
+//     return 'Error';
+//   }
+// }
 
 Future<String> triggerTranscriptSegmentsRequest(
     String url, String sessionId, List<TranscriptSegment> segments) async {

@@ -17,21 +17,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
-// class MemoryDetailPage extends StatefulWidget {
-//   const MemoryDetailPage({super.key});
-//   static const String name = 'memoryDetailPage';
-//   @override
-//   State<MemoryDetailPage> createState() => _MemoryDetailPageState();
-// }
-
 class MemoryDetailPage extends StatefulWidget {
   final MemoryBloc memoryBloc;
   final int memoryAtIndex;
 
   const MemoryDetailPage({
     super.key,
-    required this.memoryBloc, // Add memoryBloc if necessary
-    required this.memoryAtIndex, // Add the index of the memory
+    required this.memoryBloc,
+    required this.memoryAtIndex,
   });
 
   static const String name = 'memoryDetailPage';

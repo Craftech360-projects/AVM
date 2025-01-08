@@ -114,10 +114,10 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
                                 yesText: "Enable",
                                 yesPressed: () {
                                   SharedPreferencesUtil().backupsEnabled = true;
-                                  Navigator.of(context).pop;
                                   avmSnackBar(context,
                                       "Auto-memory backup is active now");
                                   _nextPage();
+                                  Navigator.of(context).pop();
                                 },
                               );
                             },

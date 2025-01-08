@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:capsoul/backend/api_requests/api/llm.dart';
+import 'package:capsoul/backend/api_requests/api/other.dart';
 import 'package:capsoul/backend/database/memory.dart';
 import 'package:capsoul/backend/database/message.dart';
 import 'package:capsoul/backend/database/prompt_provider.dart';
@@ -53,39 +54,18 @@ Future<SummaryResult> summarizeMemory(
 }) async {
   bool isPromptSaved = SharedPreferencesUtil().isPromptSaved;
   if (isPromptSaved) {
-    // ignore: unused_local_variable
     final prompt = PromptProvider().getPrompts().first;
   }
-  //  if (customPromptDetails != null) {
-  //   final savedPrompt = SharedPreferencesUtil().getSelectedPrompt('prompt');
-  //   final savedTitle = SharedPreferencesUtil().getSelectedPrompt('title');
-  //   final savedOverview = SharedPreferencesUtil().getSelectedPrompt('overview');
-  //   final savedActionItems = SharedPreferencesUtil().getSelectedPrompt('actionItems');
-  //   final savedCategory = SharedPreferencesUtil().getSelectedPrompt('category');
-  //   final savedCalendar = SharedPreferencesUtil().getSelectedPrompt('calendar');
-
-  //   customPromptDetails = CustomPrompt(
-  //     prompt: savedPrompt,
-  //     title: savedTitle,
-  //     overview: savedOverview,
-  //     actionItems: savedActionItems,
-  //     category: savedCategory,
-  //     calendar: savedCalendar,
-  //   );
-  // }
 
   debugPrint('summarizeMemory transcript length: ${transcript.length}');
   if (transcript.isEmpty || transcript.split(' ').length < 7) {
     return SummaryResult(Structured('', ''), []);
   }
+
   if (transcript.split(' ').length > 6) {
-    // try lower count?
     forceProcess = true;
   }
 
-  // try later with temperature 0
-  // NOTE: PROMPT IS VERY DELICATE, IT CAN DISCARD EVERYTHING IF NOT HANDLED PROPERLY
-  // The purpose for structuring this memory is to remember important conversations, decisions, and action items. If there's nothing like that in the transcript, output an empty title.
   var prompt = '''
 Summarize the following conversation transcript. The conversation language is ${SharedPreferencesUtil().recordingsLanguage}. Respond in English.
 
@@ -95,6 +75,10 @@ ${forceProcess ? "" : "If the conversation does not contain significant insights
 - Provide a detailed summary of the conversation, capturing the most important discussion points, insights, decisions, and commitments.
 - Ensure the summary is comprehensive and does not omit critical details.
 - Summaries should not be too brief. The overview must contain at least 100 words, and key highlights should provide enough context to understand the depth of the discussion.
+- If the transcript contains the phrase "Remind me to", extract the reminder that follows and include it in the "reminders" field.
+- For each reminder, generate a detailed **description** that includes the **purpose**, **time**, **place**, and any additional context mentioned in the transcript.
+- Extract **date and time** from the reminder text if specified, and include it in the "time" field in ISO8601 format. Use natural language understanding to interpret phrases like "tomorrow at 5 PM" or "next Monday at 3 PM" and convert them to ISO8601 format. If no specific time is mentioned, leave the field as `null`.
+- Format the reminder as: {"reminder": "string", "description": "string", "time": "string (optional, e.g., ISO8601 date string)"}
 
 Provide the following:
 1. **Title**: ${customPromptDetails?.title ?? 'The main topic or most important theme of the conversation.'}
@@ -103,6 +87,10 @@ Provide the following:
 4. **Category**: ${customPromptDetails?.category ?? 'Classify the conversation under up to 3 categories (personal, education, health, finance, legal, philosophy, spiritual, science, entrepreneurship, parenting, romantic, travel, inspiration, technology, business, social, work, other).'}
 5. **Emoji**: A single emoji that represents the conversation theme.
 6. **Calendar Events**: ${customPromptDetails?.calendar ?? 'Any specific events mentioned during the conversation. Include the title, description, start time, and duration.'}
+7. **Reminders**: Include reminders as an array. Each reminder should have:
+   - **Reminder**: A brief title of the reminder.
+   - **Description**: A detailed description including the purpose, time, place, and additional context from the transcript.
+   - **Time**: A specific time or time range if mentioned in the transcript in ISO8601 format.
 
 The date context for this conversation is ${DateTime.now().toIso8601String()}.
 
@@ -119,7 +107,14 @@ Respond in a JSON format with the following structure:
       "responsible": "string"
     }
   ],
-  "category":[{"string"}] ,
+  "reminders": [
+    {
+      "reminder": "string",
+      "description": "string",
+      "time": "string"
+    }
+  ],
+  "category": [{"string"}],
   "emoji": "string",
   "events": [
     {
@@ -129,29 +124,34 @@ Respond in a JSON format with the following structure:
       "duration": number
     }
   ]
-  
 }
 ''';
+
   var structuredResponse =
       extractJson(await executeGptPrompt(prompt, ignoreCache: ignoreCache));
 
-  debugPrint("got response, $structuredResponse");
   try {
-    //here need tostructured unt his format
-//Title:
-//  Overview:
-//  Action Items: []
-//  Category: other
-//  Emoji:
-//  Events: []
-//  Plugins Response:
-    var structured = Structured.fromJson(await jsonDecode(structuredResponse));
-    debugPrint("structured, $structured");
+    // Parse structuredResponse as JSON
+    var parsedResponse = jsonDecode(structuredResponse);
+
+    var structured = Structured.fromJson(parsedResponse);
+
+    // Handle reminders
+    if (parsedResponse['reminders'] != null &&
+    parsedResponse['reminders'].isNotEmpty) {
+  for (var reminder in parsedResponse['reminders']) {
+    sendTaskToZapier(
+      reminder['reminder'], 
+      reminder['description'] ?? 'No description provided',
+      reminder['time'] ?? '',
+    );
+  }
+}
+
 
     var pluginsResponse = await executePlugins(transcript);
     if (structured.title.isEmpty) return SummaryResult(structured, []);
 
-    //var pluginsResponse = await executePlugins(transcript);
     return SummaryResult(structured, pluginsResponse);
   } catch (e) {
     debugPrint("error, $e");
@@ -192,13 +192,6 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
         return Tuple2(
             plugin, response.replaceAll('```', '').replaceAll('""', '').trim());
       } catch (e) {
-        // CrashReporting.reportHandledCrash(e, stacktrace,
-        //     level: NonFatalExceptionLevel.critical,
-        //     userAttributes: {
-        //       'plugin': plugin.id,
-        //       'plugins_count': pluginsEnabled.length.toString(),
-        //       'transcript_length': transcript.length.toString(),
-        //     });
         debugPrint('Error executing plugin ${plugin.id},$e');
         return Tuple2(plugin, '');
       }
@@ -211,12 +204,6 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
     var responses = await allPluginResponses;
     return responses.where((e) => e.item2.length > 5).toList();
   } catch (e) {
-    // CrashReporting.reportHandledCrash(e, stacktrace,
-    //     level: NonFatalExceptionLevel.critical,
-    //     userAttributes: {
-    //       'plugins_count': pluginsEnabled.length.toString(),
-    //       'transcript_length': transcript.length.toString(),
-    //     });
     return [];
   }
 }
@@ -433,79 +420,10 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
     debugPrint('topics: $topics, dates: $dates');
     return Tuple2<List<String>, List<DateTime>>(topics, dates);
   } catch (e) {
-    // CrashReporting.reportHandledCrash(e, StackTrace.current,
-    //     level: NonFatalExceptionLevel.critical,
-    //     userAttributes: {
-    //       'response': cleanedResponse,
-    //       'message_length': message.length.toString(),
-    //       'message_words': message.split(' ').length.toString(),
-    //     });
     debugPrint('Error determining requires context: $e');
     return null;
   }
 }
-
-//this below will work with chatgpt
-// Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
-//     List<Message> messages) async {
-//   String message = '''
-//         Based on the current conversation an AI and a User are having, determine if the AI requires context outside the conversation to respond to the user's message.
-//         More context could mean, user stored old conversations, notes, or information that seems very user-specific.
-
-//         - First determine if the conversation requires context, in the field "requires_context".
-//         - Context could be 2 different things:
-//           - A list of topics (each topic being 1 or 2 words, e.g. "Startups" "Funding" "Business Meeting" "Artificial Intelligence") that are going to be used to retrieve more context, in the field "topics". Leave an empty list if not context is needed.
-//           - A dates range, if the context is time-based, in the field "dates_range". Leave an empty list if not context is needed. FYI if the user says today, today is ${DateTime.now().toIso8601String()}.
-
-//         Conversation:
-//         ${Message.getMessagesAsString(messages)}
-
-//         The output should be formatted as a JSON instance that conforms to the JSON schema below.
-
-//         As an example, for the schema {"properties": {"foo": {"title": "Foo", "description": "a list of strings", "type": "array", "items": {"type": "string"}}}, "required": ["foo"]}
-//         the object {"foo": ["bar", "baz"]} is a well-formatted instance of the schema. The object {"properties": {"foo": ["bar", "baz"]}} is not well-formatted.
-
-//         Here is the output schema:
-//         ```
-//         {"properties": {"requires_context": {"title": "Requires Context", "description": "Based on the conversation, this tells if context is needed to respond", "default": false, "type": "string"}, "topics": {"title": "Topics", "description": "If context is required, the topics to retrieve context from", "default": [], "type": "array", "items": {"type": "string"}}, "dates_range": {"title": "Dates Range", "description": "The dates range to retrieve context from", "default": [], "type": "array", "minItems": 2, "maxItems": 2, "items": [{"type": "string", "format": "date-time"}, {"type": "string", "format": "date-time"}]}}}
-//         ```
-//         '''
-//       .replaceAll('        ', '');
-//   debugPrint('determineRequiresContext message: $message');
-
-//   var response = await executeGptPrompt(message);
-
-//   debugPrint('determineRequiresContext response: $response');
-//   var cleanedResponse =
-//       response.toString().replaceAll('```', '').replaceAll('json', '').trim();
-//   print("determine>>>>>1 $cleanedResponse");
-//   try {
-//     print("determine>>>>>2");
-//     var data = jsonDecode(cleanedResponse);
-//     print("determine>>>>>3");
-//     debugPrint(">>>>>>>clean data: $data");
-
-//     debugPrint(data.toString());
-//     print("determine>>>>>4");
-//     List<String> topics =
-//         data['topics'].map<String>((e) => e.toString()).toList();
-//     List<String> datesRange =
-//         data['dates_range'].map<String>((e) => e.toString()).toList();
-//     List<DateTime> dates = datesRange.map((e) => DateTime.parse(e)).toList();
-//     debugPrint('topics: $topics, dates: $dates');
-//     return Tuple2<List<String>, List<DateTime>>(topics, dates);
-//   } catch (e) {
-//     CrashReporting.reportHandledCrash(e, StackTrace.current,
-//         level: NonFatalExceptionLevel.critical,
-//         userAttributes: {
-//           'response': cleanedResponse,
-//           'message_length': message.length.toString(),
-//           'message_words': message.split(' ').length.toString(),
-//         });
-//     debugPrint('Error determining requires context: $e');
-//     return null;
-//   }
-// }
 
 String qaRagPrompt(String context, List<Message> messages, {Plugin? plugin}) {
   // debugPrint("Your name is>>>>>>>>>>>>>>>>>>>: ${plugin.name}");
