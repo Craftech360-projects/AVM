@@ -3,12 +3,12 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:capsoul/backend/api_requests/api/llm.dart';
-import 'package:capsoul/backend/api_requests/api/other.dart';
 import 'package:capsoul/backend/database/memory.dart';
 import 'package:capsoul/backend/database/message.dart';
 import 'package:capsoul/backend/database/prompt_provider.dart';
 import 'package:capsoul/backend/preferences.dart';
 import 'package:capsoul/backend/schema/plugin.dart';
+import 'package:capsoul/utils/features/calendar.dart';
 import 'package:capsoul/utils/other/string_utils.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -136,18 +136,38 @@ Respond in a JSON format with the following structure:
 
     var structured = Structured.fromJson(parsedResponse);
 
-    // Handle reminders
     if (parsedResponse['reminders'] != null &&
-    parsedResponse['reminders'].isNotEmpty) {
-  for (var reminder in parsedResponse['reminders']) {
-    sendTaskToZapier(
-      reminder['reminder'], 
-      reminder['description'] ?? 'No description provided',
-      reminder['time'] ?? '',
-    );
-  }
-}
+        parsedResponse['reminders'].isNotEmpty) {
+      for (var reminder in parsedResponse['reminders']) {
+        String reminderText = reminder['reminder'];
+        String description =
+            reminder['description'] ?? 'No description provided';
+        String? timeString = reminder['time'];
+        DateTime? startsAt;
 
+        // Parse the time string into DateTime
+        if (timeString != null && timeString.isNotEmpty) {
+          startsAt = DateTime.parse(timeString);
+        }
+
+        if (startsAt != null) {
+          bool eventCreated = await CalendarUtil().createEvent(
+            reminderText,
+            startsAt,
+            60, // Default duration of 1 hour, can be customized
+            description: description,
+          );
+
+          if (eventCreated) {
+            debugPrint('Reminder added to calendar: $reminderText');
+          } else {
+            debugPrint('Failed to add reminder to calendar: $reminderText');
+          }
+        } else {
+          debugPrint('Invalid or missing time for reminder: $reminderText');
+        }
+      }
+    }
 
     var pluginsResponse = await executePlugins(transcript);
     if (structured.title.isEmpty) return SummaryResult(structured, []);

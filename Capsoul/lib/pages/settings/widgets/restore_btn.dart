@@ -66,13 +66,13 @@ class RestoreButtonState extends State<RestoreButton> {
                   ),
                 )
               : CircleAvatar(
-                  backgroundColor: AppColors.greyLavender,
-                  child: Icon(Icons.restore, size: 22.h),
+                  backgroundColor: AppColors.purpleDark,
+                  child: Icon(
+                    Icons.restore_rounded,
+                    size: 22.h,
+                    color: AppColors.commonPink,
+                  ),
                 ),
-          // const Icon(
-          //     Icons.restore,
-          //     size: 22.h,
-          //   ),
           onTap: isRestoreInProgress ? null : _handleRestore,
         ),
         if (isRestoreInProgress)

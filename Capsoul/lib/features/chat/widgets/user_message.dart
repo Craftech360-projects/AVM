@@ -92,7 +92,7 @@ class UserCard extends StatelessWidget {
                         height: 1.4,
                       ),
                     ),
-                    h5,
+                    h4,
                     // Timestamp
                     if (message?.createdAt != null) ...[
                       Row(

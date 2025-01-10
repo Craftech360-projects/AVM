@@ -165,7 +165,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
             },
             icon: const Icon(Icons.more_vert_rounded, size: 25),
           ),
-          w10,
+          w8,
         ],
       ),
       body: Container(
@@ -190,7 +190,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
               style:
                   textTheme.labelLarge?.copyWith(fontSize: 20.h, height: 1.25),
             ),
-            h5,
+            h4,
             if (categories.isNotEmpty)
               Wrap(
                 spacing: 8.w,
@@ -203,7 +203,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                     )
                     .toList(),
               ),
-            h20,
+            h16,
             Expanded(
               child: CustomTabBar(
                 tabs: const [

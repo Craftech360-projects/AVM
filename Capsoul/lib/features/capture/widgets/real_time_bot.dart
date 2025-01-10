@@ -17,7 +17,7 @@ Widget buildPopupContent(
         maxLines: 2,
         style: TextStyle(fontSize: 14),
       ),
-      w10,
+      w8,
       Switch(
         activeTrackColor: AppColors.purpleDark,
         activeColor: AppColors.commonPink,

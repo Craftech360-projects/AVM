@@ -21,7 +21,7 @@ Future<bool> customDialogBox(BuildContext context,
         child: Row(
           children: [
             Icon(icon, color: iconColor ?? AppColors.blue),
-            w10,
+            w8,
             Text(
               title,
               style: TextStyle(
@@ -43,7 +43,7 @@ Future<bool> customDialogBox(BuildContext context,
               color: AppColors.blueGreyDark,
             ),
           ),
-          h10,
+          h8,
         ],
       ),
       actionsAlignment: MainAxisAlignment.spaceAround,
@@ -98,7 +98,7 @@ void showPermissionDeniedDialog(
         child: Row(
           children: [
             Icon(Icons.location_on, color: AppColors.red),
-            w10,
+            w8,
             Text(
               title,
               style: TextStyle(
@@ -120,7 +120,7 @@ void showPermissionDeniedDialog(
               color: AppColors.blueGreyDark,
             ),
           ),
-          h10,
+          h8,
         ],
       ),
       actionsAlignment: MainAxisAlignment.spaceEvenly,
@@ -171,7 +171,7 @@ class CustomDialogWidget extends StatelessWidget {
         child: Row(
           children: [
             Icon(icon, color: iconColor ?? AppColors.blue),
-            w10,
+            w8,
             Text(
               maxLines: 2,
               title,
@@ -194,7 +194,7 @@ class CustomDialogWidget extends StatelessWidget {
               color: AppColors.blueGreyDark,
             ),
           ),
-          h10,
+          h8,
         ],
       ),
       actionsAlignment: MainAxisAlignment.spaceEvenly,

@@ -9,6 +9,7 @@ import 'package:capsoul/features/capture/logic/websocket_mixin.dart';
 import 'package:capsoul/pages/home/custom_scaffold.dart';
 import 'package:capsoul/pages/settings/widgets/custom_expandible_widget.dart';
 import 'package:capsoul/pages/settings/widgets/custom_prompt_page.dart';
+import 'package:capsoul/pages/settings/widgets/firmware_screen.dart';
 import 'package:capsoul/pages/settings/widgets/keywords_popup.dart';
 import 'package:flutter/material.dart';
 
@@ -66,7 +67,7 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
       children: [
         _buildDeveloperSwitch(),
-        h5,
+        h4,
         if (!_developerEnabled)
           _buildDeveloperDescription()
         else
@@ -87,7 +88,7 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
                 backgroundColor: AppColors.purpleDark,
                 child: Icon(Icons.people, color: AppColors.commonPink),
               ),
-              w15,
+              w16,
               Text(
                 'Developer Options',
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
@@ -124,6 +125,7 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
         _buildPromptTile(),
         _buildCodecTile(),
         _buildKeywordDetectionTile(),
+        _buildFirmwareScreen(),
       ],
     );
   }
@@ -218,6 +220,50 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
     );
   }
 
+  Widget _buildFirmwareScreen() {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => FirmwareScreen()));
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 4),
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+        decoration:
+            BoxDecoration(color: AppColors.commonPink, borderRadius: br8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Firmware Settings",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(
+                  "Check for new updates",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                )
+              ],
+            ),
+            Icon(
+              Icons.arrow_forward_ios_rounded,
+              size: 16,
+              color: AppColors.black,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildKeywordDetectionTile() {
     return CustomExpansionTile(
       title: 'Keyword Detection',
@@ -245,15 +291,7 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
 
   void developerModeSelected({required String modeSelected}) {
     SharedPreferencesUtil().saveApiType('NewApiKey', modeSelected);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: const Text('App will restart to apply selected changes.'),
-        );
-      },
-    );
-
+    avmSnackBar(context, "New changes have been applied");
     if (mounted) {
       setState(() {});
     }
@@ -267,15 +305,7 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
         _currentCodecType = modeSelected;
       });
     }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: const Text('App will restart to apply selected changes.'),
-        );
-      },
-    );
+    avmSnackBar(context, "New changes have been applied");
     _reconnectWebSocket();
   }
 

@@ -51,7 +51,7 @@ class _ZapierPageState extends State<ZapierPage> {
                       backgroundColor: AppColors.greyLavender,
                       child: Icon(Icons.link),
                     ),
-                    w15,
+                    w16,
                     Text(
                       'Zapier Integration',
                       style:
@@ -69,12 +69,12 @@ class _ZapierPageState extends State<ZapierPage> {
               ],
             ),
           ),
-          h5,
+          h4,
           const Text(
             'Zapier can automate workflows by connecting your app to other services. Enable to configure your integration settings.',
             textAlign: TextAlign.center,
           ),
-          h20,
+          h16,
           if (zapierEnabled) ..._zapierIntegrationOptions(),
         ],
       ),
@@ -101,7 +101,7 @@ class _ZapierPageState extends State<ZapierPage> {
         'Enter your Zapier webhook URL and select the type of workflows you want to automate.',
         textAlign: TextAlign.start,
       ),
-      h20,
+      h16,
       TextField(
         textAlign: TextAlign.center,
         controller: webhookController,
@@ -119,7 +119,7 @@ class _ZapierPageState extends State<ZapierPage> {
           ),
         ),
       ),
-      h15,
+      h16,
       ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.purpleDark,

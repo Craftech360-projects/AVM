@@ -45,7 +45,7 @@ class OnboardingButton extends StatelessWidget {
           padding: EdgeInsets.all(4.h),
           decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: br30,
+              borderRadius: br15,
               border: Border.all(color: AppColors.black)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

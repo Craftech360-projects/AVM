@@ -34,7 +34,7 @@ class LiveStreamCard extends StatelessWidget {
               color: Colors.grey[300],
             ),
           ),
-          w10,
+          w8,
 
           // Content
           Expanded(
@@ -49,7 +49,7 @@ class LiveStreamCard extends StatelessWidget {
                     fontSize: 13,
                   ),
                 ),
-                h5,
+                h4,
                 Text(
                   'Dr.$hostName',
                   style: const TextStyle(

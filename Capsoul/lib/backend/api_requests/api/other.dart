@@ -179,8 +179,6 @@ Future<void> sendTaskToZapier(
     String title, String description, String time) async {
   final isZapierEnabled = SharedPreferencesUtil().zapierEnabled;
   final webhookUrl = SharedPreferencesUtil().zapierWebhookUrl;
-  print("Webhook Enabled ? ===> $isZapierEnabled");
-  print("Webhook URL ===> $webhookUrl");
 
   if (!isZapierEnabled || webhookUrl.isEmpty) {
     debugPrint('Zapier integration is disabled or webhook URL is missing.');
@@ -196,7 +194,6 @@ Future<void> sendTaskToZapier(
     'start_time': startTime.toIso8601String(),
     'end_time': endTime.toIso8601String(),
   };
-  print("Payload ===> $data");
 
   try {
     final response = await http.post(
@@ -205,10 +202,8 @@ Future<void> sendTaskToZapier(
       body: jsonEncode(data),
     );
 
-    print("Payload Response ===> ${response.statusCode}");
 
     if (response.statusCode == 200) {
-      print("Reminder was added to calendar");
     } else {
       debugPrint('Failed to send task to Zapier: ${response.body}');
     }

@@ -82,7 +82,7 @@ class _CalendarPageState extends State<CalendarPage> {
   List<Widget> _displayCalendars() {
     final textTheme = Theme.of(context).textTheme;
     return [
-      // h15,
+      // h16,
       Container(
         margin: EdgeInsets.symmetric(vertical: 12.h),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
@@ -100,7 +100,7 @@ class _CalendarPageState extends State<CalendarPage> {
         'Select a calendar for Capsoul to connect to.',
         textAlign: TextAlign.center,
       ),
-      h10,
+      h8,
       for (var calendar in calendars)
         RadioListTile(
           fillColor: WidgetStatePropertyAll(AppColors.purpleDark),
@@ -140,7 +140,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 const Row(
                   children: [
                     Icon(Icons.edit_calendar),
-                    w15,
+                    w16,
                     Text(
                       'Enable integration',
                       style:

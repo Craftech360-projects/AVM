@@ -46,7 +46,7 @@ class OverallTabState extends State<OverallTab> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          h10,
+          h8,
 
           /// AI Summary
           CustomListTile(
@@ -66,7 +66,7 @@ class OverallTabState extends State<OverallTab> {
               color: AppColors.grey,
             ),
           ),
-          h20,
+          h16,
 
           /// Chapters
           CustomListTile(
@@ -91,7 +91,7 @@ class OverallTabState extends State<OverallTab> {
             ...events.asMap().entries.map((entry) {
               int index = entry.key + 1;
               var event = entry.value;
-              h10;
+              h8;
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -158,7 +158,7 @@ class OverallTabState extends State<OverallTab> {
                 ],
               );
             }),
-          h20,
+          h16,
 
           /// Action Items Section
           CustomListTile(
@@ -217,7 +217,7 @@ class OverallTabState extends State<OverallTab> {
                 ),
               );
             }),
-          h10,
+          h8,
 
           Container(
             decoration: BoxDecoration(
@@ -242,13 +242,13 @@ class OverallTabState extends State<OverallTab> {
                   thickness: 1,
                 ),
                 Text(
-                  widget.geolocation!.address!,
+                  widget.geolocation?.address ?? "No address found!",
                   style: TextStyle(
                     fontSize: 14,
                     color: AppColors.grey,
                   ),
                 ),
-                h10,
+                h8,
                 if (widget.geolocation != null &&
                     widget.geolocation!.latitude != null &&
                     widget.geolocation!.longitude != null)
@@ -277,7 +277,7 @@ class OverallTabState extends State<OverallTab> {
                             children: [
                               Icon(Icons.error,
                                   color: AppColors.black, size: 50),
-                              h10,
+                              h8,
                               Text(
                                 'Failed to load map image',
                                 style: textTheme.bodyLarge?.copyWith(
@@ -311,7 +311,7 @@ class OverallTabState extends State<OverallTab> {
     }
     if (pluginResponse.isEmpty) {
       return [
-        h30,
+        h32,
         Text(
           'No plugins were triggered.',
           style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 20),
@@ -342,7 +342,7 @@ class OverallTabState extends State<OverallTab> {
             ),
           ],
         ),
-        h30,
+        h32,
       ];
     } else {
       return [
@@ -350,7 +350,7 @@ class OverallTabState extends State<OverallTab> {
           'Plugins 🧑‍💻',
           style: Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 26),
         ),
-        h20,
+        h16,
         ...pluginResponse.mapIndexed((i, pluginResponse) {
           if (pluginResponse.content.length < 5) return const SizedBox.shrink();
           Plugin? plugin = pluginsList.firstWhereOrNull(
@@ -422,7 +422,7 @@ class OverallTabState extends State<OverallTab> {
             ),
           );
         }),
-        h10,
+        h8,
       ];
     }
   }

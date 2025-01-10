@@ -37,7 +37,7 @@ class FinalizePage extends StatelessWidget {
                   child: Text(
                     'You are all set 🎉',
                     style: TextStyle(
-                        fontSize: 28, fontWeight: FontWeight.w500, height: 1.2),
+                        fontSize: 24, fontWeight: FontWeight.w500, height: 1.2),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -46,7 +46,7 @@ class FinalizePage extends StatelessWidget {
                 margin: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
-                    borderRadius: br30),
+                    borderRadius: br12),
                 height: 55.h,
                 width: double.maxFinite,
                 child: CustomElevatedButton(

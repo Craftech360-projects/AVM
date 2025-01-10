@@ -678,7 +678,7 @@ void showOptionsBottomSheet(
                                     size: 20),
                               )
                             : const SizedBox.shrink(),
-                        h20,
+                        h16,
                       ],
               ),
             );

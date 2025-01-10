@@ -43,20 +43,20 @@ class AIMessage extends StatelessWidget {
                   backgroundImage: NetworkImage(pluginSender!.getImageUrl()),
                 )
               : Container(
-                  height: 32.h,
-                  width: 32.w,
+                  height: 35.h,
+                  width: 35.w,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.purpleDark,
                   ),
                   child: const Icon(Icons.assistant, color: AppColors.white),
                 ),
-          w10,
+          w4,
           Flexible(
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
               decoration: BoxDecoration(
-                color: AppColors.blueGreyDark.withValues(alpha: 0.1),
+                color: Color(0xFFE5E4E2),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(3),
                   topRight: Radius.circular(20),
@@ -95,12 +95,12 @@ class AIMessage extends StatelessWidget {
                     ),
                   // Optional Copy Button or Initial Options
                   if (message.id != 1) _getCopyButton(context),
-                  if (message.id == 1 && displayOptions) h5,
+                  if (message.id == 1 && displayOptions) h4,
                   if (message.id == 1 && displayOptions)
                     ..._getInitialOptions(context),
                   // Display Memories
                   if (memories.isNotEmpty) ...[
-                    h15,
+                    h16,
                     for (var memory in (memories.length > 3
                         ? memories.reversed.toList().sublist(0, 3)
                         : memories.reversed.toList()))
@@ -201,7 +201,7 @@ class AIMessage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
         width: double.maxFinite,
         decoration: BoxDecoration(
-          color: AppColors.purpleBright.withValues(alpha: 0.2),
+          color: Color(0xFFF8F8FF),
           borderRadius: br15,
         ),
         child: Text(optionText, style: Theme.of(context).textTheme.bodyMedium),
@@ -218,15 +218,15 @@ class AIMessage extends StatelessWidget {
 
   _getInitialOptions(BuildContext context) {
     return [
-      h5,
+      h4,
       _getInitialOption(context, 'Which tasks are due today or tomorrow?'),
-      h5,
+      h4,
       _getInitialOption(
           context, 'What progress did I make on yesterday tasks?'),
-      h5,
+      h4,
       _getInitialOption(context,
           'Can you summarize the latest tips on growing my business??'),
-      h5,
+      h4,
       _getInitialOption(context,
           'What new skills or knowledge did I gain from recent discussions?'),
     ];

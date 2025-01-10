@@ -44,7 +44,7 @@ class MemoryCard extends StatelessWidget {
               },
             ),
           ),
-          w10,
+          w8,
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -57,7 +57,7 @@ class MemoryCard extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         height: 1.4)),
-                h10,
+                h8,
                 Text(
                   '${DateFormat('d MMM').format(memory.createdAt)} -'
                   ' ${DateFormat('h:mm a').format(memory.createdAt)}',
@@ -68,6 +68,7 @@ class MemoryCard extends StatelessWidget {
           ),
           if (isSelected)
             Checkbox(
+              activeColor: AppColors.red,
               value: isSelected,
               onChanged: (value) {
                 onSelect();

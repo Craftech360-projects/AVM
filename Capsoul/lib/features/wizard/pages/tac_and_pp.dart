@@ -29,7 +29,7 @@ class TACandPP extends StatelessWidget {
               thickness: 2,
               color: AppColors.purpleDark,
             ),
-            h10,
+            h8,
             Expanded(
               child: ScrollbarTheme(
                 data: ScrollbarThemeData(
@@ -47,7 +47,7 @@ class TACandPP extends StatelessWidget {
                         Text(
                           'General Terms',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -56,11 +56,11 @@ class TACandPP extends StatelessWidget {
                           'The app is provided as-is without any warranties.',
                           'We reserve the right to update the terms at any time.',
                         ]),
-                        SizedBox(height: 20),
+                        h16,
                         Text(
                           'Privacy Policy',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -69,11 +69,11 @@ class TACandPP extends StatelessWidget {
                           'We do not share your personal information with third parties.',
                           'You can request data deletion at any time.',
                         ]),
-                        SizedBox(height: 20),
+                        h16,
                         Text(
                           'User Responsibilities',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -88,7 +88,7 @@ class TACandPP extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            h16,
             ElevatedButton(
               onPressed: onAccept,
               // onPressed: _onSaveButtonPressed,

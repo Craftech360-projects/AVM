@@ -39,7 +39,7 @@ class CustomDialog extends StatelessWidget {
               thickness: 2,
               color: AppColors.purpleDark,
             ),
-            h10,
+            h8,
             Expanded(
               child: ScrollbarTheme(
                 data: ScrollbarThemeData(
@@ -71,11 +71,11 @@ class CustomDialog extends StatelessWidget {
                   onPressed: () => Navigator.of(context).pop(),
                   label: Text(
                     "Close",
-                    style: TextStyle(color: AppColors.purpleDark),
+                    style: TextStyle(color: AppColors.black),
                   ),
                   icon: Icon(
                     Icons.close_rounded,
-                    color: AppColors.purpleDark,
+                    color: AppColors.black,
                   ),
                   iconAlignment: IconAlignment.end,
                 )
@@ -94,11 +94,10 @@ class CustomDialog extends StatelessWidget {
         Text(
           heading,
           style: const TextStyle(
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 8),
         ..._buildPoints(points),
         const SizedBox(height: 20),
       ],
@@ -120,7 +119,7 @@ class CustomDialog extends StatelessWidget {
                 Expanded(
                   child: Text(
                     point,
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 15, height: 1.2),
                   ),
                 ),
               ],

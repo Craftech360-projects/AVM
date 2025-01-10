@@ -119,7 +119,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    h10,
+                    h8,
                     widget.device != null
                         ? Container(
                             decoration: BoxDecoration(
@@ -142,7 +142,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                                     color: AppColors.white,
                                   ),
                                 ),
-                                w5,
+                                w4,
                                 Text(
                                   '${widget.batteryLevel.toString()}% Battery',
                                   style: const TextStyle(
@@ -155,7 +155,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                             ),
                           )
                         : Container(),
-                    h10,
+                    h8,
                     InkWell(
                       onTap: () {
                         if (widget.device != null) {
@@ -220,7 +220,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      h10,
+                      h8,
                     ],
                   ),
               ],

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final lightTheme = ThemeData(
+    iconTheme: IconThemeData(color: AppColors.black),
+    primaryColor: AppColors.purpleDark,
     brightness: Brightness.light,
     fontFamily: "Montserrat",
     textTheme: const TextTheme(
@@ -23,20 +25,18 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         elevation: 0,
-        backgroundColor: AppColors.yellow,
+        foregroundColor: AppColors.white,
+        backgroundColor: AppColors.purpleDark,
         shadowColor: Colors.transparent,
         textStyle: const TextStyle(
-          fontSize: 20,
-          fontFamily: "Montserrat",
-          fontWeight: FontWeight.bold,
-        ),
-        shape: RoundedRectangleBorder(borderRadius: br30),
+            fontSize: 17, fontFamily: "Montserrat", color: AppColors.white),
+        shape: RoundedRectangleBorder(borderRadius: br12),
       ),
     ),
   );
 
   static final darkTheme = ThemeData(
-    primaryColor: AppColors.yellow,
+    primaryColor: AppColors.purpleDark,
     scaffoldBackgroundColor: AppColors.darkBg,
     appBarTheme: const AppBarTheme(backgroundColor: AppColors.darkBg),
     brightness: Brightness.dark,
@@ -59,13 +59,14 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         shadowColor: Colors.transparent,
         elevation: 0,
-        backgroundColor: AppColors.yellow,
+        backgroundColor: AppColors.white,
+        foregroundColor: AppColors.purpleDark,
         textStyle: const TextStyle(
-          fontSize: 20,
+          color: AppColors.purpleDark,
+          fontSize: 17,
           fontFamily: "Montserrat",
-          fontWeight: FontWeight.bold,
         ),
-        shape: RoundedRectangleBorder(borderRadius: br30),
+        shape: RoundedRectangleBorder(borderRadius: br12),
       ),
     ),
   );

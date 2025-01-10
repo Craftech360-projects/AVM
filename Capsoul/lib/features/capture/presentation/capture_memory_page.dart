@@ -240,7 +240,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                 color: AppColors.black,
                               ),
                             ),
-                            h10,
+                            h8,
                             TypingIndicator(),
                           ],
                         ),
@@ -312,7 +312,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                         scrollController: widget.scrollController,
                         tutorialKey: _greetingCardKey,
                       ),
-                    h10,
+                    h8,
                     //*--- Filter Button ---*//
 
                     Row(
@@ -567,7 +567,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                         );
                       },
                     ),
-                    h10,
+                    h8,
                     if (SharedPreferencesUtil().notificationPlugin)
                       TypingIndicator(),
                   ],

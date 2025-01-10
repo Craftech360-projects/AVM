@@ -111,9 +111,11 @@ class _BackupButtonState extends State<BackupButton> {
                   style: TextStyle(fontWeight: FontWeight.w500)),
           trailing: CircleAvatar(
             backgroundColor:
-                backupsEnabled ? AppColors.greyLavender : AppColors.greyLight,
+                backupsEnabled ? AppColors.purpleDark : AppColors.greyLight,
             child: Icon(
-                color: backupsEnabled ? AppColors.black : AppColors.greyMedium,
+                color: backupsEnabled
+                    ? AppColors.commonPink
+                    : AppColors.greyMedium,
                 Icons.backup,
                 size: 22.h),
           ),

@@ -127,7 +127,7 @@ class _GreetingCardState extends State<GreetingCard> {
                                       color: AppColors.white,
                                     ),
                                   ),
-                                  h5,
+                                  h4,
                                   const Text(
                                     'Change is inevitable. Always strive for the next big thing!',
                                     style: TextStyle(
@@ -140,7 +140,7 @@ class _GreetingCardState extends State<GreetingCard> {
                             ),
                           ],
                         ),
-                        h10,
+                        h8,
                         Container(height: 1.5, color: AppColors.purpleDark),
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
@@ -159,7 +159,7 @@ class _GreetingCardState extends State<GreetingCard> {
                                         ? AppColors.white.withValues(alpha: 0.9)
                                         : AppColors.grey,
                                   ),
-                                  w5,
+                                  w4,
                                   Text(
                                     'Internet',
                                     style: TextStyle(
@@ -200,7 +200,7 @@ class _GreetingCardState extends State<GreetingCard> {
                                             : AppColors.white
                                                 .withValues(alpha: 0.9),
                                       ),
-                                      w5,
+                                      w4,
                                       Text(
                                         deviceInfo,
                                         style: TextStyle(

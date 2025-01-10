@@ -38,10 +38,10 @@ class _CustomTabBarState extends State<CustomTabBar>
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6.h + 8.h),
-            color: AppColors.white,
+            color: AppColors.purpleDark,
             border: Border.all(
-              color: AppColors.commonPink,
-              width: 2,
+              color: AppColors.purpleDark,
+              width: 2.5,
             ),
           ),
           child: SizedBox(
@@ -51,11 +51,11 @@ class _CustomTabBarState extends State<CustomTabBar>
                 dividerColor: Colors.transparent,
                 // padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 6.w),
                 indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: AppColors.white,
-                unselectedLabelColor: AppColors.grey,
+                labelColor: AppColors.black,
+                unselectedLabelColor: AppColors.white,
                 indicator: BoxDecoration(
                   borderRadius: br12,
-                  color: AppColors.black,
+                  color: AppColors.white,
                 ),
                 indicatorWeight: 0,
                 labelPadding: EdgeInsets.zero,

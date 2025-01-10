@@ -119,7 +119,7 @@ class FoundDevicesState extends State<FoundDevices>
             Container(
               decoration: BoxDecoration(
                   border: Border.all(color: AppColors.black),
-                  borderRadius: br30),
+                  borderRadius: br12),
               height: 50.h,
               width: double.maxFinite,
               child: CustomElevatedButton(
@@ -135,7 +135,7 @@ class FoundDevicesState extends State<FoundDevices>
                   }
                 },
                 child: FittedBox(
-                fit: BoxFit.scaleDown,
+                  fit: BoxFit.scaleDown,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -154,7 +154,8 @@ class FoundDevicesState extends State<FoundDevices>
                           fontSize: 18,
                           color: batteryPercentage <= 25
                               ? Colors.red
-                              : batteryPercentage > 25 && batteryPercentage <= 50
+                              : batteryPercentage > 25 &&
+                                      batteryPercentage <= 50
                                   ? Colors.orange
                                   : Colors.green,
                         ),
@@ -176,7 +177,7 @@ class FoundDevicesState extends State<FoundDevices>
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.black),
-                  borderRadius: br30,
+                  borderRadius: br12,
                 ),
                 height: 55.h,
                 width: double.maxFinite,

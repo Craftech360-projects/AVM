@@ -89,7 +89,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 22.0, horizontal: 08.0),
+      padding: const EdgeInsets.symmetric(vertical: 22.0, horizontal: 12.0),
       child: GestureDetector(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 600),
@@ -195,8 +195,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 4),
-        height: 55.h,
-        padding: EdgeInsets.fromLTRB(8, 2, 4, 2),
+        height: 50.h,
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: br12,
@@ -216,6 +215,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     ? _messageController
                     : (isMemoryVisible ? _searchController : null),
                 decoration: InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   isDense: true,
                   hintText: isChatVisible
                       ? 'Ask Capsoul anything...'
@@ -231,7 +232,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
               child: Container(
                 decoration: BoxDecoration(
                     shape: BoxShape.rectangle, color: AppColors.white),
-                padding: EdgeInsets.all(4.h),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                 child: CustomIconButton(
                   size: 24.h,
                   iconPath: AppImages.send,

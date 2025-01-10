@@ -21,7 +21,7 @@ Future<bool> customDialogBox(BuildContext context,
         child: Row(
           children: [
             Icon(icon, color: iconColor ?? AppColors.blue),
-            w10,
+            w8,
             Text(
               title,
               style: TextStyle(
@@ -44,7 +44,7 @@ Future<bool> customDialogBox(BuildContext context,
               color: AppColors.blueGreyDark,
             ),
           ),
-          h10,
+          h8,
         ],
       ),
       actionsAlignment: MainAxisAlignment.spaceAround,
@@ -99,7 +99,7 @@ void showPermissionDeniedDialog(
         child: Row(
           children: [
             Icon(Icons.location_on, color: AppColors.red),
-            w10,
+            w8,
             Text(
               title,
               style: TextStyle(
@@ -122,7 +122,7 @@ void showPermissionDeniedDialog(
               color: AppColors.blueGreyDark,
             ),
           ),
-          h10,
+          h8,
         ],
       ),
       actionsAlignment: MainAxisAlignment.spaceAround,
@@ -184,7 +184,7 @@ class CustomDialogWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Icon(icon, color: iconColor ?? AppColors.blue),
-            w10,
+            w8,
             Text(
               maxLines: 2,
               title,
@@ -209,7 +209,7 @@ class CustomDialogWidget extends StatelessWidget {
             ),
           ),
           if (showTextField) ...[
-            h10,
+            h8,
             TextField(
               cursorColor: AppColors.black,
               style: TextStyle(color: AppColors.white),
@@ -250,13 +250,13 @@ class CustomDialogWidget extends StatelessWidget {
           icon: const Icon(Icons.close, color: AppColors.white, size: 17),
           label: Text(
             noText ?? 'No',
-            style: TextStyle(fontSize: 13),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
         ),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            minimumSize: const Size(80, 40),
+            minimumSize: const Size(60, 40),
             backgroundColor: AppColors.green,
             foregroundColor: AppColors.white,
             shape: RoundedRectangleBorder(
@@ -267,7 +267,7 @@ class CustomDialogWidget extends StatelessWidget {
           icon: const Icon(Icons.check, color: AppColors.white, size: 17),
           label: Text(
             yesText ?? 'Yes',
-            style: TextStyle(fontSize: 13),
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
         ),
       ],

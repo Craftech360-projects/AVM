@@ -68,7 +68,7 @@ class TypingIndicatorState extends State<TypingIndicator>
             height: widget.dotHeight,
           ),
         ),
-        w5,
+        w4,
         FadeTransition(
           opacity: _animation2,
           child: Dot(
@@ -76,7 +76,7 @@ class TypingIndicatorState extends State<TypingIndicator>
             height: widget.dotHeight,
           ),
         ),
-        w5,
+        w4,
         FadeTransition(
           opacity: _animation3,
           child: Dot(

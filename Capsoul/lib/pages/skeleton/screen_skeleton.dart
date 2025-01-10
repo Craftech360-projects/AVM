@@ -12,14 +12,14 @@ class ScreenSkeleton extends StatelessWidget {
         // mainAxisSize: MainAxisSize.min,
         children: [
           const Skeleton(height: 180, width: double.infinity),
-          h30,
+          h32,
           Expanded(
             child: ListView.builder(
               itemCount: 4,
               itemBuilder: (context, index) => const Column(
                 children: [
                   Skeleton(height: 100, width: double.infinity),
-                  h20,
+                  h16,
                 ],
               ),
             ),

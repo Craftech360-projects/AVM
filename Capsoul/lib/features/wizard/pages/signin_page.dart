@@ -52,14 +52,14 @@ class SigninPage extends StatelessWidget {
                   ),
                 ),
               ),
-              h15,
+              h16,
               Column(
                 children: [
                   if (!Platform.isIOS) ...[
                     Container(
                       decoration: BoxDecoration(
                           border: Border.all(color: AppColors.black),
-                          borderRadius: br30),
+                          borderRadius: br12),
                       height: 50.h,
                       width: double.maxFinite,
                       child: CustomElevatedButton(
@@ -103,7 +103,7 @@ class SigninPage extends StatelessWidget {
                             log("Google Sign-in failed: $e");
                           }
                         },
-                        child: const Text(' Continue using Google',
+                        child: const Text('Continue using Google',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.black,
@@ -117,7 +117,7 @@ class SigninPage extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                           border: Border.all(color: AppColors.black),
-                          borderRadius: br30),
+                          borderRadius: br12),
                       height: 55.h,
                       width: double.maxFinite,
                       child: CustomElevatedButton(
@@ -162,18 +162,19 @@ class SigninPage extends StatelessWidget {
                             log("Apple Sign-in failed: $e");
                           }
                         },
-                        child: const Text(' Continue using Apple',
+                        child: const Text('Continue using Apple',
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 color: AppColors.black,
                                 fontSize: 18)),
                       ),
                     ),
-                  h10,
+                  h8,
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
                       style: TextStyle(
+                        fontFamily: "SpaceGrotesk",
                         color: AppColors.black,
                         fontWeight: FontWeight.w500,
                       ),
@@ -205,7 +206,7 @@ class SigninPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  h10,
+                  h8,
                 ],
               ),
             ],

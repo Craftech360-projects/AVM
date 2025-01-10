@@ -58,12 +58,12 @@ class TypingIndicatorState extends State<TypingIndicator>
           opacity: _animation1,
           child: const Dot(),
         ),
-        w5,
+        w4,
         FadeTransition(
           opacity: _animation2,
           child: const Dot(),
         ),
-        w5,
+        w4,
         FadeTransition(
           opacity: _animation3,
           child: const Dot(),

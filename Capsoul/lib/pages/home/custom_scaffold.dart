@@ -109,7 +109,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
                       ),
                     ),
                   ),
-                w10,
+                w8,
               ],
             )
           : null,

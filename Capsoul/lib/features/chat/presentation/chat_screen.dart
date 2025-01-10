@@ -167,14 +167,14 @@ class _ChatScreenState extends State<ChatScreen>
                             .pluginsList
                             .firstWhereOrNull((e) => e.id == message.pluginId),
                       ),
-                      h10,
+                      h8,
                     ],
                   );
                 } else {
                   return Column(
                     children: [
                       UserCard(message: message),
-                      h10,
+                      h8,
                     ],
                   );
                 }

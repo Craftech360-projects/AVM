@@ -144,8 +144,6 @@ Future<bool> retrieveBackup(String? uid) async {
       return false;
     }
 
-    debugPrint("backup>>>>>>>> ${backupData.toString()}");
-
     try {
       // Attempt to restore from backup
       var memories = await restoreFromBackup(uid: uid, backupData: backupData);

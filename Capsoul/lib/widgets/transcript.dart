@@ -58,7 +58,7 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: widget.segments.length,
-        separatorBuilder: (_, __) => h5,
+        separatorBuilder: (_, __) => h4,
         itemBuilder: (context, idx) {
           final segment = widget.segments[idx];
           return Align(
@@ -81,7 +81,7 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
                       color: AppColors.black,
                     ),
                   ),
-                  h5,
+                  h4,
                   AnimatedSize(
                     duration: const Duration(milliseconds: 500),
                     curve: Curves.ease,

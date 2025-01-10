@@ -39,15 +39,15 @@ class _ProfilePageState extends State<ProfilePage> {
         children: <Widget>[
           _buildProfileTile(),
           _buildNameTile(),
-          h20,
+          h16,
           const Divider(color: AppColors.purpleDark, height: 1),
-          h15,
+          h16,
           const BackupButton(),
-          h15,
+          h16,
           const RestoreButton(),
-          h20,
+          h16,
           const Divider(color: AppColors.purpleDark, height: 1),
-          h20,
+          h16,
           _buildUserIdTile(),
           _buildDeleteAccountTile(),
           getSignOutButton(context, _handleSignOut),
@@ -84,9 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(
-        SharedPreferencesUtil().givenName.isEmpty
-            ? 'Set Your Name'
-            : 'Change your name',
+        SharedPreferencesUtil().givenName.isEmpty ? 'Set name' : 'Change name',
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       subtitle: Text(
@@ -123,8 +121,12 @@ class _ProfilePageState extends State<ProfilePage> {
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
       trailing: CircleAvatar(
-        backgroundColor: AppColors.commonPink,
-        child: Icon(Icons.copy_rounded, size: 22.h),
+        backgroundColor: AppColors.purpleDark,
+        child: Icon(
+          Icons.copy_rounded,
+          size: 22.h,
+          color: AppColors.commonPink,
+        ),
       ),
       onTap: () {
         MixpanelManager().pageOpened('Authorize Saving Recordings');
@@ -145,8 +147,12 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       trailing: CircleAvatar(
-        backgroundColor: AppColors.commonPink,
-        child: Icon(Icons.warning, size: 22.h),
+        backgroundColor: AppColors.purpleDark,
+        child: Icon(
+          Icons.warning,
+          size: 22.h,
+          color: AppColors.commonPink,
+        ),
       ),
       onTap: () {
         MixpanelManager().pageOpened('Profile Delete Account Dialog');
@@ -188,8 +194,12 @@ Widget getSignOutButton(BuildContext context, VoidCallback onSignOut) {
       style: TextStyle(color: AppColors.red, fontWeight: FontWeight.w600),
     ),
     trailing: CircleAvatar(
-      backgroundColor: AppColors.commonPink,
-      child: Icon(Icons.logout_rounded, size: 22.h),
+      backgroundColor: AppColors.purpleDark,
+      child: Icon(
+        Icons.logout_rounded,
+        size: 22.h,
+        color: AppColors.commonPink,
+      ),
     ),
     onTap: () => customDialogBox(
       context,

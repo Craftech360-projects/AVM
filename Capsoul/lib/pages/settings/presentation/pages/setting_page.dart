@@ -76,11 +76,11 @@ class _SettingPageState extends State<SettingPage> {
       ];
 
       final tutorial = TutorialCoachMark(
-      textStyleSkip: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-            color: AppColors.white,
-          ),
+        textStyleSkip: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+          color: AppColors.white,
+        ),
         targets: targets,
         colorShadow: AppColors.black.withValues(alpha: 0.7),
         onSkip: () {
@@ -120,10 +120,8 @@ class _SettingPageState extends State<SettingPage> {
         ),
       ),
       showBackBtn: true,
-      showBatteryLevel: true,
       body: Column(
         children: [
-          // ListView wrapped in Expanded to fill remaining space
           Expanded(
             child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
@@ -199,7 +197,7 @@ class _SettingPageState extends State<SettingPage> {
                                 color: AppColors.white,
                               ),
                             ),
-                            w10
+                            w8
                           ],
                           Text(
                             deviceInfo,
@@ -218,21 +216,21 @@ class _SettingPageState extends State<SettingPage> {
                     );
                   },
                 ),
-                h15,
+                h16,
                 Text(
                   'Recording Settings',
                   style: textTheme.titleMedium
                       ?.copyWith(fontSize: 20.h, fontWeight: FontWeight.w600),
                 ),
-                h5,
+                h4,
                 const LanguageDropdown(),
-                h30,
+                h32,
                 Text(
                   'Add Ons',
                   style: textTheme.titleMedium
                       ?.copyWith(fontSize: 20.h, fontWeight: FontWeight.w600),
                 ),
-                h5,
+                h4,
                 ItemAddOn(
                   title: 'Profile',
                   onTap: () {
@@ -261,20 +259,17 @@ class _SettingPageState extends State<SettingPage> {
                   },
                   icon: Icons.settings_suggest,
                 ),
-                h20,
+                h16,
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Text(
-              'Version: $version+$buildVersion',
-              style: const TextStyle(
-                  color: AppColors.grey,
-                  fontSize: 14,
-                  height: 3,
-                  fontWeight: FontWeight.w500),
-            ),
+          Text(
+            'Version: $version+$buildVersion',
+            style: const TextStyle(
+                color: AppColors.grey,
+                fontSize: 14,
+                height: 3,
+                fontWeight: FontWeight.w500),
           ),
         ],
       ),

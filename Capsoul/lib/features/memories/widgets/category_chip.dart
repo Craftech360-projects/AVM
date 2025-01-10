@@ -11,23 +11,17 @@ class CategoryChip extends StatelessWidget {
   final String tagName;
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return Chip(
       elevation: 1,
       visualDensity: VisualDensity(vertical: -3.h),
       labelPadding: EdgeInsets.zero,
-      backgroundColor: AppColors.commonPink,
+      backgroundColor: AppColors.purpleDark,
       label: Text(
         tagName,
-        style: textTheme.bodyMedium,
+        style: TextStyle(color: AppColors.white),
       ),
       shape: RoundedRectangleBorder(
-        borderRadius: br5,
-        side: const BorderSide(
-          color: Colors.transparent,
-          width: 0,
-        ),
-      ),
+          borderRadius: br5, side: BorderSide(color: Colors.transparent)),
     );
   }
 }

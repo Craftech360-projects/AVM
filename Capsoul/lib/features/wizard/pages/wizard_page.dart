@@ -6,6 +6,7 @@ import 'package:capsoul/features/wizard/bloc/wizard_bloc.dart';
 import 'package:capsoul/features/wizard/widgets/onboarding_button.dart';
 import 'package:capsoul/pages/home/custom_scaffold.dart';
 import 'package:capsoul/pages/onboarding/page.dart';
+import 'package:capsoul/utils/features/backups.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -118,6 +119,7 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
                                       "Auto-memory backup is active now");
                                   _nextPage();
                                   Navigator.of(context).pop();
+                                  retrieveBackup(SharedPreferencesUtil().uid);
                                 },
                               );
                             },

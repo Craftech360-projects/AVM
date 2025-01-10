@@ -162,8 +162,7 @@ class FindDevicesPageState extends State<FindDevicesPage>
                     style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 16,
-                      color: AppColors.black,
-                      decoration: TextDecoration.underline,
+                      
                     ),
                   ),
                 ),
