@@ -201,7 +201,7 @@ getPreferencesWidgets({
                 child: GestureDetector(
                   onTap: viewPrivacyDetails,
                   child: const Text(
-                    'Help improve AVM by sharing anonymized analytics data',
+                    'Help improve Capsoul by sharing anonymized analytics data',
                     style: TextStyle(
                         color: Color.fromARGB(255, 150, 150, 150),
                         fontSize: 16,

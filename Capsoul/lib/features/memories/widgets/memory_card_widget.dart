@@ -26,7 +26,7 @@ class MemoryCardWidget extends StatelessWidget {
         if (state.memories.isEmpty) {
           return const Center(
             child: Padding(
-              padding: EdgeInsets.only(top: 32.0),
+              padding: EdgeInsets.only(top: 38.0),
               child: EmptyMemoriesWidget(),
             ),
           );

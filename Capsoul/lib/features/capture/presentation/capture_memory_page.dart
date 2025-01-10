@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:tuple/tuple.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 // ignore: must_be_immutable
 class CaptureMemoryPage extends StatefulWidget {
@@ -34,6 +35,7 @@ class CaptureMemoryPage extends StatefulWidget {
     required this.photos,
     this.scrollController,
     required this.onDismissmissedCaptureMemory,
+    required this.hasSeenTutorial,
   });
   final BuildContext context;
   final bool hasTranscripts;
@@ -45,6 +47,7 @@ class CaptureMemoryPage extends StatefulWidget {
   final List<Tuple2<String, String>> photos;
   final ScrollController? scrollController;
   final Function(DismissDirection) onDismissmissedCaptureMemory;
+  final bool hasSeenTutorial;
 
   @override
   State<CaptureMemoryPage> createState() => _CaptureMemoryPageState();
@@ -65,6 +68,11 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
   bool _isScrolled = false;
   FilterItem? _selectedFilter;
   bool _switchValue = SharedPreferencesUtil().notificationPlugin;
+  final GlobalKey _greetingCardKey = GlobalKey();
+  final GlobalKey _floatingActionKey = GlobalKey();
+  late TutorialCoachMark tutorialCoachMark;
+  List<TargetFocus> targets = [];
+  int currentTutorialIndex = 0;
 
   InternetStatus? _mapConnectivityResultToInternetStatus(
       ConnectivityResult result) {
@@ -78,6 +86,14 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
       case ConnectivityResult.none:
       case ConnectivityResult.other:
         return InternetStatus.disconnected;
+    }
+  }
+
+  void checkTutorialStatus() async {
+    bool hasSeen = widget.hasSeenTutorial;
+    // SharedPreferencesUtil().hasSeenTutorial;
+    if (!hasSeen) {
+      _createTutorial();
     }
   }
 
@@ -112,6 +128,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
   @override
   void initState() {
     super.initState();
+    checkTutorialStatus();
     _memoryBloc = BlocProvider.of<MemoryBloc>(context);
     _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
     _switchValue = SharedPreferencesUtil().notificationPlugin;
@@ -293,196 +310,190 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                         memoryCreating: widget.memoryCreating,
                         photos: widget.photos,
                         scrollController: widget.scrollController,
+                        tutorialKey: _greetingCardKey,
                       ),
                     h10,
                     //*--- Filter Button ---*//
-                    if (_isNonDiscarded ||
-                        _memoryBloc.state.memories.isNotEmpty)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Existing Align widget for the "Show/Hide Discarded" button
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: TextButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  _isNonDiscarded = !_isNonDiscarded;
-                                  _memoryBloc.add(
-                                    DisplayedMemory(
-                                        isNonDiscarded: _isNonDiscarded),
-                                  );
-                                });
-                              },
-                              label: Text(
-                                _isNonDiscarded
-                                    ? 'Show Discarded'
-                                    : 'Hide Discarded',
-                                style: const TextStyle(
-                                  color: AppColors.grey,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              icon: Icon(
-                                _isNonDiscarded
-                                    ? Icons.cancel_outlined
-                                    : Icons.filter_list,
-                                size: 16,
-                                color: AppColors.grey,
-                              ),
-                            ),
-                          ),
 
-                          // New "Filter" button on the right end
-                          TextButton.icon(
-                            onPressed: () async {
-                              final selectedFilter =
-                                  await showDialog<FilterItem>(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 8),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    backgroundColor: AppColors.commonPink,
-                                    title: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.filter_alt_outlined,
-                                            color: AppColors.blue),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          "Choose Filter",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color: AppColors.blueGreyDark,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Divider(
-                                          color: AppColors.purpleDark,
-                                          thickness: 1.5,
-                                        ),
-                                        FilterOptionWidget(
-                                          title: "Today's Memory",
-                                          isSelected:
-                                              _selectedFilter?.filterType ==
-                                                  "Today",
-                                          onTap: () {
-                                            Navigator.pop(
-                                                context,
-                                                _selectedFilter?.filterType ==
-                                                        "Today"
-                                                    ? null
-                                                    : FilterItem(
-                                                        filterType: "Today"));
-                                          },
-                                        ),
-                                        FilterOptionWidget(
-                                          title: "This Week's Memory",
-                                          isSelected:
-                                              _selectedFilter?.filterType ==
-                                                  "This Week",
-                                          onTap: () {
-                                            Navigator.pop(
-                                                context,
-                                                _selectedFilter?.filterType ==
-                                                        "This Week"
-                                                    ? null
-                                                    : FilterItem(
-                                                        filterType:
-                                                            "This Week"));
-                                          },
-                                        ),
-                                        FilterOptionWidget(
-                                          title: "Date Range Selection",
-                                          isSelected:
-                                              _selectedFilter?.filterType ==
-                                                  "DateRange",
-                                          onTap: () async {
-                                            final DateTimeRange? dateRange =
-                                                await showDateRangePicker(
-                                              context: context,
-                                              firstDate: DateTime(2000),
-                                              lastDate: DateTime.now(),
-                                            );
-                                            if (dateRange != null) {
-                                              Navigator.pop(
-                                                context,
-                                                _selectedFilter?.filterType ==
-                                                        "DateRange"
-                                                    ? null
-                                                    : FilterItem(
-                                                        filterType: "DateRange",
-                                                        startDate:
-                                                            dateRange.start,
-                                                        endDate: dateRange.end,
-                                                      ),
-                                              );
-                                            }
-                                          },
-                                        ),
-                                        FilterOptionWidget(
-                                          title: "Show All",
-                                          isSelected:
-                                              _selectedFilter?.filterType ==
-                                                  "Show All",
-                                          onTap: () {
-                                            Navigator.pop(
-                                                context,
-                                                _selectedFilter?.filterType ==
-                                                        "Show All"
-                                                    ? null
-                                                    : FilterItem(
-                                                        filterType:
-                                                            "Show All"));
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              );
-
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Visibility(
+                          visible: _memoryBloc.state.memories.isNotEmpty
+                              ? true
+                              : false,
+                          child: TextButton.icon(
+                            onPressed: () {
                               setState(() {
-                                _selectedFilter = selectedFilter;
+                                _isNonDiscarded = !_isNonDiscarded;
+                                _memoryBloc.add(
+                                  DisplayedMemory(
+                                      isNonDiscarded: _isNonDiscarded),
+                                );
                               });
-
-                              if (selectedFilter != null) {
-                                context.read<MemoryBloc>().add(
-                                      FilterMemory(
-                                        filterItem: selectedFilter,
-                                        startDate: selectedFilter.startDate,
-                                        endDate: selectedFilter.endDate,
-                                      ),
-                                    );
-                              }
                             },
-                            label: const Text(
-                              'Filter',
-                              style: TextStyle(
+                            label: Text(
+                              _isNonDiscarded
+                                  ? 'Show Discarded'
+                                  : 'Hide Discarded',
+                              style: const TextStyle(
                                 color: AppColors.grey,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            icon: const Icon(
-                              Icons.filter_alt_outlined,
+                            icon: Icon(
+                              _isNonDiscarded
+                                  ? Icons.cancel_outlined
+                                  : Icons.filter_list,
                               size: 16,
                               color: AppColors.grey,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                        TextButton.icon(
+                          onPressed: () async {
+                            final selectedFilter = await showDialog<FilterItem>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 8),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  backgroundColor: AppColors.commonPink,
+                                  title: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.filter_alt_outlined,
+                                          color: AppColors.blue),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        "Choose Filter",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: AppColors.blueGreyDark,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Divider(
+                                        color: AppColors.purpleDark,
+                                        thickness: 1.5,
+                                      ),
+                                      FilterOptionWidget(
+                                        title: "Today's Memory",
+                                        isSelected:
+                                            _selectedFilter?.filterType ==
+                                                "Today",
+                                        onTap: () {
+                                          Navigator.pop(
+                                              context,
+                                              _selectedFilter?.filterType ==
+                                                      "Today"
+                                                  ? null
+                                                  : FilterItem(
+                                                      filterType: "Today"));
+                                        },
+                                      ),
+                                      FilterOptionWidget(
+                                        title: "This Week's Memory",
+                                        isSelected:
+                                            _selectedFilter?.filterType ==
+                                                "This Week",
+                                        onTap: () {
+                                          Navigator.pop(
+                                              context,
+                                              _selectedFilter?.filterType ==
+                                                      "This Week"
+                                                  ? null
+                                                  : FilterItem(
+                                                      filterType: "This Week"));
+                                        },
+                                      ),
+                                      FilterOptionWidget(
+                                        title: "Date Range Selection",
+                                        isSelected:
+                                            _selectedFilter?.filterType ==
+                                                "DateRange",
+                                        onTap: () async {
+                                          final DateTimeRange? dateRange =
+                                              await showDateRangePicker(
+                                            context: context,
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime.now(),
+                                          );
+                                          if (dateRange != null) {
+                                            Navigator.pop(
+                                              context,
+                                              _selectedFilter?.filterType ==
+                                                      "DateRange"
+                                                  ? null
+                                                  : FilterItem(
+                                                      filterType: "DateRange",
+                                                      startDate:
+                                                          dateRange.start,
+                                                      endDate: dateRange.end,
+                                                    ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                      FilterOptionWidget(
+                                        title: "Show All",
+                                        isSelected:
+                                            _selectedFilter?.filterType ==
+                                                "Show All",
+                                        onTap: () {
+                                          Navigator.pop(
+                                              context,
+                                              _selectedFilter?.filterType ==
+                                                      "Show All"
+                                                  ? null
+                                                  : FilterItem(
+                                                      filterType: "Show All"));
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+
+                            setState(() {
+                              _selectedFilter = selectedFilter;
+                            });
+
+                            if (selectedFilter != null) {
+                              context.read<MemoryBloc>().add(
+                                    FilterMemory(
+                                      filterItem: selectedFilter,
+                                      startDate: selectedFilter.startDate,
+                                      endDate: selectedFilter.endDate,
+                                    ),
+                                  );
+                            }
+                          },
+                          label: const Text(
+                            'Filter',
+                            style: TextStyle(
+                              color: AppColors.grey,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          icon: const Icon(
+                            Icons.filter_alt_outlined,
+                            size: 16,
+                            color: AppColors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
 
                     //*--- MEMORY LIST ---*//
 
@@ -542,6 +553,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                           alignment: Alignment.center,
                           transform: transform,
                           child: FloatingActionButton(
+                            key: _floatingActionKey,
                             shape: const CircleBorder(),
                             elevation: 8.0,
                             backgroundColor: AppColors.purpleDark,
@@ -582,5 +594,101 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
         ),
       ),
     );
+  }
+
+  Future<void> _createTutorial() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Define all tutorial targets
+      final List<TargetFocus> targets = [
+        TargetFocus(
+          shape: ShapeLightFocus.RRect,
+          radius: 8.0,
+          alignSkip: Alignment.bottomRight,
+          identify: 'greetingCard',
+          keyTarget: _greetingCardKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (context, controller) => Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 30),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  'While speaking tap this widget to see live transcripts',
+                  style: TextStyle(
+                      color: AppColors.white, fontSize: 22, height: 1.3),
+                ),
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          shape: ShapeLightFocus.RRect,
+          radius: 8.0,
+          identify: 'greetingCard',
+          keyTarget: _greetingCardKey,
+          alignSkip: Alignment.bottomRight,
+          contents: [
+            TargetContent(
+              align: ContentAlign.bottom,
+              builder: (context, controller) => Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 30),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  'After speaking, swipe right to create your memory',
+                  style: TextStyle(
+                      color: AppColors.white, fontSize: 22, height: 1.3),
+                ),
+              ),
+            ),
+          ],
+        ),
+        TargetFocus(
+          identify: 'floatingAction',
+          keyTarget: _floatingActionKey,
+          alignSkip: Alignment.bottomCenter,
+          contents: [
+            TargetContent(
+              align: ContentAlign.top,
+              builder: (context, controller) => Text(
+                textAlign: TextAlign.center,
+                'Enable Capsoul bot to get real-time responses',
+                style: TextStyle(
+                    color: AppColors.white, fontSize: 22, height: 1.3),
+              ),
+            ),
+          ],
+        ),
+      ];
+
+      void showTutorialFromIndex() {
+        final tutorial = TutorialCoachMark(
+          textStyleSkip: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            color: AppColors.white,
+          ),
+          targets: targets.sublist(currentTutorialIndex),
+          colorShadow: AppColors.black.withValues(alpha: 0.7),
+          onSkip: () {
+            currentTutorialIndex++;
+            if (currentTutorialIndex < targets.length) {
+              showTutorialFromIndex();
+            }
+            return true;
+          },
+          onFinish: () {
+            SharedPreferencesUtil().hasSeenTutorial = true;
+          },
+        );
+
+        Future.delayed(const Duration(milliseconds: 500), () {
+          tutorial.show(context: context);
+        });
+      }
+
+      showTutorialFromIndex();
+    });
   }
 }

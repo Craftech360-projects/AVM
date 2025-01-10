@@ -66,7 +66,7 @@ Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
 Future<String> webhookOnMemoryCreatedCall(Memory? memory,
     {bool returnRawBody = false}) async {
   if (memory == null) return '';
-  debugPrint('devModeWebhookCall: $memory');
+  // debugPrint('devModeWebhookCall: $memory');
   // return triggerMemoryRequestAtEndpoint(
   //   //SharedPreferencesUtil().webhookOnMemoryCreated,
   //   //  'https://webhook-test.com/e2dd86c6594e8f3557246064cee207e3',

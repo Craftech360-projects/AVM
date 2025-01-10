@@ -7,7 +7,6 @@ import 'package:capsoul/core/constants/constants.dart';
 import 'package:capsoul/core/theme/app_colors.dart';
 import 'package:capsoul/core/widgets/battery_widget.dart';
 import 'package:capsoul/pages/settings/presentation/pages/setting_page.dart';
-import 'package:capsoul/src/common_widget/icon_button.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -94,20 +93,19 @@ class CustomScaffoldState extends State<CustomScaffold> {
                     child: BatteryWidget(batteryLevel: widget.batteryLevel),
                   ),
                 if (widget.showGearIcon)
-                  CircleAvatar(
-                    backgroundColor: AppColors.white,
-                    child: GestureDetector(
-                      child: CustomIconButton(
-                        size: 25,
-                        iconPath: AppImages.gearIcon,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SettingPage(),
-                            ),
-                          );
-                        },
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SettingPage(),
+                          ));
+                    },
+                    child: CircleAvatar(
+                      backgroundColor: AppColors.white,
+                      child: Image.asset(
+                        width: 26,
+                        AppImages.gearIcon,
                       ),
                     ),
                   ),

@@ -13,6 +13,7 @@ import 'package:internet_connection_checker_plus/internet_connection_checker_plu
 import 'package:tuple/tuple.dart';
 
 class GreetingCard extends StatefulWidget {
+  final GlobalKey? tutorialKey;
   final String name;
   final String? avatarUrl;
   final bool isDisconnected;
@@ -38,6 +39,7 @@ class GreetingCard extends StatefulWidget {
     this.photos = const [],
     this.scrollController,
     this.avatarUrl,
+    this.tutorialKey,
   });
 
   @override
@@ -50,6 +52,7 @@ class _GreetingCardState extends State<GreetingCard> {
     return BlocBuilder<ConnectivityBloc, ConnectivityState>(
       builder: (context, connectivityState) {
         return GestureDetector(
+          key: widget.tutorialKey,
           onTap: () {
             if (widget.segments != null && widget.segments!.isNotEmpty) {
               showModalBottomSheet(

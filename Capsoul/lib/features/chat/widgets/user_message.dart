@@ -50,11 +50,11 @@ class UserCard extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: 8.w,
-        vertical: 8.h,
+        horizontal: 0.w,
+        vertical: 0.h,
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Flexible(
@@ -64,10 +64,10 @@ class UserCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.purpleDark,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5.r),
+                    topLeft: Radius.circular(20.r),
                     topRight: Radius.circular(20.r),
                     bottomLeft: Radius.circular(20.r),
-                    bottomRight: Radius.circular(20.r),
+                    bottomRight: Radius.circular(3.r),
                   ),
                   boxShadow: [
                     BoxShadow(

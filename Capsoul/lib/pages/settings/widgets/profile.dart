@@ -66,7 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
       subtitle: const Text(
-        'What AVM has learned about you',
+        'What Capsoul has learned about you',
         style: TextStyle(fontWeight: FontWeight.w500),
       ),
       trailing: CircleAvatar(

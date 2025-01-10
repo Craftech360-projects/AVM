@@ -9,9 +9,9 @@ class NotifyOnKill {
       await platform.invokeMethod(
         'setNotificationOnKillService',
         {
-          'title': "AVM Device Disconnected...",
+          'title': "Capsoul was disconnected",
           'description':
-              "Please keep your app opened to continue using your AVM.",
+              "Please keep your app open to continue using Capsoul.",
         },
       );
     } catch (e) {

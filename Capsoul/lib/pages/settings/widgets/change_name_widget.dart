@@ -28,7 +28,7 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
   Widget build(BuildContext context) {
     return CustomDialogWidget(
       title: "Change Your Name?",
-      message: "How AVM should call you?",
+      message: "How Capsoul should call you?",
       icon: Icons.sentiment_satisfied_alt_rounded,
       showTextField: true,
       noText: "Cancel",

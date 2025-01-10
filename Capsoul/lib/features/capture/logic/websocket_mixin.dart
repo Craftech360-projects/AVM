@@ -1,10 +1,10 @@
 // import 'dart:async';
 // import 'dart:math';
 
-// import 'package:capsoul/backend/database/transcript_segment.dart';
-// import 'package:capsoul/utils/ble/communication.dart';
-// import 'package:capsoul/utils/other/notifications.dart';
-// import 'package:capsoul/utils/websockets.dart';
+// import 'package:avm/backend/database/transcript_segment.dart';
+// import 'package:avm/utils/ble/communication.dart';
+// import 'package:avm/utils/other/notifications.dart';
+// import 'package:avm/utils/websockets.dart';
 // import 'package:connectivity_plus/connectivity_plus.dart';
 // import 'package:flutter/material.dart';
 // import 'package:web_socket_channel/io.dart';
@@ -324,6 +324,7 @@
 //   }
 // }
 
+
 import 'dart:async';
 import 'dart:math';
 
@@ -586,7 +587,7 @@ mixin WebSocketMixin {
     clearNotification(2);
     createNotification(
       notificationId: 2,
-      title: 'Connection Issue 🚨',
+      title: 'Connection Issue',
       body: 'Unable to connect to the transcript service.'
           ' Please restart the app or contact support if the problem persists.',
     );

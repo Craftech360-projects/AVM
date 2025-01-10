@@ -218,7 +218,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                 decoration: InputDecoration(
                   isDense: true,
                   hintText: isChatVisible
-                      ? 'Ask your AVM anything...'
+                      ? 'Ask Capsoul anything...'
                       : 'Search for memories...',
                   hintStyle: textTheme.bodyMedium
                       ?.copyWith(color: AppColors.greyLight),

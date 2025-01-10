@@ -53,6 +53,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   ForegroundUtil foregroundUtil = ForegroundUtil();
   TabController? _controller;
   late bool _isLoading;
+  bool? hasSeenTutorial;
 
   List<Widget> screens = [Container(), const SizedBox(), const SizedBox()];
 
@@ -152,8 +153,10 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   void initState() {
     _isLoading = true;
     Future.delayed(const Duration(seconds: 2), () {
+      var tutorialSeen = SharedPreferencesUtil().hasSeenTutorial;
       setState(() {
         _isLoading = false;
+        hasSeenTutorial = tutorialSeen;
       });
     });
     _controller = TabController(
@@ -187,8 +190,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     }
 
     createNotification(
-      title: 'Don\'t forget to wear AVM today',
-      body: 'Wear your AVM and capture your memories today.',
+      title: 'Don\'t forget to wear Capsoul today',
+      body: 'Wear your Capsoul and capture your memories today.',
       notificationId: 4,
       isMorningNotification: true,
     );
@@ -229,12 +232,12 @@ class _HomePageWrapperState extends State<HomePageWrapper>
             _device = null;
             batteryLevel = -1; // Reset battery level
           });
-          InstabugLog.logInfo('AVM Device Disconnected');
+          InstabugLog.logInfo('Capsoul Disconnected');
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
             if (SharedPreferencesUtil().showDisconnectionNotification) {
               createNotification(
-                title: 'AVM Device Disconnected',
-                body: 'Please reconnect to continue using your AVM.',
+                title: 'Capsoul Disconnected',
+                body: 'Please reconnect to continue using Capsoul.',
               );
               SharedPreferencesUtil().showDisconnectionNotification = false;
             } else {}
@@ -298,16 +301,16 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   @override
   Widget build(BuildContext context) {
-   final bool isTosAccepted = SharedPreferencesUtil().tosAccepted;
+    final bool isTosAccepted = SharedPreferencesUtil().tosAccepted;
 
-  if (!isTosAccepted) {
-    return TACandPP(
-      onAccept: () {
-        SharedPreferencesUtil().tosAccepted = true;
-        setState(() {});
-      },
-    );
-  }
+    if (!isTosAccepted) {
+      return TACandPP(
+        onAccept: () {
+          SharedPreferencesUtil().tosAccepted = true;
+          setState(() {});
+        },
+      );
+    }
     return WithForegroundTask(
         child: MyUpgradeAlert(
       upgrader: _upgrader,
@@ -349,6 +352,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                             batteryLevel: batteryLevel,
                             refreshMemories: _initiateMemories,
                             refreshMessages: _refreshMessages,
+                            hasSeenTutorial: hasSeenTutorial ?? false,
                           ),
                           ChatScreen(
                             textFieldFocusNode: chatTextFieldFocusNode,

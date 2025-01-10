@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -33,11 +34,71 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   String version = '';
   String buildVersion = '';
+  final GlobalKey _settingsKey = GlobalKey();
+  late bool hasSeenTutorial;
 
   @override
   void initState() {
     super.initState();
+    var tutorialSeen = SharedPreferencesUtil().hasSeenTutorial;
+    hasSeenTutorial = tutorialSeen;
+    checkTutorialStatus();
     _getVersionInfo();
+  }
+
+  void checkTutorialStatus() async {
+    if (!hasSeenTutorial) {
+      _createTutorial();
+    }
+  }
+
+  Future<void> _createTutorial() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final targets = [
+        TargetFocus(
+          alignSkip: Alignment.bottomCenter,
+          identify: 'settingIcon',
+          keyTarget: _settingsKey,
+          contents: [
+            TargetContent(
+              align: ContentAlign.left,
+              builder: (context, controller) => FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  'Navigate to settings page\nto see connectivity status',
+                  style: TextStyle(
+                      color: AppColors.white, fontSize: 22, height: 1.3),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ];
+
+      final tutorial = TutorialCoachMark(
+      textStyleSkip: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+            color: AppColors.white,
+          ),
+        targets: targets,
+        colorShadow: AppColors.black.withValues(alpha: 0.7),
+        onSkip: () {
+          SharedPreferencesUtil().hasSeenTutorial = true;
+          setState(() {});
+          return true;
+        },
+        onFinish: () {
+          SharedPreferencesUtil().hasSeenTutorial = true;
+          setState(() {});
+        },
+      );
+
+      // Trigger tutorial
+      Future.delayed(const Duration(milliseconds: 500), () {
+        tutorial.show(context: context);
+      });
+    });
   }
 
   Future<void> _getVersionInfo() async {
@@ -147,6 +208,7 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           Spacer(),
                           Icon(
+                            key: _settingsKey,
                             Icons.arrow_forward_ios_rounded,
                             color: AppColors.black,
                             size: 16,

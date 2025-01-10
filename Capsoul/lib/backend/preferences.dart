@@ -261,6 +261,10 @@ class SharedPreferencesUtil {
 
   set backupsEnabled(bool value) => saveBool('backupsEnabled2', value);
 
+    bool get hasSeenTutorial => getBool('hasSeenTutorial') ?? false;
+
+    set hasSeenTutorial(bool value) => saveBool('hasSeenTutorial', value);
+
   Future<bool> saveApiType(String key, String value) async {
     return await _preferences?.setString(key, value) ?? false;
   }

@@ -8,26 +8,32 @@ void showTermsDialog(BuildContext context) {
     builder: (BuildContext context) {
       return CustomDialog(
         title: "Terms and Conditions",
-        content: 'Here goes your lengthy Terms and Conditions text. '
-            'Make sure to include all the legal content here for users to read. '
-            'You can expand this text as needed, and it will be scrollable within the dialog.'
-            '\n\nExample:\n1. Users agree to abide by the app’s rules.\n'
-            '2. The app reserves the right to modify terms.\n'
-            '3. Users consent to data policies in accordance with privacy laws.\n'
-            '...\n'
-            'End with any disclaimers or additional information as needed.',
-        onCancel: TextButton(
-          child: const Text('Close'),
-          onPressed: () {
-            Navigator.pop(context);
+        sections: [
+          {
+            'heading': "General Terms",
+            'points': [
+              'You must be at least 18 years old to use this app.',
+              'The app is provided as-is without any warranties.',
+              'We reserve the right to update the terms at any time.',
+            ],
           },
-        ),
-        onSubmit: TextButton(
-          child: const Text('Agree'),
-          onPressed: () {
-            Navigator.pop(context);
+          {
+            'heading': "Privacy Policy",
+            'points': [
+              'We value your privacy and take it seriously.',
+              'Personal data is only collected for app functionality.',
+              'No data will be shared without user consent.',
+            ],
           },
-        ),
+          {
+            'heading': "Privacy Policy",
+            'points': [
+              'We value your privacy and take it seriously.',
+              'Personal data is only collected for app functionality.',
+              'No data will be shared without user consent.',
+            ],
+          },
+        ],
       );
     },
   );

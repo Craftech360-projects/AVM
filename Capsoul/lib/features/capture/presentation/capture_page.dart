@@ -37,12 +37,14 @@ class CapturePage extends StatefulWidget {
   final Function refreshMessages;
   final BTDeviceStruct? device;
   final int batteryLevel;
+  final bool hasSeenTutorial;
   const CapturePage({
     super.key,
     required this.device,
     required this.refreshMemories,
     required this.refreshMessages,
     this.batteryLevel = -1,
+    required this.hasSeenTutorial,
   });
 
   @override
@@ -368,7 +370,8 @@ class CapturePageState extends State<CapturePage>
         //   sendMessageToChat(Message(DateTime.now(), r, 'ai'), memory);
         createNotification(
           notificationId: 2,
-          title: 'New Memory Created!}',
+          title:
+              'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
         );
       }
       backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
@@ -505,6 +508,7 @@ class CapturePageState extends State<CapturePage>
         _createMemory();
         setState(() {});
       },
+      hasSeenTutorial: widget.hasSeenTutorial,
     );
   }
 }

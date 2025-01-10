@@ -54,7 +54,7 @@ class _CalendarPageState extends State<CalendarPage> {
       RadioListTile(
         fillColor: WidgetStatePropertyAll(AppColors.purpleDark),
         title: const Text('Automatic'),
-        subtitle: const Text('AVM will auto-schedule your events.'),
+        subtitle: const Text('Capsoul will auto-schedule your events.'),
         value: 'auto',
         groupValue: SharedPreferencesUtil().calendarType,
         onChanged: (String? value) {
@@ -97,7 +97,7 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
       ),
       Text(
-        'Select a calendar for AVM to connect to.',
+        'Select a calendar for Capsoul to connect to.',
         textAlign: TextAlign.center,
       ),
       h10,
@@ -162,7 +162,7 @@ class _CalendarPageState extends State<CalendarPage> {
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
-                'AVM can auto-schedule events or ask for your confirmation first.',
+                'Capsoul can auto-schedule events or ask for your confirmation first.',
                 textAlign: TextAlign.center,
               ),
             ),

@@ -25,7 +25,6 @@ class SigninPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return CustomScaffold(
       body: Align(
         alignment: Alignment.bottomCenter,
@@ -174,18 +173,19 @@ class SigninPage extends StatelessWidget {
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: textTheme.bodySmall?.copyWith(
+                      style: TextStyle(
                         color: AppColors.black,
                         fontWeight: FontWeight.w500,
                       ),
                       children: [
                         const TextSpan(
-                            text: 'By signing up for AVM, you agree to the \n'),
+                            text:
+                                'By signing up for Capsoul, you agree to the \n'),
                         TextSpan(
                           text: 'Terms and Conditions',
-                          style: textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.purpleDark),
+                          style: TextStyle(
+                              color: AppColors.purpleDark,
+                              fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               showTermsDialog(context);
@@ -194,9 +194,9 @@ class SigninPage extends StatelessWidget {
                         const TextSpan(text: ' and '),
                         TextSpan(
                           text: 'Privacy Policy',
-                          style: textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.purpleDark),
+                          style: TextStyle(
+                              color: AppColors.purpleDark,
+                              fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               showPrivacyPolicy(context);

@@ -27,12 +27,16 @@ class _EmptyMemoriesWidgetState extends State<EmptyMemoriesWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'No memories found!',
-      style: TextStyle(
-          color: AppColors.greyMedium,
-          fontSize: 14,
-          fontWeight: FontWeight.w500),
+    return Padding(
+      padding: const EdgeInsets.only(top: 32.0),
+      child: Text(
+        textAlign: TextAlign.center,
+        'No memories found!\nConnect your Capsoul to create new memory',
+        style: TextStyle(
+            color: AppColors.greyMedium,
+            fontSize: 14,
+            fontWeight: FontWeight.w500),
+      ),
     );
   }
 }

@@ -78,7 +78,7 @@ class ForegroundUtil {
         // foregroundServiceType: AndroidForegroundServiceType.CONNECTED_DEVICE,
         channelId: 'foreground_service',
         channelName: 'Foreground Service Notification',
-        channelDescription: 'Your AVM Device is connected',
+        channelDescription: 'Your Capsoul is connected',
         channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.HIGH,
         iconData: const NotificationIconData(
@@ -112,7 +112,7 @@ class ForegroundUtil {
       return FlutterForegroundTask.restartService();
     } else {
       return FlutterForegroundTask.startService(
-        notificationTitle: 'Your AVM Device is active',
+        notificationTitle: 'Your Capsoul is active',
         notificationText: 'Tap to open the app',
         callback: startCallback,
       );

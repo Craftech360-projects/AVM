@@ -36,8 +36,8 @@ class BatteryWidget extends StatelessWidget {
         ),
         h1,
         Container(
-          width: 12,
-          height: 20,
+          width: 14,
+          height: 22,
           decoration: BoxDecoration(
             border: Border.all(color: AppColors.black, width: 1.5),
             borderRadius: br2,

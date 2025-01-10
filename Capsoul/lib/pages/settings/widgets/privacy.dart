@@ -28,7 +28,7 @@ class PrivacyInfoPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'At AVM, we take your privacy very seriously. We want to be transparent about the data we collect and how we use it to improve our product for you. Here\'s what you need to know:',
+              'At Capsoul, we take your privacy very seriously. We want to be transparent about the data we collect and how we use it to improve our product for you. Here\'s what you need to know:',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),

@@ -134,30 +134,33 @@ class FoundDevicesState extends State<FoundDevices>
                     );
                   }
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, 6)})',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                        color: AppColors.black,
+                child: FittedBox(
+                fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, 6)})',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                          color: AppColors.black,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '🔋 ${batteryPercentage.toString()}%',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                        color: batteryPercentage <= 25
-                            ? Colors.red
-                            : batteryPercentage > 25 && batteryPercentage <= 50
-                                ? Colors.orange
-                                : Colors.green,
+                      Text(
+                        '🔋 ${batteryPercentage.toString()}%',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 18,
+                          color: batteryPercentage <= 25
+                              ? Colors.red
+                              : batteryPercentage > 25 && batteryPercentage <= 50
+                                  ? Colors.orange
+                                  : Colors.green,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

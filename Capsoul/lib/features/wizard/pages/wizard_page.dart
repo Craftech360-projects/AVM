@@ -126,7 +126,7 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
                     OnboardingButton(
                       message:
                           'Your personal growth journey\nwith AI that listens to\nall your queries',
-                      buttonText: 'Connect my AVM',
+                      buttonText: 'Connect my Capsoul',
                       onSkip: _nextPage,
                       onPressed: () {
                         Navigator.push(

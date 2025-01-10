@@ -7,7 +7,6 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
-  
   logging: ^1.0.2  
   archive: ^3.6.1
   auto_size_text: ^3.0.0
@@ -74,6 +73,7 @@ dependencies:
   swipe: ^0.0.1
   timelines_plus: ^1.0.4
   tuple: ^2.0.2
+  tutorial_coach_mark: ^1.2.12
   upgrader: ^10.3.0
   url_launcher: ^6.3.0
   # url_launcher_platform_interface: null
@@ -140,3 +140,6 @@ flutter:
         - asset: assets/fonts/Montserrat-Light.ttf
         - asset: assets/fonts/Montserrat-Regular.ttf
         - asset: assets/fonts/Montserrat-SemiBold.ttf
+    - family: SpaceGrotesk
+      fonts:
+        - asset: assets/fonts/SpaceGrotesk-Regular.ttf
