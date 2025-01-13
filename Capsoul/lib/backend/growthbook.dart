@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:capsoul/backend/preferences.dart';
 import 'package:capsoul/env/env.dart';
-import 'package:flutter/material.dart';
 import 'package:growthbook_sdk_flutter/growthbook_sdk_flutter.dart';
 
 class GrowthbookUtil {
@@ -26,10 +25,7 @@ class GrowthbookUtil {
       backgroundSync: true,
       enable: true,
       attributes: attr,
-      growthBookTrackingCallBack: (gbExperiment, gbExperimentResult) {
-        debugPrint(
-            'growthBookTrackingCallBack: $gbExperiment $gbExperimentResult');
-      },
+      growthBookTrackingCallBack: (gbExperiment, gbExperimentResult) {},
       hostURL: 'https://cdn.growthbook.io/',
       qaMode: true,
       gbFeatures: {

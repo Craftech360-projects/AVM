@@ -37,7 +37,7 @@ mixin AudioChunksMixin {
         if (toProcessBytes2.hasFrames() &&
             toProcessBytes2.frames.length % 3000 == 0) {
           if (internetStatus == InternetStatus.disconnected) {
-            debugPrint('No internet connection, not processing audio');
+        
             return;
           }
           if (await WavBytesUtil.tempWavExists()) {
@@ -53,13 +53,8 @@ mixin AudioChunksMixin {
             setIsTranscribing(false);
             onNewSegments(newSegments, data.item2);
           } catch (e) {
-            debugPrint('Error processing 30 seconds frame');
-            // CrashReporting.reportHandledCrash(
-            //   e,
-            //   stacktrace,
-            //   level: NonFatalExceptionLevel.warning,
-            //   userAttributes: {'seconds': (data.item2.length ~/ 100).toString()},
-            // );
+           
+            
             toProcessBytes2.insertAudioBytes(data.item2);
           }
           WavBytesUtil.deleteTempWav();

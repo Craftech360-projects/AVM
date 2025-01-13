@@ -1,6 +1,7 @@
 import 'package:capsoul/core/assets/app_images.dart';
 import 'package:capsoul/core/constants/constants.dart';
 import 'package:capsoul/core/theme/app_colors.dart';
+import 'package:capsoul/core/widgets/typing_indicator.dart';
 import 'package:capsoul/src/common_widget/icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,10 +14,12 @@ class CustomNavBar extends StatefulWidget {
     this.onSendMessage,
     this.onTabChange,
     this.onMemorySearch,
+    this.isUserMessageSent = false,
   });
 
   final bool? isChat;
   final bool? isMemory;
+  final bool isUserMessageSent;
   final Function(String)? onSendMessage;
   final Function(int)? onTabChange;
   final Function(String)? onMemorySearch;
@@ -89,22 +92,22 @@ class _CustomNavBarState extends State<CustomNavBar> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 22.0, horizontal: 12.0),
+      padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 12.0),
       child: GestureDetector(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 600),
-          height: 64.h,
-          padding: EdgeInsets.symmetric(horizontal: 6.w),
+          height: 60,
+          padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
           decoration: BoxDecoration(
-            borderRadius: br20,
+            borderRadius: br15,
             border: Border.all(
               color: AppColors.white,
-              width: 1.w,
+              width: 2,
             ),
             boxShadow: const [
               BoxShadow(
                 color: Color.fromARGB(118, 122, 122, 122),
-                blurRadius: 4,
+                blurRadius: 5,
                 offset: Offset(0, 5),
               ),
             ],
@@ -153,7 +156,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   Widget _buildHomeBtn() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 14.w),
       child: GestureDetector(
         onTap: () {
           if (widget.onTabChange != null) {
@@ -194,11 +197,11 @@ class _CustomNavBarState extends State<CustomNavBar> {
   Widget _buildExpandedSection(TextTheme textTheme) {
     return Expanded(
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
-        height: 50.h,
+        padding: EdgeInsets.only(left: 02, right: 05),
+        height: 60.h,
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: br12,
+          borderRadius: br10,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -227,23 +230,25 @@ class _CustomNavBarState extends State<CustomNavBar> {
                 ),
               ),
             ),
-            ClipRRect(
-              borderRadius: br8,
-              child: Container(
-                decoration: BoxDecoration(
-                    shape: BoxShape.rectangle, color: AppColors.white),
-                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-                child: CustomIconButton(
-                  size: 24.h,
-                  iconPath: AppImages.send,
-                  onPressed: isChatVisible
-                      ? _handleSendMessage
-                      : () => _handleSearchMessage(
-                            _searchController.text.trim(),
-                          ),
-                ),
-              ),
-            ),
+            widget.isUserMessageSent
+                ? TypingIndicator(dotWidth: 6, dotHeight: 6)
+                : ClipRRect(
+                    borderRadius: br8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle, color: AppColors.white),
+                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                      child: CustomIconButton(
+                        size: 24.h,
+                        iconPath: AppImages.send,
+                        onPressed: isChatVisible
+                            ? _handleSendMessage
+                            : () => _handleSearchMessage(
+                                  _searchController.text.trim(),
+                                ),
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),

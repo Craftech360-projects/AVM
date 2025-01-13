@@ -93,10 +93,8 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
     return CustomScaffold(
       showBackBtn: true,
       showGearIcon: true,
-      title: Center(
-        child: Text("Manage Device",
-            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19)),
-      ),
+      title: Text("Manage Device",
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19)),
       body: FutureBuilder<_DeviceInfo>(
         future: _DeviceInfo.getDeviceInfo(widget.device),
         builder: (BuildContext context, AsyncSnapshot<_DeviceInfo> snapshot) {

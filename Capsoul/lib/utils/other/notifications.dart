@@ -1,9 +1,11 @@
+import 'dart:developer';
 import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:capsoul/backend/notify_on_kill.dart';
 import 'package:capsoul/backend/preferences.dart';
+import 'package:capsoul/core/theme/app_colors.dart';
 import 'package:capsoul/main.dart';
 import 'package:capsoul/pages/home/page.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +14,17 @@ import 'package:flutter/material.dart';
 // https://pub.dev/packages/awesome_notifications/versions/0.8.3
 
 Future<void> initializeNotifications() async {
+  // ignore: unused_local_variable
   bool initialized = await AwesomeNotifications().initialize(
-      // set the icon to null if you want to use the default app icon
-      'resource://drawable/ic_stat_avm',
+      'resource://drawable/ic_stat_launcher',
       [
         NotificationChannel(
             channelGroupKey: 'channel_group_key',
             channelKey: 'channel',
             channelName: 'Friend Notifications',
             channelDescription: 'Notification channel for Friend',
-            defaultColor: const Color(0xFF9D50DD),
-            ledColor: Colors.white)
+            defaultColor: AppColors.purpleDark,
+            ledColor: AppColors.commonPink)
       ],
       // Channel groups are only visual and are not required
       channelGroups: [
@@ -31,7 +33,6 @@ Future<void> initializeNotifications() async {
             channelGroupName: 'Friend Notifications')
       ],
       debug: false);
-  debugPrint('initializeNotifications: $initialized');
   NotifyOnKill.register();
 }
 
@@ -55,7 +56,6 @@ _retrieveNotificationInterval({
     var scheduled = await AwesomeNotifications().listScheduledNotifications();
     var hasMorningNotification =
         scheduled.any((element) => element.content?.id == 4);
-    debugPrint('hasMorningNotification: $hasMorningNotification');
     if (hasMorningNotification) return;
     interval = NotificationCalendar(
       hour: 8,
@@ -69,7 +69,6 @@ _retrieveNotificationInterval({
     var scheduled = await AwesomeNotifications().listScheduledNotifications();
     var hasDailySummaryNotification =
         scheduled.any((element) => element.content?.id == 5);
-    debugPrint('hasDailySummaryNotification: $hasDailySummaryNotification');
     if (hasDailySummaryNotification) return;
     interval = NotificationCalendar(
       hour: 20,
@@ -93,7 +92,6 @@ void createNotification({
 }) async {
   var allowed = await AwesomeNotifications().isNotificationAllowed();
   if (!allowed) return;
-  debugPrint('createNotification ~ Creating notification: $title');
   NotificationCalendar? interval = await _retrieveNotificationInterval(
     isMorningNotification: isMorningNotification,
     isDailySummaryNotification: isDailySummaryNotification,
@@ -121,19 +119,18 @@ clearNotification(int id) => AwesomeNotifications().cancel(id);
 void createMessagingNotification(String sender, String message) async {
   bool allowed = await AwesomeNotifications().isNotificationAllowed();
   if (!allowed) {
-    debugPrint('Notifications are not allowed.');
+    log('Notifications are not allowed.');
     return;
   }
 
   AwesomeNotifications().createNotification(
     content: NotificationContent(
-      id: 2, // Unique ID for messaging notifications
+      id: 2,
       channelKey: 'channel',
       title: sender,
       body: message,
       notificationLayout: NotificationLayout.Messaging,
-      largeIcon:
-          'resource://drawable/ic_stat_avm', // Replace with your app icon
+      largeIcon: 'resource://drawable/ic_stat_launcher',
       payload: {
         'sender': sender,
         'message': message,
@@ -200,20 +197,15 @@ class NotificationUtil {
       '/capture': 1,
       '/memories': 0,
     };
-    debugPrint(
-        'Action ${receivedAction.actionType?.name} received on ${receivedAction.actionLifeCycle?.name}');
-    debugPrint(receivedAction.toMap().toString());
 
     WidgetsFlutterBinding.ensureInitialized();
 
-    // Handle messaging actions
     if (receivedAction.buttonKeyPressed == 'REPLY') {
+      // ignore: unused_local_variable
       String? userReply = receivedAction.buttonKeyInput;
-      debugPrint('User replied: $userReply');
       // Add logic to send the user's reply to the server or process it
     } else if (receivedAction.buttonKeyPressed == 'MARK_AS_READ') {
-      debugPrint('Message marked as read');
-      // Add logic to mark the message as read
+      log('Message marked as read');
     }
 
     final payload = receivedAction.payload;
@@ -226,29 +218,4 @@ class NotificationUtil {
     MyApp.navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(builder: (context) => const HomePageWrapper()));
   }
-
-  // static Future<void> onActionReceivedMethodImpl(
-  //     ReceivedAction receivedAction) async {
-  //   final Map<String, int> screensWithRespectToPath = {
-  //     '/chat': 2,
-  //     '/capture': 1,
-  //     '/memories': 0,
-  //   };
-  //   var message =
-  //       'Action ${receivedAction.actionType?.name} received on ${receivedAction.actionLifeCycle?.name}';
-  //   debugPrint(message);
-  //   debugPrint(receivedAction.toMap().toString());
-
-  //   // Always ensure that all plugins was initialized
-  //   WidgetsFlutterBinding.ensureInitialized();
-  //   final payload = receivedAction.payload;
-  //   if (payload?.containsKey('navigateTo') ?? false) {
-  //     SharedPreferencesUtil().subPageToShowFromNotification =
-  //         payload?['navigateTo'] ?? '';
-  //   }
-  //   SharedPreferencesUtil().pageToShowFromNotification =
-  //       screensWithRespectToPath[payload?['path']] ?? 1;
-  //   MyApp.navigatorKey.currentState?.pushReplacement(
-  //       MaterialPageRoute(builder: (context) => const HomePageWrapper()));
-  // }
 }

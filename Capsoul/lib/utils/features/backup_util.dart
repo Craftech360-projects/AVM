@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:capsoul/backend/preferences.dart';
 import 'package:capsoul/utils/features/backups.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +12,9 @@ Future<void> manualBackup(BuildContext context) async {
     var uid = SharedPreferencesUtil().uid;
     // Call your backup API or method here
     await executeManualBackupWithUid(uid);
-    print("backup sucess"); // Replace this with your backup method
+    log("backup sucess");
   } catch (error) {
     // Handle error (e.g., show a snackbar or alert)
-    debugPrint('Manual backup failed: $error');
   } finally {
     isManualBackupInProgress = false;
   }

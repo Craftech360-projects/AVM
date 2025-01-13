@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:developer';
+
 import 'package:flutter/services.dart';
 
 class NotifyOnKill {
@@ -10,12 +11,11 @@ class NotifyOnKill {
         'setNotificationOnKillService',
         {
           'title': "Capsoul was disconnected",
-          'description':
-              "Please keep your app open to continue using Capsoul.",
+          'description': "Please keep your app open to continue using Capsoul.",
         },
       );
     } catch (e) {
-      debugPrint('NotifOnKill error: $e');
+      log('NotifOnKill error: $e');
     }
   }
 }

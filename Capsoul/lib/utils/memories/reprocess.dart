@@ -14,7 +14,6 @@ Future<Memory?> reProcessMemory(
   Function onFailedProcessing,
   Function changeLoadingState,
 ) async {
-  debugPrint('_reProcessMemory');
   changeLoadingState();
   SummaryResult summaryResult;
   try {
@@ -82,7 +81,6 @@ Future<Memory?> reProcessMemory(
 
   MemoryProvider().updateMemoryStructured(structured);
   MemoryProvider().updateMemory(memory);
-  debugPrint('MemoryProvider().updateMemory');
   changeLoadingState();
   MixpanelManager().reProcessMemory(memory);
   return memory;

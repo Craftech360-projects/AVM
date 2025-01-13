@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:capsoul/backend/database/memory.dart';
 import 'package:capsoul/backend/database/message.dart';
 import 'package:capsoul/backend/schema/plugin.dart';
 import 'package:capsoul/core/constants/constants.dart';
 import 'package:capsoul/core/theme/app_colors.dart';
 import 'package:capsoul/features/chat/bloc/chat_bloc.dart';
-import 'package:capsoul/utils/other/temp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,10 +30,8 @@ class AIMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isLoading = message.text.isEmpty;
-
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 0.w, vertical: 5.h),
+      padding: EdgeInsets.fromLTRB(0, 2, 20, 2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -43,8 +42,8 @@ class AIMessage extends StatelessWidget {
                   backgroundImage: NetworkImage(pluginSender!.getImageUrl()),
                 )
               : Container(
-                  height: 35.h,
-                  width: 35.w,
+                  height: 35.0,
+                  width: 35.0,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.purpleDark,
@@ -54,14 +53,17 @@ class AIMessage extends StatelessWidget {
           w4,
           Flexible(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              padding: EdgeInsets.symmetric(
+                horizontal: 08.w,
+                vertical: 05.h,
+              ),
               decoration: BoxDecoration(
                 color: Color(0xFFE5E4E2),
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(3),
-                  topRight: Radius.circular(20),
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+                  topLeft: Radius.circular(0),
+                  topRight: Radius.circular(12),
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
                 ),
               ),
               child: Column(
@@ -69,14 +71,12 @@ class AIMessage extends StatelessWidget {
                 children: [
                   if (message.typeEnum == MessageType.daySummary)
                     Text(
-                      '📅 Day Summary ~ ${dateTimeFormat('MMM, dd', DateTime.now())}',
+                      '📅 Day Summary ~ ${DateFormat('MMM, dd').format(DateTime.now())}',
                       style: const TextStyle(
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
-                    ),
-                  if (isLoading)
-                    const Center(child: CircularProgressIndicator())
+                    )
                   else
                     SelectionArea(
                       child: Text(
@@ -87,34 +87,30 @@ class AIMessage extends StatelessWidget {
                                 .replaceAll('**', '')
                                 .replaceAll('\\"', '"'),
                         style: const TextStyle(
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.black,
-                        ),
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.w500,
+                            height: 1.3),
                       ),
                     ),
-                  // Optional Copy Button or Initial Options
                   if (message.id != 1) _getCopyButton(context),
                   if (message.id == 1 && displayOptions) h4,
                   if (message.id == 1 && displayOptions)
                     ..._getInitialOptions(context),
-                  // Display Memories
                   if (memories.isNotEmpty) ...[
                     h16,
                     for (var memory in (memories.length > 3
                         ? memories.reversed.toList().sublist(0, 3)
                         : memories.reversed.toList()))
                       GestureDetector(
-                        onTap: () {
-                          // Memory Click Handler
-                        },
+                        onTap: () {},
                         child: Container(
+                          margin: EdgeInsets.symmetric(vertical: 02),
                           padding: EdgeInsets.symmetric(
-                              horizontal: 12.w, vertical: 8.h),
+                              horizontal: 12.w, vertical: 6.h),
                           decoration: BoxDecoration(
                             color:
                                 AppColors.purpleBright.withValues(alpha: 0.2),
-                            borderRadius: br12,
+                            borderRadius: br5,
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,7 +130,7 @@ class AIMessage extends StatelessWidget {
                                         .format(memory.createdAt),
                                     style: TextStyle(
                                       color: AppColors.black,
-                                      fontSize: 12.sp,
+                                      fontSize: 12.0,
                                     ),
                                   ),
                                   const Icon(Icons.arrow_forward_ios_rounded,
@@ -159,39 +155,36 @@ class AIMessage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0.0, 6.0, 0.0, 0.0),
       child: InkWell(
-        splashColor: Colors.transparent,
-        focusColor: Colors.transparent,
-        hoverColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        onTap: () async {
-          await Clipboard.setData(ClipboardData(text: message.text));
-          avmSnackBar(
-            context,
-            'Response copied to clipboard',
-          );
-        },
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 4.0, 0.0),
-              child: Icon(
+          splashColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          onTap: () async {
+            await Clipboard.setData(ClipboardData(text: message.text));
+            avmSnackBar(
+              context,
+              'Response copied to clipboard',
+            );
+          },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
                 Icons.content_copy,
                 color: AppColors.black,
-                size: 12.0,
+                size: 10.0,
               ),
-            ),
-            const Text(
-              'copy response',
-              style: TextStyle(
-                  decoration: TextDecoration.underline,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                  color: AppColors.black),
-            ),
-          ],
-        ),
-      ),
+              w4,
+              const Text(
+                'copy response',
+                style: TextStyle(
+                    // decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                    color: AppColors.black),
+              ),
+            ],
+          )),
     );
   }
 
@@ -210,7 +203,7 @@ class AIMessage extends StatelessWidget {
         try {
           BlocProvider.of<ChatBloc>(context).add(SendMessage(optionText));
         } catch (e) {
-          debugPrint("error,$e");
+          log("error,$e");
         }
       },
     );

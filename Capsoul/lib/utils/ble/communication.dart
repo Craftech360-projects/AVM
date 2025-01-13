@@ -1,9 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:capsoul/utils/ble/errors.dart';
 import 'package:capsoul/utils/ble/gatt_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 Future<int> retrieveBatteryLevel(String deviceId) async {
@@ -47,7 +47,7 @@ Future<StreamSubscription<List<int>>?> getBleBatteryLevelListener(
 
   var currValue = await batteryLevelCharacteristic.read();
   if (currValue.isNotEmpty) {
-    debugPrint('Battery level: ${currValue[0]}');
+    log('Battery level: ${currValue[0]}');
     onBatteryLevelChange!(currValue[0]);
   }
 
@@ -59,7 +59,6 @@ Future<StreamSubscription<List<int>>?> getBleBatteryLevelListener(
   }
 
   var listener = batteryLevelCharacteristic.lastValueStream.listen((value) {
-    // debugdebugPrint('Battery level listener: $value');
     if (value.isNotEmpty) {
       onBatteryLevelChange!(value[0]);
     }
@@ -96,7 +95,6 @@ Future<StreamSubscription?> getBleAudioBytesListener(
     return null;
   }
 
-  debugPrint('Subscribed to audioBytes stream from AVM Device');
   var listener = audioDataStreamCharacteristic.lastValueStream.listen((value) {
     if (value.isNotEmpty) onAudioBytesReceived(value);
   });
@@ -152,7 +150,6 @@ Future<BleAudioCodec> getAudioCodec(String deviceId) async {
       logErrorMessage('Unknown codec id: $codecId', deviceId);
   }
 
-  debugPrint('Codec is $codec');
   return codec;
 }
 
@@ -172,8 +169,6 @@ Future cameraStartPhotoController(String deviceId) async {
 
   // Capture photo once every 10s
   await imageCaptureControlCharacteristic.write([0x0A]);
-
-  debugPrint('cameraStartPhotoController');
 }
 
 Future cameraStopPhotoController(String deviceId) async {
@@ -191,8 +186,6 @@ Future cameraStopPhotoController(String deviceId) async {
   }
 
   await imageCaptureControlCharacteristic.write([0x00]);
-
-  debugPrint('cameraStopPhotoController');
 }
 
 Future<bool> hasPhotoStreamingCharacteristic(String deviceId) async {
@@ -231,7 +224,6 @@ Future<StreamSubscription?> getBleImageBytesListener(
     return null;
   }
 
-  debugPrint('Subscribed to imageBytes stream from Friend Device');
   var listener = imageStreamCharacteristic.lastValueStream.listen((value) {
     if (value.isNotEmpty) onImageBytesReceived(value);
   });

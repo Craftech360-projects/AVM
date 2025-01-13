@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -39,7 +40,6 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
   startStreamRecording(WebsocketConnectionStatus wsConnectionState,
       IOWebSocketChannel? websocketChannel) async {
     await Permission.microphone.request();
-    debugPrint("input device: ${await record.listInputDevices()}");
     InputDevice? inputDevice;
     if (Platform.isIOS) {
       inputDevice = const InputDevice(
@@ -85,10 +85,8 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
     }
     await Permission.microphone.request();
     await initializeBackgroundService();
-    debugPrint('Timer is not active and null');
     await waitForTimerToFinish();
     Future.delayed(const Duration(seconds: 2), () async {
-      debugPrint('Recording state is record');
       setState(() {
         iosDuration = 30;
         androidDuration = 30;
@@ -111,18 +109,14 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
 
   Future<void> waitForTimerToFinish() async {
     while (backgroundTranscriptTimer?.isActive ?? false) {
-      debugPrint('Waiting for timer to finish...');
       await Future.delayed(const Duration(milliseconds: 500));
     }
-    debugPrint('Timer finished');
   }
 
   Future<void> waitForTranscriptionToFinish() async {
     while (isTranscribing) {
-      debugPrint('Waiting for transcription to finish...');
       await Future.delayed(const Duration(milliseconds: 200));
     }
-    debugPrint('Transcription finished');
   }
 
   stopRecording(Function processFileToTranscript,
@@ -245,9 +239,9 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
         });
       }
     }, onError: (e, s) {
-      debugPrint('error listening for updates: $e, $s');
+      log('error listening for updates: $e, $s');
     }, onDone: () {
-      debugPrint('background listen closed');
+      log('background listen closed');
     });
   }
 
@@ -263,11 +257,10 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
       Function processFileToTranscript) async {
     backgroundTranscriptTimer?.cancel();
     backgroundTranscriptTimer = Timer.periodic(interval, (timer) async {
-      debugPrint('timer triggered at ${DateTime.now()}');
+   
       var path = await getApplicationDocumentsDirectory();
       var filePath = '${path.path}/recording_0.wav';
       try {
-        debugPrint('isTranscribing: $isTranscribing');
         if (isTranscribing) return;
         await iosBgCallback(
           shouldTranscribe: shouldTranscribe,
@@ -284,8 +277,8 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
           },
         );
       } catch (e) {
-        debugPrint('Error for file: $filePath');
-        debugPrint('Error reading and splitting file content: $e');
+        log('Error for file: $filePath');
+        log('Error reading and splitting file content: $e');
       }
     });
   }
@@ -310,10 +303,10 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
             processFileToTranscript: processFileToTranscript,
           );
         } catch (e) {
-          debugPrint('Error changing recorder to new file: $e');
+          log('Error changing recorder to new file: $e');
         }
       } else {
-        debugPrint('not performing operation in background');
+        log('not performing operation in background');
       }
     });
   }

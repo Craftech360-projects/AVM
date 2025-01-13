@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:capsoul/backend/preferences.dart';
 import 'package:device_calendar/device_calendar.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 
 class CalendarUtil {
@@ -64,12 +63,13 @@ class CalendarUtil {
           startsAt.add(Duration(minutes: durationMinutes)), currentLocation),
       availability: Availability.Tentative,
     );
+
+
     final createResult = await _calendarPlugin!.createOrUpdateEvent(event);
     if (createResult?.isSuccess == true) {
-      debugPrint('Event created successfully ${createResult!.data}');
       return true;
     } else {
-      debugPrint('Failed to create event: ${createResult!.errors}');
+      log('Failed to create event: ${createResult!.errors}');
     }
     return false;
   }

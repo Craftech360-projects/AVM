@@ -4,7 +4,6 @@ import 'package:capsoul/backend/api_requests/api/llm.dart';
 import 'package:capsoul/backend/api_requests/api/shared.dart';
 import 'package:capsoul/backend/preferences.dart';
 import 'package:capsoul/env/env.dart';
-import 'package:flutter/material.dart';
 
 Future<dynamic> pineconeApiCall(
     {required String urlSuffix, required String body}) async {
@@ -29,26 +28,6 @@ Future<void> updatePineconeMemoryId(String memoryId, int newId) {
       }));
 }
 
-// Future<bool> upsertPineconeVector(String memoryId, List<double> vectorList, DateTime createdAt) async {
-//   var body = jsonEncode({
-//     'vectors': [
-//       {
-//         'id': '${SharedPreferencesUtil().uid}-$memoryId',
-//         'values': vectorList,
-//         'metadata': {
-//           'created_at': createdAt.millisecondsSinceEpoch ~/ 1000,
-//           'memory_id': memoryId,
-//           'uid': SharedPreferencesUtil().uid,
-//         }
-//       }
-//     ],
-//     'namespace': Env.pineconeIndexNamespace
-//   });
-//   var responseBody = await pineconeApiCall(urlSuffix: 'vectors/upsert', body: body);
-//   debugPrint('upsertPineconeVector response: $responseBody');
-//   return (responseBody['upserted_count'] ?? 0) > 0;
-// }
-
 Future<bool> upsertPineconeVector(
     String memoryId, List<double> vectorList, DateTime createdAt) async {
   try {
@@ -66,18 +45,11 @@ Future<bool> upsertPineconeVector(
       ],
       'namespace': Env.pineconeIndexNamespace
     });
-    debugPrint(
-        'here in upsertPineconeVector: >>>>>>>>>>>>>>>>>>>>>>>>>>>??<<<<<<<<<<');
     var responseBody =
         await pineconeApiCall(urlSuffix: 'vectors/upsert', body: body);
-    debugPrint('upsertPineconeVector response: $responseBody');
 
     return (responseBody['upserted_count'] ?? 0) > 0;
-  } catch (e, stackTrace) {
-    debugPrint('Error in upsertPineconeVector: $e');
-    debugPrint('Stack trace: $stackTrace');
-    // You might want to log this error to a logging service
-    // or handle it in a way that's appropriate for your app
+  } catch (e) {
     return false;
   }
 }
@@ -103,8 +75,6 @@ Future<List<String>> queryPineconeVectors(
   if (startTimestamp != null) filter['created_at']['\$gte'] = startTimestamp;
   if (endTimestamp != null) filter['created_at']['\$lte'] = endTimestamp;
 
-  debugPrint('queryPineconeVectors filter: $filter');
-
   var body = jsonEncode({
     'namespace': Env.pineconeIndexNamespace,
     'vector': vectorList,
@@ -114,7 +84,6 @@ Future<List<String>> queryPineconeVectors(
     'filter': filter,
   });
   var responseBody = await pineconeApiCall(urlSuffix: 'query', body: body);
-  debugPrint(responseBody.toString());
   return (responseBody['matches'])
           ?.map<String>((e) => e['metadata']['memory_id'].toString())
           .toList() ??
@@ -126,8 +95,8 @@ Future<bool> deleteVector(String memoryId) async {
     'ids': [memoryId],
     'namespace': Env.pineconeIndexNamespace
   });
+  // ignore: unused_local_variable
   var response = await pineconeApiCall(urlSuffix: 'vectors/delete', body: body);
-  debugPrint(response.toString());
   return true;
 }
 // update vectors when fields updated

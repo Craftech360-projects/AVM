@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:capsoul/backend/database/transcript_segment.dart';
 import 'package:capsoul/backend/preferences.dart';
@@ -53,7 +54,7 @@ Future<IOWebSocketChannel?> streamingTranscript({
 
     return channel;
   } catch (e) {
-    debugPrint('Error receiving data: $e');
+    log('Error receiving data: $e');
   } finally {}
 
   return null;
@@ -68,11 +69,9 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   int sampleRate,
   String codec,
 ) async {
-  debugPrint('Websocket Opening');
   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
-  debugPrint(recordingsLanguage);
 
-  const deepgramapikey = "5a04d9c8dfa5cf9bbe3ab6913194a42332308413";  
+  const deepgramapikey = "5a04d9c8dfa5cf9bbe3ab6913194a42332308413";
   // const deepgramapikey = "e19942922008143bf76a75cb75b92853faa0b0da";
   String? codecType = SharedPreferencesUtil().getCodecType('NewCodec');
 
@@ -89,7 +88,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&language=$recordingsLanguage&model=nova-2-general&no_delay=true&endpointing=100&interim_results=false&smart_format=true&diarize=true',
   );
 
-  debugPrint('apiType at dee$apiType');
   switch (apiType) {
     case 'Deepgram':
       uri = Uri.parse(
@@ -113,8 +111,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
         'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&language=$recordingsLanguage&model=nova-2-general&no_delay=true&endpointing=100&interim_results=false&smart_format=true&diarize=true',
       );
   }
-
-  debugPrint('Connecting to WebSocket URI:$apiType $uri');
+  log('Connecting to WebSocket URI:$apiType $uri');
 
   try {
     IOWebSocketChannel channel = IOWebSocketChannel.connect(
@@ -138,9 +135,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
           await channel.ready;
           final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
           channel.sink.add(keepAliveMsg);
-          debugPrint('Sent KeepAlive message');
         } catch (e) {
-          debugPrint('Error sending KeepAlive message: $e');
+          log('Error sending KeepAlive message: $e');
         }
       });
     }
@@ -152,16 +148,11 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     void checkSilence() {
       if (lastAudioTime != null) {
         Duration silenceDuration = DateTime.now().difference(lastAudioTime!);
-        debugPrint(
-            'Current silence duration: ${silenceDuration.inSeconds} seconds');
-
         if (silenceDuration > silenceTimeout) {
-          debugPrint(
-              'Silence detected for more than 30 seconds. Stopping KeepAlive.');
           stopKeepAlive();
         }
       } else {
-        debugPrint('No audio time recorded yet');
+        log('No audio time recorded yet');
       }
     }
 
@@ -203,27 +194,19 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
                 }
                 onMessageReceived(segments);
                 lastAudioTime = DateTime.now();
-                debugPrint('updated lastAudioTime: $lastAudioTime');
                 checkSilence();
-              } else {
-                debugPrint('Empty or invalid transcript or words');
-              }
-            } else {
-              debugPrint('No alternatives found in the result');
-            }
+              } else {}
+            } else {}
           } else if (data['type'] == 'transcript') {
             // Handle transcript event
             final segmentData = data['segment'];
-            debugPrint('websocket json data $segmentData');
 
             // Ensure speaker is a string
             final speaker =
                 segmentData['speaker']?.toString() ?? 'SPEAKER_UNKNOWN';
-            debugPrint('websocket json data $speaker');
 
             // Ensure text is a string
             final text = segmentData['text']?.toString() ?? '';
-            debugPrint('websocket json data $text');
 
             // Check if text is not empty
             if (text.isNotEmpty) {
@@ -235,19 +218,16 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
                     0.0, // You might want to add a start/end time if available
                 end: 0.0,
               );
-              debugPrint('websocket- json data ${segment.toString()}');
               onMessageReceived([segment]);
             }
             lastAudioTime = DateTime.now();
-            debugPrint('Transcript received from $speaker: $text');
             // Check for silence after updating lastAudioTime
             checkSilence();
           } else {
-            debugPrint('Unknown event type: ${data['type']}');
+            log('Unknown event type: ${data['type']}');
           }
         } catch (e) {
-          debugPrint('Error processing event: $e');
-          debugPrint('Raw event: $event');
+          log('Error processing event: $e');
         }
       },
       onDone: () {
@@ -261,7 +241,6 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     );
 
     await channel.ready;
-    debugPrint('Websocket Opened');
     onWebsocketConnectionSuccess();
     return channel;
   } catch (err, stackTrace) {

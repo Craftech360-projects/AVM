@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 // The callback function should always be a top-level function.
@@ -15,13 +14,10 @@ class FirstTaskHandler extends TaskHandler {
   int _eventCount = 0;
 
   @override
-  void onStart(DateTime timestamp, SendPort? sendPort) async {
-    debugPrint('onStart');
-  }
+  void onStart(DateTime timestamp, SendPort? sendPort) async {}
 
   @override
   void onRepeatEvent(DateTime timestamp, SendPort? sendPort) async {
-    // debugPrint('FirstTaskHandler ~ onRepeatEvent: $_eventCount');
     sendPort?.send(_eventCount); // send data to main isolate
     await Future.delayed(const Duration(seconds: 1));
     _eventCount++;
@@ -32,8 +28,7 @@ class FirstTaskHandler extends TaskHandler {
 
   // Called when the notification button on the Android platform is pressed.
   @override
-  void onNotificationButtonPressed(String id) {
-  }
+  void onNotificationButtonPressed(String id) {}
 
   // Called when the notification itself on the Android platform is pressed.
   //
@@ -55,17 +50,11 @@ class ForegroundUtil {
     if (!Platform.isAndroid) {
       return;
     }
-    // if (!await FlutterForegroundTask.canDrawOverlays) {
-    //   await FlutterForegroundTask.openSystemAlertWindowSettings();
-    // }
-    debugPrint(
-        'requestPermissionForAndroid: ${!await FlutterForegroundTask.isIgnoringBatteryOptimizations}');
     if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
       await FlutterForegroundTask.requestIgnoreBatteryOptimization();
     }
     final NotificationPermission notificationPermissionStatus =
         await FlutterForegroundTask.checkNotificationPermission();
-    debugPrint('notificationPermissionStatus: $notificationPermissionStatus');
     if (notificationPermissionStatus != NotificationPermission.granted) {
       await FlutterForegroundTask.requestNotificationPermission();
     }
@@ -134,13 +123,11 @@ class ForegroundUtil {
     _receivePort = newReceivePort;
     _receivePort?.listen((data) {
       if (data is int) {
-        // print('eventCount: $data');
       } else if (data is String) {
         // if (data == 'onNotificationPressed') {
         //   Navigator.of(context).pushNamed('/resume-route');
         // }
-      } else if (data is DateTime) {
-      }
+      } else if (data is DateTime) {}
     });
 
     return _receivePort != null;

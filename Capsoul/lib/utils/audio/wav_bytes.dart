@@ -5,7 +5,6 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:capsoul/utils/ble/communication.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:opus_dart/opus_dart.dart';
 // import 'package:opus_dart/opus_dart.dart';
@@ -48,7 +47,6 @@ class WavBytesUtil {
     // Lost frame - reset state
     if (index != lastPacketIndex + 1 ||
         (internal != 0 && internal != lastFrameId + 1)) {
-      debugPrint('Lost frame');
       lastPacketIndex = -1;
       pending = [];
       lost += 1;
@@ -61,7 +59,7 @@ class WavBytesUtil {
       pending = content; // Start new frame
       lastFrameId = internal; // Update internal frame id
       lastPacketIndex = index; // Update packet id
-      // debugPrint('Frames received: ${frames.length} && Lost: $lost');
+
       return;
     }
 
@@ -75,9 +73,7 @@ class WavBytesUtil {
     int fromSecond = 0, // unused
     int toSecond = 0,
   }) {
-    debugPrint('removing frames from ${fromSecond}s to ${toSecond}s');
     frames.removeRange(fromSecond * 100, min(toSecond * 100, frames.length));
-    debugPrint('frames length: ${frames.length}');
   }
 
   void insertAudioBytes(List<List<int>> bytes) => frames.insertAll(0, bytes);
@@ -127,7 +123,6 @@ class WavBytesUtil {
 
   Future<Tuple2<File, List<List<int>>>> createWavFile(
       {String? filename, int removeLastNSeconds = 0}) async {
-    // debugPrint('First frame size: ${frames[0].length} && Last frame size: ${frames.last.length}');
     List<List<int>> framesCopy;
     if (removeLastNSeconds > 0) {
       removeFramesRange(
@@ -182,7 +177,6 @@ class WavBytesUtil {
     }
     final file = File('${directory.path}/$filename');
     await file.writeAsBytes(wavBytes);
-    debugPrint('WAV file created: ${file.path}');
     return file;
   }
 
@@ -281,30 +275,24 @@ class ImageBytesUtil {
   Uint8List _buffer = Uint8List(0);
 
   Uint8List? processChunk(List<int> data) {
-    // debugPrint('Received chunk: ${data.length} bytes');
     if (data.isEmpty) return null;
 
     if (data[0] == 255 && data[1] == 255) {
-      debugPrint('Received end of image');
       previousChunkId = -1;
       return _buffer;
     }
 
     int packetId = data[0] + (data[1] << 8);
     data = data.sublist(2);
-    // debugPrint('Packet ID: $packetId - Previous ID: $previousChunkId');
 
     if (previousChunkId == -1) {
       if (packetId == 0) {
-        debugPrint('Starting new image');
         _buffer = Uint8List(0);
       } else {
-        // debugPrint('Skipping frame');
         return null;
       }
     } else {
       if (packetId != previousChunkId + 1) {
-        debugPrint('Lost packet ~ lost image');
         _buffer = Uint8List(0);
         previousChunkId = -1;
         return null;
@@ -312,7 +300,7 @@ class ImageBytesUtil {
     }
     previousChunkId = packetId;
     _buffer = Uint8List.fromList([..._buffer, ...data]);
-    // debugPrint('Added to buffer, new size: ${_buffer.length}');
+
     return null;
   }
 

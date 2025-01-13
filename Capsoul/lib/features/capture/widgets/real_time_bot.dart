@@ -13,7 +13,7 @@ Widget buildPopupContent(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(
-        'Enable to get real time\nresponses from the bot',
+        'Enable to get real time\nresponses from Capsoul',
         maxLines: 2,
         style: TextStyle(fontSize: 14),
       ),

@@ -4,7 +4,6 @@ import 'package:capsoul/backend/preferences.dart';
 import 'package:capsoul/backend/schema/bt_device.dart';
 import 'package:capsoul/utils/ble/errors.dart';
 import 'package:capsoul/utils/ble/gatt_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 Future<BTDeviceStruct?> getConnectedDevice() async {
@@ -18,7 +17,6 @@ Future<BTDeviceStruct?> getConnectedDevice() async {
       );
     }
   }
-  debugPrint('getConnectedDevice: device not found');
   return null;
 }
 
@@ -27,8 +25,6 @@ StreamSubscription<OnConnectionStateChangedEvent> getConnectionStateListener({
   required Function(BluetoothConnectionState, BTDeviceStruct?) onStateChanged,
 }) {
   return FlutterBluePlus.events.onConnectionStateChanged.listen((event) async {
-    debugPrint(
-        'onConnectionStateChanged>>>>---->: ${event.device.remoteId.str} ${event.connectionState} ${event.device.platformName}');
     if (event.device.remoteId.str == deviceId) {
       if (event.connectionState == BluetoothConnectionState.disconnected) {
         onStateChanged(BluetoothConnectionState.disconnected, null);
@@ -42,7 +38,6 @@ StreamSubscription<OnConnectionStateChangedEvent> getConnectionStateListener({
           );
           onStateChanged(BluetoothConnectionState.connected, deviceInfo);
         } catch (e) {
-          debugPrint('Error reading characteristic: $e');
           onStateChanged(BluetoothConnectionState.disconnected, null);
         }
       }
@@ -69,7 +64,6 @@ Future<StreamSubscription<List<int>>?> getBleBatteryLevelListener(
 
   var currValue = await batteryLevelCharacteristic.read();
   if (currValue.isNotEmpty) {
-    debugPrint('Battery level: ${currValue[0]}');
     onBatteryLevelChange!(currValue[0]);
   }
 
@@ -81,7 +75,6 @@ Future<StreamSubscription<List<int>>?> getBleBatteryLevelListener(
   }
 
   var listener = batteryLevelCharacteristic.lastValueStream.listen((value) {
-    // debugdebugPrint('Battery level listener: $value');
     if (value.isNotEmpty) {
       onBatteryLevelChange!(value[0]);
     }

@@ -31,8 +31,6 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
 
     if (!const DeepCollectionEquality()
         .equals(widget.segments, oldWidget.segments)) {
-      debugPrint(
-          "TranscriptWidget segments updated from ${oldWidget.segments.length} to ${widget.segments.length}");
       setState(() {});
     }
   }
@@ -45,8 +43,6 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-        "Rebuilding TranscriptWidget: ${widget.segments.length} segments in TW");
     return Container(
       margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
       decoration: BoxDecoration(

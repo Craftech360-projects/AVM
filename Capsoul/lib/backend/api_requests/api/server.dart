@@ -7,7 +7,6 @@ import 'package:capsoul/backend/preferences.dart';
 import 'package:capsoul/backend/schema/plugin.dart';
 import 'package:capsoul/backend/schema/sample.dart';
 import 'package:capsoul/env/env.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:instabug_http_client/instabug_http_client.dart';
@@ -27,14 +26,12 @@ Future<List<TranscriptSegment>> transcribe(File file) async {
   });
 
   try {
-    var startTime = DateTime.now();
     var streamedResponse = await client.send(request);
     var response = await http.Response.fromStream(streamedResponse);
-    debugPrint(
-        'Transcript server took: ${DateTime.now().difference(startTime).inSeconds} seconds');
+
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      debugPrint('Response body: ${response.body}');
+
       return TranscriptSegment.fromJsonList(data);
     } else {
       throw Exception(
@@ -54,12 +51,11 @@ Future<bool> userHasSpeakerProfile(String uid) async {
     body: '',
   );
   if (response == null) return false;
-  debugPrint('userHasSpeakerProfile: ${response.body}');
+
   return jsonDecode(response.body)['has_profile'] ?? false;
 }
 
 Future<List<SpeakerIdSample>> getUserSamplesState(String uid) async {
-  debugPrint('getUserSamplesState for uid: $uid');
   var response = await makeApiCall(
     url: '${Env.apiBaseUrl}samples?uid=$uid',
     headers: {},
@@ -67,12 +63,11 @@ Future<List<SpeakerIdSample>> getUserSamplesState(String uid) async {
     body: '',
   );
   if (response == null) return [];
-  debugPrint('getUserSamplesState: ${response.body}');
+
   return SpeakerIdSample.fromJsonList(jsonDecode(response.body));
 }
 
 Future<bool> uploadSample(File file, String uid) async {
-  debugPrint('uploadSample ${file.path} for uid: $uid');
   var request = http.MultipartRequest(
     'POST',
     Uri.parse('${Env.apiBaseUrl}samples/upload?uid=$uid'),
@@ -85,28 +80,24 @@ Future<bool> uploadSample(File file, String uid) async {
     var response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
-      debugPrint('uploadSample Response body: ${jsonDecode(response.body)}');
       return true;
     } else {
-      debugPrint(
-          'Failed to upload sample. Status code: ${response.statusCode}');
       throw Exception(
           'Failed to upload sample. Status code: ${response.statusCode}');
     }
   } catch (e) {
-    debugPrint('An error occurred uploadSample: $e');
     throw Exception('An error occurred uploadSample: $e');
   }
 }
 
 Future<void> uploadBackupApi(String backup) async {
+  // ignore: unused_local_variable
   var response = await makeApiCall(
     url: '${Env.apiBaseUrl}v1/backups?uid=${SharedPreferencesUtil().uid}',
     headers: {'Content-Type': 'application/json'},
     method: 'POST',
     body: jsonEncode({'data': backup}),
   );
-  debugPrint('uploadBackup: ${response?.body}');
 }
 
 Future<String> downloadBackupApi(String uid) async {
@@ -117,7 +108,7 @@ Future<String> downloadBackupApi(String uid) async {
     body: '',
   );
   if (response == null) return '';
-  debugPrint('downloadBackup: ${response.body}');
+
   return jsonDecode(response.body)['data'] ?? '';
 }
 
@@ -129,38 +120,11 @@ Future<bool> deleteBackupApi() async {
     body: '',
   );
   if (response == null) return false;
-  debugPrint('deleteBackup: ${response.body}');
+
   return response.statusCode == 200;
 }
 
-// Future<List<Plugin>> retrievePlugins() async {
-//   debugPrint("retrive plugins");
-//   var response = await makeApiCall(
-//     // url: '${Env.apiBaseUrl}v1/plugins?uid=${SharedPreferencesUtil().uid}',
-//     url:
-//         'https://raw.githubusercontent.com/Craftech360-projects/AVM/test-plugin/community-plugins.json',
-//     headers: {},
-//     body: '',
-//     method: 'GET',
-//   );
-//   print("response");
-//   debugPrint(response!.body);
-//   if (response?.statusCode == 200) {
-//     try {
-//       var plugins = Plugin.fromJsonList(jsonDecode(response!.body));
-//       SharedPreferencesUtil().pluginsList = plugins;
-//       return plugins;
-//     } catch (e, stackTrace) {
-//       debugPrint(e.toString());
-//       CrashReporting.reportHandledCrash(e, stackTrace);
-//       return SharedPreferencesUtil().pluginsList;
-//     }
-//   }
-//   return SharedPreferencesUtil().pluginsList;
-// }
-
 Future<List<Plugin>> retrievePlugins() async {
-  debugPrint("retrieve plugins");
   var response = await makeApiCall(
     url:
         'https://raw.githubusercontent.com/Craftech360-projects/AVM/main/community-plugins.json',
@@ -170,48 +134,39 @@ Future<List<Plugin>> retrievePlugins() async {
   );
 
   if (response == null) {
-    debugPrint("API call failed, returning cached plugins");
     return SharedPreferencesUtil().pluginsList;
   }
 
-  // debugPrint("response");
-  // debugPrint(response.body);
-
   if (response.statusCode == 200) {
-    debugPrint("obtained Plugins successfully>>>>>>>>>>>>>>>>");
     try {
       var plugins = Plugin.fromJsonList(jsonDecode(response.body));
       SharedPreferencesUtil().pluginsList = plugins;
       return plugins;
     } catch (e, stackTrace) {
-      debugPrint(e.toString());
       CrashReporting.reportHandledCrash(e, stackTrace);
       return SharedPreferencesUtil().pluginsList;
     }
   }
 
-  debugPrint("Unexpected status code: ${response.statusCode}");
   return SharedPreferencesUtil().pluginsList;
 }
 
 Future<void> reviewPlugin(String pluginId, double score,
     {String review = ''}) async {
-  var response = await makeApiCall(
+  await makeApiCall(
     url:
         '${Env.apiBaseUrl}v1/plugins/review?plugin_id=$pluginId&uid=${SharedPreferencesUtil().uid}',
     headers: {'Content-Type': 'application/json'},
     method: 'POST',
     body: jsonEncode({'score': score, review: review}),
   );
-  debugPrint('reviewPlugin: ${response?.body}');
 }
 
 Future<void> migrateUserServer(String prevUid, String newUid) async {
-  var response = await makeApiCall(
+  await makeApiCall(
     url: '${Env.apiBaseUrl}migrate-user?prev_uid=$prevUid&new_uid=$newUid',
     headers: {},
     method: 'POST',
     body: '',
   );
-  debugPrint('migrateUser: ${response?.body}');
 }

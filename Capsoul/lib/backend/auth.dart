@@ -83,18 +83,12 @@ Future<UserCredential> signInWithApple() async {
     SharedPreferencesUtil().email = user.email ?? '';
   }
 
-  // Optionally, update the Firebase profile if name needs to be set
   if (appleCredential.givenName != null) {
     await user.updateProfile(
         displayName:
             '${SharedPreferencesUtil().givenName} ${SharedPreferencesUtil().familyName}');
-    await user.reload(); // Refresh user profile data
+    await user.reload();
   }
-
-  // Debugging output to check the saved information
-  debugPrint(
-      'signInWithApple Name: ${SharedPreferencesUtil().givenName} ${SharedPreferencesUtil().familyName}');
-  debugPrint('signInWithApple Email: ${SharedPreferencesUtil().email}');
 
   return userCred;
 }
@@ -121,9 +115,6 @@ Future<UserCredential> signInWithGoogle() async {
     SharedPreferencesUtil().givenName = givenName;
     SharedPreferencesUtil().familyName = familyName;
   }
-  // test subsequent signIn
-  debugPrint('signInWithGoogle Email: ${SharedPreferencesUtil().email}');
-  debugPrint('signInWithGoogle Name: ${SharedPreferencesUtil().givenName}');
   return result;
 }
 
@@ -173,23 +164,12 @@ Future<UserCredential> signInWithGoogle2() async {
         nameParts.length > 1 ? nameParts.last : '';
   }
 
-  // Debugging output
-  debugPrint('signInWithGoogle Email: ${SharedPreferencesUtil().email}');
-  debugPrint('signInWithGoogle Name: ${SharedPreferencesUtil().givenName}');
-
   return result;
 }
 
 listenAuthTokenChanges() {
   FirebaseAuth.instance.idTokenChanges().listen((User? user) async {
     SharedPreferencesUtil().authToken = '123:/';
-
-    // try {
-    //   var token = await getIdToken();
-    //   SharedPreferencesUtil().authToken = token ?? '';
-    // } catch (e) {
-    //   debugPrint('Error getting token: $e');
-    // }
   });
 }
 
@@ -215,10 +195,9 @@ Future<void> signOut(BuildContext context) async {
 listenAuthStateChanges() {
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
-      debugPrint('User is currently signed out!');
       SharedPreferencesUtil().onboardingCompleted = false;
     } else {
-      debugPrint('User is signed in!');
+     
     }
   });
 }

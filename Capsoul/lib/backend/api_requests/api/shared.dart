@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:capsoul/backend/auth.dart';
 import 'package:capsoul/backend/preferences.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:instabug_http_client/instabug_http_client.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -24,16 +23,10 @@ Future<http.Response?> makeApiCall({
   required String method,
 }) async {
   try {
-    // var startTime = DateTime.now();
     bool result = await InternetConnection().hasInternetAccess; // 600 ms on avg
-    // debugPrint('Internet connection check took: ${DateTime.now().difference(startTime).inMilliseconds} ms');
     if (!result) {
-      debugPrint('No internet connection, aborting $method $url');
       return null;
     }
-    // if (url.contains(Env.apiBaseUrl!)) {
-    //   headers['Authorization'] = await getAuthHeader();
-    // }
 
     final client = InstabugHttpClient();
 
@@ -47,13 +40,6 @@ Future<http.Response?> makeApiCall({
       throw Exception('Unsupported HTTP method: $method');
     }
   } catch (e) {
-    debugPrint('HTTP request failed: $e');
-    // CrashReporting.reportHandledCrash(
-    //   e,
-    //   stackTrace,
-    //   userAttributes: {'url': url, 'method': method},
-    //   level: NonFatalExceptionLevel.warning,
-    // );
     return null;
   } finally {}
 }
@@ -72,25 +58,10 @@ dynamic extractContentFromResponse(
     }
     var message = data['choices'][0]['message'];
     if (isFunctionCalling && message['tool_calls'] != null) {
-      debugPrint('message $message');
-      debugPrint('message ${message['tool_calls'].runtimeType}');
       return message['tool_calls'];
     }
     return data['choices'][0]['message']['content'];
   } else {
-    debugPrint('Error fetching data: ${response?.statusCode}');
-    // handle error, better specially for script migration
-    // CrashReporting.reportHandledCrash(
-    //   Exception('Error fetching data: ${response?.statusCode}'),
-    //   StackTrace.current,
-    //   userAttributes: {
-    //     'response_null': (response == null).toString(),
-    //     'response_status_code': response?.statusCode.toString() ?? '',
-    //     'is_embedding': isEmbedding.toString(),
-    //     'is_function_calling': isFunctionCalling.toString(),
-    //   },
-    //   level: NonFatalExceptionLevel.warning,
-    // );
     return null;
   }
 }

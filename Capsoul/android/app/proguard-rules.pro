@@ -50,3 +50,7 @@
 
 # Prevent Removal of Resources
 -keep class **.R$* { *; }
+
+# Keep Play Core classes
+-keep class com.google.android.play.core.** { *; }
+-dontwarn com.google.android.play.core.**

@@ -5,6 +5,7 @@ import 'dart:typed_data';
 
 import 'package:capsoul/backend/database/geolocation.dart';
 import 'package:capsoul/backend/database/transcript_segment.dart';
+import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 
 enum MemoryType { audio, image }
@@ -248,8 +249,7 @@ class Structured {
               created: false,
             ));
           } catch (e) {
-            // ignore: avoid_print
-            print('Error parsing event: $e');
+            debugPrint('Error parsing event: $e');
             // Skip this event if there's an error
           }
         }

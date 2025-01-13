@@ -51,10 +51,8 @@ class _CustomPromptPageState extends State<CustomPromptPage> {
     return CustomScaffold(
       showBackBtn: true,
       showGearIcon: true,
-      title: Center(
-        child: Text("Custom Prompt",
-            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 19)),
-      ),
+      title: Text("Custom Prompt",
+          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 19)),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(

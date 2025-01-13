@@ -116,7 +116,6 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
 
       return formattedTranscript;
     }
-    // print("null");
     return [];
   }
 
@@ -127,10 +126,16 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     final categories =
         _getCategories(selectedMemory.structured.target?.category);
     _getFormattedTranscript(selectedMemory.transcript);
-    // Remove the old print statement
-    // print(selectedMemory.geolocation);
+
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: Icon(Icons.arrow_back_ios_new_rounded),
+          color: AppColors.black,
+        ),
         centerTitle: false,
         backgroundColor: AppColors.white,
         title: Text(
@@ -140,7 +145,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                     ' ${DateFormat('h:mm a').format(selectedMemory.createdAt)}'
                 : 'No Date',
             style: TextStyle(
-                color: AppColors.grey,
+                color: AppColors.black,
                 fontSize: 14,
                 fontWeight: FontWeight.w500)),
         actions: [
@@ -152,7 +157,11 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 setState,
               );
             },
-            icon: const Icon(Icons.ios_share, size: 24),
+            icon: const Icon(
+              Icons.ios_share,
+              size: 24,
+              color: AppColors.black,
+            ),
           ),
           IconButton(
             onPressed: () {
@@ -163,7 +172,11 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 _reProcessMemory,
               );
             },
-            icon: const Icon(Icons.more_vert_rounded, size: 25),
+            icon: const Icon(
+              Icons.more_vert_rounded,
+              size: 25,
+              color: AppColors.black,
+            ),
           ),
           w8,
         ],

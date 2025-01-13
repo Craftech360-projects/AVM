@@ -122,11 +122,9 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       showBackBtn: true,
-      title: const Center(
-        child: Text(
-          "Calendar Settings",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
-        ),
+      title: Text(
+        "Calendar Settings",
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
       ),
       showGearIcon: true,
       body: ListView(

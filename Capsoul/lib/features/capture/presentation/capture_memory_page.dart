@@ -616,7 +616,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                   textAlign: TextAlign.center,
                   'While speaking tap this widget to see live transcripts',
                   style: TextStyle(
-                      color: AppColors.white, fontSize: 22, height: 1.3),
+                      color: AppColors.white, fontSize: 17, height: 1.3),
                 ),
               ),
             ),
@@ -638,7 +638,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                   textAlign: TextAlign.center,
                   'After speaking, swipe right to create your memory',
                   style: TextStyle(
-                      color: AppColors.white, fontSize: 22, height: 1.3),
+                      color: AppColors.white, fontSize: 17, height: 1.3),
                 ),
               ),
             ),
@@ -655,7 +655,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                 textAlign: TextAlign.center,
                 'Enable Capsoul bot to get real-time responses',
                 style: TextStyle(
-                    color: AppColors.white, fontSize: 22, height: 1.3),
+                    color: AppColors.white, fontSize: 17, height: 1.3),
               ),
             ),
           ],
@@ -666,7 +666,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
         final tutorial = TutorialCoachMark(
           textStyleSkip: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: 16,
             color: AppColors.white,
           ),
           targets: targets.sublist(currentTutorialIndex),
@@ -676,6 +676,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
             if (currentTutorialIndex < targets.length) {
               showTutorialFromIndex();
             }
+            SharedPreferencesUtil().hasSeenTutorial = true;
             return true;
           },
           onFinish: () {

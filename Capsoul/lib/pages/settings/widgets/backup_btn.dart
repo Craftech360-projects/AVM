@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:capsoul/backend/api_requests/api/server.dart';
 import 'package:capsoul/backend/mixpanel.dart';
 import 'package:capsoul/backend/preferences.dart';
@@ -172,7 +174,7 @@ class _BackupButtonState extends State<BackupButton> {
           uid); // Replace this with your backup method
     } catch (error) {
       // Handle error (e.g., show a snackbar or alert)
-      debugPrint('Manual backup failed: $error');
+      log('Manual backup failed: $error');
     } finally {
       setState(() => isManualBackupInProgress = false);
     }

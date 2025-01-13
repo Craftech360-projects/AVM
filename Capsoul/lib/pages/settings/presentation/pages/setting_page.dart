@@ -20,7 +20,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -34,71 +33,11 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   String version = '';
   String buildVersion = '';
-  final GlobalKey _settingsKey = GlobalKey();
-  late bool hasSeenTutorial;
 
   @override
   void initState() {
     super.initState();
-    var tutorialSeen = SharedPreferencesUtil().hasSeenTutorial;
-    hasSeenTutorial = tutorialSeen;
-    checkTutorialStatus();
     _getVersionInfo();
-  }
-
-  void checkTutorialStatus() async {
-    if (!hasSeenTutorial) {
-      _createTutorial();
-    }
-  }
-
-  Future<void> _createTutorial() async {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final targets = [
-        TargetFocus(
-          alignSkip: Alignment.bottomCenter,
-          identify: 'settingIcon',
-          keyTarget: _settingsKey,
-          contents: [
-            TargetContent(
-              align: ContentAlign.left,
-              builder: (context, controller) => FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  'Navigate to settings page\nto see connectivity status',
-                  style: TextStyle(
-                      color: AppColors.white, fontSize: 22, height: 1.3),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ];
-
-      final tutorial = TutorialCoachMark(
-        textStyleSkip: TextStyle(
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
-          color: AppColors.white,
-        ),
-        targets: targets,
-        colorShadow: AppColors.black.withValues(alpha: 0.7),
-        onSkip: () {
-          SharedPreferencesUtil().hasSeenTutorial = true;
-          setState(() {});
-          return true;
-        },
-        onFinish: () {
-          SharedPreferencesUtil().hasSeenTutorial = true;
-          setState(() {});
-        },
-      );
-
-      // Trigger tutorial
-      Future.delayed(const Duration(milliseconds: 500), () {
-        tutorial.show(context: context);
-      });
-    });
   }
 
   Future<void> _getVersionInfo() async {
@@ -113,15 +52,15 @@ class _SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return CustomScaffold(
-      title: const Center(
-        child: Text(
-          "Settings",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
-        ),
+      title: Text(
+        "Settings",
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
       ),
       showBackBtn: true,
+      showBatteryLevel: true,
       body: Column(
         children: [
+          // ListView wrapped in Expanded to fill remaining space
           Expanded(
             child: ListView(
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
@@ -206,7 +145,6 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           Spacer(),
                           Icon(
-                            key: _settingsKey,
                             Icons.arrow_forward_ios_rounded,
                             color: AppColors.black,
                             size: 16,
@@ -263,13 +201,16 @@ class _SettingPageState extends State<SettingPage> {
               ],
             ),
           ),
-          Text(
-            'Version: $version+$buildVersion',
-            style: const TextStyle(
-                color: AppColors.grey,
-                fontSize: 14,
-                height: 3,
-                fontWeight: FontWeight.w500),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+              'Version: $version+$buildVersion',
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 150, 150, 150),
+                  fontSize: 14,
+                  height: 3,
+                  fontWeight: FontWeight.w500),
+            ),
           ),
         ],
       ),

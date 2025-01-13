@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:capsoul/backend/schema/bt_device.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 Future<List<BTDeviceStruct>> bleFindDevices() async {
@@ -27,7 +27,7 @@ Future<List<BTDeviceStruct>> bleFindDevices() async {
         }).toList();
       },
       onError: (e) {
-        debugPrint('bleFindDevices error: $e');
+        log('bleFindDevices error: $e');
       },
     );
 

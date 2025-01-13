@@ -13,9 +13,7 @@ class TACandPP extends StatelessWidget {
       showAppBar: false,
       body: Container(
         decoration: BoxDecoration(
-            border: Border.all(),
-            borderRadius: br15,
-            color: AppColors.grey.withValues(alpha: 0.1)),
+            border: Border.all(), borderRadius: br15, color: Color(0xFFF8F8FF)),
         margin: EdgeInsets.symmetric(vertical: 80, horizontal: 12),
         padding: EdgeInsets.all(08),
         child: Column(

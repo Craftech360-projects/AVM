@@ -56,11 +56,9 @@ Future<Object> executeManualBackupWithUid(uid) async {
       memories.map((e) => e.toJson() as Map<String, dynamic>).toList();
 
   try {
-    debugPrint("Starting manual backup with UID: $uid");
     final googleDriveService = GoogleDriveService();
     Map<String, dynamic> result =
         await googleDriveService.uploadBackupToGoogleDrive(rawData);
-    debugPrint("Manual backup result: $result");
     return result;
   } catch (e) {
     return false;
@@ -91,20 +89,6 @@ Future<List<Memory>> restoreFromBackup(
       return [];
     }
 
-    // Convert JSON to Memory objects
-    // List<Memory> memoriesToRestore = decodedData.map((json) {
-    //   try {
-    //     // Check and convert memoryImg if it's a List<dynamic>
-    //     if (json['memoryImg'] is List<dynamic>) {
-    //       json['memoryImg'] =
-    //           Uint8List.fromList(List<int>.from(json['memoryImg']));
-    //     }
-    //     return Memory.fromJson(json);
-    //   } catch (e) {
-    //     print('Error converting json to memory: $e');
-    //     rethrow;
-    //   }
-    // }).toList();
     List<Memory> memoriesToRestore = decodedData.map((json) {
       try {
         if (json['memoryImg'] is List<dynamic>) {

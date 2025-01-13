@@ -37,7 +37,7 @@ class FinalizePage extends StatelessWidget {
                   child: Text(
                     'You are all set 🎉',
                     style: TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.w500, height: 1.2),
+                        fontSize: 22, fontWeight: FontWeight.w500, height: 1.2),
                     textAlign: TextAlign.center,
                   ),
                 ),

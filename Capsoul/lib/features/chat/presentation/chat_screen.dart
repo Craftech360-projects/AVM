@@ -125,8 +125,8 @@ class _ChatScreenState extends State<ChatScreen>
   Widget build(BuildContext context) {
     return BlocListener<ChatBloc, ChatState>(
       listener: (context, state) {
-        if (state.status == ChatStatus.loaded ||
-            state.status == ChatStatus.userMessageSent) {
+        if (state.status == ChatStatus.loading) {
+          Center(child: TypingIndicator());
           WidgetsBinding.instance.addPostFrameCallback((_) {
             _scrollToBottom();
           });
@@ -138,51 +138,44 @@ class _ChatScreenState extends State<ChatScreen>
             previous.messages != current.messages ||
             previous.status != current.status,
         builder: (context, state) {
-          if (state.status == ChatStatus.loading) {
-            return Center(child: TypingIndicator());
-          }
-
-          if (state.status == ChatStatus.loaded) {
-            return ListView.builder(
-              controller: _scrollController,
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                bottom: 90,
-                top: 20,
-              ),
-              itemCount: state.messages?.length ?? 0,
-              itemBuilder: (context, index) {
-                final message = state.messages?[index];
-                if (message?.senderEnum == MessageSender.ai) {
-                  return Column(
-                    children: [
-                      AIMessage(
-                        message: message!,
-                        sendMessage: (msg) {},
-                        displayOptions: state.messages!.length <= 1,
-                        memories: message.memories,
-                        pluginSender: SharedPreferencesUtil()
-                            .pluginsList
-                            .firstWhereOrNull((e) => e.id == message.pluginId),
-                      ),
-                      h8,
-                    ],
-                  );
-                } else {
-                  return Column(
-                    children: [
-                      UserCard(message: message),
-                      h8,
-                    ],
-                  );
-                }
-              },
-            );
-          }
-
-          return const SizedBox.shrink();
+          return ListView.builder(
+            controller: _scrollController,
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 80,
+              top: 20,
+            ),
+            itemCount: state.messages?.length ?? 0,
+            itemBuilder: (context, index) {
+              final message = state.messages?[index];
+              bool isAIMessage = message?.senderEnum == MessageSender.ai;
+              if (isAIMessage) {
+                return Column(
+                  children: [
+                    AIMessage(
+                      message: message!,
+                      sendMessage: (msg) {},
+                      displayOptions: state.messages!.length <= 1,
+                      memories: message.memories,
+                      pluginSender: SharedPreferencesUtil()
+                          .pluginsList
+                          .firstWhereOrNull((e) => e.id == message.pluginId),
+                    ),
+                    h8,
+                  ],
+                );
+              } else {
+                return Column(
+                  children: [
+                    UserMessage(message: message),
+                    h8,
+                  ],
+                );
+              }
+            },
+          );
         },
       ),
     );

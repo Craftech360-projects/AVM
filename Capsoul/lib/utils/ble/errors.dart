@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-
 void logErrorMessage(String message, String deviceId) {
-  debugPrint('($deviceId) $message');
   // CrashReporting.reportHandledCrash(
   //   Exception(message),
   //   StackTrace.current,

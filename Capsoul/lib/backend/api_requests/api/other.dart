@@ -1,16 +1,14 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:capsoul/backend/api_requests/api/shared.dart';
 import 'package:capsoul/backend/database/memory.dart';
 import 'package:capsoul/backend/database/transcript_segment.dart';
 import 'package:capsoul/backend/preferences.dart';
 import 'package:deepgram_speech_to_text/deepgram_speech_to_text.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
-  debugPrint('deepgramTranscribe');
-  var startTime = DateTime.now();
   // why there seems to be no punctuation
   Deepgram deepgram = Deepgram(getDeepgramApiKeyForUsage(), baseQueryParams: {
     'model': 'nova-2-general',
@@ -29,8 +27,7 @@ Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
   });
 
   DeepgramSttResult res = await deepgram.transcribeFromFile(file);
-  debugPrint(
-      'Deepgram took: ${DateTime.now().difference(startTime).inSeconds} seconds');
+
   var data = jsonDecode(res.json);
   if (data['results'] == null || data['results']['channels'] == null) {
     return [];
@@ -66,15 +63,6 @@ Future<List<TranscriptSegment>> deepgramTranscribe(File file) async {
 Future<String> webhookOnMemoryCreatedCall(Memory? memory,
     {bool returnRawBody = false}) async {
   if (memory == null) return '';
-  // debugPrint('devModeWebhookCall: $memory');
-  // return triggerMemoryRequestAtEndpoint(
-  //   //SharedPreferencesUtil().webhookOnMemoryCreated,
-  //   //  'https://webhook-test.com/e2dd86c6594e8f3557246064cee207e3',
-  //   'https://hooks.zapier.com/hooks/catch/17966596/3et9fky/',
-  //   // 'https://based-hardware--plugins-api.modal.run/zapier/memories',
-  //   memory,
-  //   returnRawBody: returnRawBody,
-  // );
   return '';
 }
 
@@ -88,11 +76,8 @@ Future<String> zapWebhookOnMemoryCreatedCall(Memory? memory,
 
   // Check if Zapier integration is enabled and the webhook URL is valid
   if (!isZapierEnabled || webhookUrl.isEmpty) {
-    debugPrint('Zapier integration is disabled or webhook URL is missing.');
     return '';
   }
-
-  debugPrint('Sending data to Zapier webhook: $memory');
 
   // Prepare data payload for the webhook
   final data = {
@@ -147,7 +132,6 @@ Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory,
   } else {
     url += '?uid=${SharedPreferencesUtil().uid}';
   }
-  debugPrint('triggerMemoryRequestAtEndpoint: $url');
   var data = memory.toJson();
   data['recordingFileBase64'] =
       await wavToBase64(memory.recordingFilePath ?? '');
@@ -158,7 +142,6 @@ Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory,
       body: jsonEncode(data),
       method: 'POST',
     );
-    debugPrint('response: ${response?.statusCode}');
     if (returnRawBody) {
       return jsonEncode(
           {'statusCode': response?.statusCode, 'body': response?.body});
@@ -167,7 +150,6 @@ Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory,
     var body = jsonDecode(response?.body ?? '{}');
     return body['message'] ?? '';
   } catch (e) {
-    debugPrint('Error triggering memory request at endpoint: $e');
     // CrashReporting.reportHandledCrash(e, StackTrace.current, level: NonFatalExceptionLevel.warning, userAttributes: {
     //   'url': url,
     // });
@@ -181,7 +163,6 @@ Future<void> sendTaskToZapier(
   final webhookUrl = SharedPreferencesUtil().zapierWebhookUrl;
 
   if (!isZapierEnabled || webhookUrl.isEmpty) {
-    debugPrint('Zapier integration is disabled or webhook URL is missing.');
     return;
   }
 
@@ -202,43 +183,15 @@ Future<void> sendTaskToZapier(
       body: jsonEncode(data),
     );
 
-
     if (response.statusCode == 200) {
-    } else {
-      debugPrint('Failed to send task to Zapier: ${response.body}');
-    }
+    } else {}
   } catch (e) {
-    debugPrint('Error sending task to Zapier: $e');
+    log(e.toString());
   }
 }
 
-// Future<String> triggerMemoryRequestAtEndpoint(
-//     String webhookUrl, Map<String, dynamic> data,
-//     {bool returnRawBody = false}) async {
-//   try {
-//     final response = await http.post(
-//       Uri.parse(webhookUrl),
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: jsonEncode(data),
-//     );
-
-//     if (response.statusCode == 200) {
-//       return returnRawBody ? response.body : 'Success';
-//     } else {
-//       debugPrint('Failed to send data to Zapier: ${response.body}');
-//       return 'Error';
-//     }
-//   } catch (e) {
-//     debugPrint('Error sending data to Zapier: $e');
-//     return 'Error';
-//   }
-// }
-
 Future<String> triggerTranscriptSegmentsRequest(
     String url, String sessionId, List<TranscriptSegment> segments) async {
-  debugPrint('triggerMemoryRequestAtEndpoint: $url');
   if (url.isEmpty) return '';
   if (url.contains('?')) {
     url += '&uid=${SharedPreferencesUtil().uid}';
@@ -255,14 +208,9 @@ Future<String> triggerTranscriptSegmentsRequest(
       }),
       method: 'POST',
     );
-    debugPrint('response: ${response?.statusCode}');
     var body = jsonDecode(response?.body ?? '{}');
     return body['message'] ?? '';
   } catch (e) {
-    debugPrint('Error triggering transcript request at endpoint: $e');
-    // CrashReporting.reportHandledCrash(e, StackTrace.current, level: NonFatalExceptionLevel.warning, userAttributes: {
-    //   'url': url,
-    // });
     return '';
   }
 }
@@ -273,7 +221,6 @@ Future<String?> wavToBase64(String filePath) async {
     // Read file as bytes
     File file = File(filePath);
     if (!file.existsSync()) {
-      // print('File does not exist: $filePath');
       return null;
     }
     List<int> fileBytes = await file.readAsBytes();
@@ -283,7 +230,7 @@ Future<String?> wavToBase64(String filePath) async {
 
     return base64Encoded;
   } catch (e) {
-    // print('Error converting WAV to base64: $e');
+
     return null; // Handle error gracefully in your application
   }
 }

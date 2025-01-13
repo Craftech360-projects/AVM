@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:capsoul/backend/preferences.dart';
 import 'package:capsoul/utils/other/notifications.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
@@ -68,7 +67,6 @@ void onStart(ServiceInstance service, bool isStream) async {
     for (var file in files) {
       if (file.path.contains('recording_') &&
           !file.path.contains('recording_0')) {
-        debugPrint('deleting file: ${file.path}');
         file.deleteSync();
       }
     }
@@ -83,8 +81,6 @@ void onStart(ServiceInstance service, bool isStream) async {
           await record.stop();
           await record.dispose();
         }
-
-        debugPrint("recording stopped");
       }
       if (event["time"] == '30') {
         var paths = SharedPreferencesUtil().recordingPaths;
@@ -94,14 +90,12 @@ void onStart(ServiceInstance service, bool isStream) async {
         record = AudioRecorder();
         await record.start(const RecordConfig(encoder: AudioEncoder.wav),
             path: filePath);
-        debugPrint("recording started again file: $filePath");
       }
     });
     service.on("stop").listen((event) async {
       await record.stop();
       await record.dispose();
       await service.stopSelf();
-      debugPrint("background process is now stopped");
     });
   }
 }
@@ -124,6 +118,5 @@ Future streamRecording(ServiceInstance service) async {
     await record.stop();
     await record.dispose();
     await service.stopSelf();
-    debugPrint("background process is now stopped");
   });
 }

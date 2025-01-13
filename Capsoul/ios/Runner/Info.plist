@@ -90,7 +90,6 @@
 		<string>fetch</string>
 		<string>processing</string>
 		<string>remote-notification</string>
-		<string>external-accessory</string>
 		<string>location</string>
 		<string>bluetooth-peripheral</string>
 		<string>nearby-interaction</string>
@@ -108,6 +107,8 @@
 	<true/>
 	<key>UIStatusBarHidden</key>
 	<false/>
+	<key>UISupportedExternalAccessoryProtocols</key>
+	<array/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:capsoul/backend/database/memory.dart';
 import 'package:capsoul/backend/database/memory_provider.dart';
 import 'package:capsoul/backend/mixpanel.dart';
@@ -40,8 +42,7 @@ class _MemoryListItemState extends State<MemoryListItem> {
         memory = updatedMemory;
       });
     } else {
-      // ignore: avoid_print
-      print('Memory not found in database.');
+      log('Memory not found in database.');
     }
   }
 
@@ -138,7 +139,7 @@ class _MemoryListItemState extends State<MemoryListItem> {
                         visualDensity: const VisualDensity(vertical: -4),
                         padding: EdgeInsets.zero,
                         onPressed: () {
-                          debugPrint('memory_list_item.dart');
+                          
                         },
                         icon: const Icon(
                           Icons.more_horiz,

@@ -39,7 +39,6 @@ class _ConnectDevicePageState extends State<ConnectDevicePage> {
               const SizedBox(height: 58),
               FindDevicesPage(
                 goNext: () {
-                  debugPrint('onConnected');
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (c) => const HomePageWrapper()),
                   );

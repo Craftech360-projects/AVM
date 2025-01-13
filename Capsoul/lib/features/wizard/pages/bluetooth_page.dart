@@ -5,20 +5,16 @@ class BluetoothPermissionHandler {
   static Future<bool> requestBluetoothPermissions(BuildContext context) async {
     // First check if Bluetooth is available
     if (await Permission.bluetooth.status.isDenied) {
-      debugPrint("Bluetooth permission is denied, requesting...");
 
       // Request Bluetooth permission
       PermissionStatus bluetoothStatus = await Permission.bluetooth.request();
-      debugPrint("Bluetooth permission status after request: $bluetoothStatus");
 
       // For iOS, also request bluetoothScan and bluetoothConnect
       PermissionStatus bluetoothScanStatus =
           await Permission.bluetoothScan.request();
-      debugPrint("Bluetooth scan status: $bluetoothScanStatus");
 
       PermissionStatus bluetoothConnectStatus =
           await Permission.bluetoothConnect.request();
-      debugPrint("Bluetooth connect status: $bluetoothConnectStatus");
 
       // If any permission is permanently denied, show settings dialog
       if (bluetoothStatus.isPermanentlyDenied ||

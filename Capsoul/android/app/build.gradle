@@ -65,6 +65,8 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
+            minifyEnabled true  // Enable code shrinking (R8 or new shrinker)
+            shrinkResources true  // Enable resource shrinking
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {

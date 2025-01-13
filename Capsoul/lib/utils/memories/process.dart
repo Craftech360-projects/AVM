@@ -38,9 +38,8 @@ Future<Memory?> processTranscriptContent(
   LocationService locationService = LocationService();
   if (await locationService.hasPermission() &&
       await locationService.enableService()) {
-    debugPrint(">>>>>>>>>Geolocation fetched successfully,$Geolocation");
   } else {
-    debugPrint("Geolocation permissions not granted or service disabled.");
+    log("Geolocation permissions not granted or service disabled.");
   }
   if (transcript.isNotEmpty || photos.isNotEmpty) {
     Memory? memory = await memoryCreationBlock(
@@ -92,19 +91,10 @@ Future<SummaryResult?> _retrieveStructure(
       }
       summary = await summarizeMemory(transcript, [],
           ignoreCache: ignoreCache, customPromptDetails: savedPrompt);
-      debugPrint("its reached here ${summary.structured}");
-      debugPrint("Structured content:");
-      debugPrint("Title: ${summary.structured.title}");
-      debugPrint("Overview: ${summary.structured.overview}");
-      debugPrint("Action Items: ${summary.structured.actionItems}");
-      debugPrint("Category: ${summary.structured.category}");
-      debugPrint("Emoji: ${summary.structured.emoji}");
-      debugPrint("Events: ${summary.structured.events}");
 
-      debugPrint("Plugins Response:");
     }
   } catch (e) {
-    debugPrint('Error: $e');
+    log('Error: $e');
     // CrashReporting.reportHandledCrash(e, stacktrace,
     //     level: NonFatalExceptionLevel.error,
     //     userAttributes: {
@@ -121,129 +111,6 @@ Future<SummaryResult?> _retrieveStructure(
   return summary;
 }
 
-// Process the creation of memory records
-// Future<Memory> memoryCreationBlock(
-//   BuildContext context,
-//   String transcript,
-//   List<TranscriptSegment> transcriptSegments,
-//   String? recordingFilePath,
-//   // Uint8List memoryImg,
-//   bool retrievedFromCache,
-//   DateTime? startedAt,
-//   DateTime? finishedAt,
-//   Geolocation? geolocation,
-//   List<Tuple2<String, String>> photos,
-// ) async {
-//   SummaryResult? summarizeResult =
-//       await _retrieveStructure(context, transcript, photos, retrievedFromCache);
-//   bool failed = false;
-//   if (summarizeResult == null) {
-//     summarizeResult = await _retrieveStructure(
-//         context, transcript, photos, retrievedFromCache,
-//         ignoreCache: true);
-//     if (summarizeResult == null) {
-//       failed = true;
-//       summarizeResult = SummaryResult(
-//         Structured('', '',
-//             emoji: '😢', category: ['failed']), // Wrap 'failed' in a list
-//         [],
-//       );
-//       if (!retrievedFromCache) {
-//         InstabugLog.logError('Unable to create memory structure.');
-//         ScaffoldMessenger.of(context).removeCurrentSnackBar();
-//         showTopSnackBar(
-//           Overlay.of(context),
-//           const CustomSnackBar.error(
-//             message:
-//                 'Unexpected error creating your memory. Please check your discarded memories.',
-//           ),
-//         );
-//         // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-//         //   content: Text(
-//         //     'Unexpected error creating your memory. Please check your discarded memories.',
-//         //     style: TextStyle(color: Colors.white),
-//         //   ),
-//         //   duration: Duration(seconds: 4),
-//         // ));
-//       }
-//     }
-//   }
-//   Structured structured = summarizeResult.structured;
-
-//   if (SharedPreferencesUtil().calendarEnabled &&
-//       SharedPreferencesUtil().deviceId.isNotEmpty &&
-//       SharedPreferencesUtil().calendarType == 'auto') {
-//     for (var event in structured.events) {
-//       event.created = await CalendarUtil().createEvent(
-//           event.title, event.startsAt, event.duration,
-//           description: event.description);
-//     }
-//   }
-//   // Pass the event title as the prompt for image generation
-//   final memoryImg =
-//       await generateImageWithFallback(summarizeResult.structured.title);
-
-//   debugPrint("going to save ,saving memory");
-
-//   Memory memory = await finalizeMemoryRecord(
-//     transcript,
-//     transcriptSegments,
-//     structured,
-//     summarizeResult.pluginsResponse,
-//     recordingFilePath,
-//     memoryImg,
-//     startedAt,
-//     finishedAt,
-//     structured.title.isEmpty,
-//     geolocation,
-//     photos,
-//   );
-//   debugPrint('Memory created: ${memory.id}');
-
-//   if (!retrievedFromCache) {
-//     if (structured.title.isEmpty && !failed) {
-//       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-//       showTopSnackBar(
-//         displayDuration: const Duration(milliseconds: 4000),
-//         Overlay.of(context),
-//         const CustomSnackBar.info(
-//             maxLines: 6,
-//             // textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-//             message:
-//                 "Audio processing failed due to noise \n Please try again in a \n quieter place!",
-//             backgroundColor: CustomColors.greyLight),
-//       );
-//       // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-//       //   content: Text(
-//       //     'Memory stored as discarded! Nothing useful. 😄',
-//       //     style: TextStyle(color: Colors.white),
-//       //   ),
-//       //   duration: Duration(seconds: 4),
-//       // ));
-//     } else if (structured.title.isNotEmpty) {
-//       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-//       showTopSnackBar(
-//         Overlay.of(context),
-//         const CustomSnackBar.success(
-//             message: 'New memory created! 🚀',
-//             backgroundColor: CustomColors.greyLavender),
-//       );
-//       // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-//       //   content: Text('New memory created! 🚀',
-//       //       style: TextStyle(color: Colors.white)),
-//       //   duration: Duration(seconds: 4),
-//       // ));
-//     } else {
-//       showTopSnackBar(
-//         Overlay.of(context),
-//         const CustomSnackBar.info(
-//           message: 'Memory stored as discarded! There\'s Background noise 😄',
-//         ),
-//       );
-//     }
-//   }
-//   return memory;
-// }
 Future<Memory> memoryCreationBlock(
   BuildContext context,
   String transcript,
@@ -291,8 +158,6 @@ Future<Memory> memoryCreationBlock(
   final memoryImg =
       await generateImageWithFallback(summarizeResult.structured.title);
 
-  debugPrint("going to save ,saving memory");
-
   Memory memory = await finalizeMemoryRecord(
     transcript,
     transcriptSegments,
@@ -306,7 +171,6 @@ Future<Memory> memoryCreationBlock(
     geolocation,
     photos,
   );
-  debugPrint('Memory created: ${memory.id}');
 
   if (!retrievedFromCache) {
     if (structured.title.isEmpty && !failed) {

@@ -29,9 +29,6 @@ class PromptProvider {
   // Method to save a Prompt
   int savePrompt(Prompt prompt) {
     try {
-      // Debugging output
-      // print("Prompt Details: ${promptToString(prompt)}");
-
       // Save the prompt
       int id = _box.put(prompt);
 

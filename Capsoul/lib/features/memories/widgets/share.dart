@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:capsoul/backend/database/memory.dart';
@@ -84,7 +85,7 @@ void _exportTranscriptTxt(Memory memory) async {
   final transcript = memory.getTranscript(generate: true);
 
   if (transcript.isEmpty) {
-    debugPrint("Transcript is empty");
+    log("Transcript is empty");
     return;
   }
 
@@ -107,7 +108,7 @@ void _exportSummaryTxt(Memory memory) async {
 
   // Check if structured data exists
   if (structured == null) {
-    debugPrint("Structured data is null");
+    log("Structured data is null");
     return;
   }
 
@@ -184,18 +185,15 @@ void showShareBottomSheet(
           void updateView(BottomSheetView view) {
             setModalState(() {
               currentView = view;
-              debugPrint("View Set to: ${view.name}");
             });
           }
 
           void setExportType(ExportType type) {
             setModalState(() {
               exportType = type;
-              debugPrint("Type Set to: ${type.name}");
+              ("Type Set to: ${type.name}");
             });
           }
-
-          debugPrint("Current View: $currentView");
 
           return Container(
             decoration: BoxDecoration(

@@ -684,5 +684,4 @@ void showOptionsBottomSheet(
             );
           }));
   if (result == true) setState(() {});
-  debugPrint('showBottomSheet result: $result');
 }

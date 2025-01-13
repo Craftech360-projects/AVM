@@ -25,6 +25,7 @@ class CustomScaffold extends StatefulWidget {
   final bool showGearIcon;
   final bool showDateTime;
   final bool? showAppBar;
+  final bool? centerTitle;
 
   const CustomScaffold(
       {super.key,
@@ -41,7 +42,9 @@ class CustomScaffold extends StatefulWidget {
       this.showBatteryLevel = false,
       this.showGearIcon = false,
       this.showDateTime = false,
-      this.showAppBar = true});
+      this.showAppBar = true,
+      this.centerTitle,
+      });
 
   @override
   CustomScaffoldState createState() => CustomScaffoldState();
@@ -77,6 +80,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
     return Scaffold(
       appBar: widget.showAppBar == true
           ? AppBar(
+              centerTitle: widget.centerTitle ?? true,
               automaticallyImplyLeading: false,
               backgroundColor: AppColors.white,
               elevation: 0,

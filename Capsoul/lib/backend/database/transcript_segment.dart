@@ -114,7 +114,6 @@ class TranscriptSegment {
     double toRemoveSeconds = 0,
   }) {
     if (newSegments.isEmpty) return;
-    // print('toAddSeconds: $toAddSeconds toRemoveSeconds: $toRemoveSeconds');
 
     for (var segment in newSegments) {
       segment.start -= toRemoveSeconds;

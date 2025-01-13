@@ -33,13 +33,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     });
   }
 
-  /// Refresh messages and update the state
   Future<void> _refreshMessages(
       RefreshMessages event, Emitter<ChatState> emit) async {
     try {
       emit(state.copyWith(status: ChatStatus.loading));
 
-      // Re-fetch the updated messages
       List<Message> messages = messageProvider.getMessages();
       emit(state.copyWith(
         status: ChatStatus.loaded,
@@ -54,7 +52,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  /// Handle initial plugin message
   Future<void> _onSendInitialPluginMessage(
       SendInitialPluginMessage event, Emitter<ChatState> emit) async {
     try {
@@ -101,11 +98,19 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  /// Send a message and handle streaming response
   Future<void> _onSendMessage(
       SendMessage event, Emitter<ChatState> emit) async {
     try {
-      emit(state.copyWith(status: ChatStatus.loading));
+      var userMessage = Message(DateTime.now(), event.message, 'human');
+      messageProvider.saveMessage(userMessage);
+
+      emit(state.copyWith(
+        status: ChatStatus.userMessageSent,
+        messages: [...?state.messages, userMessage],
+        isUserMessageSent: true,
+      ));
+
+      emit(state.copyWith(status: ChatStatus.waitingForAI));
 
       var aiMessage = _prepareStreaming(event.message);
 
@@ -123,9 +128,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         _callbackFunctionChatStreaming(aiMessage),
         () async {
           aiMessage.memories.addAll(memories);
-          messageProvider.updateMessage(aiMessage);
+          await messageProvider.updateMessage(aiMessage);
+
           add(RefreshMessages());
-          emit(state.copyWith(status: ChatStatus.loaded));
+          emit(state.copyWith(
+            status: ChatStatus.loaded,
+            isUserMessageSent: false,
+          ));
         },
       );
     } catch (error) {
@@ -136,16 +145,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
   }
 
-  /// Prepare messages for streaming
   Message _prepareStreaming(String text) {
-    var human = Message(DateTime.now(), text, 'human');
     var ai = Message(DateTime.now(), '', 'ai');
-    messageProvider.saveMessage(human);
     messageProvider.saveMessage(ai);
     return ai;
   }
 
-  /// Handle streaming response for AI message
   Future<void> Function(String) _callbackFunctionChatStreaming(
       Message aiMessage) {
     return (String content) async {
@@ -154,7 +159,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     };
   }
 
-  /// Handle sending initial plugin message (standalone function)
   Future<void> sendInitialPluginMessage(Plugin? plugin) async {
     try {
       var ai = Message(DateTime.now(), '', 'ai', pluginId: plugin?.id);

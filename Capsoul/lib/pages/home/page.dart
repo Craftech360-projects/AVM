@@ -98,8 +98,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   _setupHasSpeakerProfile() async {
     SharedPreferencesUtil().hasSpeakerProfile =
         await userHasSpeakerProfile(SharedPreferencesUtil().uid);
-    debugPrint(
-        '_setupHasSpeakerProfile: ${SharedPreferencesUtil().hasSpeakerProfile}');
     MixpanelManager().setUserProperty(
         'Speaker Profile', SharedPreferencesUtil().hasSpeakerProfile);
     setState(() {});
@@ -134,7 +132,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     } else if (state == AppLifecycleState.detached) {
       event = 'App is detached';
     }
-    debugPrint(event);
     InstabugLog.logInfo(event);
   }
 
@@ -168,7 +165,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
     SharedPreferencesUtil().pageToShowFromNotification = 1;
     SharedPreferencesUtil().onboardingCompleted = true;
-    // print('Selected: ${SharedPreferencesUtil().selectedChatPluginId}');
 
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -225,7 +221,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       deviceId: _device!.id,
       onStateChanged: (state, device) {
         if (state == BluetoothConnectionState.disconnected) {
-          debugPrint('onDisconnected');
           capturePageKey.currentState
               ?.resetState(restartBytesProcessing: false);
           setState(() {
@@ -255,13 +250,12 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   _startForeground() async {
     if (!Platform.isAndroid) return;
     await foregroundUtil.initForegroundTask();
+    // ignore: unused_local_variable
     var result = await foregroundUtil.startForegroundTask();
-    debugPrint('_startForeground: $result');
   }
 
   _onConnected(BTDeviceStruct? connectedDevice,
       {bool initiateConnectionListener = true}) {
-    debugPrint('_onConnected: $connectedDevice');
     if (connectedDevice == null) return;
     clearNotification(1);
     _device = connectedDevice;
@@ -318,6 +312,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           ? UpgradeDialogStyle.cupertino
           : UpgradeDialogStyle.material,
       child: CustomScaffold(
+        centerTitle: false,
         resizeToAvoidBottomInset: true,
         showBatteryLevel: true,
         showGearIcon: true,
@@ -365,23 +360,29 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                         memoriesTextFieldFocusNode.hasFocus)
                       const SizedBox.shrink()
                     else
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: CustomNavBar(
-                          isChat: _controller!.index == 1,
-                          isMemory: _controller!.index == 0,
-                          onTabChange: (index) => _controller?.animateTo(index),
-                          onSendMessage: (message) {
-                            BlocProvider.of<ChatBloc>(context)
-                                .add(SendMessage(message));
-                            FocusScope.of(context).unfocus();
-                          },
-                          onMemorySearch: (query) {
-                            BlocProvider.of<MemoryBloc>(context).add(
-                              SearchMemory(query: query),
-                            );
-                          },
-                        ),
+                      BlocBuilder<ChatBloc, ChatState>(
+                        builder: (context, state) {
+                          return Align(
+                            alignment: Alignment.bottomCenter,
+                            child: CustomNavBar(
+                              isChat: _controller!.index == 1,
+                              isMemory: _controller!.index == 0,
+                              onTabChange: (index) =>
+                                  _controller?.animateTo(index),
+                              onSendMessage: (message) {
+                                BlocProvider.of<ChatBloc>(context)
+                                    .add(SendMessage(message));
+                                FocusScope.of(context).unfocus();
+                              },
+                              onMemorySearch: (query) {
+                                BlocProvider.of<MemoryBloc>(context).add(
+                                  SearchMemory(query: query),
+                                );
+                              },
+                              isUserMessageSent: state.isUserMessageSent,
+                            ),
+                          );
+                        },
                       )
                   ],
                 ),

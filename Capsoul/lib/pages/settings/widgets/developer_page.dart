@@ -52,11 +52,9 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
     return CustomScaffold(
       showBackBtn: true,
       showGearIcon: true,
-      title: Center(
-        child: const Text(
-          "Developer Options",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
-        ),
+      title: const Text(
+        "Developer Options",
+        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
       ),
       body: _buildBody(),
     );

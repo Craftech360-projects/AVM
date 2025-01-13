@@ -1,7 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:capsoul/backend/schema/bt_device.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 Future<void> bleConnectDevice(String deviceId,
@@ -24,7 +24,7 @@ Future<void> bleConnectDevice(String deviceId,
     // Step 3: Request the desired MTU size if the platform is Android
     if (Platform.isAndroid) await device.requestMtu(512);
   } catch (e) {
-    debugPrint('bleConnectDevice failed: $e');
+    log('bleConnectDevice failed: $e');
   }
 }
 
@@ -33,6 +33,6 @@ Future bleDisconnectDevice(BTDeviceStruct btDevice) async {
   try {
     await device.disconnect();
   } catch (e) {
-    debugPrint('bleDisconnectDevice failed: $e');
+    log('bleDisconnectDevice failed: $e');
   }
 }

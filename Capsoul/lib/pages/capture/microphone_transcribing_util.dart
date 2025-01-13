@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:capsoul/backend/database/transcript_segment.dart';
 import 'package:capsoul/backend/preferences.dart';
 import 'package:capsoul/utils/audio/wav_bytes.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -41,23 +41,17 @@ Future transcribeAfterStopiOS({
   }
   if (filePathsToProcess.isNotEmpty) {
     Future.forEach(filePathsToProcess, (f) async {
-      debugPrint('Processing file: $f');
       await processFileToTranscript(File(f));
       final file = File(f);
       if (file.existsSync()) {
         file.deleteSync();
-        debugPrint('file deleted: $f');
       }
     }).then((value) async {
-      debugPrint('All files processed in iOS');
       SharedPreferencesUtil().recordingPaths = [];
       updateState();
       if (segments.isNotEmpty) {
-        debugPrint('segments not empty: ${segments.length} in iOS');
         memory();
-      } else {
-        debugPrint('segments empty in iOS');
-      }
+      } else {}
     });
   }
 }
@@ -91,22 +85,18 @@ Future transcribeAfterStopAndroid(
   }
   if (filePathsToProcess.isNotEmpty) {
     Future.forEach(filePathsToProcess, (f) async {
-      debugPrint('Processing file: $f');
       await processFileToTranscript(File(f));
       final file = File(f);
       if (file.existsSync()) {
         file.deleteSync();
-        debugPrint('file deleted: $f');
       }
     }).then((value) async {
-      debugPrint('All files processed in Android');
       SharedPreferencesUtil().recordingPaths = [];
       updateState();
       if (segments.isNotEmpty) {
-        debugPrint('segments not empty: ${segments.length}');
         memory();
       } else {
-        debugPrint('segments empty in Android');
+        log('segments empty in Android');
       }
     });
   }
@@ -127,7 +117,6 @@ Future iosBgCallback({
     if (await file.exists()) {
       // Get the current length of the file
       final currentLength = await file.length();
-      debugPrint('Current length: $currentLength and last offset: $lastOffset');
       if (currentLength > lastOffset) {
         // Read the new content from the file
         final content = await file.openRead(lastOffset, currentLength).toList();
@@ -143,23 +132,19 @@ Future iosBgCallback({
             channelCount: 2);
         newContent = [...header, ...newContent];
         await newFile.writeAsBytes((newContent));
-        debugPrint('Triggered content written to $newFilePath');
         if (shouldTranscribe) {
           await processFileToTranscript(newFile);
           var paths = SharedPreferencesUtil().recordingPaths;
           SharedPreferencesUtil().recordingPaths = [...paths, newFilePath];
           if (newFile.existsSync()) {
             newFile.deleteSync();
-            debugPrint('file deleted: $newFilePath');
           }
         }
         updateState(currentLength);
       }
-    } else {
-      debugPrint('File does not exist.');
-    }
+    } else {}
   } catch (e) {
-    debugPrint('Error reading and splitting file content: $e');
+    log(e.toString());
   }
 }
 
@@ -183,9 +168,8 @@ Future androidBgCallback({
       if (file.existsSync()) {
         file.deleteSync();
       }
-      debugPrint('file deleted: $filePath');
     });
   } else {
-    debugPrint('File does not exist.');
+    log('File does not exist.');
   }
 }

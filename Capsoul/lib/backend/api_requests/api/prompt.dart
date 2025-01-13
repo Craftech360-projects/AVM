@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:capsoul/backend/api_requests/api/llm.dart';
@@ -11,7 +12,6 @@ import 'package:capsoul/backend/schema/plugin.dart';
 import 'package:capsoul/utils/features/calendar.dart';
 import 'package:capsoul/utils/other/string_utils.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 
 class SummaryResult {
@@ -54,10 +54,10 @@ Future<SummaryResult> summarizeMemory(
 }) async {
   bool isPromptSaved = SharedPreferencesUtil().isPromptSaved;
   if (isPromptSaved) {
+    // ignore: unused_local_variable
     final prompt = PromptProvider().getPrompts().first;
   }
 
-  debugPrint('summarizeMemory transcript length: ${transcript.length}');
   if (transcript.isEmpty || transcript.split(' ').length < 7) {
     return SummaryResult(Structured('', ''), []);
   }
@@ -154,17 +154,17 @@ Respond in a JSON format with the following structure:
           bool eventCreated = await CalendarUtil().createEvent(
             reminderText,
             startsAt,
-            60, // Default duration of 1 hour, can be customized
+            60,
             description: description,
           );
 
           if (eventCreated) {
-            debugPrint('Reminder added to calendar: $reminderText');
+            log('Reminder added to calendar: $reminderText');
           } else {
-            debugPrint('Failed to add reminder to calendar: $reminderText');
+            log('Failed to add reminder to calendar: $reminderText');
           }
         } else {
-          debugPrint('Invalid or missing time for reminder: $reminderText');
+          log('Invalid or missing time for reminder: $reminderText');
         }
       }
     }
@@ -174,7 +174,7 @@ Respond in a JSON format with the following structure:
 
     return SummaryResult(structured, pluginsResponse);
   } catch (e) {
-    debugPrint("error, $e");
+    log("error, $e");
     return SummaryResult(Structured('', ''), []);
   }
 }
@@ -212,7 +212,7 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
         return Tuple2(
             plugin, response.replaceAll('```', '').replaceAll('""', '').trim());
       } catch (e) {
-        debugPrint('Error executing plugin ${plugin.id},$e');
+        log('Error executing plugin ${plugin.id},$e');
         return Tuple2(plugin, '');
       }
     },
@@ -281,7 +281,6 @@ Future<List<String>> getSemanticSummariesForEmbedding(String transcript) async {
   '''
       .replaceAll('  ', '')
       .trim();
-  // debugPrint(prompt);
   var response = await executeGptPrompt(prompt);
 
   return response
@@ -321,7 +320,6 @@ Respond in a JSON format with the following structure:
       .replaceAll('  ', '')
       .trim();
 
-  debugPrint(prompt);
   var response = await executeGptPrompt(prompt);
 
   return response;
@@ -347,9 +345,7 @@ Future<String> postMemoryCreationNotification(Memory memory) async {
   Structured version:
   ${memory.structured.target!.toJson()}
   ''';
-  debugPrint(prompt);
   var result = await executeGptPrompt(prompt);
-  debugPrint('postMemoryCreationNotification result: $result');
   if (result.contains('N/A') || result.split(' ').length < 5) return '';
   return result.replaceAll('```', '').trim();
 }
@@ -380,12 +376,10 @@ Future<String> dailySummaryNotifications(List<Memory> memories) async {
   ${Memory.memoriesToString(memories, includeTranscript: true)}
   ```
   ''';
-  debugPrint(prompt);
 
   //var result = await executeGptPrompt(prompt);
 
   var result = await executeGptPromptPlainText(prompt);
-  debugPrint('dailySummaryNotifications result: $result');
   return result.replaceAll('```', '').trim();
 }
 
@@ -415,14 +409,12 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
         ```
         '''
       .replaceAll('        ', '');
-  debugPrint('determineRequiresContext message: $message');
+
   var response = await executeGptPrompt(message);
-  debugPrint('determineRequiresContext response: $response');
 
   // Use a regex to find and extract the JSON part from the response
   var jsonMatch = RegExp(r'\{.*\}', dotAll: true).firstMatch(response);
   if (jsonMatch == null) {
-    debugPrint('No JSON found in response');
     return null;
   }
 
@@ -430,23 +422,20 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
 
   try {
     var data = jsonDecode(cleanedResponse);
-    debugPrint(">>>>>>>clean data: $data");
 
     List<String> topics =
         data['topics'].map<String>((e) => e.toString()).toList();
     List<String> datesRange =
         data['dates_range'].map<String>((e) => e.toString()).toList();
     List<DateTime> dates = datesRange.map((e) => DateTime.parse(e)).toList();
-    debugPrint('topics: $topics, dates: $dates');
+
     return Tuple2<List<String>, List<DateTime>>(topics, dates);
   } catch (e) {
-    debugPrint('Error determining requires context: $e');
     return null;
   }
 }
 
 String qaRagPrompt(String context, List<Message> messages, {Plugin? plugin}) {
-  // debugPrint("Your name is>>>>>>>>>>>>>>>>>>>: ${plugin.name}");
   List<Plugin> plugins = [];
   plugins = SharedPreferencesUtil().pluginsList;
   var selectedChatPlugin = SharedPreferencesUtil().selectedChatPluginId;
@@ -456,10 +445,7 @@ String qaRagPrompt(String context, List<Message> messages, {Plugin? plugin}) {
     SharedPreferencesUtil().selectedChatPluginId = 'no_selected';
   }
   if (plugin != null) {
-    debugPrint("Your name is>>>>>>>>>>>>>>>>>>>: ${plugin.name}");
-  } else {
-    debugPrint("Plugin or plugin name is null");
-  }
+  } else {}
 
   var prompt = '''
     You are an assistant for question-answering tasks. Use the following pieces of retrieved context and the conversation history to continue the conversation.
@@ -476,7 +462,7 @@ String qaRagPrompt(String context, List<Message> messages, {Plugin? plugin}) {
     Answer:
     '''
       .replaceAll('    ', '');
-  debugPrint(prompt);
+
   return prompt;
 }
 
@@ -578,7 +564,7 @@ Future<SummaryResult> summarizePhotos(
           .replaceAll('     ', '')
           .replaceAll('    ', '')
           .trim();
-  debugPrint(prompt);
+
   var structuredResponse = extractJson(await executeGptPrompt(prompt));
   var structured = Structured.fromJson(jsonDecode(structuredResponse));
   return SummaryResult(structured, []);
