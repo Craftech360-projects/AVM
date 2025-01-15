@@ -1,17 +1,20 @@
-import 'package:capsoul/backend/auth.dart';
 import 'package:capsoul/backend/mixpanel.dart';
 import 'package:capsoul/backend/preferences.dart';
 import 'package:capsoul/core/constants/constants.dart';
 import 'package:capsoul/core/theme/app_colors.dart';
+import 'package:capsoul/core/widgets/typing_indicator.dart';
 import 'package:capsoul/features/wizard/pages/signin_page.dart';
 import 'package:capsoul/pages/home/custom_scaffold.dart';
 import 'package:capsoul/pages/settings/widgets/backup_btn.dart';
 import 'package:capsoul/pages/settings/widgets/change_name_widget.dart';
 import 'package:capsoul/pages/settings/widgets/restore_btn.dart';
 import 'package:capsoul/widgets/custom_dialog_box.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -22,6 +25,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -34,25 +39,27 @@ class _ProfilePageState extends State<ProfilePage> {
       showBackBtn: true,
       showBatteryLevel: false,
       showGearIcon: true,
-      body: ListView(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        children: <Widget>[
-          _buildProfileTile(),
-          _buildNameTile(),
-          h16,
-          const Divider(color: AppColors.purpleDark, height: 1),
-          h16,
-          const BackupButton(),
-          h16,
-          const RestoreButton(),
-          h16,
-          const Divider(color: AppColors.purpleDark, height: 1),
-          h16,
-          _buildUserIdTile(),
-          _buildDeleteAccountTile(),
-          getSignOutButton(context, _handleSignOut),
-        ],
-      ),
+      body: isLoading
+          ? TypingIndicator()
+          : ListView(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              children: <Widget>[
+                _buildProfileTile(),
+                _buildNameTile(),
+                h16,
+                const Divider(color: AppColors.purpleDark, height: 1),
+                h16,
+                const BackupButton(),
+                h16,
+                const RestoreButton(),
+                h16,
+                const Divider(color: AppColors.purpleDark, height: 1),
+                h16,
+                _buildUserIdTile(),
+                _buildDeleteAccountTile(),
+                getSignOutButton(context, _handleSignOut),
+              ],
+            ),
     );
   }
 
@@ -175,38 +182,55 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void _handleSignOut() {
-    signOut(context);
-    SharedPreferencesUtil().onboardingCompleted = false;
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => const SigninPage(),
+  void _handleSignOut() async {
+    try {
+      isLoading = true;
+      await FirebaseAuth.instance.signOut();
+      await GoogleSignIn().signOut();
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      // Check if the widget is still mounted before using context
+      if (!mounted) return;
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => SigninPage()),
+        (route) => false,
+      );
+      isLoading = false;
+      avmSnackBar(context, "Signed out");
+    } catch (e) {
+      debugPrint(e.toString());
+      isLoading = false;
+      if (!mounted) return;
+      avmSnackBar(context, "Sign-out failed! Please try again");
+    }
+  }
+
+  Widget getSignOutButton(BuildContext context, VoidCallback onSignOut) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      title: const Text(
+        'Sign Out',
+        style: TextStyle(color: AppColors.red, fontWeight: FontWeight.w600),
+      ),
+      trailing: CircleAvatar(
+        backgroundColor: AppColors.purpleDark,
+        child: Icon(
+          Icons.logout_rounded,
+          size: 22.h,
+          color: AppColors.commonPink,
+        ),
+      ),
+      onTap: () => customDialogBox(
+        context,
+        icon: Icons.logout_rounded,
+        title: "Sign Out",
+        message: "Are you sure you want to sign out?",
+        yesPressed: onSignOut,
       ),
     );
   }
-}
-
-Widget getSignOutButton(BuildContext context, VoidCallback onSignOut) {
-  return ListTile(
-    contentPadding: EdgeInsets.zero,
-    title: const Text(
-      'Sign Out',
-      style: TextStyle(color: AppColors.red, fontWeight: FontWeight.w600),
-    ),
-    trailing: CircleAvatar(
-      backgroundColor: AppColors.purpleDark,
-      child: Icon(
-        Icons.logout_rounded,
-        size: 22.h,
-        color: AppColors.commonPink,
-      ),
-    ),
-    onTap: () => customDialogBox(
-      context,
-      icon: Icons.logout_rounded,
-      title: "Sign Out",
-      message: "Are you sure you want to sign out?",
-      yesPressed: onSignOut,
-    ),
-  );
 }

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:capsoul/backend/schema/bt_device.dart';
+import 'package:capsoul/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:lottie/lottie.dart';
@@ -150,12 +151,12 @@ class SinePainter extends CustomPainter {
         Colors.indigoAccent.withValues(alpha: 0.5),
         Colors.pinkAccent.withValues(alpha: 0.5)
       ],
-      [Colors.blue, Colors.lightBlueAccent, Colors.cyan, Colors.tealAccent],
+      [AppColors.blue, Colors.lightBlueAccent, Colors.cyan, Colors.tealAccent],
       [
         const Color.fromARGB(219, 239, 179, 88),
         const Color.fromARGB(255, 243, 223, 201),
         Colors.amber,
-        Colors.yellow
+        AppColors.yellow
       ]
     ];
 

@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:capsoul/backend/preferences.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -182,15 +181,15 @@ Future<String?> getIdToken() async {
   return newToken?.token;
 }
 
-Future<void> signOut(BuildContext context) async {
-  await FirebaseAuth.instance.signOut();
-  try {
-    await GoogleSignIn().signOut();
-  } catch (e) {
-    debugPrint(e.toString());
-  }
-  // context.pushReplacementNamed('auth');
-}
+// Future<void> signOut(BuildContext context) async {
+//   await FirebaseAuth.instance.signOut();
+//   try {
+//     await GoogleSignIn().signOut();
+//   } catch (e) {
+//     debugPrint(e.toString());
+//   }
+//   // context.pushReplacementNamed('auth');
+// }
 
 listenAuthStateChanges() {
   FirebaseAuth.instance.authStateChanges().listen((User? user) {

@@ -11,13 +11,13 @@ import 'package:capsoul/core/theme/app_colors.dart';
 import 'package:capsoul/features/wizard/pages/wizard_page.dart';
 import 'package:capsoul/pages/home/custom_scaffold.dart';
 import 'package:capsoul/src/common_widget/elevated_button.dart';
-import 'package:capsoul/utils/legal/privacy_policy.dart';
 import 'package:capsoul/utils/legal/terms_and_condition.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SigninPage extends StatelessWidget {
   const SigninPage({super.key});
@@ -199,8 +199,14 @@ class SigninPage extends StatelessWidget {
                               color: AppColors.purpleDark,
                               fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              showPrivacyPolicy(context);
+                            ..onTap = () async {
+                              final Uri url = Uri.parse(
+                                  'https://www.freeprivacypolicy.com/live/38486d16-4053-4bcd-8786-884b58c52ca2');
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }
                             },
                         ),
                       ],

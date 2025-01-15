@@ -65,7 +65,7 @@ void avmSnackBar(BuildContext context, String content) {
       padding: const EdgeInsets.symmetric(vertical: 04, horizontal: 08),
       behavior: SnackBarBehavior.floating,
       elevation: 1.5,
-      margin: const EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 10),
+      margin: const EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 0),
       showCloseIcon: true,
       closeIconColor: AppColors.white,
     ),

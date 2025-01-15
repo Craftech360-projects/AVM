@@ -18,16 +18,15 @@ import 'package:capsoul/features/capture/presentation/capture_page.dart';
 import 'package:capsoul/features/chat/bloc/chat_bloc.dart';
 import 'package:capsoul/features/chat/presentation/chat_screen.dart';
 import 'package:capsoul/features/memories/bloc/memory_bloc.dart';
-import 'package:capsoul/features/wizard/pages/tac_and_pp.dart';
 import 'package:capsoul/main.dart';
 import 'package:capsoul/pages/home/custom_scaffold.dart';
 import 'package:capsoul/pages/settings/presentation/pages/setting_page.dart';
 import 'package:capsoul/pages/skeleton/screen_skeleton.dart';
 import 'package:capsoul/scripts.dart';
 import 'package:capsoul/utils/audio/foreground.dart';
-// import 'package:capsoul/utils/ble/communication.dart';
 import 'package:capsoul/utils/ble/connected.dart';
 import 'package:capsoul/utils/ble/scan.dart';
+import 'package:capsoul/utils/legal/terms_and_condition.dart';
 import 'package:capsoul/utils/other/notifications.dart';
 import 'package:capsoul/widgets/navbar.dart';
 import 'package:capsoul/widgets/upgrade_alert.dart';
@@ -297,8 +296,9 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   Widget build(BuildContext context) {
     final bool isTosAccepted = SharedPreferencesUtil().tosAccepted;
 
-    if (!isTosAccepted) {
-      return TACandPP(
+    if (isTosAccepted) {
+      return TermsAndConditionsWidget(
+        showAcceptBtn: true,
         onAccept: () {
           SharedPreferencesUtil().tosAccepted = true;
           setState(() {});

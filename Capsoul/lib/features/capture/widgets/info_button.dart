@@ -1,3 +1,4 @@
+import 'package:capsoul/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class InfoButton extends StatefulWidget {
@@ -31,13 +32,9 @@ class _InfoButtonState extends State<InfoButton> {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
-                        // IconButton(
-                        //   icon: const Icon(Icons.close, color: Colors.white),
-                        //   onPressed: () => Navigator.of(context).pop(),
-                        // ),
                       ],
                     ),
                     content: const Text(
@@ -46,7 +43,7 @@ class _InfoButtonState extends State<InfoButton> {
                       "the conversation and start crafting your memory. You can find all your "
                       "treasured moments in the Memories tab!",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColors.white,
                         height: 1.5,
                       ),
                     ),
@@ -56,7 +53,7 @@ class _InfoButtonState extends State<InfoButton> {
                         style: TextButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
-                          backgroundColor: Colors.purpleAccent,
+                          backgroundColor: AppColors.purpleDark,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
@@ -64,7 +61,7 @@ class _InfoButtonState extends State<InfoButton> {
                         child: const Text(
                           'Got it!',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: AppColors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
@@ -77,7 +74,7 @@ class _InfoButtonState extends State<InfoButton> {
           'How Capsoul works?',
           style: TextStyle(
               decoration: TextDecoration.underline,
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: 15),
         ));
   }

@@ -7,22 +7,12 @@ void showPrivacyPolicy(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return CustomDialog(
-        title: "Terms and Conditions",
+        title: "Privacy Policy",
         sections: [
           {
-            'heading': "General Terms",
+            'heading': "Introduction",
             'points': [
-              'You must be at least 18 years old to use this app.',
-              'The app is provided as-is without any warranties.',
-              'We reserve the right to update the terms at any time.',
-            ],
-          },
-          {
-            'heading': "Privacy Policy",
-            'points': [
-              'We value your privacy and take it seriously.',
-              'Personal data is only collected for app functionality.',
-              'No data will be shared without user consent.',
+              "Welcome to Altio Capsoul's privacy policy. At Altio Capsoul, we are committed to protecting your privacy and ensuring the security of your personal information. This privacy policy explains how our app and wearable device, Friend, collect, use, and safeguard your data.",
             ],
           },
         ],

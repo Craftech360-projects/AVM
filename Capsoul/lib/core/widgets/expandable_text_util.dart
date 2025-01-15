@@ -1,3 +1,4 @@
+import 'package:capsoul/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ExpandableTextUtil extends StatefulWidget {
@@ -77,7 +78,7 @@ class _ExpandableTextUtilState extends State<ExpandableTextUtil> {
               onTap: _toggleExpanded,
               child: Text(
                 _expanded ? 'See less' : 'Read more...',
-                style: theme.bodyLarge?.copyWith(color: Colors.white),
+                style: theme.bodyLarge?.copyWith(color: AppColors.white),
               ),
             ),
         ],

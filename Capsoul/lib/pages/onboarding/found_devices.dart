@@ -173,7 +173,7 @@ class FoundDevicesState extends State<FoundDevices>
   List<Widget> _devicesList() {
     return widget.deviceList
         .map((device) => Padding(
-              padding: const EdgeInsets.only(bottom: 12.0), // Add space here
+              padding: const EdgeInsets.only(bottom: 12.0),
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.black),
@@ -192,7 +192,7 @@ class FoundDevicesState extends State<FoundDevices>
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 18,
-                        color: Colors.black,
+                        color: AppColors.black,
                       ),
                     ),
                     trailing: _connectingToDeviceId == device.id
@@ -202,7 +202,7 @@ class FoundDevicesState extends State<FoundDevices>
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.black),
+                                  AlwaysStoppedAnimation<Color>(AppColors.black),
                             ),
                           )
                         : const SizedBox.shrink(),
