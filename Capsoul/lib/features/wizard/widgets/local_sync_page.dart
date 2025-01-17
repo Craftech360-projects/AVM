@@ -1,122 +1,84 @@
-// import 'dart:async';
+// import 'dart:io';
 
 // import 'package:flutter/material.dart';
+// import 'package:path_provider/path_provider.dart';
 
-// class LocalSyncWidget extends StatefulWidget {
-//   final bool isWalSupported;
-//   final bool transcriptServiceReady;
-//   final bool recordingDeviceReady;
-//   final int missingWalSeconds;
-
-//   const LocalSyncWidget({
-//     super.key,
-//     required this.isWalSupported,
-//     required this.transcriptServiceReady,
-//     required this.recordingDeviceReady,
-//     required this.missingWalSeconds,
-//   });
+// class LocalSyncPage extends StatefulWidget {
+//   const LocalSyncPage({Key? key}) : super(key: key);
 
 //   @override
-//   State<LocalSyncWidget> createState() => _LocalSyncWidgetState();
+//   State<LocalSyncPage> createState() => _LocalSyncPageState();
 // }
 
-// enum LocalSyncStatus {
-//   disabled,
-//   inProgress,
-//   flush, // flushed to disk
-// }
-
-// class _LocalSyncWidgetState extends State<LocalSyncWidget> {
-//   LocalSyncStatus? _status;
-//   Timer? _missSecondsTimer;
-//   int _missSeconds = 0;
+// class _LocalSyncPageState extends State<LocalSyncPage> {
+//   List<FileSystemEntity> _files = [];
+//   bool _loading = true;
 
 //   @override
 //   void initState() {
 //     super.initState();
-
-//     _missSecondsTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-//       if (_status == LocalSyncStatus.inProgress ||
-//           _status == LocalSyncStatus.flush) {
-//         setState(() {
-//           _missSeconds++;
-//         });
-//       }
-//     });
+//     _loadFiles();
 //   }
 
-//   @override
-//   void dispose() {
-//     _missSecondsTimer?.cancel();
-//     super.dispose();
+//   Future<void> _loadFiles() async {
+//     setState(() {
+//       _loading = true;
+//     });
+
+//     try {
+//       final directory = await getApplicationDocumentsDirectory();
+//       final syncDirectory = Directory(directory.path);
+
+//       if (await syncDirectory.exists()) {
+//         final files =
+//             syncDirectory.listSync().where((file) => file is File).toList();
+//         setState(() {
+//           _files = files;
+//         });
+//       }
+//     } catch (e) {
+//       debugPrint('Error loading files: $e');
+//     } finally {
+//       setState(() {
+//         _loading = false;
+//       });
+//     }
 //   }
 
 //   @override
 //   Widget build(BuildContext context) {
-//     // Determine sync status
-//     if (widget.missingWalSeconds >= 120) {
-//       _status = LocalSyncStatus.flush;
-//     } else if (!widget.isWalSupported) {
-//       _status = LocalSyncStatus.disabled;
-//     } else if (!widget.transcriptServiceReady && widget.recordingDeviceReady) {
-//       _status = LocalSyncStatus.inProgress;
-//     } else {
-//       _status = LocalSyncStatus.disabled;
-//     }
-
-//     if (_status == LocalSyncStatus.inProgress ||
-//         _status == LocalSyncStatus.flush) {
-//       _missSeconds = widget.missingWalSeconds;
-//     }
-
-//     // Build UI
-//     if (_status == LocalSyncStatus.inProgress) {
-//       return Container(
-//         decoration: BoxDecoration(
-//           color: Colors.grey.shade900,
-//           borderRadius: const BorderRadius.all(Radius.circular(12)),
-//         ),
-//         margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-//         padding: const EdgeInsets.all(16),
-//         child: Text(
-//           '$_missSeconds seconds of on-device conversations',
-//           style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16),
-//           textAlign: TextAlign.center,
-//         ),
-//       );
-//     } else if (_status == LocalSyncStatus.flush) {
-//       return GestureDetector(
-//         onTap: () {
-//           debugPrint("Flushing missing WALs...");
-//           // Add navigation to sync page if needed
-//         },
-//         child: Container(
-//           decoration: BoxDecoration(
-//             color: Colors.grey.shade900,
-//             borderRadius: const BorderRadius.all(Radius.circular(12)),
-//           ),
-//           padding: const EdgeInsets.all(16),
-//           margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               const Text(
-//                 'Stay in Sync',
-//                 style: TextStyle(color: Colors.white, fontSize: 16),
-//               ),
-//               Text(
-//                 '${widget.missingWalSeconds} seconds available',
-//                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-//                       decoration: TextDecoration.underline,
-//                     ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       );
-//     }
-
-//     return const SizedBox.shrink();
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Local Sync Files'),
+//         backgroundColor: Colors.purple,
+//       ),
+//       body: _loading
+//           ? const Center(child: CircularProgressIndicator())
+//           : _files.isEmpty
+//               ? const Center(child: Text('No files found.'))
+//               : ListView.builder(
+//                   itemCount: _files.length,
+//                   itemBuilder: (context, index) {
+//                     final file = _files[index];
+//                     return ListTile(
+//                       title: Text(file.path.split('/').last),
+//                       subtitle: Text(
+//                           '${(file.statSync().size / 1024).toStringAsFixed(2)} KB'),
+//                       trailing: IconButton(
+//                         icon: const Icon(Icons.delete, color: Colors.red),
+//                         onPressed: () async {
+//                           try {
+//                             await file.delete();
+//                             _loadFiles();
+//                           } catch (e) {
+//                             debugPrint('Error deleting file: $e');
+//                           }
+//                         },
+//                       ),
+//                     );
+//                   },
+//                 ),
+//     );
 //   }
 // }
 
@@ -146,6 +108,36 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
   }
 
   /// Load WAL files and group them by date
+  // Future<void> _loadWals() async {
+  //   setState(() {
+  //     _loading = true;
+  //   });
+
+  //   try {
+  //     final directory = await getApplicationDocumentsDirectory();
+  //     final syncDirectory = Directory(directory.path);
+
+  //     if (await syncDirectory.exists()) {
+  //       final files =
+  //           syncDirectory.listSync().where((file) => file is File).toList();
+  //       // setState(() {
+  //       //   _files = files;
+  //       // });
+
+  //       setState(() {
+  //         _wals = files;
+  //         _groupedWals = _groupWalsByDate(_wals);
+  //       });
+  //     }
+  //   } catch (e) {
+  //     debugPrint('Error loading WALs: $e');
+  //   } finally {
+  //     setState(() {
+  //       _loading = false;
+  //     });
+  //   }
+  // }
+
   Future<void> _loadWals() async {
     setState(() {
       _loading = true;
@@ -153,16 +145,16 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
 
     try {
       final directory = await getApplicationDocumentsDirectory();
-      final files = Directory(directory.path)
-          .listSync()
-          .whereType<File>()
-          .where((file) => file.path.endsWith(".wal"))
-          .toList();
+      final syncDirectory = Directory(directory.path);
 
-      setState(() {
-        _wals = files;
-        _groupedWals = _groupWalsByDate(_wals);
-      });
+      if (await syncDirectory.exists()) {
+        // Use whereType<File>() to ensure only File objects are included
+        final files = syncDirectory.listSync().whereType<File>().toList();
+        setState(() {
+          _wals = files;
+          _groupedWals = _groupWalsByDate(_wals);
+        });
+      }
     } catch (e) {
       debugPrint('Error loading WALs: $e');
     } finally {
@@ -186,6 +178,7 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
 
   /// Simulate syncing a WAL file to the backend
   Future<void> _syncWal(File wal) async {
+    print("here , single");
     final id = wal.path; // Use file path as a unique ID
     _syncStatus[id] = 0.0;
 
@@ -203,7 +196,7 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
     });
 
     // Simulate removing the file after successful sync
-    //  await wal.delete();
+    //await wal.delete();
     _loadWals();
   }
 

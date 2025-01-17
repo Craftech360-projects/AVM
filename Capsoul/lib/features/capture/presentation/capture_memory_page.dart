@@ -13,6 +13,7 @@ import 'package:capsoul/features/capture/widgets/real_time_bot.dart';
 import 'package:capsoul/features/connectivity_bloc/connectivity_bloc.dart';
 import 'package:capsoul/features/memories/bloc/memory_bloc.dart';
 import 'package:capsoul/features/memories/widgets/memory_card_widget.dart';
+import 'package:capsoul/features/wizard/widgets/local_sync_page.dart';
 import 'package:capsoul/utils/websockets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -314,6 +315,22 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                       ),
                     h10,
                     //*--- Filter Button ---*//
+                    // Positioned(
+                    //   bottom: 70, // Adjust as per your layout
+                    //   right: 16, // Adjust as per your layout
+                    //   child: FloatingActionButton(
+                    //     onPressed: () {
+                    //       Navigator.push(
+                    //         context,
+                    //         MaterialPageRoute(
+                    //             builder: (context) => LocalSyncPage()),
+                    //       );
+                    //     },
+                    //     backgroundColor: AppColors.purpleDark,
+                    //     child: const Icon(Icons.sync,
+                    //         size: 30, color: Colors.white),
+                    //   ),
+                    // ),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -457,6 +474,40 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                                   : FilterItem(
                                                       filterType: "Show All"));
                                         },
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LocalSyncPage()),
+                                          );
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: AppColors
+                                              .purpleDark, // Button background color
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 12),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: const [
+                                            Icon(Icons.sync,
+                                                size: 20, color: Colors.white),
+                                            SizedBox(width: 8),
+                                            Text(
+                                              "Sync",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),

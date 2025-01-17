@@ -15,6 +15,7 @@ import 'package:capsoul/features/capture/presentation/capture_memory_page.dart';
 import 'package:capsoul/features/memories/bloc/memory_bloc.dart';
 import 'package:capsoul/pages/capture/location_service.dart';
 import 'package:capsoul/utils/audio/wals.dart';
+// Adjust the path as necessary
 import 'package:capsoul/utils/audio/wav_bytes.dart';
 import 'package:capsoul/utils/ble/communication.dart';
 import 'package:capsoul/utils/features/backup_util.dart';
@@ -62,6 +63,10 @@ class CapturePageState extends State<CapturePage>
         OpenGlassMixin {
   final ScrollController _scrollController = ScrollController();
   WalService? _wal;
+  bool _isWalSupported = false;
+  int _missingWalSeconds = 0;
+
+  bool get isWalSupported => _isWalSupported;
 
   @override
   bool get wantKeepAlive => true;
@@ -77,9 +82,6 @@ class CapturePageState extends State<CapturePage>
   Timer? _memoryCreationTimer;
   bool memoryCreating = false;
 
-  bool _isWalSupported = false;
-
-  bool get isWalSupported => _isWalSupported;
   DateTime? currentTranscriptStartedAt;
   DateTime? currentTranscriptFinishedAt;
   static const quietSecondsForMemoryCreation = 60;
@@ -210,34 +212,6 @@ class CapturePageState extends State<CapturePage>
     );
   }
 
-  // Future<void> initiateBytesStreamingProcessing() async {
-  //   debugPrint("====> Byte Streaming Initiated");
-  //   if (btDevice == null) return;
-  //   BleAudioCodec codec = await getAudioCodec(btDevice!.id);
-  //   audioStorage = WavBytesUtil(codec: codec);
-  //   _bleBytesStream = await getBleAudioBytesListener(
-  //     btDevice!.id,
-  //     onAudioBytesReceived: (List<int> value) {
-  //       if (value.isEmpty) return;
-  //       audioStorage!.storeFramePacket(value);
-  //       value.removeRange(0, 3);
-
-  //       var checkWalSupported = codec == BleAudioCodec.opus &&
-  //           SharedPreferencesUtil().localSyncEnabled;
-  //       if (wsConnectionState == WebsocketConnectionStatus.connected) {
-  //         // debugPrint("Adding audio>>>>>>>>>>>>>,$value");
-  //         print(SharedPreferencesUtil().localSyncEnabled);
-  //         websocketChannel?.sink.add(value);
-  //         SharedPreferencesUtil().localSyncEnabled;
-
-  //       } else {
-  //         print(SharedPreferencesUtil().localSyncEnabled);
-  //         debugPrint("Adding audio>>>>>>>>>>>>>,$value");
-  //       }
-  //     },
-  //   );
-  // }
-
 //with local sync
 
   Future<void> initiateBytesStreamingProcessing() async {
@@ -265,6 +239,7 @@ class CapturePageState extends State<CapturePage>
         if (checkWalSupported) {
           // Add data to LocalWalSync buffer for periodic flush
           _wal?.getSyncs().onByteStream(value);
+          // print("added value to local sync");
         }
 
         // Handle WebSocket connection
@@ -443,7 +418,15 @@ class CapturePageState extends State<CapturePage>
     // Initialize the WalService
     _wal = WalService();
     _wal?.start(); // Start the Wal service
-
+    Timer.periodic(const Duration(seconds: 1), (timer) async {
+      final syncs = _wal?.getSyncs();
+      if (syncs != null) {
+        setState(() {
+          _missingWalSeconds = syncs.missingWalSeconds;
+          _isWalSupported = syncs.isWalSupported; // Adjust based on your logic
+        });
+      }
+    });
     dismissedList = List.generate(segments.length, (index) => false);
 
     WidgetsBinding.instance.addObserver(this);
@@ -471,6 +454,7 @@ class CapturePageState extends State<CapturePage>
     _memoryCreationTimer?.cancel();
     _bleBytesStream?.cancel();
     _scrollController.dispose();
+    _wal?.stop(); // Stop the Wal service
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -519,4 +503,40 @@ class CapturePageState extends State<CapturePage>
       hasSeenTutorial: widget.hasSeenTutorial,
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   super.build(context);
+
+  //   return Column(
+  //     children: [
+  //       Expanded(
+  //         child: CaptureMemoryPage(
+  //           context: context,
+  //           hasTranscripts: _hasTranscripts,
+  //           wsConnectionState: wsConnectionState,
+  //           device: widget.device,
+  //           internetStatus: _internetStatus,
+  //           segments: segments,
+  //           memoryCreating: memoryCreating,
+  //           photos: photos,
+  //           scrollController: _scrollController,
+  //           onDismissmissedCaptureMemory: (direction) {
+  //             _createMemory();
+  //             setState(() {});
+  //           },
+  //           hasSeenTutorial: widget.hasSeenTutorial,
+  //         ),
+  //       ),
+  //       // Add LocalSyncWidget here
+  //       LocalSyncWidget(
+  //         isWalSupported: _isWalSupported,
+  //         transcriptServiceReady:
+  //             wsConnectionState == WebsocketConnectionStatus.connected,
+  //         recordingDeviceReady: btDevice != null,
+  //         missingWalSeconds: _missingWalSeconds,
+  //       ),
+  //     ],
+  //   );
+  // }
 }

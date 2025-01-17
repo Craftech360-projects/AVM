@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:capsoul/backend/database/transcript_segment.dart';
 import 'package:capsoul/backend/schema/plugin.dart';
 import 'package:capsoul/env/env.dart';
-import 'package:capsoul/features/capture/logic/wals.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesUtil {
