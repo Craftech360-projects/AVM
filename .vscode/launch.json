@@ -2,8 +2,8 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Capsoul (prod)",
-      "cwd": "capsoul",
+      "name": "Capsaul (prod)",
+      "cwd": "Capsaul",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -13,8 +13,8 @@
       "flutterMode": "debug"
     },
     {
-      "name": "Capsoul (prod profile mode)",
-      "cwd": "capsoul",
+      "name": "Capsaul (prod profile mode)",
+      "cwd": "Capsaul",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -24,8 +24,8 @@
       "flutterMode": "profile"
     },
     {
-      "name": "Capsoul (prod release mode)",
-      "cwd": "capsoul",
+      "name": "Capsaul (prod release mode)",
+      "cwd": "Capsaul",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -35,8 +35,8 @@
       "flutterMode": "release"
     },
     {
-      "name": "Capsoul (dev)",
-      "cwd": "capsoul",
+      "name": "Capsaul (dev)",
+      "cwd": "Capsaul",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -46,8 +46,8 @@
       "flutterMode": "debug"
     },
     {
-      "name": "Capsoul (dev profile mode)",
-      "cwd": "capsoul",
+      "name": "Capsaul (dev profile mode)",
+      "cwd": "Capsaul",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -57,8 +57,8 @@
       "flutterMode": "profile"
     },
     {
-      "name": "Capsoul (dev release mode)",
-      "cwd": "capsoul",
+      "name": "Capsaul (dev release mode)",
+      "cwd": "Capsaul",
       "request": "launch",
       "type": "dart",
       "args": [
