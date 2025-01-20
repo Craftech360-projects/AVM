@@ -105,7 +105,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(2, 6427539297124375252),
       name: 'Structured',
-      lastPropertyId: const obx_int.IdUid(8, 4321600440594391155),
+      lastPropertyId: const obx_int.IdUid(9, 7524614902799169714),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -139,7 +139,12 @@ final _entities = <obx_int.ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const obx_int.IdUid(11, 8287585027820134538),
-            relationTarget: 'Geolocation')
+            relationTarget: 'Geolocation'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(9, 7524614902799169714),
+            name: 'brainstormingQuestions',
+            type: 30,
+            flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[
@@ -651,13 +656,18 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final emojiOffset = fbb.writeString(object.emoji);
           final categoryOffset = fbb.writeList(
               object.category.map(fbb.writeString).toList(growable: false));
-          fbb.startTable(9);
+          final brainstormingQuestionsOffset = fbb.writeList(object
+              .brainstormingQuestions
+              .map(fbb.writeString)
+              .toList(growable: false));
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, titleOffset);
           fbb.addOffset(2, overviewOffset);
           fbb.addOffset(5, emojiOffset);
           fbb.addOffset(6, categoryOffset);
           fbb.addInt64(7, object.geolocation.targetId);
+          fbb.addOffset(8, brainstormingQuestionsOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -676,8 +686,15 @@ obx_int.ModelDefinition getObjectBoxModel() {
                   fb.StringReader(asciiOptimization: true),
                   lazy: false)
               .vTableGet(buffer, rootOffset, 16, []);
+          final brainstormingQuestionsParam = const fb.ListReader<String>(
+                  fb.StringReader(asciiOptimization: true),
+                  lazy: false)
+              .vTableGet(buffer, rootOffset, 20, []);
           final object = Structured(titleParam, overviewParam,
-              id: idParam, emoji: emojiParam, category: categoryParam);
+              id: idParam,
+              emoji: emojiParam,
+              category: categoryParam,
+              brainstormingQuestions: brainstormingQuestionsParam);
           object.geolocation.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
           object.geolocation.attach(store);
@@ -1163,6 +1180,10 @@ class Structured_ {
   /// See [Structured.geolocation].
   static final geolocation = obx.QueryRelationToOne<Structured, Geolocation>(
       _entities[1].properties[5]);
+
+  /// See [Structured.brainstormingQuestions].
+  static final brainstormingQuestions =
+      obx.QueryStringVectorProperty<Structured>(_entities[1].properties[6]);
 
   /// see [Structured.actionItems]
   static final actionItems =

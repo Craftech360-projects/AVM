@@ -168,25 +168,25 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
       BatchDeleteMemory event, Emitter<MemoryState> emit) async {
     try {
       emit(state.copyWith(status: MemoryStatus.loading));
-      log('BatchDeleteMemory initiated.');
-      log('Current selected memories in state: ${state.selectedMemories}');
-      log('Current memories: ${state.memories.map((m) => m.id).toList()}');
+      // log('BatchDeleteMemory initiated.');
+      // log('Current selected memories in state: ${state.selectedMemories}');
+      // log('Current memories: ${state.memories.map((m) => m.id).toList()}');
 
       // Collect memories to delete
       List<Memory> memoriesToDelete = [];
       for (int i = 0; i < state.selectedMemories.length; i++) {
         if (state.selectedMemories[i]) {
-          log('Adding memory at index $i: ${state.memories[i].id}');
+          // log('Adding memory at index $i: ${state.memories[i].id}');
           memoriesToDelete.add(state.memories[i]);
         }
       }
 
-      log('Memories to delete: ${memoriesToDelete.map((m) => m.id).toList()}');
+      // log('Memories to delete: ${memoriesToDelete.map((m) => m.id).toList()}');
       if (memoriesToDelete.isNotEmpty) {
         final success =
             await MemoryProvider().batchDeleteMemories(memoriesToDelete);
 
-        log('Batch delete success: $success');
+        // log('Batch delete success: $success');
         if (success) {
           List<Memory> updatedMemories = List.from(state.memories)
             ..removeWhere((memory) => memoriesToDelete.contains(memory));

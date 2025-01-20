@@ -13,45 +13,42 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MemoryCardWidget extends StatelessWidget {
-  MemoryCardWidget({
-    super.key,
-    required this.memoryBloc,
-  });
+  MemoryCardWidget({super.key, required this.memoryBloc, this.tabController});
 
   final MemoryBloc memoryBloc;
+  final TabController? tabController;
   bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MemoryBloc, MemoryState>(
-      bloc: memoryBloc,
-      builder: (context, state) {
-        if (state.memories.isEmpty) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 38.0),
-              child: EmptyMemoriesWidget(),
-            ),
-          );
-        }
+        bloc: memoryBloc,
+        builder: (context, state) {
+          if (state.memories.isEmpty) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 38.0),
+                child: EmptyMemoriesWidget(),
+              ),
+            );
+          }
 
-        bool isAnyMemorySelected = state.selectedMemories.contains(true);
+          bool isAnyMemorySelected = state.selectedMemories.contains(true);
 
-        return _isLoading
-            ? Padding(
-                padding: const EdgeInsets.only(top: 50.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    h8,
-                    Text("Deleting Memories"),
-                    h8,
-                    TypingIndicator(),
-                  ],
-                ),
-              )
-            : Column(
-                children: [
+          return _isLoading
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      h8,
+                      Text("Deleting Memories"),
+                      h8,
+                      TypingIndicator(),
+                    ],
+                  ),
+                )
+              : Column(children: [
                   if (isAnyMemorySelected)
                     Align(
                       alignment: Alignment.centerRight,
@@ -63,8 +60,8 @@ class MemoryCardWidget extends StatelessWidget {
                                 return CustomDialogWidget(
                                     title: "Delete memories",
                                     message:
-                                        "Are you sure you want to delete the selected memories",
-                                    icon: Icons.delete_rounded,
+                                        "Are you sure you want to delete the selected memories? This action cannot be reversed!",
+                                    icon: Icons.delete,
                                     noText: "Cancel",
                                     yesText: "Delete",
                                     yesPressed: () {
@@ -82,7 +79,7 @@ class MemoryCardWidget extends StatelessWidget {
                               });
                         },
                         icon: Icon(
-                          Icons.delete_rounded,
+                          Icons.delete,
                           color: AppColors.red,
                         ),
                         label: Text(
@@ -95,10 +92,6 @@ class MemoryCardWidget extends StatelessWidget {
                     children: List.generate(
                       state.memories.length,
                       (index) {
-                        // if (index >= state.selectedMemories.length) {
-                        //   state.selectedMemories.add(false);
-                        // }
-
                         Memory memory = state.memories[index];
                         bool isSelected = state.selectedMemories[index];
 
@@ -120,9 +113,9 @@ class MemoryCardWidget extends StatelessWidget {
                                   vertical: 04, horizontal: 04),
                               alignment: Alignment.centerRight,
                               child: Icon(
-                                Icons.delete_outline_outlined,
+                                Icons.delete,
                                 size: 38,
-                                color: AppColors.red.withValues(alpha: 0.65),
+                                color: AppColors.red.withValues(alpha: 0.7),
                               ),
                             ),
                             confirmDismiss: (direction) async {
@@ -130,20 +123,19 @@ class MemoryCardWidget extends StatelessWidget {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return CustomDialogWidget(
-                                    title: "Delete this memory",
-                                    message:
-                                        "Are you sure you want to delete this memory? This action cannot be undone!",
-                                    icon: Icons.delete_rounded,
-                                    noText: "Cancel",
-                                    yesText: "Delete",
-                                    yesPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                  );
+                                      title: "Delete this memory",
+                                      message:
+                                          "Are you sure you want to delete this memory? This action cannot be reversed!",
+                                      icon: Icons.delete,
+                                      noText: "Cancel",
+                                      yesText: "Delete",
+                                      yesPressed: () {
+                                        memoryBloc
+                                            .add(DeletedMemory(memory: memory));
+                                        Navigator.of(context).pop();
+                                      });
                                 },
                               );
-                            },
-                            onDismissed: (direction) {
-                              memoryBloc.add(DeletedMemory(memory: memory));
                             },
                             child: GestureDetector(
                               onTap: () {
@@ -164,6 +156,7 @@ class MemoryCardWidget extends StatelessWidget {
                                       pageBuilder: (context, animation,
                                               secondaryAnimation) =>
                                           MemoryDetailPage(
+                                        tabController: tabController,
                                         memoryBloc: memoryBloc,
                                         memoryAtIndex: index,
                                       ),
@@ -183,15 +176,6 @@ class MemoryCardWidget extends StatelessWidget {
                                       },
                                     ),
                                   );
-
-                                  // Navigator.of(context).push(
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => MemoryDetailPage(
-                                  //       memoryBloc: memoryBloc,
-                                  //       memoryAtIndex: index,
-                                  //     ),
-                                  //   ),
-                                  // );
                                 }
                               },
                               child: MemoryCard(
@@ -211,9 +195,7 @@ class MemoryCardWidget extends StatelessWidget {
                       },
                     ),
                   ),
-                ],
-              );
-      },
-    );
+                ]);
+        });
   }
 }

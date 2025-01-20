@@ -112,19 +112,24 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
       emit(state.copyWith(status: ChatStatus.waitingForAI));
 
+      // Include memory context if available
+      String memoryContext = event.memoryContext ?? "";
+      String prompt =
+          "${memoryContext.isNotEmpty ? "Memory Context:\n$memoryContext\n\n" : ""}${event.message}";
+
       var aiMessage = _prepareStreaming(event.message);
 
-      final ragInfo = await retrieveRAGContext(event.message);
+      final ragInfo = await retrieveRAGContext(prompt);
       String ragContext = ragInfo[0];
       List<Memory> memories = ragInfo[1].cast<Memory>();
 
-      var prompt = qaRagPrompt(
+      var finalPrompt = qaRagPrompt(
         ragContext,
         await messageProvider.retrieveMostRecentMessages(limit: 10),
       );
 
       await streamApiResponse(
-        prompt,
+        finalPrompt,
         _callbackFunctionChatStreaming(aiMessage),
         () async {
           aiMessage.memories.addAll(memories);

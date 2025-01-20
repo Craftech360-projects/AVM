@@ -109,9 +109,9 @@ class SharedPreferencesUtil {
   set recordingsLanguage(String value) =>
       saveString('recordingsLanguage', value);
 
-  bool get useFriendApiKeys => getBool('useFriendApiKeys') ?? true;
+  bool get useCapsaulApiKeys => getBool('useCapsaulApiKeys') ?? true;
 
-  set useFriendApiKeys(bool value) => saveBool('useFriendApiKeys', value);
+  set useCapsaulApiKeys(bool value) => saveBool('useCapsaulApiKeys', value);
 
   bool get onboardingCompleted => getBool('onboardingCompleted') ?? false;
 

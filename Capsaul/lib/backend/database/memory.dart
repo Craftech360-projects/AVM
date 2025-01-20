@@ -192,11 +192,15 @@ class Structured {
 
   @Backlink('structured')
   final events = ToMany<Event>();
-  final geolocation = ToOne<Geolocation>(); // Add this line
+  final geolocation = ToOne<Geolocation>();
+  List<String> brainstormingQuestions = [];
   String? get placeName => geolocation.target?.placeName;
 
   Structured(this.title, this.overview,
-      {this.id = 0, this.emoji = '', this.category = const []});
+      {this.id = 0,
+      this.emoji = '',
+      this.category = const [],
+      this.brainstormingQuestions = const []});
 
   getEmoji() {
     try {
@@ -220,6 +224,9 @@ class Structured {
       emoji: json['emoji'] ?? '',
       category:
           json['category'] != null ? List<String>.from(json['category']) : [],
+      brainstormingQuestions: json['brainstormingQuestions'] != null
+          ? List<String>.from(json['brainstormingQuestions'])
+          : [],
     );
     if (json['geolocation'] != null) {
       structured.geolocation.target = Geolocation.fromJson(json['geolocation']);
@@ -260,19 +267,19 @@ class Structured {
 
   @override
   String toString() {
-    return 'Structured(id: $id, title: $title, overview: $overview, emoji: $emoji, category: $category)';
+    return 'Structured(id: $id, title: $title, overview: $overview, emoji: $emoji, category: $category, brainstormingQuestions: $brainstormingQuestions)';
   }
 
-  toJson() {
+   toJson() {
     return {
       'title': title,
       'overview': overview,
       'emoji': emoji,
       'category': category,
+      'brainstormingQuestions': brainstormingQuestions,
       'actionItems': actionItems.map((item) => item.description).toList(),
       'events': events.map((event) => event.toJson()).toList(),
-      'geolocation': geolocation.target?.toJson(), // Add this line
-      'placeName': placeName,
+      'geolocation': geolocation.target?.toJson(),
     };
   }
 }

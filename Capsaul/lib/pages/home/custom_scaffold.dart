@@ -89,6 +89,10 @@ class CustomScaffoldState extends State<CustomScaffold> {
               elevation: 0,
               leading: widget.showBackBtn
                   ? IconButton(
+                      alignment: Alignment.topLeft,
+                      visualDensity:
+                          VisualDensity(horizontal: -4, vertical: -4),
+                      padding: EdgeInsets.zero,
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.arrow_back_ios_new_rounded))
                   : null,

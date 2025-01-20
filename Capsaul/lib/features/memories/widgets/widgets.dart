@@ -549,7 +549,7 @@ void showOptionsBottomSheet(
                         ListTile(
                           title: const Text('Delete'),
                           leading: const Icon(
-                            Icons.delete_rounded,
+                            Icons.delete,
                           ),
                           onTap: loadingReprocessMemory
                               ? null

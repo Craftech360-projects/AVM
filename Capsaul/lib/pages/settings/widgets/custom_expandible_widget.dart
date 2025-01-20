@@ -15,11 +15,9 @@ class CustomExpansionTile extends StatefulWidget {
     this.trailingIcon = const Icon(
       Icons.arrow_forward_ios,
       size: 16,
-      color: AppColors.black,
     ),
     this.leadingIcon = const Icon(
       Icons.category,
-      color: AppColors.black,
       size: 24,
     ),
     required this.title,

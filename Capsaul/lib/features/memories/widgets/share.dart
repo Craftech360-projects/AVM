@@ -238,7 +238,6 @@ void showShareBottomSheet(
                     ],
                   ),
                   const Divider(
-                    color: AppColors.black,
                     thickness: 1,
                   ),
                   Card(

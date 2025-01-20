@@ -71,15 +71,15 @@ void avmSnackBar(BuildContext context, String content) {
         content,
         style: const TextStyle(
           fontFamily: "Montserrat",
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.white,
         ),
       ),
       behavior: SnackBarBehavior.floating,
       elevation: 1.5,
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
     ),
   );
 }

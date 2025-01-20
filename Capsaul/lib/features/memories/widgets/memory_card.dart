@@ -19,16 +19,16 @@ class MemoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 06),
+      margin: EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.grey),
-        borderRadius: br10,
+        borderRadius: br5,
       ),
-      padding: EdgeInsets.symmetric(vertical: 08, horizontal: 06),
+      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: br10,
+            borderRadius: br5,
             child: Image.memory(
               memory.memoryImg!,
               height: 100.h,
@@ -54,14 +54,14 @@ class MemoryCard extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        height: 1.4)),
-                h8,
+                        height: 1.2)),
+                h4,
                 Text(
                   '${DateFormat('d MMM').format(memory.createdAt)} -'
                   ' ${DateFormat('h:mm a').format(memory.createdAt)}',
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: TextStyle(fontSize: 12),
                 ),
               ],
             ),

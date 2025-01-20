@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:capsaul/backend/api_requests/api/prompt.dart';
+import 'package:capsaul/backend/database/memory.dart';
 import 'package:capsaul/backend/database/memory_provider.dart';
 import 'package:capsaul/backend/database/message.dart';
 import 'package:capsaul/backend/database/message_provider.dart';
@@ -13,16 +14,20 @@ import 'package:capsaul/features/chat/bloc/chat_bloc.dart';
 import 'package:capsaul/features/chat/widgets/ai_message.dart';
 import 'package:capsaul/features/chat/widgets/user_message.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ChatScreen extends StatefulWidget {
   final FocusNode textFieldFocusNode;
+  final String? initialQuestion;
+  final Structured? memoryContext;
 
-  const ChatScreen({
-    super.key,
-    required this.textFieldFocusNode,
-  });
+  const ChatScreen(
+      {super.key,
+      required this.textFieldFocusNode,
+      this.initialQuestion,
+      this.memoryContext});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -86,7 +91,15 @@ class _ChatScreenState extends State<ChatScreen>
   void initState() {
     super.initState();
     _chatBloc = BlocProvider.of<ChatBloc>(context);
-    _chatBloc.add(LoadInitialChat());
+
+    if (widget.initialQuestion != null && widget.memoryContext != null) {
+      final memoryTitle = widget.memoryContext?.title ?? "Unknown Context";
+      final message =
+          "Context: $memoryTitle\nQuestion: ${widget.initialQuestion}";
+      _chatBloc.add(SendMessage(message));
+    } else {
+      _chatBloc.add(LoadInitialChat());
+    }
 
     _initDailySummary();
 
@@ -97,17 +110,13 @@ class _ChatScreenState extends State<ChatScreen>
 
     _animation =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   _scrollToBottom();
-    // });
   }
 
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 500),
         curve: Curves.easeOut,
       );
     }
@@ -123,61 +132,58 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ChatBloc, ChatState>(
-      listener: (context, state) {
+    return BlocBuilder<ChatBloc, ChatState>(
+      bloc: _chatBloc,
+      buildWhen: (previous, current) =>
+          previous.messages != current.messages ||
+          previous.status != current.status,
+      builder: (context, state) {
         if (state.status == ChatStatus.loading) {
-          Center(child: TypingIndicator());
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _scrollToBottom();
-          });
-        }
-      },
-      child: BlocBuilder<ChatBloc, ChatState>(
-        bloc: _chatBloc,
-        buildWhen: (previous, current) =>
-            previous.messages != current.messages ||
-            previous.status != current.status,
-        builder: (context, state) {
-          return ListView.builder(
-            controller: _scrollController,
-            physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.only(
-              left: 10,
-              right: 10,
-              bottom: 80,
-              top: 20,
-            ),
-            itemCount: state.messages?.length ?? 0,
-            itemBuilder: (context, index) {
-              final message = state.messages?[index];
-              bool isAIMessage = message?.senderEnum == MessageSender.ai;
-              if (isAIMessage) {
-                return Column(
-                  children: [
-                    AIMessage(
-                      message: message!,
-                      sendMessage: (msg) {},
-                      displayOptions: state.messages!.length <= 1,
-                      memories: message.memories,
-                      pluginSender: SharedPreferencesUtil()
-                          .pluginsList
-                          .firstWhereOrNull((e) => e.id == message.pluginId),
-                    ),
-                    h8,
-                  ],
-                );
-              } else {
-                return Column(
-                  children: [
-                    UserMessage(message: message),
-                    h8,
-                  ],
-                );
-              }
-            },
+          return Center(
+            child: TypingIndicator(),
           );
-        },
-      ),
+        }
+
+        // Display messages when not loading
+        return ListView.builder(
+          controller: _scrollController,
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.only(
+            left: 10,
+            right: 10,
+            bottom: 80,
+            top: 20,
+          ),
+          itemCount: state.messages?.length ?? 0,
+          itemBuilder: (context, index) {
+            final message = state.messages?[index];
+            bool isAIMessage = message?.senderEnum == MessageSender.ai;
+            if (isAIMessage) {
+              return Column(
+                children: [
+                  AIMessage(
+                    message: message!,
+                    sendMessage: (msg) {},
+                    displayOptions: state.messages!.length <= 1,
+                    memories: message.memories,
+                    pluginSender: SharedPreferencesUtil()
+                        .pluginsList
+                        .firstWhereOrNull((e) => e.id == message.pluginId),
+                  ),
+                  h8,
+                ],
+              );
+            } else {
+              return Column(
+                children: [
+                  UserMessage(message: message),
+                  h8,
+                ],
+              );
+            }
+          },
+        );
+      },
     );
   }
 }

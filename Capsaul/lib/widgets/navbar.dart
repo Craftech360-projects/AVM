@@ -92,7 +92,9 @@ class _CustomNavBarState extends State<CustomNavBar> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 12.0),
+      padding: EdgeInsets.symmetric(
+          vertical: MediaQuery.of(context).size.height * 0.010,
+          horizontal: MediaQuery.of(context).size.width * 0.05),
       child: GestureDetector(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 600),

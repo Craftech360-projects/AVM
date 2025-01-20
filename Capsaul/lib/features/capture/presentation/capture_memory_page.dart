@@ -23,20 +23,22 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 // ignore: must_be_immutable
 class CaptureMemoryPage extends StatefulWidget {
-  CaptureMemoryPage({
-    super.key,
-    required this.context,
-    required this.hasTranscripts,
-    this.device,
-    required this.wsConnectionState,
-    this.internetStatus,
-    this.segments,
-    required this.memoryCreating,
-    required this.photos,
-    this.scrollController,
-    required this.onDismissmissedCaptureMemory,
-    required this.hasSeenTutorial,
-  });
+  CaptureMemoryPage(
+      {super.key,
+      required this.context,
+      required this.hasTranscripts,
+      this.device,
+      required this.wsConnectionState,
+      this.internetStatus,
+      this.segments,
+      required this.memoryCreating,
+      required this.photos,
+      this.scrollController,
+      required this.onDismissmissedCaptureMemory,
+      required this.hasSeenTutorial,
+      this.tabController});
+
+  final TabController? tabController;
   final BuildContext context;
   final bool hasTranscripts;
   final BTDeviceStruct? device;
@@ -290,7 +292,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                       style: TextStyle(
                                         color: AppColors.grey,
                                         fontSize: 14,
-                                        fontWeight: FontWeight.w600,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),
@@ -313,7 +315,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                         scrollController: widget.scrollController,
                         tutorialKey: _greetingCardKey,
                       ),
-                    h8,
+                    Divider(),
                     //*--- Filter Button ---*//
 
                     Row(
@@ -361,14 +363,14 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                   contentPadding: EdgeInsets.symmetric(
                                       vertical: 12, horizontal: 8),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
+                                      borderRadius: br12),
                                   backgroundColor: AppColors.commonPink,
                                   title: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(Icons.filter_alt_outlined,
                                           color: AppColors.blue),
-                                      SizedBox(width: 10),
+                                      w8,
                                       Text(
                                         "Choose Filter",
                                         style: TextStyle(
@@ -513,7 +515,9 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                               ),
                             );
                           } else if (state.status == MemoryStatus.success) {
-                            return MemoryCardWidget(memoryBloc: _memoryBloc);
+                            return MemoryCardWidget(
+                                memoryBloc: _memoryBloc,
+                                tabController: widget.tabController);
                           }
                           return const SizedBox.shrink();
                         },
@@ -535,8 +539,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                 Positioned(
                     top: 0, left: 0, right: 0, child: _buildScrollGradient()),
               Positioned(
-                bottom: 11,
-                right: 11,
+                bottom: 0,
+                right: 10,
                 child: Column(
                   children: [
                     AnimatedBuilder(

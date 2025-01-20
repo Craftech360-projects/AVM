@@ -50,7 +50,6 @@ Future<Memory?> reProcessMemory(
   structured.overview = newStructured.overview;
   structured.emoji = newStructured.emoji;
   structured.category = newStructured.category;
-
   structured.actionItems.clear();
   structured.actionItems.addAll(newStructured.actionItems
       .map<ActionItem>((i) => ActionItem(i.description))

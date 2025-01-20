@@ -71,11 +71,11 @@ class CustomDialog extends StatelessWidget {
                   onPressed: () => Navigator.of(context).pop(),
                   label: Text(
                     "Close",
-                    style: TextStyle(color: AppColors.black),
+                   
                   ),
                   icon: Icon(
                     Icons.close_rounded,
-                    color: AppColors.black,
+                    
                   ),
                   iconAlignment: IconAlignment.end,
                 )

@@ -26,6 +26,7 @@ import 'package:capsaul/scripts.dart';
 import 'package:capsaul/utils/audio/foreground.dart';
 import 'package:capsaul/utils/ble/connected.dart';
 import 'package:capsaul/utils/ble/scan.dart';
+import 'package:capsaul/utils/legal/terms_and_condition.dart';
 import 'package:capsaul/utils/other/notifications.dart';
 import 'package:capsaul/widgets/navbar.dart';
 import 'package:capsaul/widgets/upgrade_alert.dart';
@@ -49,7 +50,7 @@ class HomePageWrapper extends StatefulWidget {
 class _HomePageWrapperState extends State<HomePageWrapper>
     with WidgetsBindingObserver, TickerProviderStateMixin, WebSocketMixin {
   ForegroundUtil foregroundUtil = ForegroundUtil();
-  TabController? _controller;
+  late TabController _controller;
   late bool _isLoading;
   bool? hasSeenTutorial;
 
@@ -146,7 +147,9 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   @override
   void initState() {
+    super.initState();
     _isLoading = true;
+    _controller = TabController(length: 3, initialIndex: 0, vsync: this);
     Future.delayed(const Duration(seconds: 2), () {
       var tutorialSeen = SharedPreferencesUtil().hasSeenTutorial;
       setState(() {
@@ -209,7 +212,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       });
       SharedPreferencesUtil().subPageToShowFromNotification = '';
     }
-    super.initState();
   }
 
   _initiateConnectionListener() async {
@@ -287,13 +289,25 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     MixpanelManager().bottomNavigationTabClicked(['Home', 'Chat'][index]);
     FocusScope.of(context).unfocus();
     setState(() {
-      _controller!.index = index;
+      _controller.index = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final bool isTosAccepted = SharedPreferencesUtil().tosAccepted;
+
+    if (!isTosAccepted) {
+      return TermsAndConditionsWidget(
+        showAcceptBtn: true,
+        onAccept: () {
+          SharedPreferencesUtil().tosAccepted = true;
+          setState(() {});
+          
+        },
+      );
+    }
 
     return WithForegroundTask(
         child: MyUpgradeAlert(
@@ -301,87 +315,92 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       dialogStyle: Platform.isIOS
           ? UpgradeDialogStyle.cupertino
           : UpgradeDialogStyle.material,
-      child: CustomScaffold(
-        centerTitle: false,
-        resizeToAvoidBottomInset: true,
-        showBatteryLevel: true,
-        showGearIcon: true,
-        title: theme.brightness == Brightness.light
-            ? Image.asset(
-                AppImages.appLogo,
-                width: 70,
-                height: 70,
-              )
-            : Image.asset(
-                AppImages.appLogoW,
-                width: 70,
-                height: 70,
-              ),
-        // showBackBtn: true,
-        device: _device,
-        batteryLevel: batteryLevel,
-        tabIndex: _controller!.index,
-        body: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            FocusScope.of(context).unfocus();
-            chatTextFieldFocusNode.unfocus();
-            memoriesTextFieldFocusNode.unfocus();
-          },
-          child: _isLoading
-              ? const ScreenSkeleton()
-              : Stack(
-                  children: [
-                    Positioned.fill(
-                      child: TabBarView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        controller: _controller,
-                        children: [
-                          CapturePage(
-                            key: capturePageKey,
-                            device: _device,
-                            batteryLevel: batteryLevel,
-                            refreshMemories: _initiateMemories,
-                            refreshMessages: _refreshMessages,
-                            hasSeenTutorial: hasSeenTutorial ?? false,
-                          ),
-                          ChatScreen(
-                            textFieldFocusNode: chatTextFieldFocusNode,
-                          ),
-                          const SettingPage(),
-                        ],
-                      ),
-                    ),
-                    if (chatTextFieldFocusNode.hasFocus ||
-                        memoriesTextFieldFocusNode.hasFocus)
-                      const SizedBox.shrink()
-                    else
-                      BlocBuilder<ChatBloc, ChatState>(
-                        builder: (context, state) {
-                          return Align(
-                            alignment: Alignment.bottomCenter,
-                            child: CustomNavBar(
-                              isChat: _controller!.index == 1,
-                              isMemory: _controller!.index == 0,
-                              onTabChange: (index) =>
-                                  _controller?.animateTo(index),
-                              onSendMessage: (message) {
-                                BlocProvider.of<ChatBloc>(context)
-                                    .add(SendMessage(message));
-                                FocusScope.of(context).unfocus();
-                              },
-                              onMemorySearch: (query) {
-                                BlocProvider.of<MemoryBloc>(context).add(
-                                  SearchMemory(query: query),
-                                );
-                              },
-                              isUserMessageSent: state.isUserMessageSent,
-                            ),
-                          );
-                        },
-                      )
-                  ],
+      child: DefaultTabController(
+        length: 3,
+        child: CustomScaffold(
+          
+          centerTitle: false,
+          resizeToAvoidBottomInset: true,
+          showBatteryLevel: true,
+          showGearIcon: true,
+          title: theme.brightness == Brightness.light
+              ? Image.asset(
+                  AppImages.appLogo,
+                  width: 70,
+                  height: 70,
+                )
+              : Image.asset(
+                  AppImages.appLogoW,
+                  width: 70,
+                  height: 70,
                 ),
+          // showBackBtn: true,
+          device: _device,
+          batteryLevel: batteryLevel,
+          tabIndex: _controller.index,
+          body: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              FocusScope.of(context).unfocus();
+              chatTextFieldFocusNode.unfocus();
+              memoriesTextFieldFocusNode.unfocus();
+            },
+            child: _isLoading
+                ? const ScreenSkeleton()
+                : Stack(
+                    children: [
+                      Positioned.fill(
+                        child: TabBarView(
+                          physics: ScrollPhysics(),
+                          controller: _controller,
+                          children: [
+                            CapturePage(
+                              key: capturePageKey,
+                              device: _device,
+                              batteryLevel: batteryLevel,
+                              refreshMemories: _initiateMemories,
+                              refreshMessages: _refreshMessages,
+                              hasSeenTutorial: hasSeenTutorial ?? false,
+                              tabController: _controller,
+                            ),
+                            ChatScreen(
+                              textFieldFocusNode: chatTextFieldFocusNode,
+                            ),
+                            const SettingPage(),
+                          ],
+                        ),
+                      ),
+                      if (chatTextFieldFocusNode.hasFocus ||
+                          memoriesTextFieldFocusNode.hasFocus)
+                        const SizedBox.shrink()
+                      else
+                        BlocBuilder<ChatBloc, ChatState>(
+                          builder: (context, state) {
+                            return Align(
+                              alignment: Alignment.bottomCenter,
+                              child: CustomNavBar(
+                                isChat: _controller.index == 1,
+                                isMemory: _controller.index == 0,
+                                onTabChange: (index) =>
+                                    _controller.animateTo(index),
+                                onSendMessage: (message) {
+                                  BlocProvider.of<ChatBloc>(context)
+                                      .add(SendMessage(message));
+                                  FocusScope.of(context).unfocus();
+                                },
+                                onMemorySearch: (query) {
+                                  BlocProvider.of<MemoryBloc>(context).add(
+                                    SearchMemory(query: query),
+                                  );
+                                },
+                                isUserMessageSent: state.isUserMessageSent,
+                              ),
+                            );
+                          },
+                        )
+                    ],
+                  ),
+          ),
         ),
       ),
     ));
@@ -392,7 +411,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     WidgetsBinding.instance.removeObserver(this);
     _connectionStateListener?.cancel();
     _bleBatteryLevelListener?.cancel();
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 }

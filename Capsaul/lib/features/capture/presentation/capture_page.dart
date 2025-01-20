@@ -38,6 +38,8 @@ class CapturePage extends StatefulWidget {
   final BTDeviceStruct? device;
   final int batteryLevel;
   final bool hasSeenTutorial;
+  final TabController? tabController;
+
   const CapturePage({
     super.key,
     required this.device,
@@ -45,6 +47,7 @@ class CapturePage extends StatefulWidget {
     required this.refreshMessages,
     this.batteryLevel = -1,
     required this.hasSeenTutorial,
+    this.tabController
   });
 
   @override
@@ -98,7 +101,7 @@ class CapturePageState extends State<CapturePage>
   // ignore: unused_element
   void _pluginNotification() async {
     String transcript = TranscriptSegment.segmentsAsString(segments);
-    String friendlyReplyJson = await generateFriendlyReply(transcript);
+    String friendlyReplyJson = await generateCapsaullyReply(transcript);
     var friendlyReplyMap = jsonDecode(friendlyReplyJson);
     String friendlyReply =
         friendlyReplyMap['reply'] ?? 'Default friendly reply';
@@ -543,6 +546,7 @@ class CapturePageState extends State<CapturePage>
   Widget build(BuildContext context) {
     super.build(context);
     return CaptureMemoryPage(
+      tabController: widget.tabController,
       context: context,
       hasTranscripts: _hasTranscripts,
       wsConnectionState: wsConnectionState,

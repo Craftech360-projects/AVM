@@ -20,11 +20,13 @@ import 'package:intl/intl.dart';
 class MemoryDetailPage extends StatefulWidget {
   final MemoryBloc memoryBloc;
   final int memoryAtIndex;
+  final TabController? tabController;
 
   const MemoryDetailPage({
     super.key,
     required this.memoryBloc,
     required this.memoryAtIndex,
+    this.tabController
   });
 
   static const String name = 'memoryDetailPage';
@@ -37,7 +39,6 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   late Memory selectedMemory;
-  //log(selectedMemory);
   TextEditingController titleController = TextEditingController();
   TextEditingController overviewController = TextEditingController();
   PageController pageController = PageController();
@@ -48,13 +49,11 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     selectedMemory = widget.memoryBloc.state.memories[widget.memoryAtIndex];
-    // Add this line to print geolocation data
     printGeolocationData(selectedMemory.geolocation);
   }
 
   void printGeolocationData(ToOne<Geolocation> geolocation) {
     if (geolocation.target != null) {
-      // Add more fields if necessary
     } else {}
   }
 
@@ -70,9 +69,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     if (category is List) {
       return category.map((e) => e.toString()).toList();
     } else if (category is String) {
-      // If it's a string, check if it's a bracketed list
       if (category.startsWith('[') && category.endsWith(']')) {
-        // Remove brackets and split by comma
         return category
             .substring(1, category.length - 1)
             .split(',')
@@ -85,34 +82,19 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     return [];
   }
 
-  // Convert the transcript data to the required format
   List<Map<String, String>> _getFormattedTranscript(Object? transcript) {
-    //   log("BBJHB, $transcript"); // Log the original transcript before processing
-
     if (transcript == null) return [];
 
     if (transcript is List) {
       List<Map<String, String>> formattedTranscript = transcript.map((item) {
-        // Log the keys of the item to check if they are correct
-        //    log("Transcript Item: $item");
-
-        // Ensure 'speaker' and 'text' keys are present and are of type String
-        final speaker =
-            item['speaker']?.toString() ?? ''; // cast to String, fallback to ''
-        final text =
-            item['text']?.toString() ?? ''; // cast to String, fallback to ''
-
-        // Log the formatted speaker and text
-        // log("Formatted Item: speaker=$speaker, text=$text");
+        final speaker = item['speaker']?.toString() ?? '';
+        final text = item['text']?.toString() ?? '';
 
         return {
           'speaker': speaker,
           'text': text,
         };
       }).toList();
-
-      // Log the final list after formatting
-      //log("Formatted Transcript: $formattedTranscript");
 
       return formattedTranscript;
     }
@@ -134,7 +116,6 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
             Navigator.of(context).pop();
           },
           icon: Icon(Icons.arrow_back_ios_new_rounded),
-          color: AppColors.black,
         ),
         centerTitle: false,
         backgroundColor: AppColors.white,
@@ -144,10 +125,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 ? '${DateFormat('d MMM').format(selectedMemory.createdAt)} -'
                     ' ${DateFormat('h:mm a').format(selectedMemory.createdAt)}'
                 : 'No Date',
-            style: TextStyle(
-                color: AppColors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w500)),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         actions: [
           IconButton(
             onPressed: () {
@@ -160,7 +138,6 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
             icon: const Icon(
               Icons.ios_share,
               size: 24,
-              color: AppColors.black,
             ),
           ),
           IconButton(
@@ -175,7 +152,6 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
             icon: const Icon(
               Icons.more_vert_rounded,
               size: 25,
-              color: AppColors.black,
             ),
           ),
           w8,
@@ -225,6 +201,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 ],
                 children: [
                   OverallTab(
+                    tabController: widget.tabController,
                     target: selectedMemory.structured.target!,
                     geolocation:
                         selectedMemory.geolocation.target, // Pass geolocation

@@ -74,7 +74,6 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
                     'Speaker: ${segment.speaker}',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: AppColors.black,
                     ),
                   ),
                   h4,

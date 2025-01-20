@@ -30,12 +30,11 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
     return CustomDialogWidget(
       title: "Delete this memory",
       message:
-          "Are you sure you want to delete this memory? This action cannot be undone!",
-      icon: Icons.delete_rounded,
+          "Are you sure you want to delete this memory? This action cannot be reversed!",
+      icon: Icons.delete,
       noText: "Cancel",
       yesText: "Delete",
       yesPressed: () async {
-        // deleteVector(widget.memory.id.toString());
         MemoryProvider().deleteMemory(widget.memory);
         Navigator.pop(context);
         widget.onDelete?.call();

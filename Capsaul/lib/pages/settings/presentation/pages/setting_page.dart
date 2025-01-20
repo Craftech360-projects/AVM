@@ -107,7 +107,7 @@ class _SettingPageState extends State<SettingPage> {
                               // const ConnectDevicePage(),
                             ),
                           );
-                          MixpanelManager().connectFriendClicked();
+                          MixpanelManager().connectCapsaulClicked();
                         } else {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -117,7 +117,7 @@ class _SettingPageState extends State<SettingPage> {
                               // const ConnectDevicePage(),
                             ),
                           );
-                          MixpanelManager().connectFriendClicked();
+                          MixpanelManager().connectCapsaulClicked();
                         }
                       },
                       title: Row(
@@ -146,7 +146,6 @@ class _SettingPageState extends State<SettingPage> {
                           Spacer(),
                           Icon(
                             Icons.arrow_forward_ios_rounded,
-                            color: AppColors.black,
                             size: 16,
                           )
                         ],

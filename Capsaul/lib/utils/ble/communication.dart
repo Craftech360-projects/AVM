@@ -76,7 +76,7 @@ Future<StreamSubscription?> getBleAudioBytesListener(
 }) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Capsaul', deviceId);
     return null;
   }
 
@@ -115,7 +115,7 @@ enum BleAudioCodec { pcm16, pcm8, mulaw16, mulaw8, opus, unknown }
 Future<BleAudioCodec> getAudioCodec(String deviceId) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Capsaul', deviceId);
     return BleAudioCodec.pcm8;
   }
 
@@ -156,7 +156,7 @@ Future<BleAudioCodec> getAudioCodec(String deviceId) async {
 Future cameraStartPhotoController(String deviceId) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Capsaul', deviceId);
     return;
   }
 
@@ -174,7 +174,7 @@ Future cameraStartPhotoController(String deviceId) async {
 Future cameraStopPhotoController(String deviceId) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Capsaul', deviceId);
     return;
   }
 
@@ -191,7 +191,7 @@ Future cameraStopPhotoController(String deviceId) async {
 Future<bool> hasPhotoStreamingCharacteristic(String deviceId) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Capsaul', deviceId);
     return false;
   }
   var imageCaptureControlCharacteristic =
@@ -205,7 +205,7 @@ Future<StreamSubscription?> getBleImageBytesListener(
 }) async {
   final friendService = await getServiceByUuid(deviceId, friendServiceUuid);
   if (friendService == null) {
-    logServiceNotFoundError('Friend', deviceId);
+    logServiceNotFoundError('Capsaul', deviceId);
     return null;
   }
 

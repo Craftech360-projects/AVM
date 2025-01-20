@@ -32,7 +32,7 @@ Future<List<BTDeviceStruct>> bleFindDevices() async {
     );
 
     // Start scanning if not already scanning
-    // Only look for devices that implement Friend main service
+    // Only look for devices that implement Capsaul main service
     if (!FlutterBluePlus.isScanningNow) {
       await FlutterBluePlus.startScan(
         timeout: const Duration(seconds: 5),

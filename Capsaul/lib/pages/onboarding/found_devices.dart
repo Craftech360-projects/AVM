@@ -102,16 +102,17 @@ class FoundDevicesState extends State<FoundDevices>
                       ? 'Searching for devices...'
                       : '${widget.deviceList.length} ${widget.deviceList.length == 1 ? "DEVICE" : "DEVICES"} FOUND',
                   style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: AppColors.black),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: AppColors.black,
+                  ),
                 )
               : const Text(
                   'PAIRING SUCCESSFUL',
                   style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: AppColors.black),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                  ),
                 ),
           if (widget.deviceList.isNotEmpty) const SizedBox(height: 16),
           if (!_isConnected) ..._devicesList(),
@@ -124,6 +125,7 @@ class FoundDevicesState extends State<FoundDevices>
               width: double.maxFinite,
               child: CustomElevatedButton(
                 backgroundColor: AppColors.white,
+                
                 onPressed: () async {
                   if (SharedPreferencesUtil().onboardingCompleted) {
                     Navigator.pushReplacement(
@@ -144,7 +146,6 @@ class FoundDevicesState extends State<FoundDevices>
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 18,
-                          color: AppColors.black,
                         ),
                       ),
                       Text(
@@ -192,7 +193,6 @@ class FoundDevicesState extends State<FoundDevices>
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 18,
-                        color: AppColors.black,
                       ),
                     ),
                     w4,

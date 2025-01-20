@@ -8,6 +8,7 @@ import 'package:capsaul/backend/schema/plugin.dart';
 import 'package:capsaul/core/assets/app_vectors.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
+import 'package:capsaul/features/chat/bloc/chat_bloc.dart';
 import 'package:capsaul/pages/settings/widgets/calendar.dart';
 import 'package:capsaul/src/common_widget/expandable_text.dart';
 import 'package:capsaul/src/common_widget/list_tile.dart';
@@ -17,6 +18,7 @@ import 'package:capsaul/widgets/expandable_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:map_launcher/map_launcher.dart';
@@ -25,12 +27,15 @@ class OverallTab extends StatefulWidget {
   final Structured target;
   final dynamic pluginsResponse;
   final Geolocation? geolocation;
+  final TabController? tabController;
 
-  const OverallTab(
-      {super.key,
-      required this.target,
-      this.pluginsResponse,
-      this.geolocation});
+  const OverallTab({
+    super.key,
+    required this.target,
+    this.pluginsResponse,
+    this.geolocation,
+    this.tabController,
+  });
 
   @override
   OverallTabState createState() => OverallTabState();
@@ -42,6 +47,7 @@ class OverallTabState extends State<OverallTab> {
     final textTheme = Theme.of(context).textTheme;
     final events = widget.target.events;
     final actionItems = widget.target.actionItems;
+    final brainstormQns = widget.target.brainstormingQuestions;
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,8 +58,8 @@ class OverallTabState extends State<OverallTab> {
           CustomListTile(
             leading: SvgPicture.asset(
               AppVectors.summary,
-              height: 18.h,
-              width: 18.w,
+              height: 14.h,
+              width: 14.w,
             ),
             title: Text(
               'AI Summary',
@@ -62,18 +68,87 @@ class OverallTabState extends State<OverallTab> {
           ),
           ExpandableText(
             text: widget.target.overview,
-            style: textTheme.bodyLarge?.copyWith(
+            style: textTheme.bodyMedium?.copyWith(
               color: AppColors.grey,
             ),
           ),
+          h16,
+
+          CustomListTile(
+            leading: SvgPicture.asset(
+              AppVectors.qnMark,
+              height: 15.h,
+              width: 15.w,
+            ),
+            title:
+                Text('Brainstorm with Capsaul', style: textTheme.titleMedium),
+          ),
+          if (brainstormQns.isEmpty)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 0.h),
+              child: Text(
+                'Uhuh! Seems like no questioms are available',
+                style: textTheme.bodyMedium?.copyWith(
+                  color: AppColors.grey,
+                ),
+              ),
+            )
+          else
+            ...brainstormQns.map((question) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: AppColors.purpleDark,
+                    borderRadius: br5,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        question,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.white,
+                        ),
+                      ),
+                      h4,
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: GestureDetector(
+                          child: Text(
+                            "Ask Capsaul",
+                            style: TextStyle(
+                              color: AppColors.orange,
+                              fontSize: 12,
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            widget.tabController?.animateTo(1);
+                            BlocProvider.of<ChatBloc>(context).add(
+                              SendMessage(
+                                question,
+                                memoryContext: widget.target.title,
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }),
           h16,
 
           /// Chapters
           CustomListTile(
             leading: SvgPicture.asset(
               AppVectors.chapter,
-              height: 18.h,
-              width: 18.w,
+              height: 16.h,
+              width: 16.w,
             ),
             title: Text('Events', style: textTheme.titleMedium),
           ),
@@ -82,7 +157,7 @@ class OverallTabState extends State<OverallTab> {
               padding: EdgeInsets.symmetric(vertical: 0.h),
               child: Text(
                 'No events found',
-                style: textTheme.bodyLarge?.copyWith(
+                style: textTheme.bodyMedium?.copyWith(
                   color: AppColors.grey,
                 ),
               ),
@@ -97,9 +172,7 @@ class OverallTabState extends State<OverallTab> {
                 children: [
                   Text(
                     '$index.',
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: AppColors.black,
-                    ),
+                    style: textTheme.bodyMedium?.copyWith(),
                   ),
                   Expanded(
                     child: Padding(
@@ -109,7 +182,7 @@ class OverallTabState extends State<OverallTab> {
                         children: [
                           Text(
                             event.title,
-                            style: textTheme.bodyLarge?.copyWith(
+                            style: textTheme.bodyMedium?.copyWith(
                               color: AppColors.grey,
                             ),
                           ),
@@ -152,8 +225,9 @@ class OverallTabState extends State<OverallTab> {
                             );
                             avmSnackBar(context, "Event added to calendar");
                           },
-                    icon: Icon(event.created ? Icons.check : Icons.add,
-                        color: AppColors.black),
+                    icon: Icon(
+                      event.created ? Icons.check : Icons.add,
+                    ),
                   ),
                 ],
               );
@@ -164,8 +238,8 @@ class OverallTabState extends State<OverallTab> {
           CustomListTile(
             leading: SvgPicture.asset(
               AppVectors.action,
-              height: 18.h,
-              width: 18.w,
+              height: 15.h,
+              width: 15.w,
             ),
             title: Text(
               'Action Items',
@@ -175,7 +249,7 @@ class OverallTabState extends State<OverallTab> {
           if (actionItems.isEmpty)
             Text(
               'No action items found',
-              style: textTheme.bodyLarge?.copyWith(
+              style: textTheme.bodyMedium?.copyWith(
                 color: AppColors.grey,
               ),
             )
@@ -209,7 +283,7 @@ class OverallTabState extends State<OverallTab> {
                         actionItem.description,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: textTheme.bodyLarge?.copyWith(
+                        style: textTheme.bodyMedium?.copyWith(
                           color: actionItem.completed
                               ? AppColors.black
                               : AppColors.grey,
@@ -220,106 +294,13 @@ class OverallTabState extends State<OverallTab> {
                 ),
               );
             }),
-          h16,
-
-          //Brainstorm Questions
-          CustomListTile(
-            leading: SvgPicture.asset(
-              AppVectors.qnMark,
-              height: 18.h,
-              width: 18.w,
-            ),
-            title:
-                Text('Brainstorm with Caspsaul', style: textTheme.titleMedium),
-          ),
-          if (events.isEmpty)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.h),
-              child: Text(
-                'No events found',
-                style: textTheme.bodyLarge?.copyWith(
-                  color: AppColors.grey,
-                ),
-              ),
-            )
-          else
-            ...events.asMap().entries.map((entry) {
-              int index = entry.key + 1;
-              var event = entry.value;
-              h8;
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '$index.',
-                    style: textTheme.bodyLarge?.copyWith(
-                      color: AppColors.black,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            event.title,
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: AppColors.grey,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              '${dateTimeFormat('MMM d, yyyy', event.startsAt)} at ${dateTimeFormat('h:mm a', event.startsAt)} ~ ${event.duration} minutes.',
-                              style: const TextStyle(
-                                  color: AppColors.grey, fontSize: 15),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: event.created
-                        ? null
-                        : () {
-                            var calEnabled =
-                                SharedPreferencesUtil().calendarEnabled;
-                            var calSelected =
-                                SharedPreferencesUtil().calendarId.isNotEmpty;
-                            if (!calEnabled || !calSelected) {
-                              routeToPage(context, const CalendarPage());
-                              avmSnackBar(
-                                  context,
-                                  !calEnabled
-                                      ? "Enable calendar integration to add events"
-                                      : "Select a calendar to add events to");
-                              return;
-                            }
-                            MemoryProvider().setEventCreated(event);
-                            setState(() => event.created = true);
-                            CalendarUtil().createEvent(
-                              event.title,
-                              event.startsAt,
-                              event.duration,
-                              description: event.description,
-                            );
-                            avmSnackBar(context, "Event added to calendar");
-                          },
-                    icon: Icon(event.created ? Icons.check : Icons.add,
-                        color: AppColors.black),
-                  ),
-                ],
-              );
-            }),
           h8,
 
           Container(
             decoration: BoxDecoration(
-                border: Border.all(color: AppColors.grey), borderRadius: br5),
+                border: Border.all(color: AppColors.black), borderRadius: br2),
             margin: EdgeInsets.symmetric(vertical: 20),
-            padding: EdgeInsets.symmetric(vertical: 06, horizontal: 12),
+            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -328,13 +309,12 @@ class OverallTabState extends State<OverallTab> {
                   Text(
                     'Location 📍',
                     style: TextStyle(
-                      color: AppColors.black,
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                 Divider(
-                  color: AppColors.purpleDark,
+                  color: AppColors.black,
                   thickness: 1,
                 ),
                 Text(
@@ -359,14 +339,11 @@ class OverallTabState extends State<OverallTab> {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.error,
-                                  color: AppColors.black, size: 50),
+                              Icon(Icons.error, size: 50),
                               h8,
                               Text(
                                 'Failed to load map image',
-                                style: textTheme.bodyLarge?.copyWith(
-                                  color: AppColors.black,
-                                ),
+                                style: textTheme.bodyMedium?.copyWith(),
                               ),
                             ],
                           );
@@ -408,17 +385,14 @@ class OverallTabState extends State<OverallTab> {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.error,
-                                color: AppColors.black, size: 50),
+                            const Icon(Icons.error, size: 50),
                             h8,
                             Text(
                               'Failed to load map image',
                               style: Theme.of(context)
                                   .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: AppColors.black,
-                                  ),
+                                  .bodyMedium
+                                  ?.copyWith(),
                             ),
                           ],
                         );
@@ -435,7 +409,6 @@ class OverallTabState extends State<OverallTab> {
                     height: 32,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: AppColors.black,
                     ),
                     child: Center(
                       child: IconButton(
@@ -514,9 +487,8 @@ class OverallTabState extends State<OverallTab> {
                     borderRadius: BorderRadius.circular(8)),
                 child: const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                    child: Text('Enable Plugins',
-                        style:
-                            TextStyle(color: AppColors.black, fontSize: 16))),
+                    child:
+                        Text('Enable Plugins', style: TextStyle(fontSize: 16))),
               ),
             ),
           ],
@@ -553,7 +525,6 @@ class OverallTabState extends State<OverallTab> {
                           maxLines: 1,
                           style: const TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: AppColors.black,
                             fontSize: 16,
                           ),
                         ),
@@ -590,7 +561,6 @@ class OverallTabState extends State<OverallTab> {
                   isExpanded: pluginResponseExpanded[i],
                   toggleExpand: () => onItemToggled(i),
                   style: const TextStyle(
-                    color: AppColors.black,
                     fontSize: 15,
                     height: 1.3,
                   ),

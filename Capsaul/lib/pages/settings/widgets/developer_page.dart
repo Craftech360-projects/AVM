@@ -255,7 +255,6 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
             Icon(
               Icons.arrow_forward_ios_rounded,
               size: 16,
-              color: AppColors.black,
             )
           ],
         ),

@@ -29,17 +29,14 @@ class BatteryWidget extends StatelessWidget {
         Container(
           width: 6,
           height: 3,
-          decoration: BoxDecoration(
-            color: AppColors.black,
-            borderRadius: br1,
-          ),
+          decoration: BoxDecoration(borderRadius: br1, color: AppColors.black),
         ),
         h1,
         Container(
           width: 12,
           height: 22,
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.black, width: 1.5),
+            border: Border.all(width: 1.5),
             borderRadius: br2,
           ),
           child: Stack(

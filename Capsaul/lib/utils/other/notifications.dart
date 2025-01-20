@@ -21,8 +21,8 @@ Future<void> initializeNotifications() async {
         NotificationChannel(
             channelGroupKey: 'channel_group_key',
             channelKey: 'channel',
-            channelName: 'Friend Notifications',
-            channelDescription: 'Notification channel for Friend',
+            channelName: 'Capsaul Notifications',
+            channelDescription: 'Notification channel for Capsaul',
             defaultColor: AppColors.purpleDark,
             ledColor: AppColors.commonPink)
       ],
@@ -30,7 +30,7 @@ Future<void> initializeNotifications() async {
       channelGroups: [
         NotificationChannelGroup(
             channelGroupKey: 'channel_group_key',
-            channelGroupName: 'Friend Notifications')
+            channelGroupName: 'Capsaul Notifications')
       ],
       debug: false);
   NotifyOnKill.register();

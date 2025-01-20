@@ -5,7 +5,6 @@ class BluetoothPermissionHandler {
   static Future<bool> requestBluetoothPermissions(BuildContext context) async {
     // First check if Bluetooth is available
     if (await Permission.bluetooth.status.isDenied) {
-
       // Request Bluetooth permission
       PermissionStatus bluetoothStatus = await Permission.bluetooth.request();
 
@@ -26,7 +25,7 @@ class BluetoothPermissionHandler {
               builder: (context) => AlertDialog(
                 title: const Text('Bluetooth Permission Required'),
                 content: const Text(
-                    'Bluetooth permission is required to connect with your Friend Wearable. '
+                    'Bluetooth permission is required to connect with your Capsaul Wearable. '
                     'Please enable it in Settings.'),
                 actions: [
                   TextButton(

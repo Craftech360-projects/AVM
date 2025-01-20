@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:capsaul/backend/api_requests/api/server.dart';
 import 'package:capsaul/backend/auth.dart';
-import 'package:capsaul/backend/preferences.dart';
 import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
@@ -91,26 +90,10 @@ class SigninPage extends StatelessWidget {
                               }
 
                               prefs.setString('uid', user.uid);
-
-                              bool showAcceptBtn = true;
-                              await Navigator.push(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      TermsAndConditionsWidget(
-                                    showAcceptBtn: showAcceptBtn,
-                                    onAccept: () {
-                                      SharedPreferencesUtil().tosAccepted =
-                                          true;
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const OnboardingPage(),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                  builder: (context) => const OnboardingPage(),
                                 ),
                               );
                             } else {
@@ -165,33 +148,18 @@ class SigninPage extends StatelessWidget {
                               }
 
                               prefs.setString('uid', user.uid);
-
-                              bool showAcceptBtn = true;
-                              await Navigator.push(
+                              prefs.setString('uid', user.uid);
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      TermsAndConditionsWidget(
-                                    showAcceptBtn: showAcceptBtn,
-                                    onAccept: () {
-                                      SharedPreferencesUtil().tosAccepted =
-                                          true;
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const OnboardingPage(),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                  builder: (context) => const OnboardingPage(),
                                 ),
                               );
                             } else {
-                              log("Sign-in failed or user token is null");
+                              log("Apple Sign-in failed or user token is null");
                             }
                           } catch (e) {
-                            log("Google Sign-in failed: $e");
+                            log("Apple Sign-in failed: $e");
                           }
                         },
                         child: const Text('Continue using Apple',
@@ -222,12 +190,10 @@ class SigninPage extends StatelessWidget {
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               showDialog(
-                                barrierDismissible: false,
+                                barrierDismissible: true,
                                 context: context,
                                 builder: (BuildContext context) {
                                   return Dialog(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: br8),
                                     child: TermsAndConditionsWidget(
                                       showAcceptBtn: false,
                                     ),

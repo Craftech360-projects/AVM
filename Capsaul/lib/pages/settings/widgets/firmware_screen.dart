@@ -185,7 +185,7 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
                   h8,
                   const Text(
                     "Keep your device running smoothly by updating to the latest firmware. This ensures you have the newest features and bug fixes.",
-                    style: TextStyle(fontSize: 14, color: AppColors.black),
+                    style: TextStyle(fontSize: 14),
                   ),
                   Divider(height: 32),
                   Row(

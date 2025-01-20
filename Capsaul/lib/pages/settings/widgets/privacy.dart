@@ -80,9 +80,9 @@ class PrivacyInfoPage extends StatelessWidget {
             _buildBulletPoint(
                 'Upgrade Modal: We track when the upgrade modal is dismissed or clicked.'),
             _buildBulletPoint(
-                'Get/Connect Friend: We track when you click to get or connect your Friend device.'),
+                'Get/Connect Capsaul: We track when you click to get or connect your Capsaul device.'),
             _buildBulletPoint(
-                'Disconnect Friend: We track when you disconnect your Friend device.'),
+                'Disconnect Capsaul: We track when you disconnect your Capsaul device.'),
             _buildBulletPoint(
                 'Battery Indicator: We track when you click the battery indicator.'),
             _buildBulletPoint(
@@ -127,12 +127,12 @@ class PrivacyInfoPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'We are committed to using the data we collect only to make Friend a better product for you. Your privacy and trust are paramount to us.',
+              'We are committed to using the data we collect only to make Capsaul a better product for you. Your privacy and trust are paramount to us.',
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 16),
             const Text(
-              'Thank you for being a valued user of Friend. If you have any questions or concerns, feel free to reach out to us to www.craftech360.com.',
+              'Thank you for being a valued user of Capsaul. If you have any questions or concerns, feel free to reach out to us to www.craftech360.com.',
               style: TextStyle(fontSize: 16),
             ),
           ],

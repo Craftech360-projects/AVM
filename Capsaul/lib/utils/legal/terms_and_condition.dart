@@ -111,11 +111,14 @@ class TermsAndConditionsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      title: Text(
-        "Terms And Conditions",
-        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
+      title: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          "Terms and Conditions",
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+        ),
       ),
-      showBackBtn: true,
+      showBackBtn: false,
       body: Stack(
         children: [
           Expanded(
@@ -125,7 +128,7 @@ class TermsAndConditionsWidget extends StatelessWidget {
                 final section = sections[index];
                 return Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -133,7 +136,7 @@ class TermsAndConditionsWidget extends StatelessWidget {
                         section['heading'],
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                          fontSize: 15,
                         ),
                       ),
                       ...section['points']
@@ -145,24 +148,25 @@ class TermsAndConditionsWidget extends StatelessWidget {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: ElevatedButton(
-                onPressed: onAccept,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.purpleDark,
-                  foregroundColor: AppColors.white,
-                  shape: RoundedRectangleBorder(borderRadius: br8),
-                ),
-                child: const Text(
-                  'I Accept',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          if (showAcceptBtn)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: onAccept,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.purpleDark,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(borderRadius: br8),
+                  ),
+                  child: const Text(
+                    'I Accept',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

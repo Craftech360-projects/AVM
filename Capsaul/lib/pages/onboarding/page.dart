@@ -10,7 +10,6 @@ import 'package:capsaul/pages/home/custom_scaffold.dart';
 import 'package:capsaul/utils/ble/find.dart';
 import 'package:capsaul/widgets/dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,87 +30,107 @@ class FindDevicesPage extends StatefulWidget {
 class FindDevicesPageState extends State<FindDevicesPage>
     with SingleTickerProviderStateMixin {
   List<BTDeviceStruct> deviceList = [];
-  late Timer _didNotMakeItTimer;
-  late Timer _findDevicesTimer;
+  late Timer? _didNotMakeItTimer;
+  late Timer? _findDevicesTimer;
   bool enableInstructions = false;
+  bool isScanning = false;
 
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _scanDevices();
-    });
+    _scanDevices();
   }
 
   @override
   void dispose() {
-    _findDevicesTimer.cancel();
-    _didNotMakeItTimer.cancel();
+    _findDevicesTimer?.cancel();
+    _didNotMakeItTimer?.cancel();
     super.dispose();
   }
 
   Future<void> _scanDevices() async {
-    // check if bluetooth is enabled on Android
+    setState(() {
+      isScanning = true;
+    });
+
+    // Check if Bluetooth is enabled on Android
     if (Platform.isAndroid) {
-      if (FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
-        try {
+      try {
+        if (FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
           await FlutterBluePlus.turnOn();
-        } catch (e) {
-          if (e is FlutterBluePlusException) {
-            if (e.code == 11) {
-              if (mounted) {
-                showDialog(
-                  context: context,
-                  builder: (c) => getDialog(
-                    context,
-                    () {
-                      Navigator.of(context).pop();
-                    },
-                    () {},
-                    'Enable Bluetooth',
-                    'Friend needs Bluetooth to connect to your wearable. Please enable Bluetooth and try again.',
-                    singleButton: true,
-                  ),
-                );
-              }
-            }
+        }
+      } catch (e) {
+        if (e is FlutterBluePlusException && e.code == 11) {
+          if (mounted) {
+            showDialog(
+              context: context,
+              builder: (c) => getDialog(
+                context,
+                () {
+                  Navigator.of(context).pop();
+                },
+                () {},
+                'Enable Bluetooth',
+                'Capsaul needs Bluetooth to connect to your wearable. Please enable Bluetooth and try again.',
+                singleButton: true,
+              ),
+            );
           }
+        } else {
+          debugPrint('Unexpected error while enabling Bluetooth: $e');
         }
       }
     }
 
+    // Set a timeout to show instructions if no devices are found
     _didNotMakeItTimer = Timer(const Duration(seconds: 10),
         () => setState(() => enableInstructions = true));
-    // Update foundDevicesMap with new devices and remove the ones not found anymore
+
     Map<String, BTDeviceStruct> foundDevicesMap = {};
 
+    // Start scanning periodically for devices
     _findDevicesTimer =
         Timer.periodic(const Duration(seconds: 2), (timer) async {
-      List<BTDeviceStruct> foundDevices = await bleFindDevices();
+      try {
+        List<BTDeviceStruct> foundDevices = await bleFindDevices();
 
-      // Update foundDevicesMap with new devices and remove the ones not found anymore
-      Map<String, BTDeviceStruct> updatedDevicesMap = {};
-      for (final device in foundDevices) {
-        // If it's a new device, add it to the map. If it already exists, this will just update the entry.
-        updatedDevicesMap[device.id] = device;
+        // Update foundDevicesMap with new devices and remove the ones not found anymore
+        Map<String, BTDeviceStruct> updatedDevicesMap = {
+          for (final device in foundDevices) device.id: device
+        };
+
+        // Remove devices that are no longer found
+        foundDevicesMap.keys
+            .where((id) => !updatedDevicesMap.containsKey(id))
+            .toList()
+            .forEach(foundDevicesMap.remove);
+
+        // Merge new devices into the current map
+        foundDevicesMap.addAll(updatedDevicesMap);
+
+        // Convert the values of the map back to a list
+        List<BTDeviceStruct> orderedDevices = foundDevicesMap.values.toList();
+
+        if (orderedDevices.isNotEmpty) {
+          setState(() {
+            deviceList = orderedDevices;
+            isScanning = false;
+          });
+          _didNotMakeItTimer?.cancel();
+        }
+      } catch (e) {
+        debugPrint('Error during BLE device scanning: $e');
       }
-      // Remove devices that are no longer found
-      foundDevicesMap.keys
-          .where((id) => !updatedDevicesMap.containsKey(id))
-          .toList()
-          .forEach(foundDevicesMap.remove);
+    });
 
-      // Merge the new devices into the current map to maintain order
-      foundDevicesMap.addAll(updatedDevicesMap);
-
-      // Convert the values of the map back to a list
-      List<BTDeviceStruct> orderedDevices = foundDevicesMap.values.toList();
-
-      if (orderedDevices.isNotEmpty) {
+    // Stop scanning after a timeout
+    Future.delayed(const Duration(seconds: 30), () {
+      if (mounted && isScanning) {
+        _findDevicesTimer?.cancel();
         setState(() {
-          deviceList = orderedDevices;
+          isScanning = false;
+          enableInstructions = true;
         });
-        _didNotMakeItTimer.cancel();
       }
     });
   }
@@ -128,25 +147,31 @@ class FindDevicesPageState extends State<FindDevicesPage>
             AppImages.appLogo,
             height: 30.h,
           ),
-          // SizedBox(height: 150.h),
 
-          /// Bluetooth Animation
-          BleAnimation(
-            minRadius: 40.h,
-            ripplesCount: 6,
-            duration: const Duration(milliseconds: 3000),
-            repeat: true,
-            child: Icon(
-              Icons.bluetooth_searching,
-              color: AppColors.white,
-              size: 30.h,
+          /// Bluetooth Animation or Loading Indicator
+          if (isScanning)
+            BleAnimation(
+              minRadius: 40.h,
+              ripplesCount: 6,
+              duration: const Duration(milliseconds: 3000),
+              repeat: true,
+              child: Icon(
+                Icons.bluetooth_searching,
+                color: AppColors.white,
+                size: 30.h,
+              ),
+            )
+          else if (deviceList.isEmpty && enableInstructions)
+            const Text(
+              'No devices found. Please try again or contact support.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
             ),
-          ),
-          // SizedBox(height: 140.h),
 
+          // Display Found Devices
           FoundDevices(deviceList: deviceList, goNext: widget.goNext),
-          // if (deviceList.isEmpty && enableInstructions)
-          //   const SizedBox(height: 48),
+
+          // Contact Support Button
           if (deviceList.isEmpty && enableInstructions)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 28.0),

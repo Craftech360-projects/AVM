@@ -181,7 +181,7 @@ class CustomDialogWidget extends StatelessWidget {
       title: FittedBox(
         fit: BoxFit.scaleDown,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Icon(icon, color: iconColor ?? AppColors.blue),
             w8,
@@ -211,7 +211,6 @@ class CustomDialogWidget extends StatelessWidget {
           if (showTextField) ...[
             h8,
             TextField(
-              cursorColor: AppColors.black,
               style: TextStyle(color: AppColors.white),
               controller: textFieldController,
               decoration: InputDecoration(
@@ -245,7 +244,7 @@ class CustomDialogWidget extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            noPressed ?? Navigator.of(context).pop();
+            noPressed != null ? noPressed!() : Navigator.of(context).pop();
           },
           icon: const Icon(Icons.close, color: AppColors.white, size: 17),
           label: Text(

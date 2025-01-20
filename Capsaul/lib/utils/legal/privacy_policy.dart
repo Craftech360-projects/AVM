@@ -12,7 +12,7 @@ void showPrivacyPolicy(BuildContext context) {
           {
             'heading': "Introduction",
             'points': [
-              "Welcome to Altio Capsaul's privacy policy. At Altio Capsaul, we are committed to protecting your privacy and ensuring the security of your personal information. This privacy policy explains how our app and wearable device, Friend, collect, use, and safeguard your data.",
+              "Welcome to Altio Capsaul's privacy policy. At Altio Capsaul, we are committed to protecting your privacy and ensuring the security of your personal information. This privacy policy explains how our app and wearable device, Capsaul, collect, use, and safeguard your data.",
             ],
           },
         ],

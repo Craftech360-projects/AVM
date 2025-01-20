@@ -94,7 +94,7 @@ class _GreetingCardState extends State<GreetingCard> {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: br12,
+                  borderRadius: br5,
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.black.withAlpha(25),

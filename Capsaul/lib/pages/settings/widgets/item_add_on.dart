@@ -28,9 +28,7 @@ class ItemAddOn extends StatelessWidget {
                 Text(
                   title ?? '',
                   style: const TextStyle(
-                      color: AppColors.black,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500),
+                      fontSize: 17, fontWeight: FontWeight.w500),
                 ),
                 const Spacer(),
                 Container(

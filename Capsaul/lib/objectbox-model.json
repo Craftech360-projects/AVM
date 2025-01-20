@@ -85,7 +85,7 @@
     },
     {
       "id": "2:6427539297124375252",
-      "lastPropertyId": "8:4321600440594391155",
+      "lastPropertyId": "9:7524614902799169714",
       "name": "Structured",
       "properties": [
         {
@@ -121,6 +121,11 @@
           "flags": 520,
           "indexId": "11:8287585027820134538",
           "relationTarget": "Geolocation"
+        },
+        {
+          "id": "9:7524614902799169714",
+          "name": "brainstormingQuestions",
+          "type": 30
         }
       ],
       "relations": []

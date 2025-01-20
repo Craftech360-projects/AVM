@@ -163,7 +163,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                         SharedPreferencesUtil().deviceName = '';
                         avmSnackBar(context,
                             'Capsaul has been ${widget.device == null ? "unpaired" : "disconnected"} successfully.');
-                        MixpanelManager().disconnectFriendClicked();
+                        MixpanelManager().disconnectCapsaulClicked();
                         Navigator.of(context).pop();
                       },
                       child: Container(

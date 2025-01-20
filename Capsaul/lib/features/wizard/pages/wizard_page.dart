@@ -120,6 +120,10 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
                                 icon: Icons.backup_rounded,
                                 noText: "Not now",
                                 yesText: "Enable",
+                                noPressed: () {
+                                  _nextPage();
+                                  Navigator.of(context).pop();
+                                },
                                 yesPressed: () {
                                   SharedPreferencesUtil().backupsEnabled = true;
                                   avmSnackBar(context,
@@ -138,13 +142,14 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
                       buttonText: 'Connect my Capsaul',
                       onSkip: _nextPage,
                       onPressed: () {
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                             builder: (context) => FindDevicesPage(
                               goNext: () {},
                             ),
                           ),
+                          (route) => false,
                         );
                       },
                     ),

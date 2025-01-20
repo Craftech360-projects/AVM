@@ -50,7 +50,6 @@ class TranscriptTab extends StatelessWidget {
             ),
             connectorBuilder: (_, index, __) {
               return SolidLineConnector(
-                color: AppColors.black,
                 thickness: 1.w,
               );
             },
@@ -96,9 +95,7 @@ class _TranscriptContent extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: Text(
               timeString, // Use the formatted 12-hour time
-              style: textTheme.titleMedium?.copyWith(
-                color: AppColors.black,
-              ),
+              style: textTheme.titleMedium?.copyWith(),
             ),
           ),
           Padding(

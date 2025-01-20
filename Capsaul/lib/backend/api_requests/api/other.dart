@@ -102,10 +102,10 @@ Future<String> webhookOnTranscriptReceivedCall(
 }
 
 Future<String> getPluginMarkdown(String pluginMarkdownPath) async {
-  // https://raw.githubusercontent.com/BasedHardware/Friend/main/assets/external_plugins_instructions/notion-conversations-crm.md
+  // https://raw.githubusercontent.com/BasedHardware/Capsaul/main/assets/external_plugins_instructions/notion-conversations-crm.md
   var response = await makeApiCall(
     url:
-        'https://raw.githubusercontent.com/BasedHardware/Friend/main$pluginMarkdownPath',
+        'https://raw.githubusercontent.com/BasedHardware/Capsaul/main$pluginMarkdownPath',
     method: 'GET',
     headers: {},
     body: '',
