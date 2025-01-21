@@ -4,6 +4,16 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final lightTheme = ThemeData(
+    iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(iconColor: WidgetStatePropertyAll(AppColors.black))),
+    textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+      iconColor: WidgetStatePropertyAll(AppColors.black),
+      textStyle: WidgetStateProperty.all(
+        TextStyle(color: AppColors.black, fontFamily: "Montserrat"),
+      ),
+      foregroundColor: WidgetStateProperty.all(AppColors.black),
+    )),
     appBarTheme: AppBarTheme(backgroundColor: AppColors.white),
     iconTheme: IconThemeData(color: AppColors.black),
     primaryColor: AppColors.purpleDark,
@@ -39,6 +49,16 @@ class AppTheme {
   static final darkTheme = ThemeData(
     primaryColor: AppColors.purpleDark,
     scaffoldBackgroundColor: AppColors.black,
+    iconButtonTheme: IconButtonThemeData(
+        style: ButtonStyle(iconColor: WidgetStatePropertyAll(AppColors.white))),
+    textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+      iconColor: WidgetStatePropertyAll(AppColors.white),
+      textStyle: WidgetStateProperty.all(
+        TextStyle(color: AppColors.white, fontFamily: "Montserrat"),
+      ),
+      foregroundColor: WidgetStateProperty.all(AppColors.black),
+    )),
     appBarTheme: const AppBarTheme(backgroundColor: AppColors.black),
     brightness: Brightness.dark,
     fontFamily: "Montserrat",

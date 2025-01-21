@@ -12,4 +12,5 @@ class AppVectors {
   static const String send = "${basePath}send$format";
   static const String search = "${basePath}search$format";
   static const String qnMark = "${basePath}question_mark$format";
+  static const String unPin = "${basePath}unpin$format";
 }

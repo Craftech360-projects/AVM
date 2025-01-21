@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:capsaul/backend/database/box.dart';
 import 'package:capsaul/backend/database/message.dart';
 import 'package:capsaul/objectbox.g.dart';
@@ -21,11 +23,35 @@ class MessageProvider {
 
   Future<void> updateMessage(Message message) async => _box.put(message);
 
+  Future<bool> deleteMessage(Message message) async {
+    try {
+      return _box.remove(message.id);
+    } catch (e) {
+      log('Error deleting message: $e');
+      return false;
+    }
+  }
+
+  Future<List<Message>> getPinnedMessages() async {
+    return _box.query(Message_.isPinned.equals(true)).build().find();
+  }
+
+  Future<bool> deleteMessages(List<Message> messages) async {
+    try {
+      final ids = messages.map((m) => m.id).toList();
+      _box.removeMany(ids);
+      return true;
+    } catch (e) {
+      log('Error deleting messages: $e');
+      return false;
+    }
+  }
+
   Future<List<Message>> retrieveMostRecentMessages(
       {int limit = 5, String? pluginId}) async {
     Query<Message> query = _box
         .query(
-          Message_.fromIntegration.equals(false), // determine if keep
+          Message_.fromIntegration.equals(false),
         )
         .order(Message_.createdAt, flags: Order.descending)
         .build();

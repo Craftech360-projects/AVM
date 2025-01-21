@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
@@ -44,10 +46,16 @@ class _CustomNavBarState extends State<CustomNavBar> {
     isExpanded = false;
   }
 
+  Timer? _debounce;
+
   void _onSearchChanged() {
-    if (widget.onMemorySearch != null && isMemoryVisible) {
-      widget.onMemorySearch!(_searchController.text);
-    }
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 300), () {
+      if (widget.onMemorySearch != null) {
+        widget.onMemorySearch!(_searchController.text.trim());
+      }
+    });
   }
 
   void toggleSearchVisibility() {

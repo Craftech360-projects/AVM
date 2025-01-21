@@ -220,7 +220,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(5, 3905873968765933532),
       name: 'Message',
-      lastPropertyId: const obx_int.IdUid(7, 2294662025678668284),
+      lastPropertyId: const obx_int.IdUid(8, 7987152535571781370),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -257,6 +257,11 @@ final _entities = <obx_int.ModelEntity>[
         obx_int.ModelProperty(
             id: const obx_int.IdUid(7, 2294662025678668284),
             name: 'fromIntegration',
+            type: 1,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(8, 7987152535571781370),
+            name: 'isPinned',
             type: 1,
             flags: 0)
       ],
@@ -798,7 +803,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final pluginIdOffset = object.pluginId == null
               ? null
               : fbb.writeString(object.pluginId!);
-          fbb.startTable(8);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.createdAt.millisecondsSinceEpoch);
           fbb.addOffset(2, textOffset);
@@ -806,6 +811,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addOffset(4, typeOffset);
           fbb.addOffset(5, pluginIdOffset);
           fbb.addBool(6, object.fromIntegration);
+          fbb.addBool(7, object.isPinned);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -826,11 +832,14 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .vTableGetNullable(buffer, rootOffset, 14);
           final fromIntegrationParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 16, false);
+          final isPinnedParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 18, false);
           final object = Message(createdAtParam, textParam, senderParam,
               id: idParam,
               type: typeParam,
               pluginId: pluginIdParam,
-              fromIntegration: fromIntegrationParam);
+              fromIntegration: fromIntegrationParam,
+              isPinned: isPinnedParam);
           obx_int.InternalToManyAccess.setRelInfo<Message>(object.memories,
               store, obx_int.RelInfo<Message>.toMany(1, object.id));
           return object;
@@ -1261,6 +1270,10 @@ class Message_ {
   /// See [Message.fromIntegration].
   static final fromIntegration =
       obx.QueryBooleanProperty<Message>(_entities[4].properties[6]);
+
+  /// See [Message.isPinned].
+  static final isPinned =
+      obx.QueryBooleanProperty<Message>(_entities[4].properties[7]);
 
   /// see [Message.memories]
   static final memories =

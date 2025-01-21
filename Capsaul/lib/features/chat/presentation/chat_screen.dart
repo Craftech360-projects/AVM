@@ -9,12 +9,12 @@ import 'package:capsaul/backend/database/message.dart';
 import 'package:capsaul/backend/database/message_provider.dart';
 import 'package:capsaul/backend/preferences.dart';
 import 'package:capsaul/core/constants/constants.dart';
+import 'package:capsaul/core/theme/app_colors.dart';
 import 'package:capsaul/core/widgets/typing_indicator.dart';
 import 'package:capsaul/features/chat/bloc/chat_bloc.dart';
 import 'package:capsaul/features/chat/widgets/ai_message.dart';
 import 'package:capsaul/features/chat/widgets/user_message.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,12 +36,12 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen>
     with SingleTickerProviderStateMixin {
   final TextEditingController _aiChatController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
   late ChatBloc _chatBloc;
   late AnimationController _animationController;
-  final bool _isScrolled = false;
   late Animation<double> _animation;
   late Timer _dailySummaryTimer;
+  late ScrollController _scrollController;
+  final Map<int, GlobalKey> _messageKeys = {};
 
   _initDailySummary() {
     var now = DateTime.now();
@@ -91,7 +91,7 @@ class _ChatScreenState extends State<ChatScreen>
   void initState() {
     super.initState();
     _chatBloc = BlocProvider.of<ChatBloc>(context);
-
+    _scrollController = ScrollController();
     if (widget.initialQuestion != null && widget.memoryContext != null) {
       final memoryTitle = widget.memoryContext?.title ?? "Unknown Context";
       final message =
@@ -112,21 +112,11 @@ class _ChatScreenState extends State<ChatScreen>
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
   }
 
-  void _scrollToBottom() {
-    if (_scrollController.hasClients) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeOut,
-      );
-    }
-  }
-
   @override
   void dispose() {
     _dailySummaryTimer.cancel();
-    _scrollController.dispose();
     _animationController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -144,45 +134,127 @@ class _ChatScreenState extends State<ChatScreen>
           );
         }
 
-        // Display messages when not loading
-        return ListView.builder(
-          controller: _scrollController,
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(
-            left: 10,
-            right: 10,
-            bottom: 80,
-            top: 20,
+        Message? pinnedMessage;
+        try {
+          pinnedMessage = state.messages?.firstWhere((msg) => msg.isPinned);
+        } catch (e) {
+          pinnedMessage = null;
+        }
+
+        return Stack(children: [
+          ListView.builder(
+            controller: _scrollController,
+            reverse: true,
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 80,
+              top: pinnedMessage != null ? 80 : 20,
+            ),
+            itemCount: state.messages?.length ?? 0,
+            itemBuilder: (context, index) {
+              final message =
+                  state.messages?[state.messages!.length - 1 - index];
+              bool isAIMessage = message?.senderEnum == MessageSender.ai;
+
+              _messageKeys[message!.id] ??= GlobalKey();
+
+              final key = _messageKeys[message.id];
+
+              if (isAIMessage) {
+                return Column(
+                  key: key,
+                  children: [
+                    AIMessage(
+                      message: message,
+                      sendMessage: (msg) {},
+                      displayOptions: state.messages!.length <= 1,
+                      memories: message.memories,
+                      pluginSender: SharedPreferencesUtil()
+                          .pluginsList
+                          .firstWhereOrNull((e) => e.id == message.pluginId),
+                    ),
+                    h8,
+                  ],
+                );
+              } else {
+                return Column(
+                  key: key,
+                  children: [
+                    UserMessage(message: message),
+                    h8,
+                  ],
+                );
+              }
+            },
           ),
-          itemCount: state.messages?.length ?? 0,
-          itemBuilder: (context, index) {
-            final message = state.messages?[index];
-            bool isAIMessage = message?.senderEnum == MessageSender.ai;
-            if (isAIMessage) {
-              return Column(
-                children: [
-                  AIMessage(
-                    message: message!,
-                    sendMessage: (msg) {},
-                    displayOptions: state.messages!.length <= 1,
-                    memories: message.memories,
-                    pluginSender: SharedPreferencesUtil()
-                        .pluginsList
-                        .firstWhereOrNull((e) => e.id == message.pluginId),
-                  ),
-                  h8,
-                ],
-              );
-            } else {
-              return Column(
-                children: [
-                  UserMessage(message: message),
-                  h8,
-                ],
-              );
-            }
-          },
-        );
+          if (pinnedMessage != null)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                color: AppColors.purpleDark,
+                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 5),
+                      padding: EdgeInsets.symmetric(vertical: 4),
+                      decoration: BoxDecoration(
+                          color: AppColors.white, borderRadius: br5),
+                      child: InkWell(
+                        enableFeedback: true,
+                        onTap: () {
+                          context.read<ChatBloc>().add(UnpinMessage());
+                          avmSnackBar(context, "Message unpinned");
+                        },
+                        child: Icon(
+                          Icons.push_pin_outlined,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                    ),
+                    w8,
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          final messageKey = _messageKeys[pinnedMessage?.id];
+                          if (messageKey != null &&
+                              messageKey.currentContext != null) {
+                            final box = messageKey.currentContext!
+                                .findRenderObject() as RenderBox;
+                            final position = box.localToGlobal(Offset.zero).dy;
+
+                            _scrollController.animateTo(
+                              _scrollController.offset +
+                                  position -
+                                  80,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeOut,
+                            );
+                          }
+                        },
+                        child: Tooltip(
+                          message: pinnedMessage.text,
+                          child: Text(
+                            pinnedMessage.text.length > 100
+                                ? '${pinnedMessage.text.substring(0, 100)}...'
+                                : pinnedMessage.text,
+                            style:
+                                TextStyle(color: AppColors.white, fontSize: 13),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ]);
       },
     );
   }

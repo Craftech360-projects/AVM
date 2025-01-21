@@ -54,15 +54,27 @@ class FoundDevicesState extends State<FoundDevices>
         if (SharedPreferencesUtil().onboardingCompleted) {
           setState(() {});
           Navigator.pop(context);
-          // // previous users
-          // routeToPage(context, const HomePageWrapper(), replace: true);
         } else {
           SharedPreferencesUtil().onboardingCompleted = true;
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => FinalizePage(
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              transitionDuration: Duration(milliseconds: 500),
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  FinalizePage(
                 goNext: () {},
               ),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                var zoomOutAnimation = Tween(begin: 1.0, end: 0.9).animate(
+                  CurvedAnimation(
+                      parent: secondaryAnimation, curve: Curves.easeOut),
+                );
+                return ScaleTransition(
+                  scale: zoomOutAnimation,
+                  child: child,
+                );
+              },
             ),
           );
         }
@@ -114,7 +126,7 @@ class FoundDevicesState extends State<FoundDevices>
                     fontSize: 12,
                   ),
                 ),
-          if (widget.deviceList.isNotEmpty) const SizedBox(height: 16),
+          if (widget.deviceList.isNotEmpty) h16,
           if (!_isConnected) ..._devicesList(),
           if (_isConnected)
             Container(
@@ -125,7 +137,6 @@ class FoundDevicesState extends State<FoundDevices>
               width: double.maxFinite,
               child: CustomElevatedButton(
                 backgroundColor: AppColors.white,
-                
                 onPressed: () async {
                   if (SharedPreferencesUtil().onboardingCompleted) {
                     Navigator.pushReplacement(
@@ -145,7 +156,7 @@ class FoundDevicesState extends State<FoundDevices>
                         '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, 6)})',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 18,
+                          fontSize: 16,
                         ),
                       ),
                       Text(
@@ -192,7 +203,7 @@ class FoundDevicesState extends State<FoundDevices>
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontWeight: FontWeight.w500,
-                        fontSize: 18,
+                        fontSize: 16,
                       ),
                     ),
                     w4,

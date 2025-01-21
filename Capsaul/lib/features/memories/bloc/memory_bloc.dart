@@ -222,22 +222,71 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
     try {
       if (event.query.isEmpty) {
         add(const DisplayedMemory());
-      } else {
-        final filteredMemories = state.memories.where((memory) {
-          final searchContent = '${memory.transcript}'
-                  '${memory.structured.target?.title}'
-                  '${memory.structured.target?.overview}'
-              .toLowerCase();
-          return searchContent.contains(event.query.toLowerCase());
-        }).toList();
-
-        emit(
-          state.copyWith(
-            status: MemoryStatus.success,
-            memories: filteredMemories,
-          ),
-        );
       }
+
+      //   if (event.query.trim().isEmpty) {
+      //   final allMemories = MemoryProvider().getMemories();
+      //   emit(state.copyWith(
+      //     status: MemoryStatus.success,
+      //     memories: allMemories,
+      //   ));
+      //   return null;
+      // }
+
+      final lowerQuery = event.query.toLowerCase();
+      final filteredMemories = state.memories.where((memory) {
+        // Prioritize title
+        if (memory.structured.target!.title
+            .toLowerCase()
+            .contains(lowerQuery)) {
+          return true;
+        }
+
+        // Check summary
+        if (memory.structured.target!.overview
+            .toLowerCase()
+            .contains(lowerQuery)) {
+          return true;
+        }
+
+        // Check date
+        if (RegExp(r'\d{4}-\d{2}-\d{2}').hasMatch(lowerQuery)) {
+          final searchDate = DateTime.tryParse(lowerQuery);
+          if (searchDate != null &&
+              memory.createdAt.isAtSameMomentAs(searchDate)) {
+            return true;
+          }
+        }
+
+        // Check category
+        if (memory.structured.target?.category
+                .any((c) => c.toLowerCase().contains(lowerQuery)) ??
+            false) {
+          return true;
+        }
+
+        // Check action items
+        if (memory.structured.target?.actionItems.any(
+                (ai) => ai.description.toLowerCase().contains(lowerQuery)) ??
+            false) {
+          return true;
+        }
+
+        // Check geolocation
+        if (memory.geolocation.target?.placeName
+                ?.toLowerCase()
+                .contains(lowerQuery) ??
+            false) {
+          return true;
+        }
+
+        return false;
+      }).toList();
+
+      emit(state.copyWith(
+        status: MemoryStatus.success,
+        memories: filteredMemories,
+      ));
     } catch (error) {
       emit(
         state.copyWith(

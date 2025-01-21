@@ -250,7 +250,7 @@ void showShareBottomSheet(
                           _buildListTile(
                             context,
                             title: 'Copy Transcript',
-                            icon: Icons.copy,
+                            icon: Icons.copy_rounded,
                             onTap: () => {
                               Navigator.pop(ctx),
                               _copyTranscript(context, memory)

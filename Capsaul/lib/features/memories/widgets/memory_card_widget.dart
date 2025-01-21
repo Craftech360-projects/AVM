@@ -27,7 +27,7 @@ class MemoryCardWidget extends StatelessWidget {
           if (state.memories.isEmpty) {
             return const Center(
               child: Padding(
-                padding: EdgeInsets.only(top: 38.0),
+                padding: EdgeInsets.only(top: 50.0),
                 child: EmptyMemoriesWidget(),
               ),
             );
@@ -88,111 +88,116 @@ class MemoryCardWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                  Column(
-                    children: List.generate(
-                      state.memories.length,
-                      (index) {
-                        Memory memory = state.memories[index];
-                        bool isSelected = state.selectedMemories[index];
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 40),
+                    child: Column(
+                      children: List.generate(
+                        state.memories.length,
+                        (index) {
+                          Memory memory = state.memories[index];
+                          bool isSelected = state.selectedMemories[index];
 
-                        return GestureDetector(
-                          onLongPress: () {
-                            List<bool> updatedSelection =
-                                List.from(state.selectedMemories);
-                            // updatedSelection[index] = !updatedSelection[index];
-                            updatedSelection[index] = !isSelected;
-                            memoryBloc.add(UpdatedSelection(updatedSelection));
-                            log('Memory at index $index selected: ${updatedSelection[index]}');
-                          },
-                          child: Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.endToStart,
-                            background: Container(
-                              margin: EdgeInsets.only(right: 30),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 04, horizontal: 04),
-                              alignment: Alignment.centerRight,
-                              child: Icon(
-                                Icons.delete,
-                                size: 38,
-                                color: AppColors.red.withValues(alpha: 0.7),
-                              ),
-                            ),
-                            confirmDismiss: (direction) async {
-                              return await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return CustomDialogWidget(
-                                      title: "Delete this memory",
-                                      message:
-                                          "Are you sure you want to delete this memory? This action cannot be reversed!",
-                                      icon: Icons.delete,
-                                      noText: "Cancel",
-                                      yesText: "Delete",
-                                      yesPressed: () {
-                                        memoryBloc
-                                            .add(DeletedMemory(memory: memory));
-                                        Navigator.of(context).pop();
-                                      });
-                                },
-                              );
+                          return GestureDetector(
+                            onLongPress: () {
+                              List<bool> updatedSelection =
+                                  List.from(state.selectedMemories);
+                              // updatedSelection[index] = !updatedSelection[index];
+                              updatedSelection[index] = !isSelected;
+                              memoryBloc
+                                  .add(UpdatedSelection(updatedSelection));
+                              log('Memory at index $index selected: ${updatedSelection[index]}');
                             },
-                            child: GestureDetector(
-                              onTap: () {
-                                if (isSelected) {
-                                  List<bool> updatedSelection =
-                                      List.from(state.selectedMemories);
-                                  updatedSelection[index] = false;
-                                  memoryBloc
-                                      .add(UpdatedSelection(updatedSelection));
-                                } else {
-                                  memoryBloc.add(
-                                      MemoryIndexChanged(memoryIndex: index));
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      transitionDuration:
-                                          Duration(milliseconds: 500),
-                                      pageBuilder: (context, animation,
-                                              secondaryAnimation) =>
-                                          MemoryDetailPage(
-                                        tabController: tabController,
-                                        memoryBloc: memoryBloc,
-                                        memoryAtIndex: index,
-                                      ),
-                                      transitionsBuilder: (context, animation,
-                                          secondaryAnimation, child) {
-                                        var fadeInAnimation =
-                                            Tween(begin: 0.0, end: 1.0).animate(
-                                          CurvedAnimation(
-                                              parent: animation,
-                                              curve: Curves.easeInOut),
-                                        );
-
-                                        return FadeTransition(
-                                          opacity: fadeInAnimation,
-                                          child: child,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                }
+                            child: Dismissible(
+                              key: UniqueKey(),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                margin: EdgeInsets.only(right: 30),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 04, horizontal: 04),
+                                alignment: Alignment.centerRight,
+                                child: Icon(
+                                  Icons.delete,
+                                  size: 38,
+                                  color: AppColors.red.withValues(alpha: 0.7),
+                                ),
+                              ),
+                              confirmDismiss: (direction) async {
+                                return await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomDialogWidget(
+                                        title: "Delete this memory",
+                                        message:
+                                            "Are you sure you want to delete this memory? This action cannot be reversed!",
+                                        icon: Icons.delete,
+                                        noText: "Cancel",
+                                        yesText: "Delete",
+                                        yesPressed: () {
+                                          memoryBloc.add(
+                                              DeletedMemory(memory: memory));
+                                          Navigator.of(context).pop();
+                                        });
+                                  },
+                                );
                               },
-                              child: MemoryCard(
-                                memory: memory,
-                                isSelected: isSelected,
-                                onSelect: () {
-                                  List<bool> updatedSelection =
-                                      List.from(state.selectedMemories);
-                                  updatedSelection[index] = !isSelected;
-                                  memoryBloc
-                                      .add(UpdatedSelection(updatedSelection));
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (isSelected) {
+                                    List<bool> updatedSelection =
+                                        List.from(state.selectedMemories);
+                                    updatedSelection[index] = false;
+                                    memoryBloc.add(
+                                        UpdatedSelection(updatedSelection));
+                                  } else {
+                                    memoryBloc.add(
+                                        MemoryIndexChanged(memoryIndex: index));
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        transitionDuration:
+                                            Duration(milliseconds: 500),
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            MemoryDetailPage(
+                                          tabController: tabController,
+                                          memoryBloc: memoryBloc,
+                                          memoryAtIndex: index,
+                                        ),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          var fadeInAnimation =
+                                              Tween(begin: 0.0, end: 1.0)
+                                                  .animate(
+                                            CurvedAnimation(
+                                                parent: animation,
+                                                curve: Curves.easeInOut),
+                                          );
+
+                                          return FadeTransition(
+                                            opacity: fadeInAnimation,
+                                            child: child,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  }
                                 },
+                                child: MemoryCard(
+                                  memory: memory,
+                                  isSelected: isSelected,
+                                  onSelect: () {
+                                    List<bool> updatedSelection =
+                                        List.from(state.selectedMemories);
+                                    updatedSelection[index] = !isSelected;
+                                    memoryBloc.add(
+                                        UpdatedSelection(updatedSelection));
+                                  },
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ]);

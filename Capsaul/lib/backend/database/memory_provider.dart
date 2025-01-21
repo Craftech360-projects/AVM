@@ -22,16 +22,12 @@ class MemoryProvider {
 
   MemoryProvider._internal();
 
-//* Action Items Method
-// -----------------------
+// Action Items Method
 
   int updateActionItem(ActionItem item) => _boxActionItem.put(item);
 
-// -----------------------
-
   // Method to get the Memory box
 
-//-------------
   List<Memory> getMemories() => _box.getAll();
   int getMemoriesCount() => _box.count();
 
@@ -178,15 +174,9 @@ class MemoryProvider {
      Geolocation: ${memory.geolocation.target != null ? memory.geolocation.target.toString() : 'None'}}
     ''';
   }
-
-  //void addMemory(Memory fromJson) {}
 }
 
 String getPrettyJSONString(jsonObject) {
   var encoder = const JsonEncoder.withIndent("     ");
   return encoder.convert(jsonObject);
 }
-
-
-// Add your method to convert Memory to string representation for debugging
-  

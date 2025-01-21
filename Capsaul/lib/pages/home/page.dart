@@ -148,6 +148,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   @override
   void initState() {
     super.initState();
+    setState(() {});
     _isLoading = true;
     _controller = TabController(length: 3, initialIndex: 0, vsync: this);
     Future.delayed(const Duration(seconds: 2), () {
@@ -304,7 +305,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
         onAccept: () {
           SharedPreferencesUtil().tosAccepted = true;
           setState(() {});
-          
         },
       );
     }
@@ -318,7 +318,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       child: DefaultTabController(
         length: 3,
         child: CustomScaffold(
-          
           centerTitle: false,
           resizeToAvoidBottomInset: true,
           showBatteryLevel: true,

@@ -196,7 +196,7 @@
     },
     {
       "id": "5:3905873968765933532",
-      "lastPropertyId": "7:2294662025678668284",
+      "lastPropertyId": "8:7987152535571781370",
       "name": "Message",
       "properties": [
         {
@@ -235,6 +235,11 @@
         {
           "id": "7:2294662025678668284",
           "name": "fromIntegration",
+          "type": 1
+        },
+        {
+          "id": "8:7987152535571781370",
+          "name": "isPinned",
           "type": 1
         }
       ],

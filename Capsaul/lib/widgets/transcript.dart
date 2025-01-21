@@ -45,6 +45,7 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.purpleDark),
         borderRadius: br8,

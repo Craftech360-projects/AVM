@@ -2,6 +2,7 @@ import 'package:capsaul/backend/preferences.dart';
 import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/widgets/custom_dialog_box.dart';
+import 'package:capsaul/core/widgets/typing_indicator.dart';
 import 'package:capsaul/features/wizard/bloc/wizard_bloc.dart';
 import 'package:capsaul/features/wizard/widgets/onboarding_button.dart';
 import 'package:capsaul/pages/home/custom_scaffold.dart';
@@ -35,6 +36,7 @@ class OnboardingPageContent extends StatefulWidget {
 class _OnboardingPageContentState extends State<OnboardingPageContent> {
   final PageController _pageController = PageController();
   bool isTOSAccepted = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -67,99 +69,116 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      body: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          // height: MediaQuery.of(context).size.height * 0.6,
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: Image.asset(
-                  AppImages.appLogo,
-                  height: 30.h,
-                ),
+      body: _isLoading
+          ? Center(
+              child: Column(
+                children: [
+                  TypingIndicator(),
+                  h8,
+                  Text("Backup is in progress...\nPlease wait"),
+                ],
               ),
-              BlocListener<WizardBloc, WizardState>(
-                listener: (context, state) {
-                  if (state is PermissionsGranted) {
-                    avmSnackBar(context,
-                        "All permissions granted, proceeding with the app!");
-                    _nextPage();
-                  } else if (state is PermissionsDenied) {
-                    avmSnackBar(context, state.message);
-                  }
-                },
-                child: PageView(
-                  controller: _pageController,
-                  physics: const NeverScrollableScrollPhysics(),
+            )
+          : Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                // height: MediaQuery.of(context).size.height * 0.6,
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                child: Stack(
                   children: [
-                    OnboardingButton(
-                      message:
-                          'Looks like the app needs\nsome permissions! Please\nenable necesssary permissions',
-                      buttonText: 'Enable',
-                      onSkip: _nextPage,
-                      onPressed: () {
-                        context.read<WizardBloc>().add(CheckPermissionsEvent());
-                      },
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Image.asset(
+                        AppImages.appLogo,
+                        height: 30.h,
+                      ),
                     ),
-                    OnboardingButton(
-                        message:
-                            'Hey, you can backup all the memories\nin cloud! Give us the permission\nto auto-backup your memories',
-                        buttonText: 'Enable',
-                        onSkip: _nextPage,
-                        onPressed: () async {
-                          return await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return CustomDialogWidget(
-                                title: "Enable Memory Backup",
-                                message:
-                                    "Backup your memories automatically to Google cloud! Enable the permissions to auto-backup",
-                                icon: Icons.backup_rounded,
-                                noText: "Not now",
-                                yesText: "Enable",
-                                noPressed: () {
-                                  _nextPage();
-                                  Navigator.of(context).pop();
-                                },
-                                yesPressed: () {
-                                  SharedPreferencesUtil().backupsEnabled = true;
-                                  avmSnackBar(context,
-                                      "Auto-memory backup is active now");
-                                  _nextPage();
-                                  Navigator.of(context).pop();
-                                  retrieveBackup(SharedPreferencesUtil().uid);
-                                },
+                    BlocListener<WizardBloc, WizardState>(
+                      listener: (context, state) {
+                        if (state is PermissionsGranted) {
+                          avmSnackBar(context,
+                              "All permissions granted, proceeding with the app!");
+                          _nextPage();
+                        } else if (state is PermissionsDenied) {
+                          avmSnackBar(context, state.message);
+                        }
+                      },
+                      child: PageView(
+                        controller: _pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          OnboardingButton(
+                            message:
+                                'Looks like the app needs\nsome permissions! Please\nenable necesssary permissions',
+                            buttonText: 'Enable',
+                            onSkip: _nextPage,
+                            onPressed: () {
+                              context
+                                  .read<WizardBloc>()
+                                  .add(CheckPermissionsEvent());
+                            },
+                          ),
+                          OnboardingButton(
+                              message:
+                                  'Hey, you can backup all the memories\nin cloud! Give us the permission\nto auto-backup your memories',
+                              buttonText: 'Enable',
+                              onSkip: _nextPage,
+                              onPressed: () async {
+                                return await showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CustomDialogWidget(
+                                      title: "Enable Memory Backup",
+                                      message:
+                                          "Backup your memories automatically to Google cloud! Enable the permissions to auto-backup",
+                                      icon: Icons.backup_rounded,
+                                      noText: "Not now",
+                                      yesText: "Enable",
+                                      noPressed: () {
+                                        _nextPage();
+                                        Navigator.of(context).pop();
+                                      },
+                                      yesPressed: () async {
+                                        _isLoading = true;
+                                        SharedPreferencesUtil().backupsEnabled =
+                                            true;
+                                        await retrieveBackup(
+                                            SharedPreferencesUtil().uid);
+                                        avmSnackBar(context,
+                                            "Auto-memory backup is active now");
+                                        _nextPage();
+                                        _isLoading = false;
+                                        Navigator.of(context).pop();
+                                      },
+                                    );
+                                  },
+                                );
+                              }),
+                          OnboardingButton(
+                            message:
+                                'Your personal growth journey\nwith AI that listens to\nall your queries',
+                            buttonText: 'Connect my Capsaul',
+                            onSkip: _nextPage,
+                            onPressed: () {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FindDevicesPage(
+                                    goNext: () {},
+                                  ),
+                                ),
+                                (route) => false,
                               );
                             },
-                          );
-                        }),
-                    OnboardingButton(
-                      message:
-                          'Your personal growth journey\nwith AI that listens to\nall your queries',
-                      buttonText: 'Connect my Capsaul',
-                      onSkip: _nextPage,
-                      onPressed: () {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => FindDevicesPage(
-                              goNext: () {},
-                            ),
                           ),
-                          (route) => false,
-                        );
-                      },
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

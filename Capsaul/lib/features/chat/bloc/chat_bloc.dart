@@ -27,9 +27,79 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SendInitialPluginMessage>(_onSendInitialPluginMessage);
     on<SendMessage>(_onSendMessage);
     on<RefreshMessages>(_refreshMessages);
+
     on<UpdateChat>((event, emit) async {
       final updatedMessages = MessageProvider().getMessages();
       emit(state.copyWith(messages: updatedMessages));
+    });
+
+    on<DeleteMessage>((event, emit) async {
+      try {
+        bool success = await messageProvider.deleteMessage(event.message);
+
+        if (success) {
+          List<Message> updatedMessages = messageProvider.getMessages();
+          emit(state.copyWith(messages: updatedMessages));
+        } else {
+          emit(state.copyWith(status: ChatStatus.failure));
+          log('Failed to delete the message.');
+        }
+      } catch (error) {
+        log('Error deleting message: $error');
+        emit(state.copyWith(
+          status: ChatStatus.failure,
+          errorMesage: 'An unexpected error occurred.',
+        ));
+      }
+    });
+
+    on<DeleteAllMessages>((event, emit) async {
+      try {
+        bool success =
+            await messageProvider.deleteMessages(state.messages ?? []);
+        if (success) {
+          emit(state.copyWith(messages: []));
+        }
+      } catch (e) {
+        log('Failed to clear chat: $e');
+        emit(state.copyWith(status: ChatStatus.failure));
+      }
+    });
+
+    on<PinMessage>((event, emit) async {
+      try {
+        List<Message> pinnedMessages = await messageProvider.getPinnedMessages();
+for (var msg in pinnedMessages) {
+  msg.isPinned = false;
+  await messageProvider.updateMessage(msg);
+}
+
+
+        event.message.isPinned = true;
+        await messageProvider.updateMessage(event.message);
+
+        emit(state.copyWith(messages: messageProvider.getMessages()));
+      } catch (e) {
+        log("Failed to pin message: $e");
+        emit(state.copyWith(status: ChatStatus.failure));
+      }
+    });
+
+    on<UnpinMessage>((event, emit) async {
+      try {
+        List<Message> messages = state.messages ?? [];
+        for (var msg in messages) {
+          if (msg.isPinned) {
+            msg.isPinned = false;
+            await messageProvider.updateMessage(msg);
+          }
+        }
+
+        emit(state.copyWith(messages: messageProvider.getMessages()));
+      } catch (e) {
+        log("Failed to unpin message: $e");
+        emit(state.copyWith(status: ChatStatus.failure));
+      }
     });
   }
 

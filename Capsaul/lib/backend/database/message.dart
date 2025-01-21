@@ -17,7 +17,7 @@ class Message {
   @Index()
   @Property(type: PropertyType.date)
   DateTime createdAt;
-
+  bool isPinned;
   String text;
   String sender;
 
@@ -47,6 +47,7 @@ class Message {
     this.type = 'text',
     this.pluginId,
     this.fromIntegration = false,
+    this.isPinned = false,
   });
 
   static String getMessagesAsString(
