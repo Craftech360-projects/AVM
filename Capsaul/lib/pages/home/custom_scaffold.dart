@@ -26,6 +26,7 @@ class CustomScaffold extends StatefulWidget {
   final bool showDateTime;
   final bool? showAppBar;
   final bool? centerTitle;
+  final double? titleSpacing;
 
   const CustomScaffold({
     super.key,
@@ -44,6 +45,7 @@ class CustomScaffold extends StatefulWidget {
     this.showDateTime = false,
     this.showAppBar = true,
     this.centerTitle,
+    this.titleSpacing,
   });
 
   @override
@@ -82,6 +84,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
     return Scaffold(
       appBar: widget.showAppBar == true
           ? AppBar(
+              titleSpacing: widget.titleSpacing ?? 0,
               surfaceTintColor: AppColors.white,
               centerTitle: widget.centerTitle ?? true,
               automaticallyImplyLeading: false,
@@ -90,8 +93,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
               leading: widget.showBackBtn
                   ? IconButton(
                       alignment: Alignment.topLeft,
-                      visualDensity:
-                          VisualDensity(horizontal: -4, vertical: -4),
+                      visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                       padding: EdgeInsets.zero,
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.arrow_back_ios_new_rounded))
@@ -109,23 +111,20 @@ class CustomScaffoldState extends State<CustomScaffold> {
                       Navigator.push(
                         context,
                         PageRouteBuilder(
-                          transitionDuration: Duration(milliseconds: 800),
+                          transitionDuration: Duration(milliseconds: 500),
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
                                   SettingPage(),
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
-                            var slideInAnimation = Tween<Offset>(
-                                    begin: Offset(1.0, 0.0), end: Offset.zero)
-                                .animate(
+                            var fadeInAnimation =
+                                Tween(begin: 0.0, end: 1.0).animate(
                               CurvedAnimation(
-                                parent: animation,
-                                curve: Curves.easeOutBack,
-                              ),
+                                  parent: animation, curve: Curves.easeOut),
                             );
 
-                            return SlideTransition(
-                              position: slideInAnimation,
+                            return FadeTransition(
+                              opacity: fadeInAnimation,
                               child: child,
                             );
                           },
@@ -145,6 +144,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
             )
           : null,
       body: Container(
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
         decoration: theme.brightness == Brightness.light
             ? const BoxDecoration(
                 gradient: LinearGradient(

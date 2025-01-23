@@ -221,319 +221,309 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
         builder: (context, connectivityState) {
           return Stack(
             children: [
-              SingleChildScrollView(
-                padding: EdgeInsets.symmetric(vertical: 25, horizontal: 14),
-                controller: _scrollController,
-                physics: BouncingScrollPhysics(),
-                child: Column(
-                  children: [
-                    if (widget.memoryCreating)
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.15,
-                        decoration: BoxDecoration(
-                          borderRadius: br8,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Creating new memory ...",
-                              style: TextStyle(
-                                color: AppColors.black,
-                              ),
-                            ),
-                            h8,
-                            TypingIndicator(),
-                          ],
-                        ),
-                      )
-                    else if (widget.hasTranscripts)
-                      ...items.map(
-                        (item) {
-                          return Dismissible(
-                              key: ValueKey(item),
-                              direction: DismissDirection.startToEnd,
-                              onDismissed: (direction) async {
-                                try {
-                                  await widget
-                                      .onDismissmissedCaptureMemory(direction);
-
-                                  setState(() {
-                                    items.remove(item);
-                                  });
-                                } catch (e) {
-                                  avmSnackBar(context,
-                                      'Oops! Something went wrong.\nPlease try again.');
-                                }
-                              },
-                              child: Column(
-                                children: [
-                                  GreetingCard(
-                                    name: '',
-                                    isDisconnected: true,
-                                    context: context,
-                                    hasTranscripts: widget.hasTranscripts,
-                                    wsConnectionState: widget.wsConnectionState,
-                                    internetStatus:
-                                        _mapConnectivityResultToInternetStatus(
-                                            connectivityState.status),
-                                    segments: widget.segments,
-                                    memoryCreating: widget.memoryCreating,
-                                    photos: widget.photos,
-                                    scrollController: widget.scrollController,
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 12, horizontal: 6),
-                                    child: Text(
-                                      "Swipe right to create your memory ...",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: AppColors.grey,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ));
-                        },
-                      )
-                    else
-                      GreetingCard(
-                        name: '',
-                        isDisconnected: true,
-                        context: context,
-                        hasTranscripts: widget.hasTranscripts,
-                        wsConnectionState: widget.wsConnectionState,
-                        internetStatus: _mapConnectivityResultToInternetStatus(
-                            connectivityState.status),
-                        segments: widget.segments,
-                        memoryCreating: widget.memoryCreating,
-                        photos: widget.photos,
-                        scrollController: widget.scrollController,
-                        tutorialKey: _greetingCardKey,
+              Column(
+                children: [
+                  if (widget.memoryCreating)
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      decoration: BoxDecoration(
+                        borderRadius: br8,
                       ),
-                    Divider(),
-                    //*--- Filter Button ---*//
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Visibility(
-                          visible: _memoryBloc.state.memories.isNotEmpty
-                              ? true
-                              : false,
-                          child: TextButton.icon(
-                            onPressed: () {
-                              setState(() {
-                                _isNonDiscarded = !_isNonDiscarded;
-                                _memoryBloc.add(
-                                  DisplayedMemory(
-                                      isNonDiscarded: _isNonDiscarded),
-                                );
-                              });
-                            },
-                            label: Text(
-                              _isNonDiscarded
-                                  ? 'Show Discarded'
-                                  : 'Hide Discarded',
-                              style: const TextStyle(
-                                color: AppColors.grey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            icon: Icon(
-                              _isNonDiscarded
-                                  ? Icons.cancel_outlined
-                                  : Icons.filter_list,
-                              size: 16,
-                              color: AppColors.grey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Creating new memory ...",
+                            style: TextStyle(
+                              color: AppColors.black,
                             ),
                           ),
-                        ),
-                        TextButton.icon(
-                          onPressed: () async {
-                            final selectedFilter = await showDialog<FilterItem>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 12, horizontal: 8),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: br12),
-                                  backgroundColor: AppColors.commonPink,
-                                  title: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.filter_alt_outlined,
-                                          color: AppColors.blue),
-                                      w8,
-                                      Text(
-                                        "Choose Filter",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: AppColors.blueGreyDark,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Divider(
-                                        color: AppColors.purpleDark,
-                                        thickness: 1.5,
-                                      ),
-                                      FilterOptionWidget(
-                                        title: "Today's Memory",
-                                        isSelected:
-                                            _selectedFilter?.filterType ==
-                                                "Today",
-                                        onTap: () {
-                                          Navigator.pop(
-                                              context,
-                                              _selectedFilter?.filterType ==
-                                                      "Today"
-                                                  ? null
-                                                  : FilterItem(
-                                                      filterType: "Today"));
-                                        },
-                                      ),
-                                      FilterOptionWidget(
-                                        title: "This Week's Memory",
-                                        isSelected:
-                                            _selectedFilter?.filterType ==
-                                                "This Week",
-                                        onTap: () {
-                                          Navigator.pop(
-                                              context,
-                                              _selectedFilter?.filterType ==
-                                                      "This Week"
-                                                  ? null
-                                                  : FilterItem(
-                                                      filterType: "This Week"));
-                                        },
-                                      ),
-                                      FilterOptionWidget(
-                                        title: "Date Range Selection",
-                                        isSelected:
-                                            _selectedFilter?.filterType ==
-                                                "DateRange",
-                                        onTap: () async {
-                                          final DateTimeRange? dateRange =
-                                              await showDateRangePicker(
-                                            context: context,
-                                            firstDate: DateTime(2000),
-                                            lastDate: DateTime.now(),
-                                          );
+                          h8,
+                          TypingIndicator(),
+                        ],
+                      ),
+                    )
+                  else if (widget.hasTranscripts)
+                    ...items.map(
+                      (item) {
+                        return Dismissible(
+                            key: ValueKey(item),
+                            direction: DismissDirection.startToEnd,
+                            onDismissed: (direction) async {
+                              try {
+                                await widget
+                                    .onDismissmissedCaptureMemory(direction);
 
-                                          if (dateRange != null) {
-                                            Navigator.pop(
-                                              context,
-                                              _selectedFilter?.filterType ==
-                                                      "DateRange"
-                                                  ? null
-                                                  : FilterItem(
-                                                      filterType: "DateRange",
-                                                      startDate:
-                                                          dateRange.start,
-                                                      endDate: dateRange.end,
-                                                    ),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                      FilterOptionWidget(
-                                        title: "Show All",
-                                        isSelected:
-                                            _selectedFilter?.filterType ==
-                                                "Show All",
-                                        onTap: () {
-                                          Navigator.pop(
-                                              context,
-                                              _selectedFilter?.filterType ==
-                                                      "Show All"
-                                                  ? null
-                                                  : FilterItem(
-                                                      filterType: "Show All"));
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
-
-                            setState(() {
-                              _selectedFilter = selectedFilter;
-                            });
-
-                            if (selectedFilter != null) {
-                              context.read<MemoryBloc>().add(
-                                    FilterMemory(
-                                      filterItem: selectedFilter,
-                                      startDate: selectedFilter.startDate,
-                                      endDate: selectedFilter.endDate,
+                                setState(() {
+                                  items.remove(item);
+                                });
+                              } catch (e) {
+                                avmSnackBar(context,
+                                    'Oops! Something went wrong.\nPlease try again.');
+                              }
+                            },
+                            child: Column(
+                              children: [
+                                GreetingCard(
+                                  name: '',
+                                  isDisconnected: true,
+                                  context: context,
+                                  hasTranscripts: widget.hasTranscripts,
+                                  wsConnectionState: widget.wsConnectionState,
+                                  internetStatus:
+                                      _mapConnectivityResultToInternetStatus(
+                                          connectivityState.status),
+                                  segments: widget.segments,
+                                  memoryCreating: widget.memoryCreating,
+                                  photos: widget.photos,
+                                  scrollController: widget.scrollController,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 6),
+                                  child: Text(
+                                    "Swipe right to create your memory ...",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppColors.grey,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                  );
-                            }
+                                  ),
+                                ),
+                              ],
+                            ));
+                      },
+                    )
+                  else
+                    GreetingCard(
+                      name: '',
+                      isDisconnected: true,
+                      context: context,
+                      hasTranscripts: widget.hasTranscripts,
+                      wsConnectionState: widget.wsConnectionState,
+                      internetStatus: _mapConnectivityResultToInternetStatus(
+                          connectivityState.status),
+                      segments: widget.segments,
+                      memoryCreating: widget.memoryCreating,
+                      photos: widget.photos,
+                      scrollController: widget.scrollController,
+                      tutorialKey: _greetingCardKey,
+                    ),
+                  Divider(),
+                  //*--- Filter Button ---*//
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Visibility(
+                        visible: _memoryBloc.state.memories.isNotEmpty
+                            ? true
+                            : false,
+                        child: TextButton.icon(
+                          onPressed: () {
+                            setState(() {
+                              _isNonDiscarded = !_isNonDiscarded;
+                              _memoryBloc.add(
+                                DisplayedMemory(
+                                    isNonDiscarded: _isNonDiscarded),
+                              );
+                            });
                           },
-                          label: const Text(
-                            'Filter',
-                            style: TextStyle(
+                          label: Text(
+                            _isNonDiscarded
+                                ? 'Show Discarded'
+                                : 'Hide Discarded',
+                            style: const TextStyle(
                               color: AppColors.grey,
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          icon: const Icon(
-                            Icons.filter_alt_outlined,
+                          icon: Icon(
+                            _isNonDiscarded
+                                ? Icons.cancel_outlined
+                                : Icons.filter_list,
                             size: 16,
                             color: AppColors.grey,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      TextButton.icon(
+                        onPressed: () async {
+                          final selectedFilter = await showDialog<FilterItem>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 8),
+                                shape:
+                                    RoundedRectangleBorder(borderRadius: br12),
+                                backgroundColor: AppColors.commonPink,
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.filter_alt_outlined,
+                                        color: AppColors.blue),
+                                    w8,
+                                    Text(
+                                      "Choose Filter",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: AppColors.blueGreyDark,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Divider(
+                                      color: AppColors.purpleDark,
+                                      thickness: 1.5,
+                                    ),
+                                    FilterOptionWidget(
+                                      title: "Today's Memory",
+                                      isSelected: _selectedFilter?.filterType ==
+                                          "Today",
+                                      onTap: () {
+                                        Navigator.pop(
+                                            context,
+                                            _selectedFilter?.filterType ==
+                                                    "Today"
+                                                ? null
+                                                : FilterItem(
+                                                    filterType: "Today"));
+                                      },
+                                    ),
+                                    FilterOptionWidget(
+                                      title: "This Week's Memory",
+                                      isSelected: _selectedFilter?.filterType ==
+                                          "This Week",
+                                      onTap: () {
+                                        Navigator.pop(
+                                            context,
+                                            _selectedFilter?.filterType ==
+                                                    "This Week"
+                                                ? null
+                                                : FilterItem(
+                                                    filterType: "This Week"));
+                                      },
+                                    ),
+                                    FilterOptionWidget(
+                                      title: "Date Range Selection",
+                                      isSelected: _selectedFilter?.filterType ==
+                                          "DateRange",
+                                      onTap: () async {
+                                        final DateTimeRange? dateRange =
+                                            await showDateRangePicker(
+                                          context: context,
+                                          firstDate: DateTime(2000),
+                                          lastDate: DateTime.now(),
+                                        );
 
-                    //*--- MEMORY LIST ---*//
+                                        if (dateRange != null) {
+                                          Navigator.pop(
+                                            context,
+                                            _selectedFilter?.filterType ==
+                                                    "DateRange"
+                                                ? null
+                                                : FilterItem(
+                                                    filterType: "DateRange",
+                                                    startDate: dateRange.start,
+                                                    endDate: dateRange.end,
+                                                  ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                                    FilterOptionWidget(
+                                      title: "Show All",
+                                      isSelected: _selectedFilter?.filterType ==
+                                          "Show All",
+                                      onTap: () {
+                                        Navigator.pop(
+                                            context,
+                                            _selectedFilter?.filterType ==
+                                                    "Show All"
+                                                ? null
+                                                : FilterItem(
+                                                    filterType: "Show All"));
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
 
-                    BlocConsumer<MemoryBloc, MemoryState>(
-                        bloc: _memoryBloc,
-                        builder: (context, state) {
-                          if (state.status == MemoryStatus.loading) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (state.status == MemoryStatus.failure) {
-                            return Center(
-                              child: Text(
-                                'Error: ${state.failure}',
-                              ),
-                            );
-                          } else if (state.status == MemoryStatus.success) {
-                            return MemoryCardWidget(
-                                memoryBloc: _memoryBloc,
-                                tabController: widget.tabController);
+                          setState(() {
+                            _selectedFilter = selectedFilter;
+                          });
+
+                          if (selectedFilter != null) {
+                            context.read<MemoryBloc>().add(
+                                  FilterMemory(
+                                    filterItem: selectedFilter,
+                                    startDate: selectedFilter.startDate,
+                                    endDate: selectedFilter.endDate,
+                                  ),
+                                );
                           }
-                          return const SizedBox.shrink();
                         },
-                        listener: (context, state) {
-                          if (state.status == MemoryStatus.success) {
-                            setState(() {});
-                          }
-                          if (state.status == MemoryStatus.failure) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(state.failure ??
-                                  'Oops! An unknown error occurred.'),
-                            ));
-                          }
-                        }),
-                  ],
-                ),
+                        label: const Text(
+                          'Filter',
+                          style: TextStyle(
+                            color: AppColors.grey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        icon: const Icon(
+                          Icons.filter_alt_outlined,
+                          size: 16,
+                          color: AppColors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  //*--- MEMORY LIST ---*//
+
+                  BlocConsumer<MemoryBloc, MemoryState>(
+                      bloc: _memoryBloc,
+                      builder: (context, state) {
+                        if (state.status == MemoryStatus.loading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (state.status == MemoryStatus.failure) {
+                          return Center(
+                            child: Text(
+                              'Error: ${state.failure}',
+                            ),
+                          );
+                        } else if (state.status == MemoryStatus.success) {
+                          return MemoryCardWidget(
+                              memoryBloc: _memoryBloc,
+                              tabController: widget.tabController);
+                        }
+                        return const SizedBox.shrink();
+                      },
+                      listener: (context, state) {
+                        if (state.status == MemoryStatus.success) {
+                          setState(() {});
+                        }
+                        if (state.status == MemoryStatus.failure) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(state.failure ??
+                                'Oops! An unknown error occurred.'),
+                          ));
+                        }
+                      }),
+                ],
               ),
               if (_isScrolled)
                 Positioned(
@@ -669,6 +659,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
 
       void showTutorialFromIndex() {
         final tutorial = TutorialCoachMark(
+          textSkip: "NEXT",
           textStyleSkip: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 16,
@@ -690,6 +681,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
         );
 
         Future.delayed(const Duration(milliseconds: 500), () {
+          if (!mounted) return;
           tutorial.show(context: context);
         });
       }

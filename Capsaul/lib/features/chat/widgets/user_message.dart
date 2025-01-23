@@ -129,7 +129,7 @@ class UserMessage extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 13,
                           color: AppColors.white,
-                          height: 1.3,
+                          height: 1.2,
                         ),
                       ),
                       h4,

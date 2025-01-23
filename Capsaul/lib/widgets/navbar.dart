@@ -4,6 +4,8 @@ import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
 import 'package:capsaul/core/widgets/typing_indicator.dart';
+import 'package:capsaul/features/capture/presentation/capture_page.dart';
+import 'package:capsaul/features/chat/presentation/chat_screen.dart';
 import 'package:capsaul/src/common_widget/icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +16,6 @@ class CustomNavBar extends StatefulWidget {
     this.isChat = false,
     this.isMemory = false,
     this.onSendMessage,
-    this.onTabChange,
     this.onMemorySearch,
     this.isUserMessageSent = false,
   });
@@ -23,7 +24,6 @@ class CustomNavBar extends StatefulWidget {
   final bool? isMemory;
   final bool isUserMessageSent;
   final Function(String)? onSendMessage;
-  final Function(int)? onTabChange;
   final Function(String)? onMemorySearch;
 
   @override
@@ -36,6 +36,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
   bool isExpanded = false;
   final TextEditingController _messageController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
+  FocusNode chatTextFieldFocusNode = FocusNode(canRequestFocus: true);
 
   @override
   void initState() {
@@ -63,7 +64,6 @@ class _CustomNavBarState extends State<CustomNavBar> {
       isExpanded = true;
       isMemoryVisible = true;
       isChatVisible = false;
-      widget.onTabChange?.call(0);
     });
   }
 
@@ -72,7 +72,6 @@ class _CustomNavBarState extends State<CustomNavBar> {
       isExpanded = true;
       isChatVisible = true;
       isMemoryVisible = false;
-      widget.onTabChange?.call(1);
     });
   }
 
@@ -94,6 +93,47 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   void _handleSearchMessage(String query) {
     widget.onMemorySearch?.call(query);
+  }
+
+  void _navigateToCaptureScreen() {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 500),
+        pageBuilder: (context, animation, secondaryAnimation) => CapturePage(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var fadeInAnimation = Tween(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOut),
+          );
+
+          return FadeTransition(
+            opacity: fadeInAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  void _navigateToChatScreen() {
+    toggleMessageVisibility(); // Add this line before navigation
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 500),
+        pageBuilder: (context, animation, secondaryAnimation) => ChatScreen(textFieldFocusNode: chatTextFieldFocusNode, shouldExpandNavbar: true),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var fadeInAnimation = Tween(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOut),
+          );
+
+          return FadeTransition(
+            opacity: fadeInAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -145,7 +185,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       child: GestureDetector(
-        onTap: () => widget.onTabChange?.call(0),
+        onTap: _navigateToCaptureScreen,
         child: Image.asset(
           AppImages.appLogo,
           height: 16.h,
@@ -168,12 +208,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14.w),
       child: GestureDetector(
-        onTap: () {
-          if (widget.onTabChange != null) {
-            widget.onTabChange!(0);
-            collapse();
-          }
-        },
+        onTap: _navigateToCaptureScreen,
         child: Image.asset(
           AppImages.home,
           width: 24.h,
@@ -199,7 +234,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
       child: CustomIconButton(
         iconPath: AppImages.message,
         size: 24.h,
-        onPressed: toggleMessageVisibility,
+        onPressed: _navigateToChatScreen,
       ),
     );
   }

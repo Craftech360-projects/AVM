@@ -9,6 +9,7 @@ import 'package:capsaul/core/assets/app_vectors.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
 import 'package:capsaul/features/chat/bloc/chat_bloc.dart';
+import 'package:capsaul/features/chat/presentation/chat_screen.dart';
 import 'package:capsaul/pages/settings/widgets/calendar.dart';
 import 'package:capsaul/src/common_widget/expandable_text.dart';
 import 'package:capsaul/src/common_widget/list_tile.dart';
@@ -87,7 +88,7 @@ class OverallTabState extends State<OverallTab> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 0.h),
               child: Text(
-                'Uhuh! Seems like no questioms are available',
+                'Uhuh! Seems like no questions are available',
                 style: textTheme.bodyMedium?.copyWith(
                   color: AppColors.grey,
                 ),
@@ -125,8 +126,29 @@ class OverallTabState extends State<OverallTab> {
                             ),
                           ),
                           onTap: () {
-                            Navigator.of(context).pop();
-                            widget.tabController?.animateTo(1);
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                transitionDuration: Duration(milliseconds: 500),
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        ChatScreen(),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  var fadeInAnimation =
+                                      Tween(begin: 0.0, end: 1.0).animate(
+                                    CurvedAnimation(
+                                        parent: animation,
+                                        curve: Curves.easeOut),
+                                  );
+
+                                  return FadeTransition(
+                                    opacity: fadeInAnimation,
+                                    child: child,
+                                  );
+                                },
+                              ),
+                            );
                             BlocProvider.of<ChatBloc>(context).add(
                               SendMessage(
                                 question,

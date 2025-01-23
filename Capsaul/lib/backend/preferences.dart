@@ -261,7 +261,7 @@ class SharedPreferencesUtil {
 
   set backupsEnabled(bool value) => saveBool('backupsEnabled2', value);
 
-  bool get hasSeenTutorial => getBool('hasSeenTutorial') ?? false;
+  bool get hasSeenTutorial => getBool('hasSeenTutorial') ?? true;  // ===> CHANGE TO FALSE
 
   set hasSeenTutorial(bool value) => saveBool('hasSeenTutorial', value);
 

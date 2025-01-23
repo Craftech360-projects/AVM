@@ -8,12 +8,15 @@ import 'package:capsaul/backend/database/message_provider.dart';
 import 'package:capsaul/backend/database/transcript_segment.dart';
 import 'package:capsaul/backend/preferences.dart';
 import 'package:capsaul/backend/schema/bt_device.dart';
+import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/widgets/custom_dialog_box.dart';
 import 'package:capsaul/features/capture/logic/openglass_mixin.dart';
 import 'package:capsaul/features/capture/presentation/capture_memory_page.dart';
+import 'package:capsaul/features/chat/bloc/chat_bloc.dart';
 import 'package:capsaul/features/memories/bloc/memory_bloc.dart';
 import 'package:capsaul/pages/capture/location_service.dart';
+import 'package:capsaul/pages/home/custom_scaffold.dart';
 import 'package:capsaul/utils/audio/wav_bytes.dart';
 import 'package:capsaul/utils/ble/communication.dart';
 import 'package:capsaul/utils/features/backup_util.dart';
@@ -22,6 +25,7 @@ import 'package:capsaul/utils/memories/integrations.dart';
 import 'package:capsaul/utils/memories/process.dart';
 import 'package:capsaul/utils/other/notifications.dart';
 import 'package:capsaul/utils/websockets.dart';
+import 'package:capsaul/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,22 +37,21 @@ import '../../../pages/capture/phone_recorder_mixin.dart';
 import '../logic/websocket_mixin.dart';
 
 class CapturePage extends StatefulWidget {
-  final Function refreshMemories;
-  final Function refreshMessages;
+  final Function? refreshMemories;
+  final Function? refreshMessages;
   final BTDeviceStruct? device;
   final int batteryLevel;
-  final bool hasSeenTutorial;
+  final bool? hasSeenTutorial;
   final TabController? tabController;
 
-  const CapturePage({
-    super.key,
-    required this.device,
-    required this.refreshMemories,
-    required this.refreshMessages,
-    this.batteryLevel = -1,
-    required this.hasSeenTutorial,
-    this.tabController
-  });
+  const CapturePage(
+      {super.key,
+      this.device,
+      this.refreshMemories,
+      this.refreshMessages,
+      this.batteryLevel = -1,
+      this.hasSeenTutorial,
+      this.tabController});
 
   @override
   State<CapturePage> createState() => CapturePageState();
@@ -68,6 +71,7 @@ class CapturePageState extends State<CapturePage>
   List<bool> dismissedList = [];
   BTDeviceStruct? btDevice;
   bool _hasTranscripts = false;
+    FocusNode memoriesTextFieldFocusNode = FocusNode(canRequestFocus: true);
   static const defaultQuietSecondsForMemoryCreation = 60;
 
   StreamSubscription? _bleBytesStream;
@@ -107,7 +111,7 @@ class CapturePageState extends State<CapturePage>
         friendlyReplyMap['reply'] ?? 'Default friendly reply';
     createMessagingNotification('Capsaul', friendlyReply);
 
-    await widget.refreshMemories();
+    await widget.refreshMemories!();
     SharedPreferencesUtil().transcriptSegments = [];
     segments = [];
     if (mounted) {
@@ -378,7 +382,7 @@ class CapturePageState extends State<CapturePage>
   void sendMessageToChat(Message message, Memory? memory) {
     if (memory != null) message.memories.add(memory);
     MessageProvider().saveMessage(message);
-    widget.refreshMessages();
+    widget.refreshMessages!();
   }
 
   _createMemory({bool forcedCreation = false}) async {
@@ -429,10 +433,10 @@ class CapturePageState extends State<CapturePage>
               'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
         );
       }
-      backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
+      backupsEnabled ? manualBackup(context) : null;
     }
 
-    await widget.refreshMemories();
+    await widget.refreshMemories!();
     SharedPreferencesUtil().transcriptSegments = [];
     segments = [];
 
@@ -544,23 +548,60 @@ class CapturePageState extends State<CapturePage>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     super.build(context);
-    return CaptureMemoryPage(
-      tabController: widget.tabController,
-      context: context,
-      hasTranscripts: _hasTranscripts,
-      wsConnectionState: wsConnectionState,
-      device: widget.device,
-      internetStatus: _internetStatus,
-      segments: segments,
-      memoryCreating: memoryCreating,
-      photos: photos,
-      scrollController: _scrollController,
-      onDismissmissedCaptureMemory: (direction) {
-        _createMemory();
-        setState(() {});
-      },
-      hasSeenTutorial: widget.hasSeenTutorial,
+    return CustomScaffold(
+      titleSpacing: 10.0,
+      centerTitle: false,
+      resizeToAvoidBottomInset: true,
+      showBatteryLevel: true,
+      showGearIcon: true,
+      title: theme.brightness == Brightness.light
+          ? Image.asset(
+              AppImages.appLogo,
+              width: 70,
+              height: 70,
+            )
+          : Image.asset(
+              AppImages.appLogoW,
+              width: 70,
+              height: 70,
+            ),
+      showBackBtn: false,
+      body: Stack(children: [
+        CaptureMemoryPage(
+          tabController: widget.tabController,
+          context: context,
+          hasTranscripts: _hasTranscripts,
+          wsConnectionState: wsConnectionState,
+          device: widget.device,
+          internetStatus: _internetStatus,
+          segments: segments,
+          memoryCreating: memoryCreating,
+          photos: photos,
+          scrollController: _scrollController,
+          onDismissmissedCaptureMemory: (direction) {
+            _createMemory();
+            setState(() {});
+          },
+          hasSeenTutorial: true,
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: CustomNavBar(
+            onSendMessage: (message) {
+              BlocProvider.of<ChatBloc>(context).add(SendMessage(message));
+              FocusScope.of(context).unfocus();
+            },
+            onMemorySearch: (query) {
+              BlocProvider.of<MemoryBloc>(context).add(
+                SearchMemory(query: query),
+              );
+            },
+          ),
+        )
+      ]),
     );
   }
 }

@@ -160,7 +160,7 @@ class AIMessage extends StatelessWidget {
                         style: const TextStyle(
                             fontSize: 13.0,
                             fontWeight: FontWeight.w500,
-                            height: 1.3),
+                            height: 1.2),
                       ),
                     if (message.id == 1 && displayOptions) h4,
                     if (message.id == 1 && displayOptions)

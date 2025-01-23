@@ -121,38 +121,45 @@ class TermsAndConditionsWidget extends StatelessWidget {
       showBackBtn: false,
       body: Stack(
         children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: sections.length,
-              itemBuilder: (context, index) {
-                final section = sections[index];
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        section['heading'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
+          Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: sections.length,
+                  itemBuilder: (context, index) {
+                    final section = sections[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            section['heading'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
+                          ...section['points']
+                              .map<Widget>((point) => Text('• $point'))
+                              .toList(),
+                        ],
                       ),
-                      ...section['points']
-                          .map<Widget>((point) => Text('• $point'))
-                          .toList(),
-                    ],
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
           if (showAcceptBtn)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15),
-              child: Align(
-                alignment: Alignment.bottomCenter,
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 10),
+                width: double.infinity,
                 child: ElevatedButton(
                   onPressed: onAccept,
                   style: ElevatedButton.styleFrom(
@@ -161,7 +168,7 @@ class TermsAndConditionsWidget extends StatelessWidget {
                     shape: RoundedRectangleBorder(borderRadius: br8),
                   ),
                   child: const Text(
-                    'I Accept',
+                    'I Accept the Terms',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                   ),
                 ),
