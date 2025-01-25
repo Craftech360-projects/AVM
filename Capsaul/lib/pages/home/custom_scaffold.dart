@@ -154,12 +154,19 @@ class CustomScaffoldState extends State<CustomScaffold> {
                   colors: [AppColors.white, AppColors.commonPink],
                 ),
               )
-            : null,
+            : const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: [0.3, 1.0],
+                  colors: [AppColors.black, AppColors.brightGrey],
+                ),
+              ),
         child: widget.body,
       ),
       bottomNavigationBar: widget.bottomNavigationBar,
       floatingActionButton: widget.floatingActionButton,
-      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+      resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset ?? true,
     );
   }
 }

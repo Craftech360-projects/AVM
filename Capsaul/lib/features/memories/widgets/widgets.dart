@@ -44,7 +44,7 @@ List<Widget> getSummaryWidgets(
         size: 16,
       ),
     ),
-    const SizedBox(height: 8),
+    h8,
     EditableTitle(
       initialText: structured.title,
       onTextChanged: (newTitle) {

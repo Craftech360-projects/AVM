@@ -7,6 +7,7 @@ import 'package:capsaul/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:capsaul/features/connectivity_bloc/connectivity_bloc.dart';
 import 'package:capsaul/utils/websockets.dart';
 import 'package:capsaul/widgets/transcript.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -51,6 +52,7 @@ class _GreetingCardState extends State<GreetingCard> {
   Widget build(BuildContext context) {
     return BlocBuilder<ConnectivityBloc, ConnectivityState>(
       builder: (context, connectivityState) {
+        // You should use connectivityState.status for the internet status
         return GestureDetector(
           key: widget.tutorialKey,
           onTap: () {
@@ -150,12 +152,16 @@ class _GreetingCardState extends State<GreetingCard> {
                               Row(
                                 children: [
                                   Icon(
-                                    widget.internetStatus ==
-                                            InternetStatus.connected
+                                    connectivityState.status ==
+                                                ConnectivityResult.wifi ||
+                                            connectivityState.status ==
+                                                ConnectivityResult.mobile
                                         ? Icons.wifi_rounded
                                         : Icons.wifi_off_rounded,
-                                    color: widget.internetStatus ==
-                                            InternetStatus.connected
+                                    color: connectivityState.status ==
+                                                ConnectivityResult.wifi ||
+                                            connectivityState.status ==
+                                                ConnectivityResult.mobile
                                         ? AppColors.white.withValues(alpha: 0.9)
                                         : AppColors.grey,
                                   ),
@@ -163,8 +169,10 @@ class _GreetingCardState extends State<GreetingCard> {
                                   Text(
                                     'Internet',
                                     style: TextStyle(
-                                      color: connectivityState
-                                              is ConnectivityConnected
+                                      color: connectivityState.status ==
+                                                  ConnectivityResult.wifi ||
+                                              connectivityState.status ==
+                                                  ConnectivityResult.mobile
                                           ? AppColors.white
                                               .withValues(alpha: 0.9)
                                           : AppColors.grey,

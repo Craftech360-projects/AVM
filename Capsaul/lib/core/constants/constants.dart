@@ -71,7 +71,7 @@ void avmSnackBar(BuildContext context, String content) {
         content,
         style: const TextStyle(
           fontFamily: "Montserrat",
-          fontSize: 13,
+          fontSize: 14,
           fontWeight: FontWeight.w500,
           color: AppColors.white,
         ),

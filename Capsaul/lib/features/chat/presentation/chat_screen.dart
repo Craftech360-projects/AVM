@@ -27,14 +27,12 @@ class ChatScreen extends StatefulWidget {
   final FocusNode? textFieldFocusNode;
   final String? initialQuestion;
   final Structured? memoryContext;
-  final bool shouldExpandNavbar;
 
   const ChatScreen({
     super.key,
     this.textFieldFocusNode,
     this.initialQuestion,
     this.memoryContext,
-    this.shouldExpandNavbar = false,
   });
 
   @override
@@ -140,17 +138,17 @@ class _ChatScreenState extends State<ChatScreen>
     super.dispose();
   }
 
-  void _scrollToBottom() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          0.0,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
-      }
-    });
-  }
+  // void _scrollToBottom() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     if (_scrollController.hasClients) {
+  //       _scrollController.animateTo(
+  //         0.0,
+  //         duration: const Duration(milliseconds: 500),
+  //         curve: Curves.easeOut,
+  //       );
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -218,9 +216,7 @@ class _ChatScreenState extends State<ChatScreen>
                       children: [
                         AIMessage(
                           message: message,
-                          sendMessage: (msg) {
-                            _chatBloc.add(SendMessage(msg));
-                          },
+                          sendMessage: (msg) {},
                           displayOptions: state.messages!.length <= 1,
                           memories: message.memories,
                           pluginSender: SharedPreferencesUtil()
@@ -228,7 +224,7 @@ class _ChatScreenState extends State<ChatScreen>
                               .firstWhereOrNull(
                                   (e) => e.id == message.pluginId),
                         ),
-                        const SizedBox(height: 8),
+                        h8,
                       ],
                     );
                   } else {
@@ -236,7 +232,7 @@ class _ChatScreenState extends State<ChatScreen>
                       key: key,
                       children: [
                         UserMessage(message: message),
-                        const SizedBox(height: 8),
+                        h8,
                       ],
                     );
                   }
@@ -250,7 +246,6 @@ class _ChatScreenState extends State<ChatScreen>
                       onSendMessage: (message) {
                         _chatBloc.add(SendMessage(message));
                         FocusScope.of(context).unfocus();
-                        _scrollToBottom();
                       },
                       isUserMessageSent: state.isUserMessageSent,
                     ),

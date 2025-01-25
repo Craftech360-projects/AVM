@@ -28,14 +28,12 @@ class OverallTab extends StatefulWidget {
   final Structured target;
   final dynamic pluginsResponse;
   final Geolocation? geolocation;
-  final TabController? tabController;
 
   const OverallTab({
     super.key,
     required this.target,
     this.pluginsResponse,
     this.geolocation,
-    this.tabController,
   });
 
   @override
@@ -104,58 +102,58 @@ class OverallTabState extends State<OverallTab> {
                     color: AppColors.purpleDark,
                     borderRadius: br5,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        question,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: AppColors.white,
+                      Expanded(
+                        child: Text(
+                          question,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppColors.white,
+                          ),
                         ),
                       ),
-                      h4,
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: GestureDetector(
-                          child: Text(
-                            "Ask Capsaul",
-                            style: TextStyle(
-                              color: AppColors.orange,
-                              fontSize: 12,
-                            ),
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                transitionDuration: Duration(milliseconds: 500),
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) =>
-                                        ChatScreen(),
-                                transitionsBuilder: (context, animation,
-                                    secondaryAnimation, child) {
-                                  var fadeInAnimation =
-                                      Tween(begin: 0.0, end: 1.0).animate(
-                                    CurvedAnimation(
-                                        parent: animation,
-                                        curve: Curves.easeOut),
-                                  );
+                      w8,
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              transitionDuration: Duration(milliseconds: 500),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      ChatScreen(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                var fadeInAnimation =
+                                    Tween(begin: 0.0, end: 1.0).animate(
+                                  CurvedAnimation(
+                                      parent: animation, curve: Curves.easeOut),
+                                );
 
-                                  return FadeTransition(
-                                    opacity: fadeInAnimation,
-                                    child: child,
-                                  );
-                                },
-                              ),
-                            );
-                            BlocProvider.of<ChatBloc>(context).add(
-                              SendMessage(
-                                question,
-                                memoryContext: widget.target.title,
-                              ),
-                            );
-                          },
+                                return FadeTransition(
+                                  opacity: fadeInAnimation,
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                          BlocProvider.of<ChatBloc>(context).add(
+                            SendMessage(
+                              question,
+                              memoryContext: widget.target.title,
+                            ),
+                          );
+                        },
+                        child: Icon(
+                          opticalSize: 0.1,
+                          fill: 0.1,
+                          grade: 0.1,
+                          weight: 0.1,
+                          size: 28,
+                          Icons.arrow_circle_right_outlined,
+                          color: AppColors.white,
                         ),
                       )
                     ],

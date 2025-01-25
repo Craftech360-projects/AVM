@@ -146,7 +146,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       });
     });
 
-
     SharedPreferencesUtil().pageToShowFromNotification = 1;
     SharedPreferencesUtil().onboardingCompleted = true;
 
@@ -208,7 +207,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
               ?.resetState(restartBytesProcessing: false);
           setState(() {
             _device = null;
-            batteryLevel = -1; // Reset battery level
+            batteryLevel = -1;
           });
           InstabugLog.logInfo('Capsaul Disconnected');
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {

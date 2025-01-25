@@ -1,3 +1,4 @@
+import 'package:capsaul/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class PrivacyInfoPage extends StatelessWidget {
@@ -39,7 +40,7 @@ class PrivacyInfoPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            h8,
             _buildBulletPoint(
                 'Onboarding Events: We track when you connect your device and complete the onboarding process.'),
             _buildBulletPoint(
@@ -97,7 +98,7 @@ class PrivacyInfoPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            h8,
             _buildBulletPoint(
                 'Anonymous Tracking: All tracking is 100% anonymous. We do not collect or store any personal information like your email address.'),
             _buildBulletPoint(
@@ -112,7 +113,7 @@ class PrivacyInfoPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            h8,
             _buildBulletPoint(
                 'Opt-In: You can choose to opt in to tracking to help us enhance your experience.'),
             _buildBulletPoint(
@@ -125,7 +126,7 @@ class PrivacyInfoPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+            h8,
             const Text(
               'We are committed to using the data we collect only to make Capsaul a better product for you. Your privacy and trust are paramount to us.',
               style: TextStyle(fontSize: 16),

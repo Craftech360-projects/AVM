@@ -1,5 +1,5 @@
+import 'package:capsaul/core/constants/constants.dart';
 import 'package:flutter/material.dart';
-
 
 class InstructionsTab extends StatefulWidget {
   final VoidCallback goNext;
@@ -49,7 +49,7 @@ class _InstructionsTabState extends State<InstructionsTab> {
                 'assets/images/instruction_1.png',
                 height: 40,
               ),
-              const SizedBox(height: 8),
+              h8,
               const Text(
                 'Wear the device and make sure it is connected to the app ',
                 textAlign: TextAlign.center,
@@ -61,7 +61,7 @@ class _InstructionsTabState extends State<InstructionsTab> {
                 width: 40,
                 height: 40,
               ),
-              const SizedBox(height: 8),
+              h8,
               const Text(
                 'Make sure you’re in a quiet environment',
                 textAlign: TextAlign.center,
@@ -73,7 +73,7 @@ class _InstructionsTabState extends State<InstructionsTab> {
                 width: 40,
                 height: 40,
               ),
-              const SizedBox(height: 8),
+              h8,
               const Text(
                 'Repeat the phrases that will appear on the screen',
                 textAlign: TextAlign.center,

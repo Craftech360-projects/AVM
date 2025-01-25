@@ -20,13 +20,11 @@ import 'package:intl/intl.dart';
 class MemoryDetailPage extends StatefulWidget {
   final MemoryBloc memoryBloc;
   final int memoryAtIndex;
-  final TabController? tabController;
 
   const MemoryDetailPage({
     super.key,
     required this.memoryBloc,
     required this.memoryAtIndex,
-    this.tabController
   });
 
   static const String name = 'memoryDetailPage';
@@ -201,7 +199,6 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 ],
                 children: [
                   OverallTab(
-                    tabController: widget.tabController,
                     target: selectedMemory.structured.target!,
                     geolocation:
                         selectedMemory.geolocation.target, // Pass geolocation

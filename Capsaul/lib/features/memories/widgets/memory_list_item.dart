@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:capsaul/backend/database/memory.dart';
 import 'package:capsaul/backend/database/memory_provider.dart';
 import 'package:capsaul/backend/mixpanel.dart';
+import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/features/memories/bloc/memory_bloc.dart';
 import 'package:capsaul/features/memories/pages/memory_detail_page.dart';
 import 'package:flutter/material.dart';
@@ -109,9 +110,7 @@ class _MemoryListItemState extends State<MemoryListItem> {
                           style: Theme.of(context).textTheme.titleLarge,
                           maxLines: 1,
                         ),
-                  widget.memory.discarded
-                      ? const SizedBox.shrink()
-                      : const SizedBox(height: 8),
+                  widget.memory.discarded ? const SizedBox.shrink() : h8,
                   widget.memory.discarded
                       ? const SizedBox.shrink()
                       : Text(
@@ -123,7 +122,7 @@ class _MemoryListItemState extends State<MemoryListItem> {
                                   color: Colors.grey.shade300, height: 1.3),
                           maxLines: 2,
                         ),
-                  const SizedBox(height: 8),
+                  h8,
                   const Divider(
                     height: 0,
                     thickness: 1,

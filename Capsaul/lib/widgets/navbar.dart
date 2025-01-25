@@ -57,6 +57,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
   }
 
   void toggleSearchVisibility() {
+    Provider.of<NavbarState>(context, listen: false).expand();
     Provider.of<NavbarState>(context, listen: false).setChatVisibility(false);
     Provider.of<NavbarState>(context, listen: false).setMemoryVisibility(true);
 
@@ -75,7 +76,6 @@ class _CustomNavBarState extends State<CustomNavBar> {
         transitionDuration: Duration(milliseconds: 500),
         pageBuilder: (context, animation, secondaryAnimation) => ChatScreen(
           textFieldFocusNode: chatTextFieldFocusNode,
-          shouldExpandNavbar: true,
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           var fadeInAnimation = Tween(begin: 0.0, end: 1.0).animate(
@@ -104,6 +104,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
       widget.onSendMessage?.call(message);
       _messageController.clear();
       FocusScope.of(context).unfocus();
+    } else {
+      null;
     }
   }
 
@@ -113,8 +115,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-          vertical: MediaQuery.of(context).size.height * 0.010,
-          horizontal: MediaQuery.of(context).size.width * 0.05),
+        vertical: MediaQuery.of(context).size.height * 0.010,
+      ),
       child: GestureDetector(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 600),
@@ -139,9 +141,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (!navbarState.isExpanded) _buildLogo(),
+              _buildLogo(),
               if (!navbarState.isExpanded) _buildVerticalDivider(),
-              if (navbarState.isExpanded) _buildHomeBtn(),
               if (!navbarState.isExpanded) _buildSearchButton(),
               if (!navbarState.isExpanded) _buildMessageButton(),
               if (navbarState.isExpanded) _buildExpandedSection(),
@@ -154,33 +155,11 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   Widget _buildLogo() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15.w),
-      child: GestureDetector(
-        child: Image.asset(
-          AppImages.appLogo,
-          height: 16.h,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildVerticalDivider() {
-    return VerticalDivider(
-      thickness: 0.5.w,
-      width: 0,
-      color: AppColors.brightGrey,
-      endIndent: 8.h,
-      indent: 8.h,
-    );
-  }
-
-  Widget _buildHomeBtn() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: GestureDetector(
         onTap: () async {
           Provider.of<NavbarState>(context, listen: false).collapse();
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             PageRouteBuilder(
               transitionDuration: Duration(milliseconds: 500),
@@ -201,10 +180,20 @@ class _CustomNavBarState extends State<CustomNavBar> {
           );
         },
         child: Image.asset(
-          AppImages.home,
-          width: 24.h,
+          AppImages.appLogo,
+          height: 16.h,
         ),
       ),
+    );
+  }
+
+  Widget _buildVerticalDivider() {
+    return VerticalDivider(
+      thickness: 0.5.w,
+      width: 0,
+      color: AppColors.brightGrey,
+      endIndent: 8.h,
+      indent: 8.h,
     );
   }
 
@@ -262,13 +251,22 @@ class _CustomNavBarState extends State<CustomNavBar> {
                 ),
               ),
             ),
-            if (navbarState.isChatVisible)
-              InkWell(
-                  onTap: _handleSendMessage,
-                  child: Icon(
-                    Icons.send_rounded,
-                    color: AppColors.purpleDark,
-                  ))
+            navbarState.isChatVisible
+                ? InkWell(
+                    onTap:
+                        navbarState.isChatVisible ? _handleSendMessage : null,
+                    child: Icon(
+                      Icons.send_rounded,
+                      size: 28.w,
+                      color: AppColors.purpleDark,
+                    ),
+                  )
+                : (navbarState.isMemoryVisible
+                    ? Icon(
+                        Icons.cancel_outlined,
+                        size: 28.w,
+                      )
+                    : SizedBox.shrink()),
           ],
         ),
       ),

@@ -13,10 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MemoryCardWidget extends StatelessWidget {
-  MemoryCardWidget({super.key, required this.memoryBloc, this.tabController});
+  MemoryCardWidget({super.key, required this.memoryBloc});
 
   final MemoryBloc memoryBloc;
-  final TabController? tabController;
   bool _isLoading = false;
 
   @override
@@ -89,7 +88,7 @@ class MemoryCardWidget extends StatelessWidget {
                       ),
                     ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 40),
+                    padding: const EdgeInsets.only(bottom: 70),
                     child: Column(
                       children: List.generate(
                         state.memories.length,
@@ -159,7 +158,6 @@ class MemoryCardWidget extends StatelessWidget {
                                         pageBuilder: (context, animation,
                                                 secondaryAnimation) =>
                                             MemoryDetailPage(
-                                          tabController: tabController,
                                           memoryBloc: memoryBloc,
                                           memoryAtIndex: index,
                                         ),

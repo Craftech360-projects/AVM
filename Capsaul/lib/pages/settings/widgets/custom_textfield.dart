@@ -1,3 +1,4 @@
+import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
@@ -52,7 +53,7 @@ class CustomTextField extends StatelessWidget {
               labelText!,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-          if (showLabel) const SizedBox(height: 8),
+          if (showLabel) h8,
           TextFormField(
             focusNode: focusNode,
             controller: controller,

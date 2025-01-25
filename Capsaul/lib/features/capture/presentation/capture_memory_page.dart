@@ -23,22 +23,21 @@ import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 // ignore: must_be_immutable
 class CaptureMemoryPage extends StatefulWidget {
-  CaptureMemoryPage(
-      {super.key,
-      required this.context,
-      required this.hasTranscripts,
-      this.device,
-      required this.wsConnectionState,
-      this.internetStatus,
-      this.segments,
-      required this.memoryCreating,
-      required this.photos,
-      this.scrollController,
-      required this.onDismissmissedCaptureMemory,
-      required this.hasSeenTutorial,
-      this.tabController});
+  CaptureMemoryPage({
+    super.key,
+    required this.context,
+    required this.hasTranscripts,
+    this.device,
+    required this.wsConnectionState,
+    this.internetStatus,
+    this.segments,
+    required this.memoryCreating,
+    required this.photos,
+    this.scrollController,
+    required this.onDismissmissedCaptureMemory,
+    required this.hasSeenTutorial,
+  });
 
-  final TabController? tabController;
   final BuildContext context;
   final bool hasTranscripts;
   final BTDeviceStruct? device;
@@ -219,9 +218,9 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
       create: (context) => ConnectivityBloc(),
       child: BlocBuilder<ConnectivityBloc, ConnectivityState>(
         builder: (context, connectivityState) {
-          return Stack(
-            children: [
-              Column(
+          return Stack(children: [
+            SingleChildScrollView(
+              child: Column(
                 children: [
                   if (widget.memoryCreating)
                     Container(
@@ -343,8 +342,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                           ),
                           icon: Icon(
                             _isNonDiscarded
-                                ? Icons.cancel_outlined
-                                : Icons.filter_list,
+                                ? Icons.filter_list
+                                : Icons.cancel_outlined,
                             size: 16,
                             color: AppColors.grey,
                           ),
@@ -507,8 +506,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                           );
                         } else if (state.status == MemoryStatus.success) {
                           return MemoryCardWidget(
-                              memoryBloc: _memoryBloc,
-                              tabController: widget.tabController);
+                            memoryBloc: _memoryBloc,
+                          );
                         }
                         return const SizedBox.shrink();
                       },
@@ -525,51 +524,51 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                       }),
                 ],
               ),
-              if (_isScrolled)
-                Positioned(
-                    top: 0, left: 0, right: 0, child: _buildScrollGradient()),
+            ),
+            if (_isScrolled)
               Positioned(
-                bottom: 0,
-                right: 10,
-                child: Column(
-                  children: [
-                    AnimatedBuilder(
-                      animation: _animation,
-                      builder: (context, child) {
-                        double flipValue = _isFlippingRight
-                            ? _animation.value
-                            : -_animation.value;
+                  top: 0, left: 0, right: 0, child: _buildScrollGradient()),
+            Positioned(
+              bottom: 0,
+              right: 10,
+              child: Column(
+                children: [
+                  AnimatedBuilder(
+                    animation: _animation,
+                    builder: (context, child) {
+                      double flipValue = _isFlippingRight
+                          ? _animation.value
+                          : -_animation.value;
 
-                        Matrix4 transform = Matrix4.identity()
-                          ..setEntry(3, 2, 0.001)
-                          ..rotateY(flipValue);
+                      Matrix4 transform = Matrix4.identity()
+                        ..setEntry(3, 2, 0.001)
+                        ..rotateY(flipValue);
 
-                        return Transform(
-                          alignment: Alignment.center,
-                          transform: transform,
-                          child: FloatingActionButton(
-                            key: _floatingActionKey,
-                            shape: const CircleBorder(),
-                            elevation: 8.0,
-                            backgroundColor: AppColors.purpleDark,
-                            onPressed: _showPopup,
-                            child: Image.asset(
-                              AppImages.botIcon,
-                              width: 45,
-                              height: 45,
-                            ),
+                      return Transform(
+                        alignment: Alignment.center,
+                        transform: transform,
+                        child: FloatingActionButton(
+                          key: _floatingActionKey,
+                          shape: const CircleBorder(),
+                          elevation: 8.0,
+                          backgroundColor: AppColors.purpleDark,
+                          onPressed: _showPopup,
+                          child: Image.asset(
+                            AppImages.botIcon,
+                            width: 45,
+                            height: 45,
                           ),
-                        );
-                      },
-                    ),
-                    h8,
-                    if (SharedPreferencesUtil().notificationPlugin)
-                      TypingIndicator(),
-                  ],
-                ),
+                        ),
+                      );
+                    },
+                  ),
+                  h8,
+                  if (SharedPreferencesUtil().notificationPlugin)
+                    TypingIndicator(),
+                ],
               ),
-            ],
-          );
+            ),
+          ]);
         },
       ),
     );

@@ -13,7 +13,6 @@ import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/widgets/custom_dialog_box.dart';
 import 'package:capsaul/features/capture/logic/openglass_mixin.dart';
 import 'package:capsaul/features/capture/presentation/capture_memory_page.dart';
-import 'package:capsaul/features/chat/bloc/chat_bloc.dart';
 import 'package:capsaul/features/memories/bloc/memory_bloc.dart';
 import 'package:capsaul/pages/capture/location_service.dart';
 import 'package:capsaul/pages/home/custom_scaffold.dart';
@@ -29,7 +28,6 @@ import 'package:capsaul/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:location/location.dart';
 import 'package:uuid/uuid.dart';
 
@@ -42,16 +40,15 @@ class CapturePage extends StatefulWidget {
   final BTDeviceStruct? device;
   final int batteryLevel;
   final bool? hasSeenTutorial;
-  final TabController? tabController;
 
-  const CapturePage(
-      {super.key,
-      this.device,
-      this.refreshMemories,
-      this.refreshMessages,
-      this.batteryLevel = -1,
-      this.hasSeenTutorial,
-      this.tabController});
+  const CapturePage({
+    super.key,
+    this.device,
+    this.refreshMemories,
+    this.refreshMessages,
+    this.batteryLevel = -1,
+    this.hasSeenTutorial,
+  });
 
   @override
   State<CapturePage> createState() => CapturePageState();
@@ -83,7 +80,6 @@ class CapturePageState extends State<CapturePage>
   DateTime? currentTranscriptStartedAt;
   DateTime? currentTranscriptFinishedAt;
   static const quietSecondsForMemoryCreation = 60;
-  InternetStatus? _internetStatus;
 
   bool isGlasses = false;
   String conversationId = const Uuid().v4();
@@ -424,7 +420,6 @@ class CapturePageState extends State<CapturePage>
     return CustomScaffold(
       titleSpacing: 10.0,
       centerTitle: false,
-      resizeToAvoidBottomInset: true,
       showBatteryLevel: true,
       showGearIcon: true,
       title: theme.brightness == Brightness.light
@@ -441,12 +436,10 @@ class CapturePageState extends State<CapturePage>
       showBackBtn: false,
       body: Stack(children: [
         CaptureMemoryPage(
-          tabController: widget.tabController,
           context: context,
           hasTranscripts: _hasTranscripts,
           wsConnectionState: wsConnectionState,
           device: widget.device,
-          internetStatus: _internetStatus,
           segments: segments,
           memoryCreating: memoryCreating,
           photos: photos,
@@ -460,10 +453,6 @@ class CapturePageState extends State<CapturePage>
         Align(
           alignment: Alignment.bottomCenter,
           child: CustomNavBar(
-            onSendMessage: (message) {
-              BlocProvider.of<ChatBloc>(context).add(SendMessage(message));
-              FocusScope.of(context).unfocus();
-            },
             onMemorySearch: (query) {
               BlocProvider.of<MemoryBloc>(context).add(
                 SearchMemory(query: query),
@@ -471,6 +460,7 @@ class CapturePageState extends State<CapturePage>
             },
           ),
         )
+        
       ]),
     );
   }
