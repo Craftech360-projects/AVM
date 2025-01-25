@@ -14,9 +14,9 @@ class CompletionTab extends StatefulWidget {
 class _CompletionTabState extends State<CompletionTab> {
   @override
   void initState() {
+    super.initState();
     SharedPreferencesUtil().hasSpeakerProfile = true;
     MixpanelManager().speechProfileCompleted();
-    super.initState();
   }
 
   @override

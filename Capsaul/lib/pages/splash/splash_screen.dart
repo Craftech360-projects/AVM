@@ -23,7 +23,6 @@ class SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         _opacity = 1.0;

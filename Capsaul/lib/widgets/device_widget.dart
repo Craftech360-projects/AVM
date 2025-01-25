@@ -22,12 +22,12 @@ class _DeviceAnimationWidgetState extends State<DeviceAnimationWidget>
 
   @override
   void initState() {
+    super.initState();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     )..repeat(reverse: true);
     // _animation = Tween<double>(begin: 1, end: 0.8).animate(_controller);
-    super.initState();
   }
 
   @override

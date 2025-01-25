@@ -15,12 +15,13 @@ import 'package:capsaul/core/widgets/typing_indicator.dart';
 import 'package:capsaul/features/chat/bloc/chat_bloc.dart';
 import 'package:capsaul/features/chat/widgets/ai_message.dart';
 import 'package:capsaul/features/chat/widgets/user_message.dart';
-import 'package:capsaul/features/memories/bloc/memory_bloc.dart';
+import 'package:capsaul/main.dart';
 import 'package:capsaul/pages/home/custom_scaffold.dart';
 import 'package:capsaul/widgets/navbar.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
   final FocusNode? textFieldFocusNode;
@@ -49,6 +50,40 @@ class _ChatScreenState extends State<ChatScreen>
   late Timer _dailySummaryTimer;
   late ScrollController _scrollController;
   final Map<int, GlobalKey> _messageKeys = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Expand the navbar when ChatScreen is opened
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<NavbarState>(context, listen: false).expand();
+    });
+
+    // Initialize bloc and controllers
+    _chatBloc = BlocProvider.of<ChatBloc>(context);
+    _scrollController = ScrollController();
+
+    // Handle initial question or memory context
+    if (widget.initialQuestion != null && widget.memoryContext != null) {
+      final memoryTitle = widget.memoryContext?.title ?? "Unknown Context";
+      final message =
+          "Context: $memoryTitle\nQuestion: ${widget.initialQuestion}";
+      _chatBloc.add(SendMessage(message));
+    } else {
+      _chatBloc.add(LoadInitialChat());
+    }
+
+    // Initialize animations and daily summary logic
+    _initDailySummary();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat();
+
+    _animation =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+  }
 
   _initDailySummary() {
     var now = DateTime.now();
@@ -95,36 +130,26 @@ class _ChatScreenState extends State<ChatScreen>
   }
 
   @override
-  void initState() {
-    super.initState();
-    _chatBloc = BlocProvider.of<ChatBloc>(context);
-    _scrollController = ScrollController();
-    if (widget.initialQuestion != null && widget.memoryContext != null) {
-      final memoryTitle = widget.memoryContext?.title ?? "Unknown Context";
-      final message =
-          "Context: $memoryTitle\nQuestion: ${widget.initialQuestion}";
-      _chatBloc.add(SendMessage(message));
-    } else {
-      _chatBloc.add(LoadInitialChat());
-    }
-
-    _initDailySummary();
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    )..repeat();
-
-    _animation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
-  }
-
-  @override
   void dispose() {
     _dailySummaryTimer.cancel();
     _animationController.dispose();
     _scrollController.dispose();
+
+    // Collapse navbar when ChatScreen is closed
+    Provider.of<NavbarState>(context, listen: false).collapse();
     super.dispose();
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0.0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   @override
@@ -156,7 +181,7 @@ class _ChatScreenState extends State<ChatScreen>
               previous.status != current.status,
           builder: (context, state) {
             if (state.status == ChatStatus.loading) {
-              return Center(
+              return const Center(
                 child: TypingIndicator(),
               );
             }
@@ -193,7 +218,9 @@ class _ChatScreenState extends State<ChatScreen>
                       children: [
                         AIMessage(
                           message: message,
-                          sendMessage: (msg) {},
+                          sendMessage: (msg) {
+                            _chatBloc.add(SendMessage(msg));
+                          },
                           displayOptions: state.messages!.length <= 1,
                           memories: message.memories,
                           pluginSender: SharedPreferencesUtil()
@@ -201,7 +228,7 @@ class _ChatScreenState extends State<ChatScreen>
                               .firstWhereOrNull(
                                   (e) => e.id == message.pluginId),
                         ),
-                        h8,
+                        const SizedBox(height: 8),
                       ],
                     );
                   } else {
@@ -209,33 +236,27 @@ class _ChatScreenState extends State<ChatScreen>
                       key: key,
                       children: [
                         UserMessage(message: message),
-                        h8,
+                        const SizedBox(height: 8),
                       ],
                     );
                   }
                 },
               ),
-              if (widget.textFieldFocusNode!.hasFocus)
-                const SizedBox.shrink()
-              else
-                BlocBuilder<ChatBloc, ChatState>(builder: (context, state) {
+              BlocBuilder<ChatBloc, ChatState>(
+                builder: (context, state) {
                   return Align(
                     alignment: Alignment.bottomCenter,
                     child: CustomNavBar(
                       onSendMessage: (message) {
-                        BlocProvider.of<ChatBloc>(context)
-                            .add(SendMessage(message));
+                        _chatBloc.add(SendMessage(message));
                         FocusScope.of(context).unfocus();
-                      },
-                      onMemorySearch: (query) {
-                        BlocProvider.of<MemoryBloc>(context).add(
-                          SearchMemory(query: query),
-                        );
+                        _scrollToBottom();
                       },
                       isUserMessageSent: state.isUserMessageSent,
                     ),
                   );
-                }),
+                },
+              ),
               if (pinnedMessage != null)
                 Positioned(
                   top: 0,
@@ -243,13 +264,14 @@ class _ChatScreenState extends State<ChatScreen>
                   right: 0,
                   child: Container(
                     color: AppColors.purpleDark,
-                    padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          margin: EdgeInsets.symmetric(vertical: 5),
-                          padding: EdgeInsets.symmetric(vertical: 4),
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          padding: const EdgeInsets.symmetric(vertical: 4),
                           decoration: BoxDecoration(
                               color: AppColors.white, borderRadius: br5),
                           child: InkWell(
@@ -258,13 +280,13 @@ class _ChatScreenState extends State<ChatScreen>
                               context.read<ChatBloc>().add(UnpinMessage());
                               avmSnackBar(context, "Message unpinned");
                             },
-                            child: Icon(
+                            child: const Icon(
                               Icons.push_pin_outlined,
                               color: AppColors.grey,
                             ),
                           ),
                         ),
-                        w8,
+                        const SizedBox(width: 8),
                         Expanded(
                           child: InkWell(
                             onTap: () {
@@ -290,7 +312,7 @@ class _ChatScreenState extends State<ChatScreen>
                                 pinnedMessage.text.length > 100
                                     ? '${pinnedMessage.text.substring(0, 100)}...'
                                     : pinnedMessage.text,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: AppColors.white, fontSize: 13),
                                 overflow: TextOverflow.ellipsis,
                               ),

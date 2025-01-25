@@ -37,6 +37,7 @@ import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:opus_dart/opus_dart.dart';
 import 'package:opus_flutter/opus_flutter.dart' as opus_flutter;
+import 'package:provider/provider.dart';
 
 void main() async {
   if (F.env == Environment.prod) {
@@ -48,24 +49,29 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   ble.FlutterBluePlus.setLogLevel(ble.LogLevel.info, color: true);
-  if (F.env == Environment.prod) {
-    await Firebase.initializeApp(
-      options: prod.DefaultFirebaseOptions.currentPlatform,
-    );
-  } else {
-    await Firebase.initializeApp(
-      options: dev.DefaultFirebaseOptions.currentPlatform,
-    );
+  try {
+    if (F.env == Environment.prod) {
+      await Firebase.initializeApp(
+        options: prod.DefaultFirebaseOptions.currentPlatform,
+      );
+    } else {
+      await Firebase.initializeApp(
+        options: dev.DefaultFirebaseOptions.currentPlatform,
+      );
+    }
+
+    await initializeNotifications();
+    await SharedPreferencesUtil.init();
+    await ObjectBoxUtil.init();
+    await MixpanelManager.init();
+
+    Bloc.observer = const SimpleBlocObserver();
+  } catch (e, stackTrace) {
+    log('Initialization failed: $e\n$stackTrace');
   }
 
-  await initializeNotifications();
-  await SharedPreferencesUtil.init();
-  await ObjectBoxUtil.init();
-  await MixpanelManager.init();
-  // AppLogger.init();
-  Bloc.observer = const SimpleBlocObserver();
-
   listenAuthTokenChanges();
+
   bool isAuth = false;
   try {
     isAuth = (await getIdToken()) != null;
@@ -75,10 +81,13 @@ void main() async {
 
   if (isAuth) MixpanelManager().identify();
 
-  initOpus(await opus_flutter.load());
-
-  await GrowthbookUtil.init();
-  CalendarUtil.init();
+  try {
+    initOpus(await opus_flutter.load());
+    await GrowthbookUtil.init();
+    CalendarUtil.init();
+  } catch (e, stackTrace) {
+    log('Optional initialization failed: $e\n$stackTrace');
+  }
 
   if (Env.oneSignalAppId != null) {
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
@@ -100,6 +109,7 @@ void main() async {
             SharedPreferencesUtil().uid,
           );
         }
+
         FlutterError.onError = (FlutterErrorDetails details) {
           Zone.current.handleUncaughtError(
               details.exception, details.stack ?? StackTrace.empty);
@@ -113,8 +123,39 @@ void main() async {
   }
 }
 
+class NavbarState extends ChangeNotifier {
+  bool _isExpanded = false;
+  bool isChatVisible = false;
+  bool isMemoryVisible = false;
+
+  bool get isExpanded => _isExpanded;
+
+  void setChatVisibility(bool value) {
+    isChatVisible = value;
+    notifyListeners();
+  }
+
+  void setMemoryVisibility(bool value) {
+    isMemoryVisible = value;
+    notifyListeners();
+  }
+
+  void expand() {
+    _isExpanded = true;
+    notifyListeners();
+  }
+
+  void collapse() {
+    _isExpanded = false;
+    isChatVisible = false;
+    isMemoryVisible = false;
+    notifyListeners();
+  }
+}
+
 _getRunApp(bool isAuth) {
-  return runApp(MyApp(isAuth: isAuth));
+  return runApp(ChangeNotifierProvider(
+      create: (_) => NavbarState(), child: MyApp(isAuth: isAuth)));
 }
 
 class MyApp extends StatefulWidget {
@@ -137,18 +178,22 @@ class MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    super.initState();
     NotificationUtil.initializeNotificationsEventListeners();
     NotificationUtil.initializeIsolateReceivePort();
     _initiatePlugins();
-    super.initState();
   }
 
   Future<void> _initiatePlugins() async {
-    plugins = SharedPreferencesUtil().pluginsList;
-    plugins = await retrievePlugins();
+    try {
+      plugins = SharedPreferencesUtil().pluginsList;
+      plugins = await retrievePlugins();
 
-    _edgeCasePluginNotAvailable();
-    setState(() {});
+      _edgeCasePluginNotAvailable();
+      setState(() {});
+    } catch (e, stackTrace) {
+      log('Plugin initialization failed: $e\n$stackTrace');
+    }
   }
 
   _edgeCasePluginNotAvailable() {

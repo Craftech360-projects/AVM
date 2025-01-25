@@ -53,8 +53,8 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
 
   @override
   void initState() {
-    _init();
     super.initState();
+    _init();
   }
 
   @override

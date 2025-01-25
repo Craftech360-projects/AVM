@@ -19,9 +19,9 @@ class _ChangeNameWidgetState extends State<ChangeNameWidget> {
 
   @override
   void initState() {
+    super.initState();
     user = getFirebaseUser();
     nameController = TextEditingController(text: user?.displayName ?? '');
-    super.initState();
   }
 
   @override

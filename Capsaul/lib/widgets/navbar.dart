@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
-import 'package:capsaul/core/widgets/typing_indicator.dart';
 import 'package:capsaul/features/capture/presentation/capture_page.dart';
 import 'package:capsaul/features/chat/presentation/chat_screen.dart';
+import 'package:capsaul/main.dart';
 import 'package:capsaul/src/common_widget/icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 class CustomNavBar extends StatefulWidget {
   const CustomNavBar({
@@ -18,6 +19,7 @@ class CustomNavBar extends StatefulWidget {
     this.onSendMessage,
     this.onMemorySearch,
     this.isUserMessageSent = false,
+    this.hintText,
   });
 
   final bool? isChat;
@@ -25,29 +27,24 @@ class CustomNavBar extends StatefulWidget {
   final bool isUserMessageSent;
   final Function(String)? onSendMessage;
   final Function(String)? onMemorySearch;
+  final String? hintText;
 
   @override
   State<CustomNavBar> createState() => _CustomNavBarState();
 }
 
 class _CustomNavBarState extends State<CustomNavBar> {
-  late bool isMemoryVisible;
-  late bool isChatVisible;
-  bool isExpanded = false;
   final TextEditingController _messageController = TextEditingController();
   final TextEditingController _searchController = TextEditingController();
-  FocusNode chatTextFieldFocusNode = FocusNode(canRequestFocus: true);
+  final FocusNode chatTextFieldFocusNode = FocusNode();
+  final FocusNode searchTextFieldFocusNode = FocusNode();
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
-    isMemoryVisible = false;
-    isChatVisible = false;
-    isExpanded = false;
   }
-
-  Timer? _debounce;
 
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
@@ -60,26 +57,44 @@ class _CustomNavBarState extends State<CustomNavBar> {
   }
 
   void toggleSearchVisibility() {
+    Provider.of<NavbarState>(context, listen: false).setChatVisibility(false);
+    Provider.of<NavbarState>(context, listen: false).setMemoryVisibility(true);
+
     setState(() {
-      isExpanded = true;
-      isMemoryVisible = true;
-      isChatVisible = false;
+      searchTextFieldFocusNode.requestFocus();
     });
   }
 
   void toggleMessageVisibility() {
-    setState(() {
-      isExpanded = true;
-      isChatVisible = true;
-      isMemoryVisible = false;
-    });
+    Provider.of<NavbarState>(context, listen: false).setChatVisibility(true);
+    Provider.of<NavbarState>(context, listen: false).setMemoryVisibility(false);
+
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionDuration: Duration(milliseconds: 500),
+        pageBuilder: (context, animation, secondaryAnimation) => ChatScreen(
+          textFieldFocusNode: chatTextFieldFocusNode,
+          shouldExpandNavbar: true,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var fadeInAnimation = Tween(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeOut),
+          );
+
+          return FadeTransition(
+            opacity: fadeInAnimation,
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   void collapse() {
     setState(() {
-      isExpanded = false;
-      isMemoryVisible = false;
-      isChatVisible = false;
+      Provider.of<NavbarState>(context, listen: false).collapse();
+      FocusScope.of(context).unfocus();
     });
   }
 
@@ -88,57 +103,14 @@ class _CustomNavBarState extends State<CustomNavBar> {
     if (message.isNotEmpty) {
       widget.onSendMessage?.call(message);
       _messageController.clear();
+      FocusScope.of(context).unfocus();
     }
-  }
-
-  void _handleSearchMessage(String query) {
-    widget.onMemorySearch?.call(query);
-  }
-
-  void _navigateToCaptureScreen() {
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 500),
-        pageBuilder: (context, animation, secondaryAnimation) => CapturePage(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          var fadeInAnimation = Tween(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeOut),
-          );
-
-          return FadeTransition(
-            opacity: fadeInAnimation,
-            child: child,
-          );
-        },
-      ),
-    );
-  }
-
-  void _navigateToChatScreen() {
-    toggleMessageVisibility(); // Add this line before navigation
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 500),
-        pageBuilder: (context, animation, secondaryAnimation) => ChatScreen(textFieldFocusNode: chatTextFieldFocusNode, shouldExpandNavbar: true),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          var fadeInAnimation = Tween(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeOut),
-          );
-
-          return FadeTransition(
-            opacity: fadeInAnimation,
-            child: child,
-          );
-        },
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final navbarState = Provider.of<NavbarState>(context);
+
     return Padding(
       padding: EdgeInsets.symmetric(
           vertical: MediaQuery.of(context).size.height * 0.010,
@@ -167,13 +139,12 @@ class _CustomNavBarState extends State<CustomNavBar> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (!isExpanded) _buildLogo(),
-              if (!isExpanded) _buildVerticalDivider(),
-              if (isExpanded) _buildHomeBtn(),
-              if (!isExpanded) _buildSearchButton(),
-              if (!isExpanded) _buildMessageButton(),
-              if (isExpanded && (isMemoryVisible || isChatVisible))
-                _buildExpandedSection(textTheme),
+              if (!navbarState.isExpanded) _buildLogo(),
+              if (!navbarState.isExpanded) _buildVerticalDivider(),
+              if (navbarState.isExpanded) _buildHomeBtn(),
+              if (!navbarState.isExpanded) _buildSearchButton(),
+              if (!navbarState.isExpanded) _buildMessageButton(),
+              if (navbarState.isExpanded) _buildExpandedSection(),
             ],
           ),
         ),
@@ -185,7 +156,6 @@ class _CustomNavBarState extends State<CustomNavBar> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       child: GestureDetector(
-        onTap: _navigateToCaptureScreen,
         child: Image.asset(
           AppImages.appLogo,
           height: 16.h,
@@ -208,7 +178,28 @@ class _CustomNavBarState extends State<CustomNavBar> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14.w),
       child: GestureDetector(
-        onTap: _navigateToCaptureScreen,
+        onTap: () async {
+          Provider.of<NavbarState>(context, listen: false).collapse();
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              transitionDuration: Duration(milliseconds: 500),
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  CapturePage(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                var fadeInAnimation = Tween(begin: 0.0, end: 1.0).animate(
+                  CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                );
+
+                return FadeTransition(
+                  opacity: fadeInAnimation,
+                  child: child,
+                );
+              },
+            ),
+          );
+        },
         child: Image.asset(
           AppImages.home,
           width: 24.h,
@@ -234,66 +225,50 @@ class _CustomNavBarState extends State<CustomNavBar> {
       child: CustomIconButton(
         iconPath: AppImages.message,
         size: 24.h,
-        onPressed: _navigateToChatScreen,
+        onPressed: toggleMessageVisibility,
       ),
     );
   }
 
-  Widget _buildExpandedSection(TextTheme textTheme) {
+  Widget _buildExpandedSection() {
+    final navbarState = Provider.of<NavbarState>(context);
+
     return Expanded(
       child: Container(
-        padding: EdgeInsets.only(left: 02, right: 05),
-        height: 60.h,
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: br10,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: TextField(
-                style: TextStyle(fontSize: 14, height: 1.2),
-                textAlign: TextAlign.start,
-                textAlignVertical: TextAlignVertical.center,
-                maxLines: 3,
-                minLines: 1,
-                controller: isChatVisible
+                focusNode: navbarState.isChatVisible
+                    ? chatTextFieldFocusNode
+                    : searchTextFieldFocusNode,
+                controller: navbarState.isChatVisible
                     ? _messageController
-                    : (isMemoryVisible ? _searchController : null),
+                    : (navbarState.isMemoryVisible ? _searchController : null),
                 decoration: InputDecoration(
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  isDense: true,
-                  hintText: isChatVisible
-                      ? 'Ask Capsaul anything...'
-                      : 'Search for memories...',
-                  hintStyle: textTheme.bodyMedium
-                      ?.copyWith(color: AppColors.greyLight),
+                  hintStyle: TextStyle(fontSize: 14),
+                  hintText: navbarState.isChatVisible
+                      ? widget.hintText ?? 'Type a message...'
+                      : (navbarState.isMemoryVisible
+                          ? 'Search memories...'
+                          : ''),
                   border: InputBorder.none,
                 ),
               ),
             ),
-            widget.isUserMessageSent
-                ? TypingIndicator(dotWidth: 6, dotHeight: 6)
-                : ClipRRect(
-                    borderRadius: br8,
-                    child: Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.rectangle, color: AppColors.white),
-                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
-                      child: CustomIconButton(
-                        size: 24.h,
-                        iconPath: AppImages.send,
-                        onPressed: isChatVisible
-                            ? _handleSendMessage
-                            : () => _handleSearchMessage(
-                                  _searchController.text.trim(),
-                                ),
-                      ),
-                    ),
-                  ),
+            if (navbarState.isChatVisible)
+              InkWell(
+                  onTap: _handleSendMessage,
+                  child: Icon(
+                    Icons.send_rounded,
+                    color: AppColors.purpleDark,
+                  ))
           ],
         ),
       ),
@@ -304,6 +279,9 @@ class _CustomNavBarState extends State<CustomNavBar> {
   void dispose() {
     _messageController.dispose();
     _searchController.dispose();
+    chatTextFieldFocusNode.dispose();
+    searchTextFieldFocusNode.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 }

@@ -71,7 +71,7 @@ class CapturePageState extends State<CapturePage>
   List<bool> dismissedList = [];
   BTDeviceStruct? btDevice;
   bool _hasTranscripts = false;
-    FocusNode memoriesTextFieldFocusNode = FocusNode(canRequestFocus: true);
+  FocusNode memoriesTextFieldFocusNode = FocusNode(canRequestFocus: true);
   static const defaultQuietSecondsForMemoryCreation = 60;
 
   StreamSubscription? _bleBytesStream;
@@ -130,135 +130,6 @@ class CapturePageState extends State<CapturePage>
     photos = [];
     conversationId = const Uuid().v4();
   }
-
-  // Future<void> initiateWebsocket(
-  //     [BleAudioCodec? audioCodec, int? sampleRate]) async {
-  //   BleAudioCodec codec = audioCodec ??
-  //       (btDevice?.id == null
-  //           ? BleAudioCodec.pcm8
-  //           : await getAudioCodec(btDevice!.id));
-  //   await initWebSocket(
-  //     codec: codec,
-  //     sampleRate: sampleRate,
-  //     onConnectionSuccess: () {
-  //       if (segments.isNotEmpty) {
-  //         // means that it was a reconnection, so we need to reset
-  //         streamStartedAtSecond = null;
-  //         secondsMissedOnReconnect =
-  //             (DateTime.now().difference(firstStreamReceivedAt!).inSeconds);
-  //       }
-  //       if (mounted) {
-  //         setState(() {});
-  //       }
-  //     },
-  //     onConnectionFailed: (err) => setState(() {}),
-  //     onConnectionClosed: (int? closeCode, String? closeReason) {
-  //       // avmSnackBar(context,
-  //       //     "Connection was lost! Please check your internet connection.");
-  //     },
-  //     onConnectionError: (err) {
-  //       avmSnackBar(context,
-  //           "Connection was lost! Please check your internet connection.");
-  //     },
-  //     // onMessageReceived: (List<TranscriptSegment> newSegments) async {
-  //     //   if (newSegments.isEmpty) return;
-
-  //     //   if (newSegments.isNotEmpty) {
-  //     //     debugPrint('newSegments:==> ${newSegments.last}');
-
-  //     //     audioStorage?.removeFramesRange(
-  //     //         fromSecond: 0, toSecond: newSegments[0].start.toInt());
-
-  //     //     firstStreamReceivedAt = DateTime.now();
-
-  //     //     setState(() {
-  //     //       segments.addAll(newSegments);
-  //     //       dismissedList = List.generate(segments.length, (index) => false);
-  //     //     });
-  //     //   }
-
-  //     //   streamStartedAtSecond ??= newSegments[0].start;
-
-  //     //   TranscriptSegment.combineSegments(
-  //     //     segments,
-  //     //     newSegments,
-  //     //     toRemoveSeconds: streamStartedAtSecond ?? 0,
-  //     //     toAddSeconds: secondsMissedOnReconnect ?? 0,
-  //     //   );
-  //     //   triggerTranscriptSegmentReceivedEvents(newSegments, conversationId,
-  //     //       sendMessageToChat: sendMessageToChat);
-  //     //   SharedPreferencesUtil().transcriptSegments = segments;
-  //     //   setHasTranscripts(true);
-  //     //   print("HAS TRANSCRIPTS WHEN INPUT IS RECEIVED ===>: $_hasTranscripts");
-  //     //   _memoryCreationTimer?.cancel();
-
-  //     //   bool notificationPluginValue = await getNotificationPluginValue();
-  //     //   if (notificationPluginValue) {
-  //     //     _memoryCreationTimer =
-  //     //         Timer(Duration(seconds: 10), () => _pluginNotification());
-  //     //   } else {
-  //     //     _memoryCreationTimer = Timer(
-  //     //       Duration(seconds: 60),
-  //     //       () => _createMemory(),
-  //     //     );
-  //     //   }
-
-  //     //   currentTranscriptStartedAt ??= DateTime.now();
-  //     //   currentTranscriptFinishedAt = DateTime.now();
-  //     //   if (_scrollController.hasClients) {
-  //     //     _scrollController.animateTo(
-  //     //       _scrollController.position.maxScrollExtent,
-  //     //       duration: const Duration(milliseconds: 100),
-  //     //       curve: Curves.easeOut,
-  //     //     );
-  //     //   }
-  //     //   if (mounted) {
-  //     //     setState(() {});
-  //     //   }
-  //     // },
-
-  //     onMessageReceived: (List<TranscriptSegment> newSegments) {
-  //       debugPrint("====> Message Received");
-  //       if (newSegments.isEmpty) return;
-
-  //       if (segments.isEmpty) {
-  //         debugPrint('newSegments: ${newSegments.last}');
-  //         // small bug -> when memory A creates, and memory B starts, memory B will clean a lot more seconds than available,
-  //         //  losing from the audio the first part of the recording. All other parts are fine.
-  //         audioStorage?.removeFramesRange(
-  //             fromSecond: 0, toSecond: newSegments[0].start.toInt());
-  //         firstStreamReceivedAt = DateTime.now();
-  //       }
-  //       streamStartedAtSecond ??= newSegments[0].start;
-
-  //       TranscriptSegment.combineSegments(
-  //         segments,
-  //         newSegments,
-  //         toRemoveSeconds: streamStartedAtSecond ?? 0,
-  //         toAddSeconds: secondsMissedOnReconnect ?? 0,
-  //       );
-  //       triggerTranscriptSegmentReceivedEvents(newSegments, conversationId,
-  //           sendMessageToChat: sendMessageToChat);
-  //       SharedPreferencesUtil().transcriptSegments = segments;
-  //       setHasTranscripts(true);
-  //       debugPrint('Memory creation timer restarted');
-  //       _memoryCreationTimer?.cancel();
-  //       _memoryCreationTimer = Timer(
-  //           const Duration(seconds: quietSecondsForMemoryCreation),
-  //           () => _createMemory());
-  //       currentTranscriptStartedAt ??= DateTime.now();
-  //       currentTranscriptFinishedAt = DateTime.now();
-  //       if (_scrollController.hasClients) {
-  //         _scrollController.animateTo(
-  //           _scrollController.position.maxScrollExtent,
-  //           duration: const Duration(milliseconds: 100),
-  //           curve: Curves.easeOut,
-  //         );
-  //       }
-  //       setState(() {});
-  //     },
-  //   );
-  // }
 
   Future<void> initiateWebsocket(
       [BleAudioCodec? audioCodec, int? sampleRate]) async {
@@ -549,7 +420,6 @@ class CapturePageState extends State<CapturePage>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     super.build(context);
     return CustomScaffold(
       titleSpacing: 10.0,

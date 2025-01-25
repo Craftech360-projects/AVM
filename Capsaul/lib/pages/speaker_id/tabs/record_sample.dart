@@ -42,12 +42,12 @@ class _RecordSampleTabState extends State<RecordSampleTab>
 
   @override
   void initState() {
+    super.initState();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     )..repeat(reverse: true);
     _animation = Tween<double>(begin: 1.1, end: 1.5).animate(_controller);
-    super.initState();
   }
 
   Future<void> startRecording() async {

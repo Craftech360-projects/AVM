@@ -79,10 +79,6 @@ class _DeviceInfo {
 }
 
 class _ConnectedDeviceState extends State<ConnectedDevice> {
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
