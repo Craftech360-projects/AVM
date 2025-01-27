@@ -27,6 +27,7 @@ class CustomScaffold extends StatefulWidget {
   final bool? showAppBar;
   final bool? centerTitle;
   final double? titleSpacing;
+  final VoidCallback? onBackBtnPressed;
 
   const CustomScaffold({
     super.key,
@@ -46,6 +47,7 @@ class CustomScaffold extends StatefulWidget {
     this.showAppBar = true,
     this.centerTitle,
     this.titleSpacing,
+    this.onBackBtnPressed,
   });
 
   @override
@@ -95,7 +97,12 @@ class CustomScaffoldState extends State<CustomScaffold> {
                       alignment: Alignment.topLeft,
                       visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                       padding: EdgeInsets.zero,
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        if (widget.onBackBtnPressed != null) {
+                          widget.onBackBtnPressed!();
+                        }
+                      },
                       icon: const Icon(Icons.arrow_back_ios_new_rounded))
                   : null,
               title: widget.title,

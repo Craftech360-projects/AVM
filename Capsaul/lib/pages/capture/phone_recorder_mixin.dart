@@ -246,11 +246,12 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
   }
 
   @override
-  void dispose() async {
+  void dispose() {
     backgroundTranscriptTimer?.cancel();
     timer?.cancel();
-    await record.dispose();
-    super.dispose();
+    record.dispose().then((_) {
+      super.dispose();
+    });
   }
 
   Future iosBgTranscribing(Duration interval, bool shouldTranscribe,

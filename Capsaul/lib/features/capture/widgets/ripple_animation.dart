@@ -53,12 +53,6 @@
 //   }
 
 //   @override
-//   void dispose() {
-//     _controller?.dispose();
-//     super.dispose();
-//   }
-
-//   @override
 //   Widget build(BuildContext context) => CustomPaint(
 //         painter: CirclePainter(
 //           _controller,

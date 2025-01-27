@@ -12,6 +12,7 @@ import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
 import 'package:capsaul/core/widgets/typing_indicator.dart';
+import 'package:capsaul/features/capture/presentation/capture_page.dart';
 import 'package:capsaul/features/chat/bloc/chat_bloc.dart';
 import 'package:capsaul/features/chat/widgets/ai_message.dart';
 import 'package:capsaul/features/chat/widgets/user_message.dart';
@@ -132,9 +133,6 @@ class _ChatScreenState extends State<ChatScreen>
     _dailySummaryTimer.cancel();
     _animationController.dispose();
     _scrollController.dispose();
-
-    // Collapse navbar when ChatScreen is closed
-    Provider.of<NavbarState>(context, listen: false).collapse();
     super.dispose();
   }
 
@@ -155,6 +153,11 @@ class _ChatScreenState extends State<ChatScreen>
     final theme = Theme.of(context);
 
     return CustomScaffold(
+      onBackBtnPressed: () {
+        Provider.of<NavbarState>(context, listen: false).collapse();
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const CapturePage()));
+      },
       centerTitle: false,
       resizeToAvoidBottomInset: true,
       showBatteryLevel: true,

@@ -38,10 +38,10 @@ Future streamApiResponse(
       callback('Incorrect API Key provided.');
       return;
     } else if (response.statusCode == 429) {
-      callback('You have reached the API limit.');
+      callback('Too many requests. Please try again later.');
       return;
     } else if (response.statusCode != 200) {
-      callback('Unknown Error with LLaMA API.');
+      callback('An error occurred. Please try again.');
       return;
     }
 
