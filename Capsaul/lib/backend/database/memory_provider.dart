@@ -36,8 +36,6 @@ class MemoryProvider {
 
   List<Memory> getMemoriesOrdered({bool includeDiscarded = false}) {
     if (includeDiscarded) {
-      // created at descending
-      // The method retrieves all Memory objects from the store, regardless of whether they are discarded or not.
       return _box.query().order(Memory_.createdAt).build().find();
     } else {
       return _box
@@ -80,8 +78,7 @@ class MemoryProvider {
     }
   }
 
-  // bool deleteMemory(Memory memory) => _box.remove(memory.id);
-
+  // DeleteMemory
   Future<bool> deleteMemory(Memory memory) async {
     try {
       return _box.remove(memory.id);

@@ -7,7 +7,6 @@ import 'package:capsaul/objectbox.g.dart';
 class MessageProvider {
   static final MessageProvider _instance = MessageProvider._internal();
   static final Box<Message> _box = ObjectBoxUtil().box!.store.box<Message>();
-
   factory MessageProvider() {
     return _instance;
   }

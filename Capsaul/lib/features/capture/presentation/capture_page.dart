@@ -307,7 +307,9 @@ class CapturePageState extends State<CapturePage>
     if (!memory.discarded) {
       executeBackupWithUid();
       if (mounted) {
-        context.read<MemoryBloc>().add(DisplayedMemory(isNonDiscarded: !memory.discarded));
+        context
+            .read<MemoryBloc>()
+            .add(DisplayedMemory(isNonDiscarded: !memory.discarded));
       }
 
       if (!memory.discarded &&
@@ -344,6 +346,7 @@ class CapturePageState extends State<CapturePage>
       conversationId = const Uuid().v4();
     }
   }
+
   setHasTranscripts(bool hasTranscripts) {
     if (_hasTranscripts == hasTranscripts) return;
     if (mounted) {
@@ -530,8 +533,8 @@ class CapturePageState extends State<CapturePage>
           hasSeenTutorial: true,
         ),
         Positioned(
-          bottom: 0,
-          right: 10,
+          bottom: 10,
+          right: 0,
           child: Align(
             child: Column(
               children: [

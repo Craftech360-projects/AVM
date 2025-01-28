@@ -146,7 +146,8 @@ Respond in a JSON format with the following structure:
         parsedResponse['reminders'].isNotEmpty) {
       for (var reminder in parsedResponse['reminders']) {
         String reminderText = reminder['reminder'];
-        String description = reminder['description'] ?? 'No description provided';
+        String description =
+            reminder['description'] ?? 'No description provided';
         String? timeString = reminder['time'];
         DateTime? startsAt;
 

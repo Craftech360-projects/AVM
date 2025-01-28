@@ -1,6 +1,7 @@
 class AppImages {
   static const String basePath = "assets/images/";
   static const String format = ".png";
+  static const String formatJPG = ".jpg";
 
   static const String appLogo = "${basePath}avm_text$format";
   static const String appLogoW = "${basePath}avm_text_white$format";
@@ -14,4 +15,5 @@ class AppImages {
   static const String search = "${basePath}search$format";
   static const String batteryIcon = "${basePath}battery_icon$format";
   static const String botIcon = "${basePath}bot_icon$format";
+  static const String neuralLink = "${basePath}neural_link$formatJPG";
 }

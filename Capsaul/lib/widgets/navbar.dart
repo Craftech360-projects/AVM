@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
+import 'package:capsaul/core/widgets/typing_indicator.dart';
 import 'package:capsaul/features/chat/presentation/chat_screen.dart';
 import 'package:capsaul/main.dart';
 import 'package:capsaul/src/common_widget/icon_button.dart';
@@ -115,8 +116,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
     final navbarState = Provider.of<NavbarState>(context);
 
     return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: MediaQuery.of(context).size.height * 0.010,
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).size.height * 0.020,
       ),
       child: GestureDetector(
         child: AnimatedContainer(
@@ -210,7 +211,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6),
+        padding: EdgeInsets.only(left: 4),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: br10,
@@ -220,6 +221,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
           children: [
             Expanded(
               child: TextField(
+                style: TextStyle(fontSize: 14, letterSpacing: 0),
                 focusNode: navbarState.isChatVisible
                     ? chatTextFieldFocusNode
                     : searchTextFieldFocusNode,
@@ -238,14 +240,23 @@ class _CustomNavBarState extends State<CustomNavBar> {
               ),
             ),
             navbarState.isChatVisible
-                ? InkWell(
-                    onTap:
-                        navbarState.isChatVisible ? _handleSendMessage : null,
-                    child: Icon(
-                      Icons.send_rounded,
-                      size: 28.w,
-                      color: AppColors.purpleDark,
-                    ),
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    child: widget.isUserMessageSent
+                        ? TypingIndicator(
+                            dotHeight: 6,
+                            dotWidth: 6,
+                          )
+                        : InkWell(
+                            onTap: navbarState.isChatVisible
+                                ? _handleSendMessage
+                                : null,
+                            child: Icon(
+                              Icons.send_rounded,
+                              size: 32.w,
+                              color: AppColors.purpleDark,
+                            ),
+                          ),
                   )
                 : (navbarState.isMemoryVisible
                     ? Icon(

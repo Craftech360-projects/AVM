@@ -126,7 +126,7 @@ class _GreetingCardState extends State<GreetingCard> {
                                     'Hi! ${SharedPreferencesUtil().givenName}',
                                     style: const TextStyle(
                                       fontSize: 19,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w600,
                                       color: AppColors.white,
                                     ),
                                   ),

@@ -7,6 +7,7 @@ import 'package:capsaul/features/wizard/pages/signin_page.dart';
 import 'package:capsaul/pages/home/custom_scaffold.dart';
 import 'package:capsaul/pages/settings/widgets/backup_btn.dart';
 import 'package:capsaul/pages/settings/widgets/change_name_widget.dart';
+import 'package:capsaul/pages/settings/widgets/neural_screen.dart';
 import 'package:capsaul/pages/settings/widgets/restore_btn.dart';
 import 'package:capsaul/widgets/custom_dialog_box.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -83,6 +84,27 @@ class _ProfilePageState extends State<ProfilePage> {
           color: AppColors.commonPink,
         ),
       ),
+      onTap: () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            transitionDuration: Duration(milliseconds: 500),
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                NeuralScreen(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var zoomInAnimation = Tween(begin: 0.9, end: 1.0).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeOut),
+              );
+
+              return ScaleTransition(
+                scale: zoomInAnimation,
+                child: child,
+              );
+            },
+          ),
+        );
+      },
     );
   }
 

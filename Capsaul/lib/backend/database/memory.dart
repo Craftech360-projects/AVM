@@ -171,6 +171,15 @@ class Memory {
     };
   }
 
+  static Memory empty() {
+    return Memory(
+      DateTime.now(),
+      '',
+      null,
+      false,
+    );
+  }
+
   @override
   String toString() {
     return 'Memory(id: $id, createdAt: $createdAt, startedAt: $startedAt, finishedAt: $finishedAt, transcript: $transcript, memoryImg: $memoryImg, recordingFilePath: $recordingFilePath, discarded: $discarded)';
@@ -270,7 +279,7 @@ class Structured {
     return 'Structured(id: $id, title: $title, overview: $overview, emoji: $emoji, category: $category, brainstormingQuestions: $brainstormingQuestions)';
   }
 
-   toJson() {
+  toJson() {
     return {
       'title': title,
       'overview': overview,

@@ -157,7 +157,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  stops: [0.3, 1.0],
+                  stops: [0.2, 1.0],
                   colors: [AppColors.white, AppColors.commonPink],
                 ),
               )
