@@ -212,8 +212,7 @@ class CapturePageState extends State<CapturePage>
     );
   }
 
-//with local sync
-
+  int elapsedSeconds = 0;
   Future<void> initiateBytesStreamingProcessing() async {
     debugPrint("====> Byte Streaming Initiated");
     if (btDevice == null) return;
@@ -229,32 +228,46 @@ class CapturePageState extends State<CapturePage>
         // Store frame packet for Wav processing
         audioStorage!.storeFramePacket(value);
 
-        // Remove first 3 bytes (if required by your processing logic)
-        value.removeRange(0, 3);
-
         // Check if Wal synchronization is supported
-        var checkWalSupported = codec == BleAudioCodec.opus &&
+        bool isWalSupported = codec == BleAudioCodec.opus &&
             SharedPreferencesUtil().localSyncEnabled;
 
-        if (checkWalSupported) {
-          // Add data to LocalWalSync buffer for periodic flush
-          _wal?.getSyncs().onByteStream(value);
-          // print("added value to local sync");
-        }
-
-        // Handle WebSocket connection
-        if (wsConnectionState == WebsocketConnectionStatus.connected) {
-          // Send data via WebSocket
-          websocketChannel?.sink.add(value);
-        } else {
-          // Debug output for offline case
-          debugPrint("WebSocket disconnected; audio packet: $value");
-        }
+        // Process the audio data
+        _processAudioData(value, isWalSupported);
       },
     );
   }
 
-  int elapsedSeconds = 0;
+  void _processAudioData(List<int> value, bool isWalSupported) {
+    // Remove the first 3 bytes (if required by your processing logic)
+    List<int> processedValue = value.sublist(3);
+
+    // Handle WebSocket connection
+    if (wsConnectionState == WebsocketConnectionStatus.connected) {
+      debugPrint("WebSocket connected; audio packet: $processedValue");
+
+      // Send data via WebSocket
+      try {
+        websocketChannel?.sink.add(processedValue);
+        debugPrint("Data sent via WebSocket.");
+      } catch (e) {
+        debugPrint("Error sending data via WebSocket: $e");
+      }
+
+      // Sync data locally if Wal is supported
+      if (isWalSupported) {
+        _wal?.getSyncs().onBytesSync(processedValue);
+      }
+    } else {
+      // Debug output for offline case
+      debugPrint("WebSocket disconnected; storing data locally.");
+
+      // Sync data locally if Wal is supported
+      if (isWalSupported) {
+        _wal?.getSyncs().onBytesSync(processedValue);
+      }
+    }
+  }
 
   Future<void> startOpenGlass() async {
     if (btDevice == null) return;
@@ -344,10 +357,6 @@ class CapturePageState extends State<CapturePage>
 
       if (!memory.discarded &&
           SharedPreferencesUtil().postMemoryNotificationIsChecked) {
-        // postMemoryCreationNotification(memory).then((r) {
-        //   debugPrint('Notification response: $r');
-        //   if (r.isEmpty) return;
-        //   sendMessageToChat(Message(DateTime.now(), r, 'ai'), memory);
         createNotification(
           notificationId: 2,
           title:
@@ -418,6 +427,7 @@ class CapturePageState extends State<CapturePage>
     // Initialize the WalService
     _wal = WalService();
     _wal?.start(); // Start the Wal service
+    // Periodically check for missing Wal seconds
     Timer.periodic(const Duration(seconds: 1), (timer) async {
       final syncs = _wal?.getSyncs();
       if (syncs != null) {
@@ -539,4 +549,25 @@ class CapturePageState extends State<CapturePage>
   //     ],
   //   );
   // }
+}
+
+class WalService {
+  final LocalWalSync localWalSync = LocalWalSync();
+
+  /// Starts the synchronization service.
+  void start() {
+    localWalSync.start();
+    debugPrint("WalService started.");
+  }
+
+  /// Stops the synchronization service.
+  Future<void> stop() async {
+    await localWalSync.stop();
+    debugPrint("WalService stopped.");
+  }
+
+  /// Provides access to the LocalWalSync instance.
+  LocalWalSync getSyncs() {
+    return localWalSync;
+  }
 }

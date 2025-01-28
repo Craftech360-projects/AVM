@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:capsoul/backend/database/transcript_segment.dart';
 import 'package:capsoul/backend/schema/plugin.dart';
 import 'package:capsoul/env/env.dart';
-
+import 'package:capsoul/utils/audio/wals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesUtil {
@@ -91,15 +91,15 @@ class SharedPreferencesUtil {
 
   //--------------------------------- Wals ------------------------------------//
 
-  // set wals(List<Wal> wals) {
-  //   final List<String> value = wals.map((e) => jsonEncode(e.toJson())).toList();
-  //   saveStringList('wals', value);
-  // }
+  set wals(List<Wal> wals) {
+    final List<String> value = wals.map((e) => jsonEncode(e.toJson())).toList();
+    saveStringList('wals', value);
+  }
 
-  // List<Wal> get wals {
-  //   final List<String> value = getStringList('wals') ?? [];
-  //   return Wal.fromJsonList(value.map((e) => jsonDecode(e)).toList());
-  // }
+  List<Wal> get wals {
+    final List<String> value = getStringList('wals') ?? [];
+    return Wal.fromJsonList(value.map((e) => jsonDecode(e)).toList());
+  }
 
   //--------------------------- Setters & Getters -----------------------------//
 

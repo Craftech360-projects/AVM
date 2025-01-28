@@ -1,125 +1,3 @@
-// import 'dart:async';
-
-// import 'package:flutter/material.dart';
-
-// class LocalSyncWidget extends StatefulWidget {
-//   final bool isWalSupported;
-//   final bool transcriptServiceReady;
-//   final bool recordingDeviceReady;
-//   final int missingWalSeconds;
-
-//   const LocalSyncWidget({
-//     super.key,
-//     required this.isWalSupported,
-//     required this.transcriptServiceReady,
-//     required this.recordingDeviceReady,
-//     required this.missingWalSeconds,
-//   });
-
-//   @override
-//   State<LocalSyncWidget> createState() => _LocalSyncWidgetState();
-// }
-
-// enum LocalSyncStatus {
-//   disabled,
-//   inProgress,
-//   flush, // flushed to disk
-// }
-
-// class _LocalSyncWidgetState extends State<LocalSyncWidget> {
-//   LocalSyncStatus? _status;
-//   Timer? _missSecondsTimer;
-//   int _missSeconds = 0;
-
-//   @override
-//   void initState() {
-//     super.initState();
-
-//     _missSecondsTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-//       if (_status == LocalSyncStatus.inProgress ||
-//           _status == LocalSyncStatus.flush) {
-//         setState(() {
-//           _missSeconds++;
-//         });
-//       }
-//     });
-//   }
-
-//   @override
-//   void dispose() {
-//     _missSecondsTimer?.cancel();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // Determine sync status
-//     if (widget.missingWalSeconds >= 120) {
-//       _status = LocalSyncStatus.flush;
-//     } else if (!widget.isWalSupported) {
-//       _status = LocalSyncStatus.disabled;
-//     } else if (!widget.transcriptServiceReady && widget.recordingDeviceReady) {
-//       _status = LocalSyncStatus.inProgress;
-//     } else {
-//       _status = LocalSyncStatus.disabled;
-//     }
-
-//     if (_status == LocalSyncStatus.inProgress ||
-//         _status == LocalSyncStatus.flush) {
-//       _missSeconds = widget.missingWalSeconds;
-//     }
-
-//     // Build UI
-//     if (_status == LocalSyncStatus.inProgress) {
-//       return Container(
-//         decoration: BoxDecoration(
-//           color: Colors.grey.shade900,
-//           borderRadius: const BorderRadius.all(Radius.circular(12)),
-//         ),
-//         margin: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-//         padding: const EdgeInsets.all(16),
-//         child: Text(
-//           '$_missSeconds seconds of on-device conversations',
-//           style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16),
-//           textAlign: TextAlign.center,
-//         ),
-//       );
-//     } else if (_status == LocalSyncStatus.flush) {
-//       return GestureDetector(
-//         onTap: () {
-//           debugPrint("Flushing missing WALs...");
-//           // Add navigation to sync page if needed
-//         },
-//         child: Container(
-//           decoration: BoxDecoration(
-//             color: Colors.grey.shade900,
-//             borderRadius: const BorderRadius.all(Radius.circular(12)),
-//           ),
-//           padding: const EdgeInsets.all(16),
-//           margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               const Text(
-//                 'Stay in Sync',
-//                 style: TextStyle(color: Colors.white, fontSize: 16),
-//               ),
-//               Text(
-//                 '${widget.missingWalSeconds} seconds available',
-//                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-//                       decoration: TextDecoration.underline,
-//                     ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       );
-//     }
-
-//     return const SizedBox.shrink();
-//   }
-// }
-
 import 'dart:io';
 
 import 'package:capsoul/utils/audio/deepgram.dart';
@@ -198,9 +76,9 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
 
     await transcribeWithDeepgram(wal.path);
 
-    setState(() {
-      _syncStatus[id] = 1.0; // Mark as fully synced
-    });
+    // setState(() {
+    //   _syncStatus[id] = 1.0; // Mark as fully synced
+    // });
 
     // Simulate removing the file after successful sync
     //  await wal.delete();

@@ -1,142 +1,3 @@
-// import 'dart:async';
-// import 'dart:io';
-
-// import 'package:flutter/foundation.dart';
-// import 'package:path_provider/path_provider.dart';
-
-// const chunkSizeInSeconds = 60; // Duration of each chunk in seconds
-// const flushIntervalInSeconds = 90; // Interval to flush data to disk
-
-// /// Represents an audio data chunk with metadata for synchronization and storage.
-// class Wal {
-//   final int timerStart; // Start time in seconds
-//   final String codec; // Audio codec (e.g., opus)
-//   final int sampleRate; // Audio sample rate
-//   final int channel; // Audio channel count
-//   final String device; // Device identifier
-
-//   List<List<int>> data; // Buffered audio frames
-//   String? filePath; // Path to the stored file
-
-//   Wal({
-//     required this.timerStart,
-//     required this.codec,
-//     required this.sampleRate,
-//     required this.channel,
-//     required this.device,
-//     this.data = const [],
-//     this.filePath,
-//   });
-
-//   /// Generates a unique filename for the Wal object.
-//   String getFileName() {
-//     return "audio_${device}_${codec}_${sampleRate}_${channel}_$timerStart.bin";
-//   }
-// }
-
-// /// Manages audio data synchronization and storage.
-// class LocalWalSync {
-//   final List<Wal> _wals = []; // List of Wal objects
-//   final List<List<int>> _frames = []; // Buffer for incoming audio frames
-//   Timer? _chunkingTimer; // Timer for periodic chunking
-//   Timer? _flushingTimer; // Timer for periodic flushing
-
-//   /// Starts the synchronization service with periodic chunking and flushing.
-//   void start() {
-//     _chunkingTimer = Timer.periodic(
-//       const Duration(seconds: chunkSizeInSeconds),
-//       (_) => _chunk(),
-//     );
-
-//     _flushingTimer = Timer.periodic(
-//       const Duration(seconds: flushIntervalInSeconds),
-//       (_) => _flush(),
-//     );
-
-//     debugPrint("LocalWalSync started.");
-//   }
-
-//   /// Stops all timers and processes remaining data.
-//   Future<void> stop() async {
-//     _chunkingTimer?.cancel();
-//     _flushingTimer?.cancel();
-
-//     await _chunk();
-//     await _flush();
-//     _frames.clear();
-//     _wals.clear();
-
-//     debugPrint("LocalWalSync stopped.");
-//   }
-
-//   /// Buffers incoming audio data.
-//   void onByteStream(List<int> value) {
-//     if (value.isEmpty) return;
-//     _frames.add(value);
-//   }
-
-//   /// Converts buffered frames into `Wal` chunks.
-//   Future<void> _chunk() async {
-//     if (_frames.isEmpty) {
-//       debugPrint("No frames to process.");
-//       return;
-//     }
-
-//     const framesPerSecond = 100; // Assuming 100 frames per second
-//     final chunkSize = framesPerSecond * chunkSizeInSeconds;
-
-//     while (_frames.length >= chunkSize) {
-//       // Extract a chunk of frames
-//       final chunk = _frames.sublist(0, chunkSize);
-//       _frames.removeRange(0, chunkSize);
-
-//       // Create a new Wal object
-//       final timerStart = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-//       final wal = Wal(
-//         timerStart: timerStart,
-//         codec: "opus",
-//         sampleRate: 16000,
-//         channel: 1,
-//         device: "phone",
-//         data: chunk,
-//       );
-
-//       _wals.add(wal);
-//       debugPrint("Chunk created: ${wal.getFileName()}");
-//     }
-//   }
-
-//   /// Writes all buffered Wal objects to disk.
-//   Future<void> _flush() async {
-//     if (_wals.isEmpty) {
-//       debugPrint("No Wals to flush.");
-//       return;
-//     }
-
-//     final directory = await getApplicationDocumentsDirectory();
-
-//     for (var wal in _wals) {
-//       if (wal.filePath != null) continue; // Skip already flushed Wals
-
-//       final filePath = '${directory.path}/${wal.getFileName()}';
-//       final file = File(filePath);
-
-//       // Flatten and write the chunked data to the file
-//       final flattenedData = wal.data.expand((frame) => frame).toList();
-//       try {
-//         await file.writeAsBytes(flattenedData);
-//         wal.filePath = filePath;
-//         debugPrint("Flushed to disk: $filePath");
-//       } catch (e) {
-//         debugPrint("Error writing to disk: $e");
-//       }
-//     }
-
-//     // Remove flushed Wals
-//     _wals.removeWhere((wal) => wal.filePath != null);
-//   }
-// }
-
 import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
@@ -147,175 +8,105 @@ import 'package:path_provider/path_provider.dart';
 const chunkSizeInSeconds = 60; // Duration of each chunk in seconds
 const flushIntervalInSeconds = 90; // Interval to flush data to disk
 
-/// Represents an audio data chunk with metadata for synchronization and storage.
-class Wal {
-  final int timerStart; // Start time in seconds
-  final String codec; // Audio codec (e.g., opus)
-  final int sampleRate; // Audio sample rate
-  final int channel; // Audio channel count
-  final String device; // Device identifier
-
-  List<List<int>> data; // Buffered audio frames
-  String? filePath; // Path to the stored file
-
-  Wal({
-    required this.timerStart,
-    required this.codec,
-    required this.sampleRate,
-    required this.channel,
-    required this.device,
-    this.data = const [],
-    this.filePath,
-  });
-
-  /// Generates a unique filename for the Wal object.
-  String getFileName() {
-    return "audio_${device}_${codec}_${sampleRate}_${channel}_$timerStart.bin";
-  }
+enum WalServiceStatus {
+  init,
+  ready,
+  stop,
 }
 
-/// Manages audio data synchronization and storage.
-// class LocalWalSync {
-//   final List<Wal> _wals = []; // List of Wal objects
-//   final List<List<int>> _frames = []; // Buffer for incoming audio frames
-//   final HashSet<int> _syncFrameSeq =
-//       HashSet<int>(); // Tracks processed frame sequences
+enum WalStatus {
+  inProgress,
+  miss,
+  synced,
+  corrupted,
+}
 
-//   Timer? _chunkingTimer; // Timer for periodic chunking
-//   Timer? _flushingTimer; // Timer for periodic flushing
+enum WalStorage {
+  mem,
+  disk,
+  sdcard,
+}
 
-//   /// Starts the synchronization service with delayed synchronization logic.
-//   void start() {
-//     _chunkingTimer = Timer.periodic(
-//       const Duration(seconds: chunkSizeInSeconds),
-//       (_) => _chunk(),
-//     );
+class Wal {
+  int timerStart; // in seconds
+  String codec;
+  int channel;
+  int sampleRate;
+  int seconds;
+  String device;
 
-//     _flushingTimer = Timer.periodic(
-//       const Duration(seconds: flushIntervalInSeconds),
-//       (_) => _flush(),
-//     );
+  WalStatus status;
+  WalStorage storage;
 
-//     debugPrint("LocalWalSync started.");
-//   }
+  String? filePath;
+  List<List<int>> data = [];
+  int storageOffset = 0;
+  int storageTotalBytes = 0;
+  int fileNum = 1;
 
-//   /// Stops all timers and processes remaining data.
-//   Future<void> stop() async {
-//     _chunkingTimer?.cancel();
-//     _flushingTimer?.cancel();
+  bool isSyncing = false;
+  DateTime? syncStartedAt;
+  int? syncEtaSeconds;
 
-//     await _chunk();
-//     await _flush();
-//     _frames.clear();
-//     _wals.clear();
+  String get id => '${device}_$timerStart';
 
-//     debugPrint("LocalWalSync stopped.");
-//   }
+  Wal(
+      {required this.timerStart,
+      this.codec = "opus",
+      this.sampleRate = 16000,
+      this.channel = 1,
+      this.status = WalStatus.inProgress,
+      this.storage = WalStorage.mem,
+      this.filePath,
+      this.seconds = chunkSizeInSeconds,
+      this.device = "phone",
+      this.storageOffset = 0,
+      this.storageTotalBytes = 0,
+      this.fileNum = 1,
+      this.data = const []});
 
-//   /// Buffers incoming audio data.
-//   void onByteStream(List<int> value) {
-//     if (value.isEmpty) return;
-//     _frames.add(value);
-//   }
+  factory Wal.fromJson(Map<String, dynamic> json) {
+    return Wal(
+      timerStart: json['timer_start'],
+      codec: json['codec'],
+      channel: json['channel'],
+      sampleRate: json['sample_rate'],
+      status:
+          WalStatus.values.asNameMap()[json['status']] ?? WalStatus.inProgress,
+      storage: WalStorage.values.asNameMap()[json['storage']] ?? WalStorage.mem,
+      filePath: json['file_path'],
+      seconds: json['seconds'] ?? chunkSizeInSeconds,
+      device: json['device'] ?? "phone",
+      storageOffset: json['storage_offset'] ?? 0,
+      storageTotalBytes: json['storage_total_bytes'] ?? 0,
+      fileNum: json['file_num'] ?? 1,
+    );
+  }
 
-//   /// Converts buffered frames into `Wal` chunks with delayed synchronization logic.
-//   Future<void> _chunk() async {
-//     if (_frames.isEmpty) {
-//       debugPrint("Frames are empty");
-//       return;
-//     }
+  Map<String, dynamic> toJson() {
+    return {
+      'timer_start': timerStart,
+      'codec': codec,
+      'channel': channel,
+      'sample_rate': sampleRate,
+      'status': status.name,
+      'storage': storage.name,
+      'file_path': filePath,
+      'seconds': seconds,
+      'device': device,
+      'storage_offset': storageOffset,
+      'storage_total_bytes': storageTotalBytes,
+      'file_num': fileNum,
+    };
+  }
 
-//     const framesPerSecond = 100; // Assuming 100 frames per second
-//     const lossesThreshold = 10 * framesPerSecond; // 10s of allowed frame losses
-//     const newFrameSyncDelaySeconds = 15; // Wait 15s for new frame synced
-//     final chunkSize = framesPerSecond * chunkSizeInSeconds;
+  static List<Wal> fromJsonList(List<dynamic> jsonList) =>
+      jsonList.map((e) => Wal.fromJson(e)).toList();
 
-//     var timerEnd = DateTime.now().millisecondsSinceEpoch ~/ 1000 -
-//         newFrameSyncDelaySeconds;
-//     var pivot = _frames.length - newFrameSyncDelaySeconds * framesPerSecond;
-
-//     if (pivot <= 0) {
-//       debugPrint("Not enough frames for delayed synchronization.");
-//       return;
-//     }
-
-//     // Scan backward to process chunks
-//     var high = pivot;
-//     while (high > 0) {
-//       var low = high - chunkSize;
-//       if (low < 0) low = 0;
-
-//       var synced = true;
-//       var losses = 0;
-//       var chunk = _frames.sublist(low, high);
-
-//       for (var frame in chunk) {
-//         var head = frame.sublist(0, 3);
-//         var seq =
-//             Uint8List.fromList(head..add(0)).buffer.asByteData().getInt32(0);
-
-//         if (!_syncFrameSeq.contains(seq)) {
-//           losses++;
-//           if (losses >= lossesThreshold) {
-//             synced = false;
-//             break;
-//           }
-//         }
-//       }
-
-//       var timerStart = timerEnd - (high - low) ~/ framesPerSecond;
-
-//       if (!synced) {
-//         debugPrint("Detected unsynced frames.");
-//         final wal = Wal(
-//           timerStart: timerStart,
-//           codec: "opus",
-//           sampleRate: 16000,
-//           channel: 1,
-//           device: "phone",
-//           data: chunk,
-//         );
-//         _wals.add(wal);
-//       }
-
-//       timerEnd -= chunkSizeInSeconds;
-//       high = low;
-//     }
-
-//     // Clean up processed frames
-//     _frames.removeRange(0, pivot);
-//   }
-
-//   /// Writes all buffered Wal objects to disk.
-//   Future<void> _flush() async {
-//     if (_wals.isEmpty) {
-//       debugPrint("No Wals to flush.");
-//       return;
-//     }
-
-//     final directory = await getApplicationDocumentsDirectory();
-
-//     for (var wal in _wals) {
-//       if (wal.filePath != null) continue; // Skip already flushed Wals
-
-//       final filePath = '${directory.path}/${wal.getFileName()}';
-//       final file = File(filePath);
-
-//       // Flatten and write the chunked data to the file
-//       final flattenedData = wal.data.expand((frame) => frame).toList();
-//       try {
-//         await file.writeAsBytes(flattenedData);
-//         wal.filePath = filePath;
-//         debugPrint("Flushed to disk: $filePath");
-//       } catch (e) {
-//         debugPrint("Error writing to disk: $e");
-//       }
-//     }
-
-//     // Remove flushed Wals
-//     _wals.removeWhere((wal) => wal.filePath != null);
-//   }
-// }
+  getFileName() {
+    return "audio_${device.replaceAll(RegExp(r'[^a-zA-Z0-9]'), "").toLowerCase()}_${codec}_${sampleRate}_${channel}_$timerStart.bin";
+  }
+}
 
 class LocalWalSync {
   final List<Wal> _wals = []; // List of Wal objects
@@ -343,14 +134,19 @@ class LocalWalSync {
   void start() {
     _chunkingTimer = Timer.periodic(
       const Duration(seconds: chunkSizeInSeconds),
-      (_) => _chunk(),
+      (_) {
+        debugPrint("Chunking timer triggered.");
+        _chunk();
+      },
     );
 
     _flushingTimer = Timer.periodic(
       const Duration(seconds: flushIntervalInSeconds),
-      (_) => _flush(),
+      (_) {
+        debugPrint("Flushing timer triggered.");
+        _flush();
+      },
     );
-
     debugPrint("LocalWalSync started.");
   }
 
@@ -371,74 +167,64 @@ class LocalWalSync {
   void onByteStream(List<int> value) {
     if (value.isEmpty) return;
     _frames.add(value);
+    debugPrint("Accumulated frames: ${_frames.length}");
   }
 
-  /// Converts buffered frames into `Wal` chunks with delayed synchronization logic.
+  void onBytesSync(List<int> value) {
+    var head = value.sublist(0, 3);
+    print("Syncing frame head: $head");
+    var seq = Uint8List.fromList(head..add(0)).buffer.asByteData().getInt32(0);
+    debugPrint("Syncing frame: $seq");
+    _syncFrameSeq.add(seq);
+  }
+
   Future<void> _chunk() async {
     if (_frames.isEmpty) {
-      debugPrint("Frames are empty");
+      debugPrint("No frames to process.");
       return;
     }
 
     const framesPerSecond = 100; // Assuming 100 frames per second
-    const lossesThreshold = 10 * framesPerSecond; // 10s of allowed frame losses
-    const newFrameSyncDelaySeconds = 15; // Wait 15s for new frame synced
-    final chunkSize = framesPerSecond * chunkSizeInSeconds;
+    const chunkSize =
+        framesPerSecond * chunkSizeInSeconds; // Number of frames per chunk
 
-    var timerEnd = DateTime.now().millisecondsSinceEpoch ~/ 1000 -
-        newFrameSyncDelaySeconds;
-    var pivot = _frames.length - newFrameSyncDelaySeconds * framesPerSecond;
+    debugPrint(
+        "Frames accumulated: ${_frames.length}, Chunk size required: $chunkSize");
 
-    if (pivot <= 0) {
-      debugPrint("Not enough frames for delayed synchronization.");
-      return;
-    }
+    var timerEnd = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-    // Scan backward to process chunks
-    var high = pivot;
+    var high = _frames.length;
     while (high > 0) {
       var low = high - chunkSize;
       if (low < 0) low = 0;
 
-      var synced = true;
-      var losses = 0;
       var chunk = _frames.sublist(low, high);
 
-      for (var frame in chunk) {
-        var head = frame.sublist(0, 3);
-        var seq =
-            Uint8List.fromList(head..add(0)).buffer.asByteData().getInt32(0);
+      // Check if the chunk is being created
+      debugPrint(
+          "Creating chunk of size ${chunk.length}, High: $high, Low: $low");
 
-        if (!_syncFrameSeq.contains(seq)) {
-          losses++;
-          if (losses >= lossesThreshold) {
-            synced = false;
-            break;
-          }
-        }
-      }
+      // Add the chunk to the _wals list
+      _wals.add(Wal(
+        timerStart: timerEnd - (high - low) ~/ framesPerSecond,
+        data: chunk,
+      ));
 
-      var timerStart = timerEnd - (high - low) ~/ framesPerSecond;
+      debugPrint("Added Wal to _wals: ${_wals.length}");
 
-      if (!synced) {
-        debugPrint("Detected unsynced frames.");
-        final wal = Wal(
-          timerStart: timerStart,
-          codec: "opus",
-          sampleRate: 16000,
-          channel: 1,
-          device: "phone",
-          data: chunk,
-        );
-        _wals.add(wal);
-      }
+      // Safely remove processed frames from the _frames list, ensuring we don't attempt to remove more frames than available
+      var framesToRemove = chunk.length;
+      _frames.removeRange(0, framesToRemove);
 
+      // Update the timerEnd for the next chunk
       timerEnd -= chunkSizeInSeconds;
+
+      // Set high to the low value to process the next chunk
       high = low;
     }
 
-    // Clean up processed frames
-    _frames.removeRange(0, pivot);
+    // Debugging: Print remaining frames
+    debugPrint("Remaining frames: ${_frames.length}");
   }
 
   /// Writes all buffered Wal objects to disk.
@@ -449,47 +235,28 @@ class LocalWalSync {
     }
 
     final directory = await getApplicationDocumentsDirectory();
-
+    debugPrint("Flushing ${_wals.length} Wals to disk.");
     for (var wal in _wals) {
       if (wal.filePath != null) continue; // Skip already flushed Wals
 
       final filePath = '${directory.path}/${wal.getFileName()}';
       final file = File(filePath);
 
-      // Flatten and write the chunked data to the file
       final flattenedData = wal.data.expand((frame) => frame).toList();
       try {
         await file.writeAsBytes(flattenedData);
         wal.filePath = filePath;
-        debugPrint("Flushed to disk: $filePath");
+        debugPrint("Flushed Wal to disk: ${wal.id} at $filePath");
       } catch (e) {
-        debugPrint("Error writing to disk: $e");
+        debugPrint("Error writing Wal to disk: $e");
       }
     }
-
-    // Remove flushed Wals
+    // Check how many Wals are remaining after the flush
+    debugPrint("no of  Wals in _wals: ${_wals.length}");
+    // Remove flushed Wals from _wals
     _wals.removeWhere((wal) => wal.filePath != null);
-  }
-}
-
-/// Provides a high-level service for managing Wal synchronization.
-class WalService {
-  final LocalWalSync localWalSync = LocalWalSync();
-
-  /// Starts the synchronization service.
-  void start() {
-    localWalSync.start();
-    debugPrint("WalService started.");
-  }
-
-  /// Stops the synchronization service.
-  Future<void> stop() async {
-    await localWalSync.stop();
-    debugPrint("WalService stopped.");
-  }
-
-  /// Provides access to the LocalWalSync instance.
-  LocalWalSync getSyncs() {
-    return localWalSync;
+    debugPrint("Removed flushed Wals from _wals.");
+    // Check how many Wals are remaining after the flush
+    debugPrint("Remaining Wals in _wals: ${_wals.length}");
   }
 }

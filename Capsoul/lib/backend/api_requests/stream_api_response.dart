@@ -97,11 +97,11 @@ Future streamApiResponse(
   final headers = {
     'Content-Type': 'application/json',
     'Authorization':
-        'Bearer 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',
+        'Bearer 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',
   };
 
   var body = jsonEncode({
-    "model": "llama-3.1-70b-versatile",
+    "model": "llama-3.3-70b-versatile",
     "messages": [
       {"role": "system", "content": ""},
       {"role": "user", "content": prompt}
@@ -132,7 +132,7 @@ Future streamApiResponse(
     debugPrint('Error sending request: $e');
   }
 }
-
+ 
 void _processStream(
   http.StreamedResponse response,
   Future<dynamic> Function(String) callback,
