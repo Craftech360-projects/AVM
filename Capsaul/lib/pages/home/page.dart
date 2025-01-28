@@ -41,7 +41,6 @@ class HomePageWrapper extends StatefulWidget {
 class _HomePageWrapperState extends State<HomePageWrapper>
     with WidgetsBindingObserver, TickerProviderStateMixin, WebSocketMixin {
   ForegroundUtil foregroundUtil = ForegroundUtil();
-  late bool _isLoading;
   bool? hasSeenTutorial;
 
   List<Widget> screens = [Container(), const SizedBox(), const SizedBox()];
@@ -137,11 +136,9 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   void initState() {
     super.initState();
     setState(() {});
-    _isLoading = true;
     Future.delayed(const Duration(seconds: 2), () {
       var tutorialSeen = SharedPreferencesUtil().hasSeenTutorial;
       setState(() {
-        _isLoading = false;
         hasSeenTutorial = tutorialSeen;
       });
     });

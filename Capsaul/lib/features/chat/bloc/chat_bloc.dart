@@ -188,30 +188,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           "${memoryContext.isNotEmpty ? "Memory Context:\n$memoryContext\n\n" : ""}${event.message}";
 
       var aiMessage = _prepareStreaming(event.message);
-      print('AI Message: ===> ${aiMessage.text}');
 
       final ragInfo = await retrieveRAGContext(prompt);
-      print('RAG Info: ===> $ragInfo');
       String ragContext = ragInfo[0];
       List<Memory> memories = ragInfo[1].cast<Memory>();
-      print('RAG Context: ===> $ragContext');
-      print('Memories: ===> $memories');
 
       var finalPrompt = qaRagPrompt(
         ragContext,
         await messageProvider.retrieveMostRecentMessages(limit: 10),
       );
-      print('Final Prompt: ===> $finalPrompt');
 
       await streamApiResponse(
         finalPrompt,
         _callbackFunctionChatStreaming(aiMessage),
         () async {
-          print("Inside the callback function in bloc");
           aiMessage.memories.addAll(memories);
-          print('Memories: ===> $memories');
           await messageProvider.updateMessage(aiMessage);
-          print('AI Message new: ===> ${aiMessage.text}');
           add(RefreshMessages());
           emit(state.copyWith(
             status: ChatStatus.loaded,
@@ -229,17 +221,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   Message _prepareStreaming(String text) {
     var ai = Message(DateTime.now(), '', 'ai');
-    print('AI Message inside prepare Streaming: ===> ${ai.text}');
     messageProvider.saveMessage(ai);
     return ai;
   }
 
   Future<void> Function(String) _callbackFunctionChatStreaming(
       Message aiMessage) {
-    print("AI Message in callback function: ===> ${aiMessage.text}");
     return (String content) async {
       aiMessage.text = '${aiMessage.text}$content';
-      print('AI Message in callback function 2: ===> ${aiMessage.text}');
       await messageProvider.updateMessage(aiMessage);
     };
   }

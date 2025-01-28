@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:capsaul/backend/api_requests/api/other.dart';
 import 'package:capsaul/backend/database/memory.dart';
@@ -473,13 +474,18 @@ void showOptionsBottomSheet(
                                   ),
                                 )
                               : const Icon(Icons.send_to_mobile_outlined),
-                          onTap: () {
+                          onTap: () async {
                             setModalState(
                                 () => loadingPluginIntegrationTest = true);
-                            // if not set, show dialog to set URL or take them to settings.
-                            webhookOnMemoryCreatedCall(memory,
-                                    returnRawBody: true)
-                                .then((response) {
+
+                            try {
+                              final response = await webhookOnMemoryCreatedCall(
+                                  memory,
+                                  returnRawBody: true);
+
+                              // Check if the widget is still mounted before proceeding
+                              if (!context.mounted) return;
+
                               showDialog(
                                 context: context,
                                 builder: (c) => getDialog(
@@ -492,9 +498,32 @@ void showOptionsBottomSheet(
                                   singleButton: true,
                                 ),
                               );
-                              setModalState(
-                                  () => loadingPluginIntegrationTest = false);
-                            });
+                            } catch (e) {
+                              // Handle any errors that occur during the async operation
+                              log(e.toString());
+
+                              // Check if the widget is still mounted before showing an error dialog
+                              if (context.mounted) {
+                                showDialog(
+                                  context: context,
+                                  builder: (c) => getDialog(
+                                    context,
+                                    () => Navigator.pop(context),
+                                    () => Navigator.pop(context),
+                                    'Error:',
+                                    'Failed to trigger integration. Please try again.',
+                                    okButtonText: 'Ok',
+                                    singleButton: true,
+                                  ),
+                                );
+                              }
+                            } finally {
+                              // Ensure the loading state is reset, even if an error occurs
+                              if (context.mounted) {
+                                setModalState(
+                                    () => loadingPluginIntegrationTest = false);
+                              }
+                            }
                           },
                         ),
                         ListTile(

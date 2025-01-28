@@ -194,6 +194,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                                   items.remove(item);
                                 });
                               } catch (e) {
+                                if (!context.mounted) return;
                                 avmSnackBar(context,
                                     'Oops! Something went wrong.\nPlease try again.');
                               }
@@ -360,6 +361,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                                         );
 
                                         if (dateRange != null) {
+                                          if (!context.mounted) return;
                                           Navigator.pop(
                                             context,
                                             _selectedFilter?.filterType ==
@@ -399,6 +401,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                           });
 
                           if (selectedFilter != null) {
+                            if (!context.mounted) return;
                             context.read<MemoryBloc>().add(
                                   FilterMemory(
                                     filterItem: selectedFilter,

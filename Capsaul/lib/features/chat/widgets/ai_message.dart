@@ -55,42 +55,56 @@ class AIMessage extends StatelessWidget {
                           },
                           label: Text("Select Message")),
                       TextButton.icon(
-                          icon: Icon(Icons.delete),
-                          onPressed: () async {
-                            try {
-                              bool? confirm = await customDialogBox(
-                                context,
-                                icon: Icons.delete,
-                                title: 'Delete Message',
-                                message:
-                                    'Are you sure you want to delete this message? This action cannot be reversed!',
-                              );
-                              if (confirm) {
-                                context
-                                    .read<ChatBloc>()
-                                    .add(DeleteMessage(message));
-                              }
+                        icon: Icon(Icons.delete),
+                        onPressed: () async {
+                          try {
+                            bool? confirm = await customDialogBox(
+                              context,
+                              icon: Icons.delete,
+                              title: 'Delete Message',
+                              message:
+                                  'Are you sure you want to delete this message? This action cannot be reversed!',
+                            );
+
+                            if (!context.mounted) return;
+
+                            if (confirm == true) {
+                              context
+                                  .read<ChatBloc>()
+                                  .add(DeleteMessage(message));
+                            }
+
+                            if (context.mounted) {
                               Navigator.of(context).pop();
                               avmSnackBar(context, "Message deleted");
-                            } catch (e) {
-                              log(e.toString());
+                            }
+                          } catch (e) {
+                            log(e.toString());
+
+                            if (context.mounted) {
                               avmSnackBar(context,
                                   "Oops! Something went wrong, Please try again later");
                             }
-                          },
-                          label: Text("Delete Message")),
+                          }
+                        },
+                        label: Text("Delete Message"),
+                      ),
                       TextButton.icon(
-                          icon: Icon(Icons.copy_rounded),
-                          onPressed: () async {
-                            await Clipboard.setData(
-                                ClipboardData(text: message.text));
-                            Navigator.of(context).pop();
-                            avmSnackBar(
-                              context,
-                              'Message copied to clipboard',
-                            );
-                          },
-                          label: Text("Copy Message")),
+                        icon: Icon(Icons.copy_rounded),
+                        onPressed: () async {
+                          await Clipboard.setData(
+                              ClipboardData(text: message.text));
+
+                          if (!context.mounted) return;
+
+                          Navigator.of(context).pop();
+                          avmSnackBar(
+                            context,
+                            'Message copied to clipboard',
+                          );
+                        },
+                        label: Text("Copy Message"),
+                      ),
                       TextButton.icon(
                           icon: Icon(Icons.push_pin_rounded),
                           onPressed: () async {

@@ -286,9 +286,16 @@ class CapturePageState extends State<CapturePage>
         photos: photos,
         sendMessageToChat: sendMessageToChat,
       );
+
+      if (mounted) {
+        avmSnackBar(context, "Memory processed successfully!");
+      }
     } catch (e) {
-      avmSnackBar(context, "Something went wrong while creating the memory.");
+      if (mounted) {
+        avmSnackBar(context, "Something went wrong while creating the memory.");
+      }
     }
+
     if (memory == null) {
       setHasTranscripts(false);
       if (mounted) {
@@ -299,9 +306,9 @@ class CapturePageState extends State<CapturePage>
 
     if (!memory.discarded) {
       executeBackupWithUid();
-      context
-          .read<MemoryBloc>()
-          .add(DisplayedMemory(isNonDiscarded: !memory.discarded));
+      if (mounted) {
+        context.read<MemoryBloc>().add(DisplayedMemory(isNonDiscarded: !memory.discarded));
+      }
 
       if (!memory.discarded &&
           SharedPreferencesUtil().postMemoryNotificationIsChecked) {
@@ -311,31 +318,32 @@ class CapturePageState extends State<CapturePage>
               'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
         );
       }
-      backupsEnabled ? manualBackup(context) : null;
+      if (backupsEnabled && mounted) {
+        manualBackup(context);
+      }
     }
 
-    await widget.refreshMemories!();
-    SharedPreferencesUtil().transcriptSegments = [];
-    segments = [];
-
-    // Reset the states
     if (mounted) {
+      await widget.refreshMemories!();
+      SharedPreferencesUtil().transcriptSegments = [];
+      segments = [];
+
+      // Reset the states
       setState(() => memoryCreating = false);
+
+      // Perform cleanup
+      audioStorage?.clearAudioBytes();
+      setHasTranscripts(false);
+      currentTranscriptStartedAt = null;
+      currentTranscriptFinishedAt = null;
+      elapsedSeconds = 0;
+      streamStartedAtSecond = null;
+      firstStreamReceivedAt = null;
+      secondsMissedOnReconnect = null;
+      photos = [];
+      conversationId = const Uuid().v4();
     }
-
-    // Perform cleanup
-    audioStorage?.clearAudioBytes();
-    setHasTranscripts(false);
-    currentTranscriptStartedAt = null;
-    currentTranscriptFinishedAt = null;
-    elapsedSeconds = 0;
-    streamStartedAtSecond = null;
-    firstStreamReceivedAt = null;
-    secondsMissedOnReconnect = null;
-    photos = [];
-    conversationId = const Uuid().v4();
   }
-
   setHasTranscripts(bool hasTranscripts) {
     if (_hasTranscripts == hasTranscripts) return;
     if (mounted) {
@@ -406,6 +414,7 @@ class CapturePageState extends State<CapturePage>
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (await LocationService().displayPermissionsDialog()) {
+        if (!mounted) return;
         showDialog(
           context: context,
           builder: (c) => CustomDialogWidget(

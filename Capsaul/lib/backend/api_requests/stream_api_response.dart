@@ -20,7 +20,7 @@ Future streamApiResponse(
   };
 
   var body = jsonEncode({
-    "model": "llama-3.1-70b-versatile",
+    "model": "llama-3.3-70b-versatile",
     "messages": [
       {"role": "system", "content": ""},
       {"role": "user", "content": prompt}
@@ -32,11 +32,9 @@ Future streamApiResponse(
     ..headers.addAll(headers)
     ..body = body;
 
-  print('Request: ===> ${request.body}');
 
   try {
     final http.StreamedResponse response = await client.send(request);
-    print('Response: ===> ${response.statusCode}');
     if (response.statusCode == 401) {
       callback('Incorrect API Key provided.');
       return;
@@ -59,7 +57,6 @@ Future<void> _processStream(
   Future<dynamic> Function(String) callback,
   VoidCallback onDone,
 ) async {
-  print('Processing Stream');
   await response.stream
       .transform(utf8.decoder)
       .transform(const LineSplitter())
@@ -72,9 +69,7 @@ Future<void> _processStream(
             } else {
               try {
                 var data = jsonDecode(jsonData);
-                print('Data: ===> $data');
                 String content = data['choices'][0]['delta']['content'] ?? '';
-                print('Content: ===> $content');
                 if (content.isNotEmpty) {
                   await callback(content);
                 }

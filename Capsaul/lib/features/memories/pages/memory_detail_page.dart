@@ -219,23 +219,44 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
     );
   }
 
-  _reProcessMemory(BuildContext context, StateSetter setModalState,
-      Memory memory, Function changeLoadingState) async {
-    Memory? newMemory = await reProcessMemory(
-      context,
-      memory,
-      () => avmSnackBar(
-        context,
-        'Memory processing failed! Please try again.',
-      ),
-      changeLoadingState,
-    );
+  _reProcessMemory(
+  BuildContext context,
+  StateSetter setModalState,
+  Memory memory,
+  Function changeLoadingState,
+) async {
+  Memory? newMemory = await reProcessMemory(
+    context,
+    memory,
+    () {
+      if (mounted) {
+        avmSnackBar(
+          context,
+          'Memory processing failed! Please try again.',
+        );
+      }
+    },
+    changeLoadingState,
+  );
 
+  // Check if the widget is still mounted before proceeding
+  if (!mounted) return;
+
+  // Update the state only if the widget is still mounted
+  setModalState(() {
     pluginResponseExpanded = List.filled(memory.pluginsResponse.length, false);
     overviewController.text = newMemory!.structured.target!.overview;
     titleController.text = newMemory.structured.target!.title;
+  });
 
+  // Show a success snackbar only if the widget is still mounted
+  if (context.mounted) {
     avmSnackBar(context, "Memory reprocessed successfully!");
+  }
+
+  // Navigate back only if the widget is still mounted
+  if (context.mounted) {
     Navigator.pop(context, true);
   }
+}
 }

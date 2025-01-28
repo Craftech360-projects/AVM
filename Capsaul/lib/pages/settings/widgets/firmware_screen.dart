@@ -128,8 +128,10 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
   }
 
   Future<BluetoothDevice> getConnectedDevice(String deviceId) async {
-    bool isBluetoothOn = await FlutterBluePlus.isOn;
-    if (!isBluetoothOn) {
+    BluetoothAdapterState adapterState =
+        await FlutterBluePlus.adapterState.first;
+    if (adapterState != BluetoothAdapterState.on) {
+      if (!mounted) return Future.error("Bluetooth is off");
       avmSnackBar(context, "Please enable Bluetooth to continue.");
       return Future.error("Bluetooth is off");
     }
