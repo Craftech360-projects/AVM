@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
-import 'package:capsaul/features/capture/presentation/capture_page.dart';
 import 'package:capsaul/features/chat/presentation/chat_screen.dart';
 import 'package:capsaul/main.dart';
 import 'package:capsaul/src/common_widget/icon_button.dart';
@@ -20,6 +19,7 @@ class CustomNavBar extends StatefulWidget {
     this.onMemorySearch,
     this.isUserMessageSent = false,
     this.hintText,
+    this.onBackBtnPressed,
   });
 
   final bool? isChat;
@@ -28,6 +28,7 @@ class CustomNavBar extends StatefulWidget {
   final Function(String)? onSendMessage;
   final Function(String)? onMemorySearch;
   final String? hintText;
+  final VoidCallback? onBackBtnPressed;
 
   @override
   State<CustomNavBar> createState() => _CustomNavBarState();
@@ -158,26 +159,11 @@ class _CustomNavBarState extends State<CustomNavBar> {
       padding: EdgeInsets.symmetric(horizontal: 5.w),
       child: GestureDetector(
         onTap: () async {
-          Provider.of<NavbarState>(context, listen: false).collapse();
-          Navigator.push(
-            context,
-            PageRouteBuilder(
-              transitionDuration: Duration(milliseconds: 500),
-              pageBuilder: (context, animation, secondaryAnimation) =>
-                  CapturePage(),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                var fadeInAnimation = Tween(begin: 0.0, end: 1.0).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeOut),
-                );
-
-                return FadeTransition(
-                  opacity: fadeInAnimation,
-                  child: child,
-                );
-              },
-            ),
-          );
+          if (widget.onBackBtnPressed != null) {
+            widget.onBackBtnPressed!();
+          } else {
+            Provider.of<NavbarState>(context, listen: false).collapse();
+          }
         },
         child: Image.asset(
           AppImages.appLogo,

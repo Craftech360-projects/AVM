@@ -82,7 +82,7 @@ class UserMessage extends StatelessWidget {
                       TextButton.icon(
                           icon: Icon(Icons.push_pin_rounded),
                           onPressed: () async {
-                            context.read<ChatBloc>().add(PinMessage(message!));
+                            // context.read<ChatBloc>().add(PinMessage(message!));
                             Navigator.of(context).pop();
                             avmSnackBar(context, "Message pinned");
                           },

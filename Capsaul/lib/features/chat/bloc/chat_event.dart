@@ -6,8 +6,8 @@ class LoadInitialChat extends ChatEvent {}
 
 class SendMessage extends ChatEvent {
   final String message;
-  final String? memoryContext;
-  SendMessage(this.message, {this.memoryContext});
+  final String? memoryContext; // Add this
+  SendMessage(this.message, {this.memoryContext}); // Update constructor
 }
 
 class RefreshMessages extends ChatEvent {}

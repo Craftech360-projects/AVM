@@ -329,7 +329,7 @@ class OverallTabState extends State<OverallTab> {
                   Text(
                     'Location 📍',
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -340,7 +340,7 @@ class OverallTabState extends State<OverallTab> {
                 Text(
                   widget.geolocation?.address ?? "No address found!",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     color: AppColors.grey,
                   ),
                 ),

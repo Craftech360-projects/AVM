@@ -1,7 +1,6 @@
 import 'package:capsaul/backend/database/transcript_segment.dart';
 import 'package:capsaul/backend/preferences.dart';
 import 'package:capsaul/backend/schema/bt_device.dart';
-import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
 import 'package:capsaul/core/widgets/typing_indicator.dart';
@@ -9,7 +8,6 @@ import 'package:capsaul/features/capture/models/filter_item.dart';
 import 'package:capsaul/features/capture/presentation/capture_page.dart';
 import 'package:capsaul/features/capture/widgets/filter_widget.dart';
 import 'package:capsaul/features/capture/widgets/greeting_card.dart';
-import 'package:capsaul/features/capture/widgets/real_time_bot.dart';
 import 'package:capsaul/features/connectivity_bloc/connectivity_bloc.dart';
 import 'package:capsaul/features/memories/bloc/memory_bloc.dart';
 import 'package:capsaul/features/memories/widgets/memory_card_widget.dart';
@@ -54,11 +52,7 @@ class CaptureMemoryPage extends StatefulWidget {
   State<CaptureMemoryPage> createState() => _CaptureMemoryPageState();
 }
 
-class _CaptureMemoryPageState extends State<CaptureMemoryPage>
-    with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-  bool _isFlippingRight = true;
+class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
   final List<int> items = List.generate(1, (index) => index);
   late MemoryBloc _memoryBloc;
   bool _isNonDiscarded = true;
@@ -68,9 +62,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
   final ScrollController _scrollController = ScrollController();
   bool _isScrolled = false;
   FilterItem? _selectedFilter;
-  bool _switchValue = SharedPreferencesUtil().notificationPlugin;
   final GlobalKey _greetingCardKey = GlobalKey();
-  final GlobalKey _floatingActionKey = GlobalKey();
+
   late TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = [];
   int currentTutorialIndex = 0;
@@ -98,75 +91,16 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
     }
   }
 
-  void _showPopup() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              backgroundColor: AppColors.white,
-              contentPadding: const EdgeInsets.all(12),
-              shape: RoundedRectangleBorder(borderRadius: br2),
-              content: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: buildPopupContent(
-                  setState,
-                  _switchValue,
-                  (bool value) {
-                    setState(() {
-                      _switchValue = value;
-                    });
-                  },
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
   @override
   void initState() {
     super.initState();
     checkTutorialStatus();
     _memoryBloc = BlocProvider.of<MemoryBloc>(context);
     _memoryBloc.add(DisplayedMemory(isNonDiscarded: _isNonDiscarded));
-    _switchValue = SharedPreferencesUtil().notificationPlugin;
 
     _searchController.addListener(() {
       _memoryBloc.add(SearchMemory(query: _searchController.text));
     });
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
-
-    _animation = Tween<double>(begin: 0, end: 2 * 3.141592653589793).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        Future.delayed(const Duration(seconds: 5), () {
-          if (mounted) {
-            setState(() {
-              _isFlippingRight = !_isFlippingRight;
-            });
-            _animationController.reset();
-            _animationController.forward();
-          }
-        });
-      }
-    });
-
-    // Start the first flip
-    _animationController.forward();
 
     _scrollController.addListener(() {
       if (_scrollController.offset > 0 && !_isScrolled) {
@@ -208,7 +142,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
   void dispose() {
     _searchController.dispose();
     _scrollController.dispose();
-    _animationController.dispose();
     super.dispose();
   }
 
@@ -220,6 +153,9 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
         builder: (context, connectivityState) {
           return Stack(children: [
             SingleChildScrollView(
+              padding: EdgeInsets.only(top: 25),
+              physics: BouncingScrollPhysics(),
+              controller: _scrollController,
               child: Column(
                 children: [
                   if (widget.memoryCreating)
@@ -528,46 +464,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
             if (_isScrolled)
               Positioned(
                   top: 0, left: 0, right: 0, child: _buildScrollGradient()),
-            Positioned(
-              bottom: 0,
-              right: 10,
-              child: Column(
-                children: [
-                  AnimatedBuilder(
-                    animation: _animation,
-                    builder: (context, child) {
-                      double flipValue = _isFlippingRight
-                          ? _animation.value
-                          : -_animation.value;
-
-                      Matrix4 transform = Matrix4.identity()
-                        ..setEntry(3, 2, 0.001)
-                        ..rotateY(flipValue);
-
-                      return Transform(
-                        alignment: Alignment.center,
-                        transform: transform,
-                        child: FloatingActionButton(
-                          key: _floatingActionKey,
-                          shape: const CircleBorder(),
-                          elevation: 8.0,
-                          backgroundColor: AppColors.purpleDark,
-                          onPressed: _showPopup,
-                          child: Image.asset(
-                            AppImages.botIcon,
-                            width: 45,
-                            height: 45,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  h8,
-                  if (SharedPreferencesUtil().notificationPlugin)
-                    TypingIndicator(),
-                ],
-              ),
-            ),
           ]);
         },
       ),
@@ -634,22 +530,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                   style: TextStyle(
                       color: AppColors.white, fontSize: 17, height: 1.3),
                 ),
-              ),
-            ),
-          ],
-        ),
-        TargetFocus(
-          identify: 'floatingAction',
-          keyTarget: _floatingActionKey,
-          alignSkip: Alignment.bottomCenter,
-          contents: [
-            TargetContent(
-              align: ContentAlign.top,
-              builder: (context, controller) => Text(
-                textAlign: TextAlign.center,
-                'Enable Capsaul bot to get real-time responses',
-                style: TextStyle(
-                    color: AppColors.white, fontSize: 17, height: 1.3),
               ),
             ),
           ],

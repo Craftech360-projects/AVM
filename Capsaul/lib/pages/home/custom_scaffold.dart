@@ -95,7 +95,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
               leading: widget.showBackBtn
                   ? IconButton(
                       alignment: Alignment.topLeft,
-                      visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                      visualDensity: VisualDensity(horizontal: 4, vertical: 4),
                       padding: EdgeInsets.zero,
                       onPressed: () {
                         Navigator.pop(context);

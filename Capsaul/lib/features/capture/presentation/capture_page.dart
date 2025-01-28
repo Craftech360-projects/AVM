@@ -10,9 +10,12 @@ import 'package:capsaul/backend/preferences.dart';
 import 'package:capsaul/backend/schema/bt_device.dart';
 import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
+import 'package:capsaul/core/theme/app_colors.dart';
 import 'package:capsaul/core/widgets/custom_dialog_box.dart';
+import 'package:capsaul/core/widgets/typing_indicator.dart';
 import 'package:capsaul/features/capture/logic/openglass_mixin.dart';
 import 'package:capsaul/features/capture/presentation/capture_memory_page.dart';
+import 'package:capsaul/features/capture/widgets/real_time_bot.dart';
 import 'package:capsaul/features/memories/bloc/memory_bloc.dart';
 import 'package:capsaul/pages/capture/location_service.dart';
 import 'package:capsaul/pages/home/custom_scaffold.dart';
@@ -60,7 +63,8 @@ class CapturePageState extends State<CapturePage>
         WidgetsBindingObserver,
         PhoneRecorderMixin,
         WebSocketMixin,
-        OpenGlassMixin {
+        OpenGlassMixin,
+        TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   @override
   bool get wantKeepAlive => true;
@@ -70,6 +74,13 @@ class CapturePageState extends State<CapturePage>
   bool _hasTranscripts = false;
   FocusNode memoriesTextFieldFocusNode = FocusNode(canRequestFocus: true);
   static const defaultQuietSecondsForMemoryCreation = 60;
+
+  final GlobalKey _floatingActionKey = GlobalKey();
+
+  late Animation<double> _animation;
+  late AnimationController _animationController;
+  bool _isFlippingRight = true;
+  bool _switchValue = SharedPreferencesUtil().notificationPlugin;
 
   StreamSubscription? _bleBytesStream;
   WavBytesUtil? audioStorage;
@@ -351,6 +362,35 @@ class CapturePageState extends State<CapturePage>
     // include created at and finished at for this cached transcript
   }
 
+  void _showPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return AlertDialog(
+              backgroundColor: AppColors.white,
+              contentPadding: const EdgeInsets.all(12),
+              shape: RoundedRectangleBorder(borderRadius: br2),
+              content: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: buildPopupContent(
+                  setState,
+                  _switchValue,
+                  (bool value) {
+                    setState(() {
+                      _switchValue = value;
+                    });
+                  },
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -381,6 +421,35 @@ class CapturePageState extends State<CapturePage>
         );
       }
     });
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    );
+
+    _animation = Tween<double>(begin: 0, end: 2 * 3.141592653589793).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _animationController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Future.delayed(const Duration(seconds: 5), () {
+          if (mounted) {
+            setState(() {
+              _isFlippingRight = !_isFlippingRight;
+            });
+            _animationController.reset();
+            _animationController.forward();
+          }
+        });
+      }
+    });
+
+    // Start the first flip
+    _animationController.forward();
   }
 
   @override
@@ -388,6 +457,7 @@ class CapturePageState extends State<CapturePage>
     _memoryCreationTimer?.cancel();
     _bleBytesStream?.cancel();
     _scrollController.dispose();
+    _animationController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -450,6 +520,47 @@ class CapturePageState extends State<CapturePage>
           },
           hasSeenTutorial: true,
         ),
+        Positioned(
+          bottom: 0,
+          right: 10,
+          child: Align(
+            child: Column(
+              children: [
+                AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    double flipValue =
+                        _isFlippingRight ? _animation.value : -_animation.value;
+
+                    Matrix4 transform = Matrix4.identity()
+                      ..setEntry(3, 2, 0.001)
+                      ..rotateY(flipValue);
+
+                    return Transform(
+                      alignment: Alignment.center,
+                      transform: transform,
+                      child: FloatingActionButton(
+                        key: _floatingActionKey,
+                        shape: const CircleBorder(),
+                        elevation: 8.0,
+                        backgroundColor: AppColors.purpleDark,
+                        onPressed: _showPopup,
+                        child: Image.asset(
+                          AppImages.botIcon,
+                          width: 45,
+                          height: 45,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                h8,
+                if (SharedPreferencesUtil().notificationPlugin)
+                  TypingIndicator(),
+              ],
+            ),
+          ),
+        ),
         Align(
           alignment: Alignment.bottomCenter,
           child: CustomNavBar(
@@ -459,8 +570,7 @@ class CapturePageState extends State<CapturePage>
               );
             },
           ),
-        )
-        
+        ),
       ]),
     );
   }

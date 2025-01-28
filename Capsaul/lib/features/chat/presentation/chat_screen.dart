@@ -12,7 +12,6 @@ import 'package:capsaul/core/assets/app_images.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
 import 'package:capsaul/core/widgets/typing_indicator.dart';
-import 'package:capsaul/features/capture/presentation/capture_page.dart';
 import 'package:capsaul/features/chat/bloc/chat_bloc.dart';
 import 'package:capsaul/features/chat/widgets/ai_message.dart';
 import 'package:capsaul/features/chat/widgets/user_message.dart';
@@ -44,8 +43,6 @@ class _ChatScreenState extends State<ChatScreen>
     with SingleTickerProviderStateMixin {
   final TextEditingController _aiChatController = TextEditingController();
   late ChatBloc _chatBloc;
-  late AnimationController _animationController;
-  late Animation<double> _animation;
   late Timer _dailySummaryTimer;
   late ScrollController _scrollController;
   final Map<int, GlobalKey> _messageKeys = {};
@@ -53,17 +50,12 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void initState() {
     super.initState();
-
-    // Expand the navbar when ChatScreen is opened
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<NavbarState>(context, listen: false).expand();
     });
-
-    // Initialize bloc and controllers
     _chatBloc = BlocProvider.of<ChatBloc>(context);
     _scrollController = ScrollController();
 
-    // Handle initial question or memory context
     if (widget.initialQuestion != null && widget.memoryContext != null) {
       final memoryTitle = widget.memoryContext?.title ?? "Unknown Context";
       final message =
@@ -73,15 +65,7 @@ class _ChatScreenState extends State<ChatScreen>
       _chatBloc.add(LoadInitialChat());
     }
 
-    // Initialize animations and daily summary logic
     _initDailySummary();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    )..repeat();
-
-    _animation =
-        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
   }
 
   _initDailySummary() {
@@ -131,33 +115,17 @@ class _ChatScreenState extends State<ChatScreen>
   @override
   void dispose() {
     _dailySummaryTimer.cancel();
-    _animationController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
-
-  // void _scrollToBottom() {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     if (_scrollController.hasClients) {
-  //       _scrollController.animateTo(
-  //         0.0,
-  //         duration: const Duration(milliseconds: 500),
-  //         curve: Curves.easeOut,
-  //       );
-  //     }
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return CustomScaffold(
-      onBackBtnPressed: () {
-        Provider.of<NavbarState>(context, listen: false).collapse();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const CapturePage()));
-      },
+      onBackBtnPressed: () =>
+          Provider.of<NavbarState>(context, listen: false).collapse(),
       centerTitle: false,
       resizeToAvoidBottomInset: true,
       showBatteryLevel: true,
@@ -242,6 +210,8 @@ class _ChatScreenState extends State<ChatScreen>
                 },
               ),
               BlocBuilder<ChatBloc, ChatState>(
+                buildWhen: (previous, current) =>
+                    previous.isUserMessageSent != current.isUserMessageSent,
                 builder: (context, state) {
                   return Align(
                     alignment: Alignment.bottomCenter,
@@ -251,6 +221,11 @@ class _ChatScreenState extends State<ChatScreen>
                         FocusScope.of(context).unfocus();
                       },
                       isUserMessageSent: state.isUserMessageSent,
+                      onBackBtnPressed: () {
+                        Provider.of<NavbarState>(context, listen: false)
+                            .collapse();
+                        Navigator.pop(context);
+                      },
                     ),
                   );
                 },
@@ -275,7 +250,7 @@ class _ChatScreenState extends State<ChatScreen>
                           child: InkWell(
                             enableFeedback: true,
                             onTap: () {
-                              context.read<ChatBloc>().add(UnpinMessage());
+                              // context.read<ChatBloc>().add(UnpinMessage());
                               avmSnackBar(context, "Message unpinned");
                             },
                             child: const Icon(
@@ -284,7 +259,7 @@ class _ChatScreenState extends State<ChatScreen>
                             ),
                           ),
                         ),
-                        const SizedBox(width: 8),
+                        w8,
                         Expanded(
                           child: InkWell(
                             onTap: () {

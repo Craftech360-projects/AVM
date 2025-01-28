@@ -87,22 +87,23 @@ class _GreetingCardState extends State<GreetingCard> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    stops: [0.3, 1.0],
-                    colors: [
-                      Color.fromARGB(255, 112, 186, 255),
-                      Color(0xFFCDB4DB),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  // gradient: const LinearGradient(
+                  //   stops: [0.3, 1.0],
+                  //   colors: [
+                  //     Color.fromARGB(255, 112, 186, 255),
+                  //     Color(0xFFCDB4DB),
+                  //   ],
+                  //   begin: Alignment.topLeft,
+                  //   end: Alignment.bottomRight,
+                  // ),
+                  color: AppColors.blue.withValues(alpha: 0.7),
                   borderRadius: br5,
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.black.withAlpha(25),
-                      spreadRadius: 4,
+                      spreadRadius: 2,
                       blurRadius: 4,
-                      offset: const Offset(2, 2),
+                      offset: const Offset(1, 2),
                     ),
                   ],
                 ),
@@ -124,8 +125,8 @@ class _GreetingCardState extends State<GreetingCard> {
                                   Text(
                                     'Hi! ${SharedPreferencesUtil().givenName}',
                                     style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
+                                      fontSize: 19,
+                                      fontWeight: FontWeight.w500,
                                       color: AppColors.white,
                                     ),
                                   ),
@@ -133,7 +134,7 @@ class _GreetingCardState extends State<GreetingCard> {
                                   const Text(
                                     'Change is inevitable. Always strive for the next big thing!',
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -145,7 +146,7 @@ class _GreetingCardState extends State<GreetingCard> {
                         h8,
                         Container(height: 1.5, color: AppColors.purpleDark),
                         Padding(
-                          padding: const EdgeInsets.only(top: 12),
+                          padding: const EdgeInsets.only(top: 8),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

@@ -49,7 +49,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="Capsaul"
         android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        android:enableOnBackInvokedCallback="true">
         
         <service android:name="com.pravera.flutter_foreground_task.service.ForegroundService" android:exported="false" android:foregroundServiceType="dataSync|connectedDevice" android:stopWithTask="true" />
         <service android:name="id.flutter.flutter_background_service.BackgroundService" android:foregroundServiceType="microphone" tools:node="merge" />

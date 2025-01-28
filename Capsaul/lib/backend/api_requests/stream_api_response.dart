@@ -32,20 +32,21 @@ Future streamApiResponse(
     ..headers.addAll(headers)
     ..body = body;
 
+  print('Request: ===> ${request.body}');
+
   try {
     final http.StreamedResponse response = await client.send(request);
+    print('Response: ===> ${response.statusCode}');
     if (response.statusCode == 401) {
       callback('Incorrect API Key provided.');
       return;
     } else if (response.statusCode == 429) {
-      callback('Too many requests. Please try again later.');
+      callback('You have reached the API limit.');
       return;
     } else if (response.statusCode != 200) {
-      callback('An error occurred. Please try again.');
+      callback('Unknown Error with LLaMA API.');
       return;
     }
-
-    log('Stream response: ${response.statusCode}');
 
     await _processStream(response, callback, onDone);
   } catch (e) {
@@ -58,6 +59,7 @@ Future<void> _processStream(
   Future<dynamic> Function(String) callback,
   VoidCallback onDone,
 ) async {
+  print('Processing Stream');
   await response.stream
       .transform(utf8.decoder)
       .transform(const LineSplitter())
@@ -70,7 +72,9 @@ Future<void> _processStream(
             } else {
               try {
                 var data = jsonDecode(jsonData);
+                print('Data: ===> $data');
                 String content = data['choices'][0]['delta']['content'] ?? '';
+                print('Content: ===> $content');
                 if (content.isNotEmpty) {
                   await callback(content);
                 }
