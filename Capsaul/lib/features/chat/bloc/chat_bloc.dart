@@ -243,7 +243,10 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       print("BEFORE: ${aiMessage.text}");
       // Remove <think>...</think> and trailing newline
       aiMessage.text = aiMessage.text
-          .replaceAll(RegExp(r'<think>.*?<\/think>\n?', dotAll: true), '');
+          .replaceAllMapped(
+              RegExp(r'<think>.*?<\/think>\s*', dotAll: true), (match) => '')
+          .replaceAll(RegExp(r'^\s*\n', multiLine: true), '')
+          .trim();
 
       await messageProvider.updateMessage(aiMessage);
     };
