@@ -123,17 +123,21 @@ void createMessagingNotification(String sender, String message) async {
     return;
   }
 
+  // ✅ Ensure emojis are properly encoded
+  String fixedMessage = message.replaceAllMapped(
+      RegExp(r'[\uD800-\uDFFF]'), (match) => match.group(0) ?? '');
+
   AwesomeNotifications().createNotification(
     content: NotificationContent(
       id: 2,
       channelKey: 'channel',
       title: sender,
-      body: message,
+      body: fixedMessage, // ✅ Use the fixed message
       notificationLayout: NotificationLayout.Messaging,
       largeIcon: 'resource://drawable/ic_stat_launcher',
       payload: {
         'sender': sender,
-        'message': message,
+        'message': fixedMessage,
       },
     ),
     actionButtons: [
