@@ -203,6 +203,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         _callbackFunctionChatStreaming(aiMessage),
         () async {
           aiMessage.memories.addAll(memories);
+          print("FINAL, ${aiMessage.toString()}");
           await messageProvider.updateMessage(aiMessage);
           add(RefreshMessages());
           emit(state.copyWith(
@@ -225,10 +226,25 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     return ai;
   }
 
+  // Future<void> Function(String) _callbackFunctionChatStreaming(
+  //     Message aiMessage) {
+  //   return (String content) async {
+  //     aiMessage.text = '${aiMessage.text}$content';
+  //     await messageProvider.updateMessage(aiMessage);
+  //   };
+  // }
   Future<void> Function(String) _callbackFunctionChatStreaming(
       Message aiMessage) {
     return (String content) async {
       aiMessage.text = '${aiMessage.text}$content';
+
+      // Remove content inside <think>...</think>
+      // Remove <think>...</think> including any newlines after it
+      print("BEFORE: ${aiMessage.text}");
+      // Remove <think>...</think> and trailing newline
+      aiMessage.text = aiMessage.text
+          .replaceAll(RegExp(r'<think>.*?<\/think>\n?', dotAll: true), '');
+
       await messageProvider.updateMessage(aiMessage);
     };
   }

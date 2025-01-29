@@ -33,11 +33,28 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   String version = '';
   String buildVersion = '';
+  String selectedModel = "deepseek-r1-distill-llama-70b"; // Default to DeepSeek
 
   @override
   void initState() {
     super.initState();
     _getVersionInfo();
+    _loadSelectedModel();
+  }
+
+  // Load the selected model from SharedPreferences
+  void _loadSelectedModel() {
+    setState(() {
+      selectedModel = SharedPreferencesUtil().selectedModel;
+    });
+  }
+
+  // Update the selected model in SharedPreferences
+  void _updateSelectedModel(String newModel) {
+    setState(() {
+      selectedModel = newModel;
+      SharedPreferencesUtil().selectedModel = newModel;
+    });
   }
 
   Future<void> _getVersionInfo() async {
@@ -46,6 +63,36 @@ class _SettingPageState extends State<SettingPage> {
       version = packageInfo.version;
       buildVersion = packageInfo.buildNumber;
     });
+  }
+
+  Widget _buildModelDropdown() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 14.w),
+      child: DropdownButtonFormField<String>(
+        value: selectedModel,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        ),
+        items: [
+          DropdownMenuItem(
+            value: "deepseek-r1-distill-llama-70b",
+            child: Text("DeepSeek R1 Distill 70B"),
+          ),
+          DropdownMenuItem(
+            value: "llama-3.3-70b-versatile",
+            child: Text("LLaMA 3.3 70B Versatile"),
+          ),
+        ],
+        onChanged: (value) {
+          if (value != null) {
+            _updateSelectedModel(value);
+          }
+        },
+      ),
+    );
   }
 
   @override
@@ -153,6 +200,14 @@ class _SettingPageState extends State<SettingPage> {
                     );
                   },
                 ),
+                Text(
+                  'AI Model Selection',
+                  style: textTheme.titleMedium
+                      ?.copyWith(fontSize: 20.h, fontWeight: FontWeight.w600),
+                ),
+                h8,
+                _buildModelDropdown(), // 🔹 Add the dropdown widget
+
                 h16,
                 Text(
                   'Recording Settings',

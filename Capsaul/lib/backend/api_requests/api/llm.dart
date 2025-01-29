@@ -57,42 +57,48 @@ Future<dynamic> gptApiCall({
 Future<dynamic> llamaApiCall({
   required String message,
   double temperature = 1,
-  int maxTokens = 32500,
 }) async {
-  // Define the URL for the LLaMA API
   const url = 'https://api.groq.com/openai/v1/chat/completions';
 
-  // Define the headers for the request
+  // ✅ Fetch the selected model from SharedPreferences
+  String model = SharedPreferencesUtil().selectedModel;
+
+  // ✅ Dynamically set maxTokens based on model
+  int maxTokens = (model == "deepseek-r1-distill-llama-70b") ? 131072 : 32768;
+
+  print("model------, $model");
+  print("maxTokens------, $maxTokens");
+
   final headers = {
     'Content-Type': 'application/json',
     'Authorization':
         'Bearer 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',
   };
 
-  // Construct the body of the request
-  final body = jsonEncode({
-    // Replace with specific model identifier if needed
-    "model": "llama-3.3-70b-versatile",
+  // ✅ Only add `response_format` for models that support it
+  Map<String, dynamic> bodyData = {
+    "model": model,
     'messages': [
-      {'role': 'system', 'content': ''' '''},
-      {
-        'role': 'user',
-        'content': " {$message}",
-      },
+      {'role': 'system', 'content': ''},
+      {'role': 'user', 'content': message},
     ],
     'temperature': temperature,
     'max_tokens': maxTokens,
     'stream': false,
-    'response_format': {"type": "json_object"},
-  });
+  };
 
-  // Make the API call
+  if (model != "deepseek-r1-distill-llama-70b") {
+    bodyData['response_format'] = {"type": "json_object"};
+  }
+
+  final body = jsonEncode(bodyData);
+
   try {
     var response =
         await http.post(Uri.parse(url), headers: headers, body: body);
+    print(response.body);
     if (response.statusCode == 200) {
       var decodedResponse = jsonDecode(response.body);
-      // Extract and return only the content
       return decodedResponse['choices'][0]['message']['content'];
     } else {
       log("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
@@ -158,10 +164,20 @@ Future<dynamic> llamaPluginApiCall({
 Future<dynamic> llamaPluginApiCallPlainText({
   required String message,
   double temperature = 1,
-  int maxTokens = 32500,
 }) async {
+  print(message);
+
   // Define the URL for the LLaMA API
   const url = 'https://api.groq.com/openai/v1/chat/completions';
+
+  // ✅ Fetch the selected model from SharedPreferences
+  String model = SharedPreferencesUtil().selectedModel;
+
+  // ✅ Set maxTokens dynamically based on model
+  int maxTokens = (model == "deepseek-r1-distill-llama-70b") ? 131072 : 32768;
+
+  print("model------, $model");
+  print("maxTokens------, $maxTokens");
 
   // Define the headers for the request
   final headers = {
@@ -170,32 +186,46 @@ Future<dynamic> llamaPluginApiCallPlainText({
         'Bearer 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',
   };
 
-  // Construct the body of the request
-  final body = jsonEncode({
-    // Replace with specific model identifier if needed
-    "model": "llama-3.3-70b-versatile",
+  // ✅ Construct the request body
+  Map<String, dynamic> bodyData = {
+    "model": model,
     'messages': [
-      {'role': 'system', 'content': ''' '''},
-      {
-        'role': 'user',
-        'content': " {$message}",
-      },
+      {'role': 'system', 'content': ''},
+      {'role': 'user', 'content': message},
     ],
     'temperature': temperature,
     'max_tokens': maxTokens,
     'stream': false,
-    'response_format': {"type": "text"},
-  });
+  };
+
+  // ✅ Only include `response_format` if the model supports it
+  if (model != "deepseek-r1-distill-llama-70b") {
+    bodyData['response_format'] = {"type": "text"};
+  }
+
+  final body = jsonEncode(bodyData);
 
   // Make the API call
   try {
     var response =
         await http.post(Uri.parse(url), headers: headers, body: body);
+
     if (response.statusCode == 200) {
-      // return jsonDecode(response.body);
-      var decodedResponse = jsonDecode(response.body);
-      // Extract and return only the content
-      return decodedResponse['choices'][0]['message']['content'];
+      String responseBody = response.body;
+      print("Raw Response: $responseBody");
+
+      var decodedResponse = jsonDecode(responseBody);
+
+      // Extract the AI message content and remove <think> tags
+      String finalResponseBody =
+          decodedResponse['choices'][0]['message']['content'] ?? "";
+      finalResponseBody = finalResponseBody.replaceAll(
+          RegExp(r'\<think\>.*?\<\/think\>\s*', dotAll: true), '');
+
+      // ✅ Now parse the cleaned JSON response
+
+      // ✅ Return the cleaned content
+      return finalResponseBody;
     } else {
       log("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
       return null;
@@ -217,12 +247,12 @@ Future<String> executeGptPrompt(String? prompt,
   }
 
   //api call using llama
-
+  print("hereeeee");
   String response = await llamaApiCall(
-      message: prompt,
-      temperature: 1, // Adjust temperature as needed
-      maxTokens: 32500 // Adjust maxTokens as needed or set to -1 for default
-      );
+    message: prompt,
+    temperature: 1, // Adjust temperature as needed
+    // Adjust maxTokens as needed or set to -1 for default
+  );
 
   prefs.setGptCompletionCache(promptBase64, response);
 
@@ -240,7 +270,7 @@ Future<String> executeGptPluginPrompt(String? prompt,
   }
 
   //api call using llama
-
+  print("hereeeee>>>>>>>>>>>>>>>>>>");
   String response = await llamaPluginApiCall(
       message: prompt,
       temperature: 1, // Adjust temperature as needed
@@ -265,10 +295,10 @@ Future<String> executeGptPromptPlainText(String? prompt,
   //api call using llama
 
   String response = await llamaPluginApiCallPlainText(
-      message: prompt,
-      temperature: 1, // Adjust temperature as needed
-      maxTokens: 32500 // Adjust maxTokens as needed or set to -1 for default
-      );
+    message: prompt,
+    temperature: 1, // Adjust temperature as needed
+    // Adjust maxTokens as needed or set to -1 for default
+  );
 
   prefs.setGptCompletionCache(promptBase64, response);
   return response;

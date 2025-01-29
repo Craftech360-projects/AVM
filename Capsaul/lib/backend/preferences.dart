@@ -21,8 +21,16 @@ class SharedPreferencesUtil {
     _preferences = await SharedPreferences.getInstance();
   }
 
-  set uid(String value) => saveString('uid', value);
+  static const String _modelKey = 'selectedModel';
 
+  // ✅ Save the selected model
+  set selectedModel(String model) => saveString(_modelKey, model);
+
+  // ✅ Retrieve the selected model (DeepSeek as default)
+  String get selectedModel =>
+      getString(_modelKey) ?? "deepseek-r1-distill-llama-70b";
+
+  set uid(String value) => saveString('uid', value);
   String get uid => getString('uid') ?? '';
 
   set deviceId(String value) => saveString('deviceId', value);
@@ -261,7 +269,8 @@ class SharedPreferencesUtil {
 
   set backupsEnabled(bool value) => saveBool('backupsEnabled2', value);
 
-  bool get hasSeenTutorial => getBool('hasSeenTutorial') ?? true;  // ===> CHANGE TO FALSE
+  bool get hasSeenTutorial =>
+      getBool('hasSeenTutorial') ?? true; // ===> CHANGE TO FALSE
 
   set hasSeenTutorial(bool value) => saveBool('hasSeenTutorial', value);
 

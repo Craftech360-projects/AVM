@@ -1,10 +1,33 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:capsaul/backend/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import './streaming_models.dart';
+
+Future<String> generateRequestBody(String prompt) async {
+  String selectedModel = SharedPreferencesUtil().selectedModel;
+
+  return jsonEncode({
+    "model": selectedModel,
+    "messages": [
+      {"role": "system", "content": ""},
+      {"role": "user", "content": prompt}
+    ],
+    "temperature": 1,
+    "max_tokens":
+        selectedModel == "deepseek-r1-distill-llama-70b" ? 131072 : 32768,
+    "stream": true,
+  });
+}
+
+void switchModel(bool useDeepSeek) {
+  SharedPreferencesUtil().selectedModel =
+      useDeepSeek ? "deepseek-r1-distill-llama-70b" : "llama-3.3-70b-versatile";
+  print("Model switched to: ${SharedPreferencesUtil().selectedModel}");
+}
 
 Future streamApiResponse(
   String prompt,
@@ -19,12 +42,19 @@ Future streamApiResponse(
         'Bearer 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',
   };
 
+  // ✅ Get the model dynamically from SharedPreferences
+  String selectedModel = SharedPreferencesUtil().selectedModel;
+  print("model------, $selectedModel");
+  // ✅ Use the dynamic model in the request body
   var body = jsonEncode({
-    "model": "llama-3.3-70b-versatile",
+    "model": selectedModel,
     "messages": [
       {"role": "system", "content": ""},
       {"role": "user", "content": prompt}
     ],
+    "temperature": 1,
+    "max_tokens":
+        selectedModel == "deepseek-r1-distill-llama-70b" ? 131072 : 32768,
     "stream": true,
   });
 
@@ -32,9 +62,10 @@ Future streamApiResponse(
     ..headers.addAll(headers)
     ..body = body;
 
-
   try {
     final http.StreamedResponse response = await client.send(request);
+    print(response.statusCode);
+    print(response.reasonPhrase);
     if (response.statusCode == 401) {
       callback('Incorrect API Key provided.');
       return;
@@ -57,20 +88,32 @@ Future<void> _processStream(
   Future<dynamic> Function(String) callback,
   VoidCallback onDone,
 ) async {
+  // Create a StringBuffer to accumulate the content from the stream
+  StringBuffer accumulatedContent = StringBuffer();
+
   await response.stream
-      .transform(utf8.decoder)
-      .transform(const LineSplitter())
+      .transform(utf8.decoder) // Decode the stream as UTF-8 text
+      .transform(const LineSplitter()) // Split the text into lines
       .listen(
         (String line) async {
           if (line.startsWith('data: ')) {
-            String jsonData = line.substring(6).trim();
+            String jsonData =
+                line.substring(6).trim(); // Remove 'data: ' prefix
+
             if (jsonData == '[DONE]') {
+              // Stream is done, trigger onDone callback
               onDone();
+              // Print the final accumulated content
+              print('Final Total Data: ${accumulatedContent.toString()}');
             } else {
               try {
-                var data = jsonDecode(jsonData);
+                var data = jsonDecode(jsonData); // Decode the JSON data
                 String content = data['choices'][0]['delta']['content'] ?? '';
+
                 if (content.isNotEmpty) {
+                  // Accumulate the content as it arrives
+                  accumulatedContent.writeln(content);
+                  // Call the callback with the content
                   await callback(content);
                 }
               } catch (e) {
@@ -79,13 +122,51 @@ Future<void> _processStream(
             }
           }
         },
-        onDone: onDone,
+        onDone: onDone, // This will be called when the stream is done
         onError: (error) {
           log('Error in stream: $error');
         },
       )
       .asFuture();
 }
+
+// Future<void> _processStream(
+//   http.StreamedResponse response,
+//   Future<dynamic> Function(String) callback,
+//   VoidCallback onDone,
+// ) async {
+//   await response.stream
+//       .transform(utf8.decoder)
+//       .transform(const LineSplitter())
+//       .listen(
+//         (String line) async {
+//           if (line.startsWith('data: ')) {
+//             String jsonData = line.substring(6).trim();
+//             if (jsonData == '[DONE]') {
+//               onDone();
+
+//             } else {
+//               try {
+//                 var data = jsonDecode(jsonData);
+//                 print(data);
+
+//                 String content = data['choices'][0]['delta']['content'] ?? '';
+//                 if (content.isNotEmpty) {
+//                   await callback(content);
+//                 }
+//               } catch (e) {
+//                 log('Error processing chunk: $e');
+//               }
+//             }
+//           }
+//         },
+//         onDone: onDone,
+//         onError: (error) {
+//           log('Error in stream: $error');
+//         },
+//       )
+//       .asFuture();
+// }
 
 bool isValidJson(String jsonString) {
   try {
@@ -117,4 +198,8 @@ void handlePartialResponseContent(
       callback(content);
     }
   }
+}
+
+Future<void> printFinalMessage(String content) async {
+  print('Final Message: $content');
 }
