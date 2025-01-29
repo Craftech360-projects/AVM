@@ -15,5 +15,4 @@ class AppImages {
   static const String search = "${basePath}search$format";
   static const String batteryIcon = "${basePath}battery_icon$format";
   static const String botIcon = "${basePath}bot_icon$format";
-  static const String neuralLink = "${basePath}neural_link$formatJPG";
 }
