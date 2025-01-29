@@ -326,7 +326,7 @@ Respond in a JSON format with the following structure:
       .replaceAll('  ', '')
       .trim();
 
-  var response = await executeGptPrompt(prompt);
+  var response = await executeGptPromptPlainText(prompt);
 
   return response;
 }
