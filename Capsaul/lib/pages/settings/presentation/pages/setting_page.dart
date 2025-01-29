@@ -66,15 +66,17 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _buildModelDropdown() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      decoration: BoxDecoration(
+        color: AppColors.greyLavender,
+        borderRadius: BorderRadius.circular(12),
+      ),
       child: DropdownButtonFormField<String>(
         value: selectedModel,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: const InputDecoration(
+          contentPadding: EdgeInsets.zero,
+          border: InputBorder.none,
         ),
         items: [
           DropdownMenuItem(
@@ -201,7 +203,7 @@ class _SettingPageState extends State<SettingPage> {
                   },
                 ),
                 Text(
-                  'AI Model Selection',
+                  'AI Model',
                   style: textTheme.titleMedium
                       ?.copyWith(fontSize: 20.h, fontWeight: FontWeight.w600),
                 ),
