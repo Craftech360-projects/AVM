@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:capsaul/backend/api_requests/api/prompt.dart';
@@ -17,7 +18,6 @@ import 'package:capsaul/core/widgets/custom_dialog_box.dart';
 import 'package:capsaul/core/widgets/typing_indicator.dart';
 import 'package:capsaul/features/capture/logic/openglass_mixin.dart';
 import 'package:capsaul/features/capture/presentation/capture_memory_page.dart';
-import 'package:capsaul/features/capture/presentation/wals.dart';
 import 'package:capsaul/features/capture/widgets/real_time_bot.dart';
 import 'package:capsaul/features/memories/bloc/memory_bloc.dart';
 import 'package:capsaul/pages/capture/location_service.dart';
@@ -67,8 +67,7 @@ class CapturePageState extends State<CapturePage>
         PhoneRecorderMixin,
         WebSocketMixin,
         OpenGlassMixin,
-        TickerProviderStateMixin,
-        IWalSyncListener {
+        TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   @override
   bool get wantKeepAlive => true;
@@ -76,6 +75,8 @@ class CapturePageState extends State<CapturePage>
   List<bool> dismissedList = [];
   BTDeviceStruct? btDevice;
   bool _hasTranscripts = false;
+
+  // IWalService get _wal => ServiceManager.instance().wal;
   final bool _isWalSupported = true;
   FocusNode memoriesTextFieldFocusNode = FocusNode(canRequestFocus: true);
   static const defaultQuietSecondsForMemoryCreation = 60;
@@ -106,8 +107,7 @@ class CapturePageState extends State<CapturePage>
 
   static const chunkSizeInSeconds = 60;
   static const flushIntervalInSeconds = 90;
-
-  late WalSyncs _walSyncs; // Will be properly initialized in initState
+  // Add this line
 
   @override
   void didChangeDependencies() {
@@ -261,6 +261,21 @@ class CapturePageState extends State<CapturePage>
   //   });
   //   notifyListeners();
   // }
+  final List<List<int>> _frames = [];
+  final HashSet<int> _syncFrameSeq = HashSet();
+
+  void onByteStream(List<int> value) {
+    _frames.add(value);
+  }
+
+  void onBytesSync(List<int> value) {
+    var head = value.sublist(0, 3);
+    var seq = Uint8List.fromList(head..add(0)).buffer.asByteData().getInt32(0);
+    _syncFrameSeq.add(seq);
+  }
+//
+
+//
 
   Future<void> initiateBytesStreamingProcessing() async {
     if (btDevice == null) return;
@@ -270,19 +285,19 @@ class CapturePageState extends State<CapturePage>
       btDevice!.id,
       onAudioBytesReceived: (List<int> value) {
         if (value.isEmpty) return;
-        
-        // Send to WalSync for immediate processing
+        log('value: $value');
         if (_isWalSupported) {
-          _walSyncs.phone.onByteStream(value);
+          onByteStream(value);
         }
-
-        // Handle audio storage and websocket
         audioStorage!.storeFramePacket(value);
-        List<int> trimmedValue = List<int>.from(value);
-        trimmedValue.removeRange(0, 3);
+        value.removeRange(0, 3);
+        log('value after removed: $value');
         if (wsConnectionState == WebsocketConnectionStatus.connected) {
-          websocketChannel?.sink.add(trimmedValue);
+          websocketChannel?.sink.add(value);
         }
+        print("lenght, ${value.length}");
+        onBytesSync(value);
+        print("svdvvh, ${_frames.toString()}");
       },
     );
   }
@@ -466,10 +481,6 @@ class CapturePageState extends State<CapturePage>
   @override
   void initState() {
     super.initState();
-    // Initialize _walSyncs with proper listener
-    _walSyncs = WalSyncs(this);
-    _walSyncs.start(); // Start the WalSync service
-
     btDevice = widget.device;
     WavBytesUtil.clearTempWavFiles();
     initiateWebsocket();
@@ -531,7 +542,6 @@ class CapturePageState extends State<CapturePage>
 
   @override
   void dispose() {
-    _walSyncs.stop(); // Stop the WalSync service
     _memoryCreationTimer?.cancel();
     _bleBytesStream?.cancel();
     _scrollController.dispose();
@@ -559,11 +569,6 @@ class CapturePageState extends State<CapturePage>
         }
       }
     }
-  }
-
-  @override
-  void onMissingWalUpdated() {
-    // Implement the method from IWalSyncListener
   }
 
   @override
