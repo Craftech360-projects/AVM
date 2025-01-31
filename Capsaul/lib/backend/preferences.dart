@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:capsaul/backend/database/transcript_segment.dart';
 import 'package:capsaul/backend/schema/plugin.dart';
 import 'package:capsaul/env/env.dart';
+import 'package:capsaul/features/capture/presentation/wals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesUtil {
@@ -19,6 +20,16 @@ class SharedPreferencesUtil {
 
   static Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
+  }
+
+  set wals(List<Wal> wals) {
+    final List<String> value = wals.map((e) => jsonEncode(e.toJson())).toList();
+    saveStringList('wals', value);
+  }
+
+  List<Wal> get wals {
+    final List<String> value = getStringList('wals') ?? [];
+    return Wal.fromJsonList(value.map((e) => jsonDecode(e)).toList());
   }
 
   static const String _modelKey = 'selectedModel';

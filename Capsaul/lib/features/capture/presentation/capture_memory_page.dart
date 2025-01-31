@@ -6,6 +6,7 @@ import 'package:capsaul/core/theme/app_colors.dart';
 import 'package:capsaul/core/widgets/typing_indicator.dart';
 import 'package:capsaul/features/capture/models/filter_item.dart';
 import 'package:capsaul/features/capture/presentation/capture_page.dart';
+import 'package:capsaul/features/capture/presentation/local_sync_page.dart';
 import 'package:capsaul/features/capture/widgets/filter_widget.dart';
 import 'package:capsaul/features/capture/widgets/greeting_card.dart';
 import 'package:capsaul/features/connectivity_bloc/connectivity_bloc.dart';
@@ -467,6 +468,21 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
             if (_isScrolled)
               Positioned(
                   top: 0, left: 0, right: 0, child: _buildScrollGradient()),
+            Positioned(
+              top: 10,
+              right: 10,
+              child: IconButton(
+                icon: Icon(Icons.sync),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LocalSyncPage(),
+                    ),
+                  );
+                },
+              ),
+            ),
           ]);
         },
       ),
