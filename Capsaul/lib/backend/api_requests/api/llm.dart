@@ -7,6 +7,7 @@ import 'package:capsaul/backend/preferences.dart';
 import 'package:http/http.dart' as http;
 
 const apiKey = "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";
+
 Future<dynamic> gptApiCall({
   required String model,
   String urlSuffix = 'chat/completions',
@@ -66,9 +67,6 @@ Future<dynamic> llamaApiCall({
   // ✅ Dynamically set maxTokens based on model
   int maxTokens = (model == "deepseek-r1-distill-llama-70b") ? 131072 : 32768;
 
-  print("model------, $model");
-  print("maxTokens------, $maxTokens");
-
   final headers = {
     'Content-Type': 'application/json',
     'Authorization':
@@ -96,12 +94,11 @@ Future<dynamic> llamaApiCall({
   try {
     var response =
         await http.post(Uri.parse(url), headers: headers, body: body);
-    print(response.body);
     if (response.statusCode == 200) {
       var decodedResponse = jsonDecode(response.body);
       return decodedResponse['choices'][0]['message']['content'];
     } else {
-      log("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
+      log("Error ---->: ${response.statusCode} ${response.reasonPhrase}");
       return null;
     }
   } catch (e) {
@@ -152,7 +149,7 @@ Future<dynamic> llamaPluginApiCall({
       // Extract and return only the content
       return decodedResponse['choices'][0]['message']['content'];
     } else {
-      log("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
+      log("Error ---->: ${response.statusCode} ${response.reasonPhrase}");
       return null;
     }
   } catch (e) {
@@ -165,7 +162,6 @@ Future<dynamic> llamaPluginApiCallPlainText({
   required String message,
   double temperature = 1,
 }) async {
-  print(message);
 
   // Define the URL for the LLaMA API
   const url = 'https://api.groq.com/openai/v1/chat/completions';
@@ -175,9 +171,6 @@ Future<dynamic> llamaPluginApiCallPlainText({
 
   // ✅ Set maxTokens dynamically based on model
   int maxTokens = (model == "deepseek-r1-distill-llama-70b") ? 131072 : 32768;
-
-  print("model------, $model");
-  print("maxTokens------, $maxTokens");
 
   // Define the headers for the request
   final headers = {
@@ -212,7 +205,6 @@ Future<dynamic> llamaPluginApiCallPlainText({
 
     if (response.statusCode == 200) {
       String responseBody = response.body;
-      print("Raw Response: $responseBody");
 
       var decodedResponse = jsonDecode(responseBody);
 
@@ -227,7 +219,7 @@ Future<dynamic> llamaPluginApiCallPlainText({
       // ✅ Return the cleaned content
       return finalResponseBody;
     } else {
-      log("Error>>>>>: ${response.statusCode} ${response.reasonPhrase}");
+      log("Error ---->: ${response.statusCode} ${response.reasonPhrase}");
       return null;
     }
   } catch (e) {
@@ -247,7 +239,6 @@ Future<String> executeGptPrompt(String? prompt,
   }
 
   //api call using llama
-  print("hereeeee");
   String response = await llamaApiCall(
     message: prompt,
     temperature: 1, // Adjust temperature as needed
@@ -270,7 +261,6 @@ Future<String> executeGptPluginPrompt(String? prompt,
   }
 
   //api call using llama
-  print("hereeeee>>>>>>>>>>>>>>>>>>");
   String response = await llamaPluginApiCall(
       message: prompt,
       temperature: 1, // Adjust temperature as needed
@@ -293,7 +283,6 @@ Future<String> executeGptPromptPlainText(String? prompt,
   }
 
   //api call using llama
-
   String response = await llamaPluginApiCallPlainText(
     message: prompt,
     temperature: 1, // Adjust temperature as needed

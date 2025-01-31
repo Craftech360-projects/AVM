@@ -26,7 +26,6 @@ Future<String> generateRequestBody(String prompt) async {
 void switchModel(bool useDeepSeek) {
   SharedPreferencesUtil().selectedModel =
       useDeepSeek ? "deepseek-r1-distill-llama-70b" : "llama-3.3-70b-versatile";
-  print("Model switched to: ${SharedPreferencesUtil().selectedModel}");
 }
 
 Future streamApiResponse(
@@ -44,7 +43,6 @@ Future streamApiResponse(
 
   // ✅ Get the model dynamically from SharedPreferences
   String selectedModel = SharedPreferencesUtil().selectedModel;
-  print("model------, $selectedModel");
   // ✅ Use the dynamic model in the request body
   var body = jsonEncode({
     "model": selectedModel,
@@ -64,8 +62,6 @@ Future streamApiResponse(
 
   try {
     final http.StreamedResponse response = await client.send(request);
-    print(response.statusCode);
-    print(response.reasonPhrase);
     if (response.statusCode == 401) {
       callback('Incorrect API Key provided.');
       return;
@@ -104,7 +100,6 @@ Future<void> _processStream(
               // Stream is done, trigger onDone callback
               onDone();
               // Print the final accumulated content
-              print('Final Total Data: ${accumulatedContent.toString()}');
             } else {
               try {
                 var data = jsonDecode(jsonData); // Decode the JSON data
@@ -201,5 +196,4 @@ void handlePartialResponseContent(
 }
 
 Future<void> printFinalMessage(String content) async {
-  print('Final Message: $content');
 }

@@ -39,7 +39,8 @@ Future<bool> customDialogBox(BuildContext context,
           Text(
             message,
             style: TextStyle(
-              fontSize: 16,
+              height: 1.2,
+              fontSize: 14.5,
               color: AppColors.blueGreyDark,
             ),
           ),
@@ -61,7 +62,10 @@ Future<bool> customDialogBox(BuildContext context,
             Navigator.of(c).pop();
           },
           icon: const Icon(Icons.close, color: AppColors.white),
-          label: const Text('No'),
+          label: const Text(
+            'No',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          ),
         ),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -76,7 +80,10 @@ Future<bool> customDialogBox(BuildContext context,
             Navigator.of(c).pop();
           },
           icon: const Icon(Icons.check, color: AppColors.white),
-          label: const Text('Yes'),
+          label: const Text(
+            'Yes',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          ),
         ),
       ],
     ),
@@ -116,14 +123,15 @@ void showPermissionDeniedDialog(
           Text(
             message,
             style: TextStyle(
-              fontSize: 16,
+              height: 1.2,
+              fontSize: 14.5,
               color: AppColors.blueGreyDark,
             ),
           ),
           h8,
         ],
       ),
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actionsAlignment: MainAxisAlignment.spaceBetween,
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -136,7 +144,10 @@ void showPermissionDeniedDialog(
             Navigator.of(c).pop();
           },
           icon: const Icon(Icons.check, color: AppColors.white),
-          label: const Text('Ok'),
+          label: const Text(
+            'Ok',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          ),
         ),
       ],
     ),
@@ -163,7 +174,7 @@ class CustomDialogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: br12,
       ),
       backgroundColor: AppColors.white,
       title: FittedBox(
@@ -190,14 +201,15 @@ class CustomDialogWidget extends StatelessWidget {
           Text(
             message,
             style: TextStyle(
-              fontSize: 16,
+              height: 1.2,
+              fontSize: 14.5,
               color: AppColors.blueGreyDark,
             ),
           ),
           h8,
         ],
       ),
-      actionsAlignment: MainAxisAlignment.spaceEvenly,
+      actionsAlignment: MainAxisAlignment.spaceBetween,
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -211,7 +223,10 @@ class CustomDialogWidget extends StatelessWidget {
             Navigator.of(context).pop();
           },
           icon: const Icon(Icons.close, color: AppColors.white),
-          label: const Text('No'),
+          label: const Text(
+            'No',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          ),
         ),
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -223,7 +238,10 @@ class CustomDialogWidget extends StatelessWidget {
           ),
           onPressed: yesPressed,
           icon: const Icon(Icons.check, color: AppColors.white),
-          label: const Text('Yes'),
+          label: const Text(
+            'Yes',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+          ),
         ),
       ],
     );

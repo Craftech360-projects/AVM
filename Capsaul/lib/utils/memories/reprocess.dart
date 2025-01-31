@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:capsaul/backend/api_requests/api/pinecone.dart';
 import 'package:capsaul/backend/api_requests/api/prompt.dart';
 import 'package:capsaul/backend/database/memory.dart';
 import 'package:capsaul/backend/database/memory_provider.dart';
 import 'package:capsaul/backend/mixpanel.dart';
+import 'package:capsaul/utils/features/calendar.dart';
+import 'package:capsaul/utils/memories/process.dart';
 import 'package:flutter/material.dart';
 
 import '../../backend/database/prompt_provider.dart';
@@ -14,6 +18,7 @@ Future<Memory?> reProcessMemory(
   Function onFailedProcessing,
   Function changeLoadingState,
 ) async {
+  try{
   changeLoadingState();
   SummaryResult summaryResult;
   try {
@@ -50,16 +55,21 @@ Future<Memory?> reProcessMemory(
   structured.overview = newStructured.overview;
   structured.emoji = newStructured.emoji;
   structured.category = newStructured.category;
-  structured.actionItems.clear();
-  structured.actionItems.addAll(newStructured.actionItems
-      .map<ActionItem>((i) => ActionItem(i.description))
-      .toList());
+  structured.brainstormingQuestions = newStructured.brainstormingQuestions;
 
-  structured.events.clear();
-  for (var event in newStructured.events) {
-    structured.events.add(Event(event.title, event.startsAt, event.duration,
-        description: event.description));
+  if (newStructured.profileInsights != null) {
+    structured.profileInsights =
+        Map<String, dynamic>.from(newStructured.profileInsights!);
   }
+
+  structured.actionItems
+    ..clear()
+    ..addAll(newStructured.actionItems.map((i) => ActionItem(i.description)));
+
+  structured.events
+    ..clear()
+    ..addAll(newStructured.events.map((e) =>
+        Event(e.title, e.startsAt, e.duration, description: e.description)));
 
   memory.structured.target = structured;
   memory.discarded = false;
@@ -71,16 +81,38 @@ Future<Memory?> reProcessMemory(
         .toList(),
   );
 
-  // Add Calendar Events
+  // Update user profile with new insights
+  await updateUserProfile(structured);
+
+  // Update calendar events if needed
+  if (SharedPreferencesUtil().calendarEnabled) {
+    for (var event in structured.events) {
+      event.created = await CalendarUtil().createEvent(
+          event.title, event.startsAt, event.duration,
+          description: event.description);
+    }
+  }
 
   getEmbeddingsFromInput(structured.toString()).then((vector) {
     // update instead if it wasn't "discarded"
     // upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
   });
 
-  MemoryProvider().updateMemoryStructured(structured);
-  MemoryProvider().updateMemory(memory);
-  changeLoadingState();
-  MixpanelManager().reProcessMemory(memory);
-  return memory;
+  // Persist changes
+    MemoryProvider().updateMemoryStructured(structured);
+    MemoryProvider().updateMemory(memory);
+    
+    // Analytics
+    MixpanelManager().reProcessMemory(memory);
+    
+    return memory;
+
+    } catch (err, stack) {
+    log('Reprocessing Error', error: err, stackTrace: stack);
+    MixpanelManager().track(err.toString());
+    onFailedProcessing();
+    return null;
+  } finally {
+    changeLoadingState();
+  }
 }

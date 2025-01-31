@@ -34,17 +34,79 @@ class PermissionsService {
     return isAllowed;
   }
 
+  // static Future<bool> requestLocationPermission(BuildContext context) async {
+  //   location_handler.Location location = location_handler.Location();
+
+  //   bool serviceEnabled = await location.serviceEnabled();
+  //   if (!serviceEnabled) {
+  //     bool userResponse = await customDialogBox(
+  //       context,
+  //       icon: Icons.location_on_rounded,
+  //       title: 'Location Permission',
+  //       message:
+  //           'This app needs access to your location to tag memories with location data.',
+  //     );
+  //     if (userResponse) {
+  //       serviceEnabled = await location.requestService();
+  //       if (!serviceEnabled) {
+  //         if (context.mounted) {
+  //           showPermissionDeniedDialog(context, 'Location Service Disabled',
+  //               'Please enable location services in your settings for a better experience.');
+  //         }
+  //         return false;
+  //       }
+  //     } else {
+  //       return false;
+  //     }
+  //   }
+
+  //   location_handler.PermissionStatus permissionStatus =
+  //       await location.hasPermission();
+  //   if (permissionStatus == location_handler.PermissionStatus.denied ||
+  //       permissionStatus == location_handler.PermissionStatus.deniedForever) {
+  //     bool userResponse = await customDialogBox(
+  //       context,
+  //       icon: Icons.location_on_rounded,
+  //       title: 'Location Permission Required',
+  //       message:
+  //           'This app collects location data to tag memories with their location, even when the app is closed or not in use. This helps in remembering where your memories happened. Do you want to continue?',
+  //     );
+  //     if (userResponse) {
+  //       permissionStatus = await location.requestPermission();
+  //       if (permissionStatus ==
+  //           location_handler.PermissionStatus.deniedForever) {
+  //         if (context.mounted) {
+  //           showPermissionDeniedDialog(context, 'Location Permission Denied',
+  //               'Location permissions are denied permanently. Please enable them in settings.');
+  //         }
+  //         return false;
+  //       } else if (permissionStatus ==
+  //           location_handler.PermissionStatus.denied) {
+  //         return false;
+  //       }
+  //     } else {
+  //       return false;
+  //     }
+  //   }
+
+  //   // Mark the permission as requested
+  //   SharedPreferencesUtil().locationPermissionRequested = true;
+
+  //   return permissionStatus == location_handler.PermissionStatus.granted;
+  // }
+
   static Future<bool> requestLocationPermission(BuildContext context) async {
     location_handler.Location location = location_handler.Location();
 
+    // Check if location services are enabled
     bool serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
       bool userResponse = await customDialogBox(
         context,
         icon: Icons.location_on_rounded,
-        title: 'Location Permission',
+        title: 'Enable Location Services',
         message:
-            'This app needs access to your location to tag memories with location data.',
+            'This app requires location services to be enabled to tag your memories with location data. Please turn on location services to continue.',
       );
       if (userResponse) {
         serviceEnabled = await location.requestService();
@@ -60,19 +122,24 @@ class PermissionsService {
       }
     }
 
+    // Check location permission status
     location_handler.PermissionStatus permissionStatus =
         await location.hasPermission();
+
     if (permissionStatus == location_handler.PermissionStatus.denied ||
         permissionStatus == location_handler.PermissionStatus.deniedForever) {
+      // Prominent Disclosure BEFORE requesting permission
       bool userResponse = await customDialogBox(
         context,
         icon: Icons.location_on_rounded,
-        title: 'Location Permission',
+        title: 'Location Permission Required',
         message:
-            'Location permission is needed to tag memories with their location. This can help you remember where they happened.',
+            'This app collects location data to tag memories with their location, even when the app is closed or not in use. This helps in remembering where your memories happened. Do you want to continue?',
       );
+
       if (userResponse) {
         permissionStatus = await location.requestPermission();
+
         if (permissionStatus ==
             location_handler.PermissionStatus.deniedForever) {
           if (context.mounted) {
@@ -86,6 +153,22 @@ class PermissionsService {
         }
       } else {
         return false;
+      }
+    }
+
+    // Request Background Location Permission if Foreground Permission is granted
+    if (permissionStatus == location_handler.PermissionStatus.granted) {
+      bool backgroundUserResponse = await customDialogBox(
+        context,
+        icon: Icons.location_on_rounded,
+        title: 'Allow Background Location?',
+        message:
+            'To ensure your memories are tagged accurately, we need access to your location even when the app is closed or not in use. This helps us associate locations even when you are not actively using the app. Would you like to enable background location access?',
+      );
+
+      if (backgroundUserResponse) {
+        // Request Background Location Permission
+        permissionStatus = await location.requestPermission();
       }
     }
 

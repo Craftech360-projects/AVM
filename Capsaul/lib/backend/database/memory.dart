@@ -2,11 +2,10 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
-
+import 'package:objectbox/objectbox.dart';
 import 'package:capsaul/backend/database/geolocation.dart';
 import 'package:capsaul/backend/database/transcript_segment.dart';
 import 'package:flutter/material.dart';
-import 'package:objectbox/objectbox.dart';
 
 enum MemoryType { audio, image }
 
@@ -190,11 +189,11 @@ class Memory {
 class Structured {
   @Id()
   int id = 0;
-
   String title;
   String overview;
   String emoji;
   List<String> category = [];
+  Map<String, dynamic>? profileInsights;
 
   @Backlink('structured')
   final actionItems = ToMany<ActionItem>();
@@ -205,11 +204,15 @@ class Structured {
   List<String> brainstormingQuestions = [];
   String? get placeName => geolocation.target?.placeName;
 
-  Structured(this.title, this.overview,
-      {this.id = 0,
-      this.emoji = '',
-      this.category = const [],
-      this.brainstormingQuestions = const []});
+  Structured(
+    this.title,
+    this.overview, {
+    this.id = 0,
+    this.emoji = '',
+    this.category = const [],
+    this.brainstormingQuestions = const [],
+    this.profileInsights,
+  });
 
   getEmoji() {
     try {
@@ -236,7 +239,11 @@ class Structured {
       brainstormingQuestions: json['brainstormingQuestions'] != null
           ? List<String>.from(json['brainstormingQuestions'])
           : [],
+      profileInsights: json['profileInsights'] != null
+          ? Map<String, dynamic>.from(json['profileInsights'])
+          : null, // Add this line
     );
+
     if (json['geolocation'] != null) {
       structured.geolocation.target = Geolocation.fromJson(json['geolocation']);
     }
@@ -276,21 +283,22 @@ class Structured {
 
   @override
   String toString() {
-    return 'Structured(id: $id, title: $title, overview: $overview, emoji: $emoji, category: $category, brainstormingQuestions: $brainstormingQuestions)';
+    return 'Structured(id: $id, title: $title, overview: $overview, emoji: $emoji, category: $category, brainstormingQuestions: $brainstormingQuestions, profileInsights: $profileInsights,)';
   }
 
   toJson() {
-    return {
-      'title': title,
-      'overview': overview,
-      'emoji': emoji,
-      'category': category,
-      'brainstormingQuestions': brainstormingQuestions,
-      'actionItems': actionItems.map((item) => item.description).toList(),
-      'events': events.map((event) => event.toJson()).toList(),
-      'geolocation': geolocation.target?.toJson(),
-    };
-  }
+  return {
+    'title': title,
+    'overview': overview,
+    'emoji': emoji,
+    'category': category,
+    'brainstormingQuestions': brainstormingQuestions,
+    'actionItems': actionItems.map((item) => item.description).toList(),
+    'events': events.map((event) => event.toJson()).toList(),
+    'geolocation': geolocation.target?.toJson(),
+    'profileInsights': profileInsights,
+  };
+}
 }
 
 @Entity()

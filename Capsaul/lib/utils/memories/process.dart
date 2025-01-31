@@ -2,25 +2,26 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:capsaul/backend/api_requests/api/other.dart';
-//import 'package:capsaul/backend/api_requests/api/pinecone.dart';
+//import 'package:capsaul/d/api_requests/api/pinecone.dart';
 import 'package:capsaul/backend/api_requests/api/prompt.dart';
 import 'package:capsaul/backend/api_requests/api/random_memory_img.dart';
 import 'package:capsaul/backend/database/geolocation.dart';
 import 'package:capsaul/backend/database/memory.dart';
 import 'package:capsaul/backend/database/memory_provider.dart';
 import 'package:capsaul/backend/database/message.dart';
+import 'package:capsaul/backend/database/profile_entity.dart';
 import 'package:capsaul/backend/database/prompt_provider.dart';
 import 'package:capsaul/backend/database/transcript_segment.dart';
 import 'package:capsaul/backend/preferences.dart';
 import 'package:capsaul/backend/schema/plugin.dart';
 import 'package:capsaul/core/constants/constants.dart';
-import 'package:capsaul/pages/capture/location_service.dart';
 import 'package:capsaul/utils/features/backup_util.dart';
 import 'package:capsaul/utils/features/calendar.dart';
-import 'package:capsaul/utils/memories/integrations.dart';
 import 'package:flutter/material.dart';
 import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:tuple/tuple.dart';
+
+import '../../backend/database/box.dart';
 
 // Perform actions periodically
 Future<Memory?> processTranscriptContent(
@@ -35,30 +36,20 @@ Future<Memory?> processTranscriptContent(
   List<Tuple2<String, String>> photos = const [],
   Function(Message, Memory?)? sendMessageToChat,
 }) async {
-  LocationService locationService = LocationService();
-  if (await locationService.hasPermission() &&
-      await locationService.enableService()) {
-  } else {
-    log("Geolocation permissions not granted or service disabled.");
-  }
-  if (transcript.isNotEmpty || photos.isNotEmpty) {
-    Memory? memory = await memoryCreationBlock(
-      context,
-      transcript,
-      transcriptSegments,
-      recordingFilePath,
-      retrievedFromCache,
-      startedAt,
-      finishedAt,
-      geolocation,
-      photos,
-    );
-    log("Memory created: ${memory.geolocation.target != null ? 'Lat: ${memory.geolocation.target!.latitude}, Lon: ${memory.geolocation.target!.longitude}, Address: ${memory.geolocation.target!.address}' : 'No geolocation'}");
-    MemoryProvider().saveMemory(memory);
-    triggerMemoryCreatedEvents(memory, sendMessageToChat: sendMessageToChat);
-    return memory;
-  }
-  return null;
+  // Existing logic to create memory
+  Memory? memory = await memoryCreationBlock(
+    context,
+    transcript,
+    transcriptSegments,
+    recordingFilePath,
+    retrievedFromCache,
+    startedAt,
+    finishedAt,
+    geolocation,
+    photos,
+  );
+
+  return memory;
 }
 
 Future<SummaryResult?> _retrieveStructure(
@@ -94,23 +85,12 @@ Future<SummaryResult?> _retrieveStructure(
     }
   } catch (e) {
     log('Error: $e');
-    // CrashReporting.reportHandledCrash(e, stacktrace,
-    //     level: NonFatalExceptionLevel.error,
-    //     userAttributes: {
-    //       'transcript_length': transcript.length.toString(),
-    //       'transcript_words': transcript.split(' ').length.toString(),
-    //       'language': SharedPreferencesUtil().recordingsLanguage,
-    //       'developer_mode_enabled':
-    //           SharedPreferencesUtil().devModeEnabled.toString(),
-    //       'dev_mode_has_api_key':
-    //           (SharedPreferencesUtil().openAIApiKey != '').toString(),
-    //     });
     return null;
   }
   return summary;
 }
 
-Future<Memory> memoryCreationBlock(
+Future<Memory?> memoryCreationBlock(
   BuildContext context,
   String transcript,
   List<TranscriptSegment> transcriptSegments,
@@ -125,6 +105,7 @@ Future<Memory> memoryCreationBlock(
       await _retrieveStructure(context, transcript, photos, retrievedFromCache);
   bool failed = false;
   if (summarizeResult == null) {
+    if (!context.mounted) return null;
     summarizeResult = await _retrieveStructure(
         context, transcript, photos, retrievedFromCache,
         ignoreCache: true);
@@ -135,6 +116,7 @@ Future<Memory> memoryCreationBlock(
         [],
       );
       if (!retrievedFromCache) {
+        if (!context.mounted) return null;
         InstabugLog.logError('Unable to create memory structure.');
         avmSnackBar(context,
             "Unexpected error creating your memory. Please check your discarded memories.");
@@ -171,6 +153,8 @@ Future<Memory> memoryCreationBlock(
     photos,
   );
 
+  updateUserProfile(structured);
+
   if (!retrievedFromCache) {
     if (structured.title.isEmpty && !failed) {
       avmSnackBar(context,
@@ -185,6 +169,35 @@ Future<Memory> memoryCreationBlock(
     }
   }
   return memory;
+}
+
+// 2. Update the updateUserProfile function in process.dart
+Future<void> updateUserProfile(Structured structured) async {
+  try {
+    final box = ObjectBoxUtil().box!.store.box<Profile>();
+    Profile profile = box.get(1) ?? Profile();
+
+    // Update categories
+    profile.categories = <String>{
+      ...profile.categories.whereType<String>(),
+      ...structured.category.whereType<String>()
+    }.toList();
+
+    // Merge new insights
+    if (structured.profileInsights != null) {
+      profile.mergeInsights(structured.profileInsights!);
+    }
+
+    // Update emoji if new one exists
+    if (structured.emoji.isNotEmpty) {
+      profile.emoji = structured.emoji;
+    }
+
+    profile.lastUpdated = DateTime.now();
+    box.put(profile);
+  } catch (e) {
+    log("Error updating profile: $e");
+  }
 }
 
 // Finalize memory record after processing feedback

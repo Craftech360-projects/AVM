@@ -100,10 +100,16 @@ class MemoryProvider {
     }
   }
 
-  int updateMemory(Memory memory) => _box.put(memory);
+  Future<void> updateMemory(Memory memory) async {
+    final box = ObjectBoxUtil().box!.store.box<Memory>();
+    box.put(memory);
+  } // ---> Updated function
 
-  int updateMemoryStructured(Structured structured) =>
-      _boxStructured.put(structured);
+  Future<void> updateMemoryStructured(Structured structured) async {
+    final box = ObjectBoxUtil().box!.store.box<Structured>();
+    box.put(structured);
+  } // ---> Updated function
+
 
   Memory? getMemoryById(int id) => _box.get(id);
 

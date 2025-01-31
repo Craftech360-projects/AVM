@@ -17,6 +17,7 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 import 'backend/database/geolocation.dart';
 import 'backend/database/memory.dart';
 import 'backend/database/message.dart';
+import 'backend/database/profile_entity.dart';
 import 'backend/database/prompt.dart';
 import 'backend/database/transcript_segment.dart';
 
@@ -495,6 +496,80 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(11, 7217141358242352499),
+      name: 'Profile',
+      lastPropertyId: const obx_int.IdUid(13, 4998799422150092173),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 3893797906662704386),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 5855945356785116254),
+            name: 'core',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 1123579673728409650),
+            name: 'lifestyle',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 3022490245128466721),
+            name: 'hobbies',
+            type: 30,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 1486831852046005238),
+            name: 'interests',
+            type: 30,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 6354303140340975511),
+            name: 'habits',
+            type: 30,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 6041406212048156941),
+            name: 'work',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(8, 3690818995638602198),
+            name: 'skills',
+            type: 30,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(9, 5125134121247668516),
+            name: 'learnings',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(10, 6229586696320991589),
+            name: 'others',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(11, 5750491026101707295),
+            name: 'lastUpdated',
+            type: 10,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(12, 9197003405914847930),
+            name: 'emoji',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(13, 4998799422150092173),
+            name: 'categories',
+            type: 30,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -533,7 +608,7 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(10, 1791464344042370718),
+      lastEntityId: const obx_int.IdUid(11, 7217141358242352499),
       lastIndexId: const obx_int.IdUid(11, 8287585027820134538),
       lastRelationId: const obx_int.IdUid(3, 7136919903563407649),
       lastSequenceId: const obx_int.IdUid(0, 0),
@@ -1102,6 +1177,91 @@ obx_int.ModelDefinition getObjectBoxModel() {
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
 
           return object;
+        }),
+    Profile: obx_int.EntityDefinition<Profile>(
+        model: _entities[10],
+        toOneRelations: (Profile object) => [],
+        toManyRelations: (Profile object) => {},
+        getId: (Profile object) => object.id,
+        setId: (Profile object, int id) {
+          object.id = id;
+        },
+        objectToFB: (Profile object, fb.Builder fbb) {
+          final coreOffset = fbb.writeString(object.core);
+          final lifestyleOffset = fbb.writeString(object.lifestyle);
+          final hobbiesOffset = fbb.writeList(
+              object.hobbies.map(fbb.writeString).toList(growable: false));
+          final interestsOffset = fbb.writeList(
+              object.interests.map(fbb.writeString).toList(growable: false));
+          final habitsOffset = fbb.writeList(
+              object.habits.map(fbb.writeString).toList(growable: false));
+          final workOffset = fbb.writeString(object.work);
+          final skillsOffset = fbb.writeList(
+              object.skills.map(fbb.writeString).toList(growable: false));
+          final learningsOffset = fbb.writeString(object.learnings);
+          final othersOffset = fbb.writeString(object.others);
+          final emojiOffset = fbb.writeString(object.emoji);
+          final categoriesOffset = fbb.writeList(
+              object.categories.map(fbb.writeString).toList(growable: false));
+          fbb.startTable(14);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, coreOffset);
+          fbb.addOffset(2, lifestyleOffset);
+          fbb.addOffset(3, hobbiesOffset);
+          fbb.addOffset(4, interestsOffset);
+          fbb.addOffset(5, habitsOffset);
+          fbb.addOffset(6, workOffset);
+          fbb.addOffset(7, skillsOffset);
+          fbb.addOffset(8, learningsOffset);
+          fbb.addOffset(9, othersOffset);
+          fbb.addInt64(10, object.lastUpdated.millisecondsSinceEpoch);
+          fbb.addOffset(11, emojiOffset);
+          fbb.addOffset(12, categoriesOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = Profile()
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+            ..core = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 6, '')
+            ..lifestyle = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 8, '')
+            ..hobbies = const fb.ListReader<String>(
+                    fb.StringReader(asciiOptimization: true),
+                    lazy: false)
+                .vTableGet(buffer, rootOffset, 10, [])
+            ..interests = const fb.ListReader<String>(
+                    fb.StringReader(asciiOptimization: true),
+                    lazy: false)
+                .vTableGet(buffer, rootOffset, 12, [])
+            ..habits = const fb.ListReader<String>(
+                    fb.StringReader(asciiOptimization: true),
+                    lazy: false)
+                .vTableGet(buffer, rootOffset, 14, [])
+            ..work = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 16, '')
+            ..skills = const fb.ListReader<String>(
+                    fb.StringReader(asciiOptimization: true),
+                    lazy: false)
+                .vTableGet(buffer, rootOffset, 18, [])
+            ..learnings = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 20, '')
+            ..others = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 22, '')
+            ..lastUpdated = DateTime.fromMillisecondsSinceEpoch(
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0))
+            ..emoji = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 26, '')
+            ..categories = const fb.ListReader<String>(
+                    fb.StringReader(asciiOptimization: true),
+                    lazy: false)
+                .vTableGet(buffer, rootOffset, 28, []);
+
+          return object;
         })
   };
 
@@ -1432,4 +1592,59 @@ class Prompt_ {
   /// See [Prompt.calender].
   static final calender =
       obx.QueryStringProperty<Prompt>(_entities[9].properties[6]);
+}
+
+/// [Profile] entity fields to define ObjectBox queries.
+class Profile_ {
+  /// See [Profile.id].
+  static final id =
+      obx.QueryIntegerProperty<Profile>(_entities[10].properties[0]);
+
+  /// See [Profile.core].
+  static final core =
+      obx.QueryStringProperty<Profile>(_entities[10].properties[1]);
+
+  /// See [Profile.lifestyle].
+  static final lifestyle =
+      obx.QueryStringProperty<Profile>(_entities[10].properties[2]);
+
+  /// See [Profile.hobbies].
+  static final hobbies =
+      obx.QueryStringVectorProperty<Profile>(_entities[10].properties[3]);
+
+  /// See [Profile.interests].
+  static final interests =
+      obx.QueryStringVectorProperty<Profile>(_entities[10].properties[4]);
+
+  /// See [Profile.habits].
+  static final habits =
+      obx.QueryStringVectorProperty<Profile>(_entities[10].properties[5]);
+
+  /// See [Profile.work].
+  static final work =
+      obx.QueryStringProperty<Profile>(_entities[10].properties[6]);
+
+  /// See [Profile.skills].
+  static final skills =
+      obx.QueryStringVectorProperty<Profile>(_entities[10].properties[7]);
+
+  /// See [Profile.learnings].
+  static final learnings =
+      obx.QueryStringProperty<Profile>(_entities[10].properties[8]);
+
+  /// See [Profile.others].
+  static final others =
+      obx.QueryStringProperty<Profile>(_entities[10].properties[9]);
+
+  /// See [Profile.lastUpdated].
+  static final lastUpdated =
+      obx.QueryDateProperty<Profile>(_entities[10].properties[10]);
+
+  /// See [Profile.emoji].
+  static final emoji =
+      obx.QueryStringProperty<Profile>(_entities[10].properties[11]);
+
+  /// See [Profile.categories].
+  static final categories =
+      obx.QueryStringVectorProperty<Profile>(_entities[10].properties[12]);
 }
