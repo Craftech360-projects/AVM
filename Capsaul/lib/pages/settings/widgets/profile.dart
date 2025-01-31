@@ -5,6 +5,7 @@ import 'package:capsaul/core/theme/app_colors.dart';
 import 'package:capsaul/core/widgets/typing_indicator.dart';
 import 'package:capsaul/features/wizard/pages/signin_page.dart';
 import 'package:capsaul/pages/home/custom_scaffold.dart';
+import 'package:capsaul/pages/settings/widgets/about_you.dart';
 import 'package:capsaul/pages/settings/widgets/backup_btn.dart';
 import 'package:capsaul/pages/settings/widgets/change_name_widget.dart';
 import 'package:capsaul/pages/settings/widgets/neural_screen.dart';
@@ -89,8 +90,8 @@ class _ProfilePageState extends State<ProfilePage> {
           context,
           PageRouteBuilder(
             transitionDuration: Duration(milliseconds: 500),
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                NeuralScreen(),
+            pageBuilder: (context, animation, secondaryAnimation) => AboutYouScreen(),
+                // NeuralScreen(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               var zoomInAnimation = Tween(begin: 0.9, end: 1.0).animate(

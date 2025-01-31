@@ -112,7 +112,7 @@ class CapturePageState extends State<CapturePage>
   // ignore: unused_element
   void _pluginNotification() async {
     String transcript = TranscriptSegment.segmentsAsString(segments);
-    String friendlyReplyJson = await generateCapsaullyReply(transcript);
+    String friendlyReplyJson = await generateCapsaulReply(transcript);
     var friendlyReplyMap = jsonDecode(friendlyReplyJson);
     String friendlyReply =
         friendlyReplyMap['reply'] ?? 'Default friendly reply';

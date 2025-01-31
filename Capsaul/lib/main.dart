@@ -6,6 +6,7 @@ import 'package:capsaul/backend/auth.dart';
 import 'package:capsaul/backend/database/box.dart';
 import 'package:capsaul/backend/database/memory_provider.dart';
 import 'package:capsaul/backend/database/message_provider.dart';
+import 'package:capsaul/backend/database/profile_provider.dart';
 import 'package:capsaul/backend/growthbook.dart';
 import 'package:capsaul/backend/mixpanel.dart';
 import 'package:capsaul/backend/preferences.dart';
@@ -227,6 +228,7 @@ class MyAppState extends State<MyApp> {
             BlocProvider<ConnectivityBloc>(
               create: (context) => ConnectivityBloc(),
             ),
+            ChangeNotifierProvider(create: (_) => ProfileProvider()),
           ],
           child: MaterialApp(
             navigatorObservers: [InstabugNavigatorObserver()],
