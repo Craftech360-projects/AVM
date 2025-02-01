@@ -9,7 +9,7 @@ from openai import OpenAI
 
 from utils.other.endpoints import timeit
 
-os.environ['GROQ_API_KEY'] = ''
+os.environ['GROQ_API_KEY'] = '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'
 os.environ['FAL_KEY'] = ''
 
 # filename = '../audioSamples/empty.wav'

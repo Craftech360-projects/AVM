@@ -1,0 +1,8 @@
+1.636 - 5.758:  Nothing directly related to what you just talked about, but sort of related.
+6.018 - 14.502: For FedRAMP, you're looking at any FIPS-related security issues that have been raised.
+15.102 - 19.664: How far are you going in terms of auditing to find anything that hasn't already been identified?
+21.745 - 26.167: There is... I'll link in another issue, a separate issue that is...
+27.354 - 34.379:  that has instructions from AppSec on what they would like us to do as far as setting up container scanning.
+34.819 - 42.184: And they have set up a project with a single configuration that they're asking us to use.
+42.885 - 53.832: There is some debate as to how that project has been configured because it uses a combination of three container scanning tools rather than one.
+56.034 - 59.684:  And so they've asked us to use that

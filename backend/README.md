@@ -7,7 +7,7 @@
 	```
 	gcloud auth login
 	gcloud config set project <project-id>
-	gcloud auth application-default login --project <project-id>
+	gcloud auth application-default login --project avme-2c4d0
 	```
 	Replace `<project-id>` with your Google Cloud Project ID
 	This should generate the `application_default_credentials.json` file in the `~/.config/gcloud` directory. This file is read automatically by gcloud in Python, so you don’t have to manually add any env for the service account.

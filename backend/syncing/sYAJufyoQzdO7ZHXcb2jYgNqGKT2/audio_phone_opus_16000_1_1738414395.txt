@@ -1,0 +1,4 @@
+4.561 - 32.44:  security findings on the commercial versions of analyzers specifically that was the catalyst for this particular conversation because on container scanning we get a lot of findings related to debian based images that that project has not shipped a fix for or won't fix ship a fix for um so there is a separate thread that is going on here about what to do can we do deviation requests in bulk for this class for this for this class of um
+33.34 - 33.961:  of findings.
+34.962 - 43.133: The TLDR is below, and there's a couple of options that are being brainstormed within this particular thread.
+43.173 - 50.121: So I wanted, and I know I've said a lot of words, I didn't say it well, but I'll put it here in case there was any questions or commentary.

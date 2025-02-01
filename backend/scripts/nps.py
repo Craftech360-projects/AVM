@@ -11,6 +11,7 @@ from database.users import get_all_ratings
 from database.auth import get_user_from_uid
 
 
+load_dotenv() 
 def calculate_nps():
     ratings = get_all_ratings(rating_type="chat_message")
     uid_to_ratings = defaultdict(list)

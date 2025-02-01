@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 from typing import List
 
-from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
+from fastapi import APIRouter, Header, UploadFile, File, Depends, HTTPException
 from opuslib import Decoder
 from pydub import AudioSegment
 
@@ -17,7 +17,7 @@ from utils.other import endpoints as auth
 from utils.other.storage import get_syncing_file_temporal_signed_url, delete_syncing_temporal_file
 from utils.stt.pre_recorded import fal_whisperx, fal_postprocessing
 from utils.stt.vad import vad_is_empty
-
+from utils.stt.whisperx import process_all_audio_files
 router = APIRouter()
 
 import shutil
@@ -119,7 +119,7 @@ def decode_files_to_wav(files_path: List[str]):
 def retrieve_vad_segments(path: str, segmented_paths: set):
     start_timestamp = get_timestamp_from_path(path)
     voice_segments = vad_is_empty(path, return_segments=True, cache=True)
-
+    print('voice_segments:', voice_segments)
     segments = []
     # should we merge more aggressively, to avoid too many small segments? ~ not for now
     # Pros -> lesser segments, faster, less concurrency
@@ -129,17 +129,19 @@ def retrieve_vad_segments(path: str, segmented_paths: set):
     # so ... let's merge them if distance < 120 seconds
     # a better option would be to keep here 1s, and merge them like that after transcribing
     # but FAL has 10 RPS limit, **let's merge it here for simplicity for now**
-
+   
     for i, segment in enumerate(voice_segments):
         if segments and (segment['start'] - segments[-1]['end']) < 120:
             segments[-1]['end'] = segment['end']
         else:
             segments.append(segment)
-
+    print('voice_segments:', voice_segments)
     print(path, segments)
 
     aseg = AudioSegment.from_wav(path)
+    print('aseg:', aseg.duration_seconds)
     path_dir = '/'.join(path.split('/')[:-1])
+    print('path_dir:', path_dir)
     for i, segment in enumerate(segments):
         if (segment['end'] - segment['start']) < 1:
             continue
@@ -207,28 +209,36 @@ def process_segment(path: str, uid: str, response: dict):
         response['updated_memories'].add(closest_memory['id'])
         update_memory_segments(uid, closest_memory['id'], segments)
 
-
 @router.post("/v1/sync-local-files")
-async def sync_local_files(files: List[UploadFile] = File(...), uid: str = Depends(auth.get_current_user_uid)):
+async def sync_local_files(
+    files: List[UploadFile] = File(...), 
+    uid: str = Header(None)
+):
+    if not uid:
+        raise HTTPException(status_code=400, detail="Missing uid header")
+
+    print("User ID:", uid)
+    print("files",files)
     # Improve a version without timestamp, to consider uploads from the stored in v2 device bytes.
     paths = retrieve_file_paths(files, uid)
+    print("step 1 - paths:", paths)
     wav_paths = decode_files_to_wav(paths)
-
+    print("step 2 - wav_paths:", wav_paths)
+    
     def chunk_threads(threads):
         chunk_size = 5
         for i in range(0, len(threads), chunk_size):
             [t.start() for t in threads[i:i + chunk_size]]
-            [t.join() for t in threads[i:i + chunk_size]]
+            [t.join() for t in threads[i+i + chunk_size]]
 
-    segmented_paths = set()
-    threads = [threading.Thread(target=retrieve_vad_segments, args=(path, segmented_paths)) for path in wav_paths]
-    chunk_threads(threads)
+    print(f'step 3-, syncing/{uid}/')
+    combined_transcripts = process_all_audio_files(directory=f"syncing/{uid}/")
 
-    print('sync_local_files len(segmented_paths)', len(segmented_paths))
-
-    response = {'updated_memories': set(), 'new_memories': set()}
-    threads = [threading.Thread(target=process_segment, args=(path, uid, response,)) for path in segmented_paths]
-    chunk_threads(threads)
-
-    # notify through FCM too ?
+    response = {
+        # 'updated_memories': set(),
+        # 'new_memories': set(),
+        'transcripts': combined_transcripts
+    }
+    print('response:', response)
     return response
+
