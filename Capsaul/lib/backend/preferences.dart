@@ -28,7 +28,7 @@ class SharedPreferencesUtil {
 
   // ✅ Retrieve the selected model (DeepSeek as default)
   String get selectedModel =>
-      getString(_modelKey) ?? "deepseek-r1-distill-llama-70b";
+      getString(_modelKey) ?? "llama-3.3-70b-versatile";
 
   set uid(String value) => saveString('uid', value);
   String get uid => getString('uid') ?? '';

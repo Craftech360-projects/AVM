@@ -23,11 +23,13 @@ class CustomScaffold extends StatefulWidget {
   final bool showBackBtn;
   final bool showBatteryLevel;
   final bool showGearIcon;
+  final bool? showRefreshIcon;
   final bool showDateTime;
   final bool? showAppBar;
   final bool? centerTitle;
   final double? titleSpacing;
   final VoidCallback? onBackBtnPressed;
+  final VoidCallback? onRefresh;
 
   const CustomScaffold({
     super.key,
@@ -45,9 +47,11 @@ class CustomScaffold extends StatefulWidget {
     this.showGearIcon = false,
     this.showDateTime = false,
     this.showAppBar = true,
+    this.showRefreshIcon = false,
     this.centerTitle,
     this.titleSpacing,
     this.onBackBtnPressed,
+    this.onRefresh,
   });
 
   @override
@@ -93,17 +97,15 @@ class CustomScaffoldState extends State<CustomScaffold> {
               backgroundColor: theme.appBarTheme.backgroundColor,
               elevation: 0,
               leading: widget.showBackBtn
-                  ? IconButton(
-                      alignment: Alignment.topLeft,
-                      visualDensity: VisualDensity(horizontal: 4, vertical: 4),
-                      padding: EdgeInsets.zero,
-                      onPressed: () {
+                  ? InkWell(
+                      onTap: () {
                         Navigator.pop(context);
                         if (widget.onBackBtnPressed != null) {
                           widget.onBackBtnPressed!();
                         }
                       },
-                      icon: const Icon(Icons.arrow_back_ios_new_rounded))
+                      child: Icon(Icons.arrow_back_ios_new_rounded),
+                    )
                   : null,
               title: widget.title,
               actions: [
@@ -138,20 +140,25 @@ class CustomScaffoldState extends State<CustomScaffold> {
                         ),
                       );
                     },
-                    child: CircleAvatar(
-                      backgroundColor: AppColors.white,
-                      child: Image.asset(
-                        width: 26,
-                        AppImages.gearIcon,
-                      ),
+                    child: Image.asset(
+                      width: 26,
+                      AppImages.gearIcon,
                     ),
                   ),
-                w8,
+                if (widget.showRefreshIcon == true)
+                  GestureDetector(
+                    onTap: widget.onRefresh,
+                    child: Icon(
+                      Icons.refresh_rounded,
+                      color: AppColors.black,
+                    ),
+                  ),
+                w16,
               ],
             )
           : null,
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 08),
         decoration: theme.brightness == Brightness.light
             ? const BoxDecoration(
                 gradient: LinearGradient(

@@ -132,7 +132,7 @@ class PermissionsService {
       bool userResponse = await customDialogBox(
         context,
         icon: Icons.location_on_rounded,
-        title: 'Location Permission Required',
+        title: 'Location Permission Required 🌍',
         message:
             'This app collects location data to tag memories with their location, even when the app is closed or not in use. This helps in remembering where your memories happened. Do you want to continue?',
       );
