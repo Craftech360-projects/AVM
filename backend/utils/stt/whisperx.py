@@ -20,7 +20,7 @@ model_by_language = {'en': whisperx.load_align_model(language_code='en', device=
 
 # huggingface_token = os.getenv('HUGGINGFACE_TOKEN')
 
-huggingface_token ="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"
+# huggingface_token ="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"
 print("token, ${huggingface_token}")
 if not huggingface_token:
     raise ValueError("HUGGINGFACE_TOKEN is required for diarization.")

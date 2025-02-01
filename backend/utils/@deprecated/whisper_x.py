@@ -108,9 +108,9 @@ compute_type = "float16" if device == "cuda" else "int8"
 model = whisperx.load_model("large-v3", device, compute_type=compute_type)
 model_by_language = {'en': whisperx.load_align_model(language_code='en', device=device)}
 
-# huggingface_token = os.getenv('HUGGINGFACE_TOKEN')
+# # huggingface_token = os.getenv('HUGGINGFACE_TOKEN')
 
-huggingface_token ="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"
+# huggingface_token ="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"
 print("token, ${huggingface_token}")
 if not huggingface_token:
     raise ValueError("HUGGINGFACE_TOKEN is required for diarization.")
