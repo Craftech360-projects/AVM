@@ -422,7 +422,7 @@ class CapturePageState extends State<CapturePage>
           context: context,
           builder: (c) => CustomDialogWidget(
             icon: Icons.location_on_rounded,
-            title: "Enable Location Services? 🌍",
+            title: "Location Permission Required 🌍",
             message:
                 "We need your location permissions to add a location tag to your memories. This will help you remember where they happened.",
             yesPressed: () async {

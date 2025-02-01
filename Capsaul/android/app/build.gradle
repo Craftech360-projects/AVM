@@ -23,7 +23,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 35
     ndkVersion = "26.3.11579264"
     flavorDimensions += "flavor-type"
     productFlavors {

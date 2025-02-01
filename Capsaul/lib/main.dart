@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:capsaul/backend/api_requests/api/server.dart';
 import 'package:capsaul/backend/auth.dart';
 import 'package:capsaul/backend/database/box.dart';
 import 'package:capsaul/backend/database/memory_provider.dart';
@@ -26,7 +25,6 @@ import 'package:capsaul/pages/splash/splash_screen.dart';
 import 'package:capsaul/src/config/simple_bloc_observer.dart';
 import 'package:capsaul/utils/features/calendar.dart';
 import 'package:capsaul/utils/other/notifications.dart';
-import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +72,7 @@ void main() async {
   listenAuthTokenChanges();
 
   bool isAuth = false;
+
   try {
     isAuth = (await getIdToken()) != null;
   } catch (e) {
@@ -87,13 +86,13 @@ void main() async {
     await GrowthbookUtil.init();
     CalendarUtil.init();
   } catch (e, stackTrace) {
-    log('Optional initialization failed: $e\n$stackTrace');
+    log('Optional initialization failed: $e\n$stackTrace'); // --> Needed or not Needed ?
   }
 
   if (Env.oneSignalAppId != null) {
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
     OneSignal.initialize(Env.oneSignalAppId!);
-    OneSignal.login(SharedPreferencesUtil().uid);
+    OneSignal.login(SharedPreferencesUtil().uid); // --> Needed or not Needed ?
   }
 
   if (Env.instabugApiKey != null) {
@@ -182,29 +181,29 @@ class MyAppState extends State<MyApp> {
     super.initState();
     NotificationUtil.initializeNotificationsEventListeners();
     NotificationUtil.initializeIsolateReceivePort();
-    _initiatePlugins();
+    // _initiatePlugins();
   }
 
-  Future<void> _initiatePlugins() async {
-    try {
-      plugins = SharedPreferencesUtil().pluginsList;
-      plugins = await retrievePlugins();
+  // Future<void> _initiatePlugins() async {
+  //   try {
+  //     plugins = SharedPreferencesUtil().pluginsList;
+  //     plugins = await retrievePlugins();
 
-      _edgeCasePluginNotAvailable();
-      setState(() {});
-    } catch (e, stackTrace) {
-      log('Plugin initialization failed: $e\n$stackTrace');
-    }
-  }
+  //     _edgeCasePluginNotAvailable();
+  //     setState(() {});
+  //   } catch (e, stackTrace) {
+  //     log('Plugin initialization failed: $e\n$stackTrace');
+  //   }
+  // }
 
-  _edgeCasePluginNotAvailable() {
-    var selectedChatPlugin = SharedPreferencesUtil().selectedChatPluginId;
-    var plugin = plugins.firstWhereOrNull((p) => selectedChatPlugin == p.id);
-    if (selectedChatPlugin != 'no_selected' &&
-        (plugin == null || !plugin.worksWithChat())) {
-      SharedPreferencesUtil().selectedChatPluginId = 'no_selected';
-    }
-  }
+  // _edgeCasePluginNotAvailable() {
+  //   var selectedChatPlugin = SharedPreferencesUtil().selectedChatPluginId;
+  //   var plugin = plugins.firstWhereOrNull((p) => selectedChatPlugin == p.id);
+  //   if (selectedChatPlugin != 'no_selected' &&
+  //       (plugin == null || !plugin.worksWithChat())) {
+  //     SharedPreferencesUtil().selectedChatPluginId = 'no_selected';
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

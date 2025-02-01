@@ -8,7 +8,6 @@ import 'package:capsaul/pages/home/custom_scaffold.dart';
 import 'package:capsaul/pages/settings/widgets/about_you.dart';
 import 'package:capsaul/pages/settings/widgets/backup_btn.dart';
 import 'package:capsaul/pages/settings/widgets/change_name_widget.dart';
-import 'package:capsaul/pages/settings/widgets/neural_screen.dart';
 import 'package:capsaul/pages/settings/widgets/restore_btn.dart';
 import 'package:capsaul/widgets/custom_dialog_box.dart';
 import 'package:firebase_auth/firebase_auth.dart';

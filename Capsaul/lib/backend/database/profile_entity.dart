@@ -32,6 +32,9 @@ class Profile {
   String learnings = '';
   String others = '';
 
+  @Property()
+  Map<String, dynamic>? conversationMetrics; // Add this field
+
   DateTime lastUpdated = DateTime.now();
 
   // Helper method to merge new insights
@@ -39,15 +42,20 @@ class Profile {
     try {
       core = _mergeText(core, newInsights['core']);
       lifestyle = _mergeText(lifestyle, newInsights['lifestyle']);
-      hobbies = _mergeList(hobbies, newInsights['hobbies']);
-      interests = _mergeList(interests, newInsights['interests']);
-      habits = _mergeList(habits, newInsights['habits']);
+      hobbies = _mergeList(hobbies, newInsights['hobbies'] ?? []);
+      interests = _mergeList(interests, newInsights['interests'] ?? []);
+      habits = _mergeList(habits, newInsights['habits'] ?? []);
       work = _mergeText(work, newInsights['work']);
-      skills = _mergeList(skills, newInsights['skills']);
+      skills = _mergeList(skills, newInsights['skills'] ?? []);
       learnings = _mergeText(learnings, newInsights['learnings']);
       others = _mergeText(others, newInsights['others']);
-    } catch (e) {
-      log('Failed to merge insights: $e');
+      
+      // Merge conversation metrics
+      if (newInsights['conversationMetrics'] != null) {
+        conversationMetrics = Map<String, dynamic>.from(newInsights['conversationMetrics']);
+      }
+    } catch (e, stack) {
+      log('Failed to merge insights: $e', stackTrace: stack);
     }
   }
 

@@ -97,9 +97,15 @@ Provide the following:
    - **Time**: A specific time or time range if mentioned in the transcript in ISO8601 format.
 8. **Brainstorming Questions**: Generate 2 or 3 questions based on the conversation that can be used to stimulate further thinking or discussion. These questions will be shown to the user for them to click and start a new conversation with AI.
 9. **Profile Insights**: Extract insights about the user's hobbies, interests, skills, profession, daily tasks, habits, lifestyle choices, learning points, and other relevant details.
+10. **Conversation Metrics**:
+  - Calculate sentiment score between -1 (negative) to 1 (positive)
+  - Determine speaking/listening ratio (0-1)
+  - Analyze tone distribution (calm: 0-1, excited: 0-1, etc.)
+  - Count interruptions and overlaps
+  - Identify main topics with time spent percentages
+  - Calculate empathy/politeness scores (0-1 scale)
 
 The date context for this conversation is ${DateTime.now().toIso8601String()}.
-
 
 Transcript: ${transcript.trim()}
 
@@ -145,17 +151,32 @@ Respond in a JSON format with the following structure:
     "skills": "Skills the user seems to have or is developing.",
     "learnings": "Everything AI has learned about the user.",
     "others": "Any additional unclassified information."
-  }
+  },
+  "conversationMetrics": {
+    "sentiment": 0.72,
+    "engagement": 0.65,
+    "tones": {"calm": 0.8, "excited": 0.2},
+    "interruptions": 3,
+    "topics": {"work": 0.4, "health": 0.3},
+    "empathy": 0.85,
+    "politeness": 0.9
+}
 }
 ''';
 
-  var structuredResponse = extractJson(await executeGptPrompt(prompt, ignoreCache: ignoreCache));
+  var structuredResponse =
+      extractJson(await executeGptPrompt(prompt, ignoreCache: ignoreCache));
 
   try {
     // Parse structuredResponse as JSON
     var parsedResponse = jsonDecode(structuredResponse);
-
     var structured = Structured.fromJson(parsedResponse);
+
+    // Add validation for conversationMetrics
+    if (parsedResponse['conversationMetrics'] != null) {
+      structured.conversationMetrics =
+          Map<String, dynamic>.from(parsedResponse['conversationMetrics']);
+    }
 
     if (parsedResponse['reminders'] != null &&
         parsedResponse['reminders'].isNotEmpty) {

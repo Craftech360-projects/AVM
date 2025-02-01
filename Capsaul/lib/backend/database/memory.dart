@@ -194,6 +194,7 @@ class Structured {
   String emoji;
   List<String> category = [];
   Map<String, dynamic>? profileInsights;
+  Map<String, dynamic>? conversationMetrics;  
 
   @Backlink('structured')
   final actionItems = ToMany<ActionItem>();
@@ -212,6 +213,7 @@ class Structured {
     this.category = const [],
     this.brainstormingQuestions = const [],
     this.profileInsights,
+    this.conversationMetrics,
   });
 
   getEmoji() {
@@ -241,7 +243,7 @@ class Structured {
           : [],
       profileInsights: json['profileInsights'] != null
           ? Map<String, dynamic>.from(json['profileInsights'])
-          : null, // Add this line
+          : null,
     );
 
     if (json['geolocation'] != null) {

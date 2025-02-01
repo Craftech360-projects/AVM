@@ -188,6 +188,12 @@ Future<void> updateUserProfile(Structured structured) async {
       profile.mergeInsights(structured.profileInsights!);
     }
 
+    // Update conversation metrics
+    if (structured.conversationMetrics != null) {
+      profile.conversationMetrics =
+          Map<String, dynamic>.from(structured.conversationMetrics!);
+    }
+
     // Update emoji if new one exists
     if (structured.emoji.isNotEmpty) {
       profile.emoji = structured.emoji;
@@ -195,8 +201,8 @@ Future<void> updateUserProfile(Structured structured) async {
 
     profile.lastUpdated = DateTime.now();
     box.put(profile);
-  } catch (e) {
-    log("Error updating profile: $e");
+  } catch (e, stack) {
+    log("Error updating profile: $e", stackTrace: stack);
   }
 }
 
