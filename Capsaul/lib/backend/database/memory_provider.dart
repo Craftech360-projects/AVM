@@ -10,8 +10,8 @@ import 'package:path_provider/path_provider.dart';
 class MemoryProvider {
   static final MemoryProvider _instance = MemoryProvider._internal();
   static final Box<Memory> _box = ObjectBoxUtil().box!.store.box<Memory>();
-  static final Box<Structured> _boxStructured =
-      ObjectBoxUtil().box!.store.box<Structured>();
+  // static final Box<Structured> _boxStructured =
+  //     ObjectBoxUtil().box!.store.box<Structured>();
   static final Box<Event> _boxEvent = ObjectBoxUtil().box!.store.box<Event>();
   static final Box<ActionItem> _boxActionItem =
       ObjectBoxUtil().box!.store.box<ActionItem>();
@@ -109,7 +109,6 @@ class MemoryProvider {
     final box = ObjectBoxUtil().box!.store.box<Structured>();
     box.put(structured);
   } // ---> Updated function
-
 
   Memory? getMemoryById(int id) => _box.get(id);
 

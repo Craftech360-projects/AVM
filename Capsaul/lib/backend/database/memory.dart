@@ -194,7 +194,21 @@ class Structured {
   String emoji;
   List<String> category = [];
   Map<String, dynamic>? profileInsights;
-  Map<String, dynamic>? conversationMetrics;  
+  @Property()
+  String? conversationMetricsJson;
+
+  Map<String, dynamic> get conversationMetrics {
+    if (conversationMetricsJson == null) return {};
+    try {
+      return jsonDecode(conversationMetricsJson!);
+    } catch (e) {
+      return {};
+    }
+  }
+
+  set conversationMetrics(Map<String, dynamic> value) {
+    conversationMetricsJson = jsonEncode(value);
+  }
 
   @Backlink('structured')
   final actionItems = ToMany<ActionItem>();
@@ -213,7 +227,7 @@ class Structured {
     this.category = const [],
     this.brainstormingQuestions = const [],
     this.profileInsights,
-    this.conversationMetrics,
+    this.conversationMetricsJson,
   });
 
   getEmoji() {
@@ -289,18 +303,18 @@ class Structured {
   }
 
   toJson() {
-  return {
-    'title': title,
-    'overview': overview,
-    'emoji': emoji,
-    'category': category,
-    'brainstormingQuestions': brainstormingQuestions,
-    'actionItems': actionItems.map((item) => item.description).toList(),
-    'events': events.map((event) => event.toJson()).toList(),
-    'geolocation': geolocation.target?.toJson(),
-    'profileInsights': profileInsights,
-  };
-}
+    return {
+      'title': title,
+      'overview': overview,
+      'emoji': emoji,
+      'category': category,
+      'brainstormingQuestions': brainstormingQuestions,
+      'actionItems': actionItems.map((item) => item.description).toList(),
+      'events': events.map((event) => event.toJson()).toList(),
+      'geolocation': geolocation.target?.toJson(),
+      'profileInsights': profileInsights,
+    };
+  }
 }
 
 @Entity()

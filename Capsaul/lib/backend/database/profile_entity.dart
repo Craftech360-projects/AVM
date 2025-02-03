@@ -1,4 +1,5 @@
 // 1. First, update the Profile model for ObjectBox
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:objectbox/objectbox.dart';
@@ -33,7 +34,24 @@ class Profile {
   String others = '';
 
   @Property()
-  Map<String, dynamic>? conversationMetrics; // Add this field
+  String? conversationMetricsJson;
+
+  Map<String, dynamic> get conversationMetrics {
+    if (conversationMetricsJson == null || conversationMetricsJson!.isEmpty) {
+      log("⚠️ No stored conversation metrics found.");
+      return {};
+    }
+    try {
+      return jsonDecode(conversationMetricsJson!);
+    } catch (e) {
+      log("❌ Error decoding conversation metrics: $e");
+      return {};
+    }
+  }
+
+  set conversationMetrics(Map<String, dynamic> value) {
+    conversationMetricsJson = jsonEncode(value);
+  }
 
   DateTime lastUpdated = DateTime.now();
 
@@ -49,10 +67,11 @@ class Profile {
       skills = _mergeList(skills, newInsights['skills'] ?? []);
       learnings = _mergeText(learnings, newInsights['learnings']);
       others = _mergeText(others, newInsights['others']);
-      
+
       // Merge conversation metrics
       if (newInsights['conversationMetrics'] != null) {
-        conversationMetrics = Map<String, dynamic>.from(newInsights['conversationMetrics']);
+        conversationMetrics =
+            Map<String, dynamic>.from(newInsights['conversationMetrics']);
       }
     } catch (e, stack) {
       log('Failed to merge insights: $e', stackTrace: stack);

@@ -54,8 +54,7 @@ class NeuralScreenState extends State<NeuralScreen> {
   }
 
   void _loadMemories() {
-    memories = memoryProvider.getMemoriesOrdered();
-    print('Memories Length: ${memories.length}'); 
+    memories = memoryProvider.getMemoriesOrdered(); 
     final name = SharedPreferencesUtil().givenName;
 
     // Step 1: Extract unique categories

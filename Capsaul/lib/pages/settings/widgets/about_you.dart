@@ -90,57 +90,24 @@ class _ProfileView extends StatelessWidget {
       ],
     );
   }
-  // _buildListSection('Interests', profile.interests),
-  // _buildListSection('Habits', profile.habits),
-  // _buildSection('Work & Skills', _buildWorkSection()),
-  // _buildListSection('Skills', profile.skills),
-  // _buildSection('Lifestyle', Text(profile.lifestyle)),
-  // _buildSection('Learnings', Text(profile.learnings)),
-  // _buildSection('Other Insights', Text(profile.others)),
-  // _buildCategoryCloud(),
-  // Text(
-  //   'Last Updated: ${DateFormat.yMMMd().format(profile.lastUpdated)}',
-  //   style: const TextStyle(
-  //       color: AppColors.grey, fontStyle: FontStyle.italic, fontSize: 10),
-  // ),
-  // _buildHealthScorecard(),
 
   Widget _buildProfileHeader() {
     String fixedEmoji = fixEmoji(profile.emoji);
     return SliverToBoxAdapter(
-      child: Column(
-        children: [
-          h8,
-          Text("Hmmm, I guess your mood is..."),
-          Container(
-            padding: EdgeInsets.zero,
-            margin: EdgeInsets.only(bottom: 20, top: 0),
-            decoration: BoxDecoration(
-              // border: Border.all(color: AppColors.black),
-              // color: AppColors.lightBg,
-              shape: BoxShape.circle,
-            ),
-            child: Text(
-              textAlign: TextAlign.center,
-              fixedEmoji,
-              style:
-                  const TextStyle(fontSize: 55, fontFamily: "NotoColorEmoji"),
-            ),
-          ),
-        ],
+      child: Container(
+        padding: EdgeInsets.zero,
+        margin: EdgeInsets.only(bottom: 20, top: 0),
+        child: Text(
+          textAlign: TextAlign.center,
+          fixedEmoji,
+          style: const TextStyle(fontSize: 40, fontFamily: "NotoColorEmoji"),
+        ),
       ),
     );
   }
 
   Widget _buildSentimentRadar(Profile profile) {
-    final metrics = profile.conversationMetrics ??
-        {
-          'sentiment': 0.8,
-          'clarity': 0.7,
-          'politeness': 0.9,
-          'engagement': 0.6,
-          'empathy': 0.85,
-        };
+    final metrics = profile.conversationMetrics;
 
     return Card(
       child: Padding(
@@ -150,8 +117,8 @@ class _ProfileView extends StatelessWidget {
             dataSets: [
               RadarDataSet(
                 dataEntries: [
-                  RadarEntry(value: metrics['sentiment'] ?? 0.0),
-                  RadarEntry(value: metrics['clarity'] ?? 0.0),
+                  RadarEntry(value: (metrics['sentiment'] ?? 0.0)),
+                  RadarEntry(value: (metrics['clarity'] ?? 0.0)),
                   RadarEntry(value: metrics['politeness'] ?? 0.0),
                   RadarEntry(value: metrics['engagement'] ?? 0.0),
                   RadarEntry(value: metrics['empathy'] ?? 0.0),
@@ -195,6 +162,8 @@ class _ProfileView extends StatelessWidget {
   }
 
   Widget _buildSpeechPatterns() {
+    final metrics = profile.conversationMetrics;
+    print("Metrics =====> $metrics");
     return LayoutBuilder(
       builder: (context, constraints) {
         return Column(
@@ -210,21 +179,26 @@ class _ProfileView extends StatelessWidget {
                 children: [
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildLegend(AppColors.red, "Data 1"),
-                      _buildLegend(AppColors.green, "Data 2"),
-                      _buildLegend(AppColors.blue, "Data 3"),
-                      _buildLegend(AppColors.orange, "Data 4"),
-                      _buildLegend(AppColors.purpleBright, "Data 5"),
+                      _buildLegend(AppColors.orange, "Questions"),
+                      _buildLegend(AppColors.green, "Statements"),
                     ],
                   ),
                   Expanded(
                     child: PieChart(
                       PieChartData(
                         sections: [
-                          PieChartSectionData(value: 35, color: AppColors.blue),
                           PieChartSectionData(
-                              value: 65, color: AppColors.green),
+                            showTitle: false,
+                            value: metrics['questions'] ?? 50.0,
+                            color: AppColors.orange,
+                          ),
+                          PieChartSectionData(
+                            showTitle: false,
+                            value: metrics['statements'] ?? 50.0,
+                            color: AppColors.green,
+                          ),
                         ],
                       ),
                     ),
@@ -242,20 +216,27 @@ class _ProfileView extends StatelessWidget {
     return Row(
       children: [
         Container(width: 12, height: 12, color: color),
-        w8,
+        w4,
         Text(label),
       ],
     );
   }
 
   Widget _buildProductivityChart() {
+    final metrics = profile.conversationMetrics;
+
     return LineChart(
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       LineChartData(
         lineBarsData: [
           LineChartBarData(
-            spots: [FlSpot(0, 5), FlSpot(1, 3), FlSpot(2, 7), FlSpot(3, 4)],
+            spots: [
+              FlSpot(0, metrics['monday'] ?? 0.0),
+              FlSpot(1, metrics['tuesday'] ?? 0.0),
+              FlSpot(2, metrics['wednesday'] ?? 0.0),
+              FlSpot(3, metrics['thursday'] ?? 0.0),
+            ],
           ),
         ],
         titlesData: FlTitlesData(
@@ -272,13 +253,15 @@ class _ProfileView extends StatelessWidget {
   }
 
   Widget _buildInteractionHeatmap() {
+    final metrics = profile.conversationMetrics;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: HeatMap(
-        datasets: {
-          DateTime(2023, 1, 1): 5,
-          DateTime(2023, 1, 2): 3,
-        },
+        datasets: Map.fromEntries(metrics.entries
+            .where((entry) => _isValidDate(entry.key))
+            .map((entry) => MapEntry(
+                DateFormat('yyyy-MM-dd').parse(entry.key), entry.value))),
         colorMode: ColorMode.opacity,
         showText: true,
         scrollable: true,
@@ -289,6 +272,15 @@ class _ProfileView extends StatelessWidget {
         },
       ),
     );
+  }
+
+  bool _isValidDate(String key) {
+    try {
+      DateFormat('yyyy-MM-dd').parseStrict(key);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Widget _buildMetricRow(String label, double value, Color color) {
@@ -307,15 +299,20 @@ class _ProfileView extends StatelessWidget {
   }
 
   Widget _buildHealthScorecard() {
+    final metrics = profile.conversationMetrics;
+
     return SliverPadding(
       padding: EdgeInsets.all(16),
       sliver: SliverToBoxAdapter(
         child: Card(
           child: Column(
             children: [
-              _buildMetricRow('Sentiment', 0.72, AppColors.green),
-              _buildMetricRow('Empathy', 0.85, AppColors.blue),
-              _buildMetricRow('Productivity', 0.68, AppColors.orange),
+              _buildMetricRow(
+                  'Sentiment', metrics['sentiment'] ?? 0.0, AppColors.green),
+              _buildMetricRow(
+                  'Empathy', metrics['empathy'] ?? 0.0, AppColors.blue),
+              _buildMetricRow('Productivity', metrics['productivity'] ?? 0.0,
+                  AppColors.orange),
             ],
           ),
         ),
@@ -411,16 +408,16 @@ class _ProfileView extends StatelessWidget {
       elevation: 3.0,
       shadowColor: Colors.black.withValues(alpha: 0.5),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.category, size: 16, color: AppColors.blueGreyDark),
-            w4,
+            const Icon(Icons.category, size: 15, color: AppColors.blueGreyDark),
+            // w4,
             Text(
               category,
               style:
-                  const TextStyle(color: AppColors.blueGreyDark, fontSize: 14),
+                  const TextStyle(color: AppColors.blueGreyDark, fontSize: 12),
             ),
           ],
         ),
@@ -444,7 +441,7 @@ class _ProfileView extends StatelessWidget {
               child: Text(
                 "Meet Your Clouds... 🌥️",
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: FontWeight.w600,
                   color: AppColors.blueGreyDark,
                 ),

@@ -159,8 +159,9 @@ class AIMessage extends StatelessWidget {
                       Text(
                         '📅 Day Summary ~ ${DateFormat('MMM, dd').format(DateTime.now())}',
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 11,
                           fontWeight: FontWeight.w500,
+                          height: 1.2,
                         ),
                       )
                     else
@@ -172,7 +173,7 @@ class AIMessage extends StatelessWidget {
                                 .replaceAll('**', '')
                                 .replaceAll('\\"', '"'),
                         style: const TextStyle(
-                            fontSize: 13.0,
+                            fontSize: 13.5,
                             fontWeight: FontWeight.w500,
                             height: 1.2),
                       ),
@@ -216,7 +217,7 @@ class AIMessage extends StatelessWidget {
                                   child: Text(
                                     memory.structured.target!.title,
                                     style: TextStyle(
-                                        fontSize: 13, color: AppColors.white),
+                                        fontSize: 13.5, color: AppColors.white),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -228,7 +229,7 @@ class AIMessage extends StatelessWidget {
                                           .format(memory.createdAt),
                                       style: TextStyle(
                                         color: AppColors.white,
-                                        fontSize: 12.0,
+                                        fontSize: 11.0,
                                       ),
                                     ),
                                     const Icon(
@@ -260,9 +261,9 @@ class AIMessage extends StatelessWidget {
         width: double.maxFinite,
         decoration: BoxDecoration(
           color: Color(0xFFF8F8FF),
-          borderRadius: br15,
+          borderRadius: br5,
         ),
-        child: Text(optionText, style: Theme.of(context).textTheme.bodyMedium),
+        child: Text(optionText, style: TextStyle(fontSize: 13.5, height: 1.2)),
       ),
       onTap: () {
         try {

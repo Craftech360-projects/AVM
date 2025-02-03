@@ -14,7 +14,7 @@ class ProfileProvider extends ChangeNotifier {
 
   ProfileProvider() {
     _loadProfile();
-    _profileSubscription = _repo.watchProfile().listen((updatedProfile) { 
+    _profileSubscription = _repo.watchProfile().listen((updatedProfile) {
       _profile = updatedProfile;
       notifyListeners();
     });
