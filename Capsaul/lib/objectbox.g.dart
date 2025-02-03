@@ -106,7 +106,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(2, 6427539297124375252),
       name: 'Structured',
-      lastPropertyId: const obx_int.IdUid(9, 7524614902799169714),
+      lastPropertyId: const obx_int.IdUid(10, 3009893814674760880),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -145,6 +145,11 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(9, 7524614902799169714),
             name: 'brainstormingQuestions',
             type: 30,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(10, 3009893814674760880),
+            name: 'conversationMetricsJson',
+            type: 9,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -500,7 +505,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(11, 7217141358242352499),
       name: 'Profile',
-      lastPropertyId: const obx_int.IdUid(13, 4998799422150092173),
+      lastPropertyId: const obx_int.IdUid(14, 7652152835451897499),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -567,6 +572,11 @@ final _entities = <obx_int.ModelEntity>[
             id: const obx_int.IdUid(13, 4998799422150092173),
             name: 'categories',
             type: 30,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(14, 7652152835451897499),
+            name: 'conversationMetricsJson',
+            type: 9,
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
@@ -740,7 +750,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .brainstormingQuestions
               .map(fbb.writeString)
               .toList(growable: false));
-          fbb.startTable(10);
+          final conversationMetricsJsonOffset =
+              object.conversationMetricsJson == null
+                  ? null
+                  : fbb.writeString(object.conversationMetricsJson!);
+          fbb.startTable(11);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, titleOffset);
           fbb.addOffset(2, overviewOffset);
@@ -748,6 +762,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addOffset(6, categoryOffset);
           fbb.addInt64(7, object.geolocation.targetId);
           fbb.addOffset(8, brainstormingQuestionsOffset);
+          fbb.addOffset(9, conversationMetricsJsonOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -770,11 +785,15 @@ obx_int.ModelDefinition getObjectBoxModel() {
                   fb.StringReader(asciiOptimization: true),
                   lazy: false)
               .vTableGet(buffer, rootOffset, 20, []);
+          final conversationMetricsJsonParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 22);
           final object = Structured(titleParam, overviewParam,
               id: idParam,
               emoji: emojiParam,
               category: categoryParam,
-              brainstormingQuestions: brainstormingQuestionsParam);
+              brainstormingQuestions: brainstormingQuestionsParam,
+              conversationMetricsJson: conversationMetricsJsonParam);
           object.geolocation.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
           object.geolocation.attach(store);
@@ -1203,7 +1222,11 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final emojiOffset = fbb.writeString(object.emoji);
           final categoriesOffset = fbb.writeList(
               object.categories.map(fbb.writeString).toList(growable: false));
-          fbb.startTable(14);
+          final conversationMetricsJsonOffset =
+              object.conversationMetricsJson == null
+                  ? null
+                  : fbb.writeString(object.conversationMetricsJson!);
+          fbb.startTable(15);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, coreOffset);
           fbb.addOffset(2, lifestyleOffset);
@@ -1217,6 +1240,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addInt64(10, object.lastUpdated.millisecondsSinceEpoch);
           fbb.addOffset(11, emojiOffset);
           fbb.addOffset(12, categoriesOffset);
+          fbb.addOffset(13, conversationMetricsJsonOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1259,7 +1283,10 @@ obx_int.ModelDefinition getObjectBoxModel() {
             ..categories = const fb.ListReader<String>(
                     fb.StringReader(asciiOptimization: true),
                     lazy: false)
-                .vTableGet(buffer, rootOffset, 28, []);
+                .vTableGet(buffer, rootOffset, 28, [])
+            ..conversationMetricsJson =
+                const fb.StringReader(asciiOptimization: true)
+                    .vTableGetNullable(buffer, rootOffset, 30);
 
           return object;
         })
@@ -1353,6 +1380,10 @@ class Structured_ {
   /// See [Structured.brainstormingQuestions].
   static final brainstormingQuestions =
       obx.QueryStringVectorProperty<Structured>(_entities[1].properties[6]);
+
+  /// See [Structured.conversationMetricsJson].
+  static final conversationMetricsJson =
+      obx.QueryStringProperty<Structured>(_entities[1].properties[7]);
 
   /// see [Structured.actionItems]
   static final actionItems =
@@ -1647,4 +1678,8 @@ class Profile_ {
   /// See [Profile.categories].
   static final categories =
       obx.QueryStringVectorProperty<Profile>(_entities[10].properties[12]);
+
+  /// See [Profile.conversationMetricsJson].
+  static final conversationMetricsJson =
+      obx.QueryStringProperty<Profile>(_entities[10].properties[13]);
 }

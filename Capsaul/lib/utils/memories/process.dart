@@ -188,21 +188,24 @@ Future<void> updateUserProfile(Structured structured) async {
       profile.mergeInsights(structured.profileInsights!);
     }
 
-    // Update conversation metrics
-    if (structured.conversationMetrics != null) {
-      profile.conversationMetrics =
-          Map<String, dynamic>.from(structured.conversationMetrics!);
+    if (structured.conversationMetrics.isNotEmpty) {
+      profile.conversationMetrics = structured.conversationMetrics;
+    } else {
+      log(
+          "⚠️ Warning: Received empty conversation metrics, keeping existing values.");
     }
+
+    profile.lastUpdated = DateTime.now();
 
     // Update emoji if new one exists
     if (structured.emoji.isNotEmpty) {
       profile.emoji = structured.emoji;
     }
 
-    profile.lastUpdated = DateTime.now();
     box.put(profile);
+
   } catch (e, stack) {
-    log("Error updating profile: $e", stackTrace: stack);
+    log("❌ Error updating profile: $e", stackTrace: stack);
   }
 }
 
@@ -250,13 +253,7 @@ Future<Memory> finalizeMemoryRecord(
   for (var r in pluginsResponse) {
     memory.pluginsResponse.add(PluginResponse(r.item2, pluginId: r.item1.id));
   }
-  // log("plugin response,${memory.pluginsResponse.toString()}");
-  zapWebhookOnMemoryCreatedCall(memory, returnRawBody: true); // Add photos
-  // for (var image in photos) {
-  //   memory.photos.add(MemoryPhoto(image.item1, image.item2));
-  // }
-
-  // Print the memory object before saving for debugging
+  zapWebhookOnMemoryCreatedCall(memory, returnRawBody: true);
 
   try {
     // Save the memory object
@@ -264,16 +261,6 @@ Future<Memory> finalizeMemoryRecord(
   } catch (e) {
     // Handle the error as needed
   }
-
-  // Process embeddings if not discarded
-  // if (!discarded) {
-  //   getEmbeddingsFromInput(structured.toString()).then((vector) {
-  //     upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
-  //   });
-  // }
-
-  // Optionally, track the memory creation
-  // MixpanelManager().memoryCreated(memory);
 
   return memory;
 }

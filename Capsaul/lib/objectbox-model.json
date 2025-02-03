@@ -85,7 +85,7 @@
     },
     {
       "id": "2:6427539297124375252",
-      "lastPropertyId": "9:7524614902799169714",
+      "lastPropertyId": "10:3009893814674760880",
       "name": "Structured",
       "properties": [
         {
@@ -126,6 +126,11 @@
           "id": "9:7524614902799169714",
           "name": "brainstormingQuestions",
           "type": 30
+        },
+        {
+          "id": "10:3009893814674760880",
+          "name": "conversationMetricsJson",
+          "type": 9
         }
       ],
       "relations": []
@@ -479,7 +484,7 @@
     },
     {
       "id": "11:7217141358242352499",
-      "lastPropertyId": "13:4998799422150092173",
+      "lastPropertyId": "14:7652152835451897499",
       "name": "Profile",
       "properties": [
         {
@@ -547,6 +552,11 @@
           "id": "13:4998799422150092173",
           "name": "categories",
           "type": 30
+        },
+        {
+          "id": "14:7652152835451897499",
+          "name": "conversationMetricsJson",
+          "type": 9
         }
       ],
       "relations": []

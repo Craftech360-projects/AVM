@@ -64,20 +64,23 @@ class _GreetingCardState extends State<GreetingCard> {
                 builder: (context) => Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.close),
+                    Stack(children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                            child: TranscriptWidget(
+                                segments: widget.segments ?? [])),
                       ),
-                    ),
-                    Expanded(
-                      child: SingleChildScrollView(
-                          child: TranscriptWidget(
-                              segments: widget.segments ?? [])),
-                    )
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.close),
+                        ),
+                      ),
+                    ]),
                   ],
                 ),
               );

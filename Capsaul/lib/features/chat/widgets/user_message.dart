@@ -142,7 +142,7 @@ class UserMessage extends StatelessWidget {
                       Text(
                         message?.text ?? '',
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 13.5,
                           color: AppColors.white,
                           height: 1.2,
                         ),
@@ -157,7 +157,7 @@ class UserMessage extends StatelessWidget {
                               style: const TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.white,
-                                fontSize: 10,
+                                fontSize: 11,
                               ),
                             ),
                           ],

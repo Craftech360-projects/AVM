@@ -31,7 +31,7 @@ class _EmptyMemoriesWidgetState extends State<EmptyMemoriesWidget> {
       padding: const EdgeInsets.only(top: 32.0),
       child: Text(
         textAlign: TextAlign.center,
-        'No memories found!\nConnect your Capsaul to create new memory',
+        'No memories found!\nConnect your Capsaul and get started',
         style: TextStyle(
             color: AppColors.greyMedium,
             fontSize: 14,

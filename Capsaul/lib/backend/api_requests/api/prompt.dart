@@ -66,50 +66,54 @@ Future<SummaryResult> summarizeMemory(
   }
 
   var prompt = '''
-Summarize the following conversation transcript and extract insights about the user. The conversation language is ${SharedPreferencesUtil().recordingsLanguage}. Respond in English.
+I am your personal assistant, here to help you reflect on and summarize your conversations. Based on your latest discussion, I will extract key insights, highlight important topics, and provide useful takeaways. The conversation language is ${SharedPreferencesUtil().recordingsLanguage}. And I will respond in English. Let's dive in!
 
-${forceProcess ? "" : "If the conversation does not contain significant insights or action items, output an empty title."}
+${forceProcess ? "" : "If the conversation does not contain significant insights or action items, I'll output an empty title."}
 
 **Key Instructions**: 
-- Provide a detailed summary of the conversation, capturing the most important discussion points, insights, decisions, and commitments.
-- Ensure the summary is comprehensive and does not omit critical details.
-- Summaries should not be too brief. The overview must contain at least 100 words, and key highlights should provide enough context to understand the depth of the discussion.
-- If the transcript contains the phrase "Please remind me to", extract the reminder that follows and include it in the "reminders" field.
-- For each reminder, generate a detailed **description** that includes the **purpose**, **time**, **place**, and any additional context mentioned in the transcript.
-- Extract **date and time** from the reminder text if specified, and include it in the "time" field in ISO8601 format. Use natural language understanding to interpret phrases like "tomorrow at 5 PM" or "next Monday at 3 PM" and convert them to ISO8601 format. If no specific time is mentioned, leave the field as `null`.
-- Format the reminder as: {"reminder": "string", "description": "string", "time": "string (optional, e.g., ISO8601 date string)"}
-- Identify recurring **hobbies**, **interests**, and **skills** based on the user's discussions.
-- Extract work-related details to infer the user's **profession** and **daily tasks**.
-- Recognize **habits** and **lifestyle choices** (e.g., fitness, travel, food preferences).
-- Identify **learning points**, things the user actively engages with and improves upon.
-- Categorize miscellaneous insights under **"others"**.
+- I'll Provide a detailed summary of your conversation, capturing the most important discussion points, insights, decisions, and commitments.
+- I'll ensure the summary is comprehensive and I will not omit any critical details.
+- I'll ensure summaries are not too brief and the overview will contain at least 100 words, and key highlights provides enough context to understand the depth of the discussion.
+- If the transcript contains the phrase "Please remind me to", I'll extract the reminder that follows and include it in the "reminders" field.
+- For each reminder, I'll generate a detailed **description** that includes the **purpose**, **time**, **place**, and any additional context mentioned in the transcript.
+- I'll extract **date and time** from the reminder text if specified, and will include it in the "time" field in ISO8601 format. I'll use natural language understanding to interpret phrases like "tomorrow at 5 PM" or "next Monday at 3 PM" and convert them to ISO8601 format. If no specific time is mentioned, I'll leave the field as `null`.
+- I'll format the reminder as: {"reminder": "string", "description": "string", "time": "string (optional, e.g., ISO8601 date string)"}
+- I'll identify your recurring **hobbies**, **interests**, and **skills** based on the user's discussions.
+- I'll extract your work-related details to infer your **profession** and **daily tasks**.
+- I'll recognize your **habits** and **lifestyle choices** (e.g., fitness, travel, food preferences).
+- I'll identify **learning points**, things you actively engage with and improves upon.
+- I'll categorize the miscellaneous insights under **"others"**.
 
-Provide the following:
-1. **Title**: ${customPromptDetails?.title ?? 'The main topic or most important theme of the conversation.'}
-2. **Overview**: ${customPromptDetails?.overview ?? 'A detailed summary (minimum 100 words) of the key points and most significant details discussed, including decisions and major insights.'}
+Here’s what I’ll provide:
+
+1. **Title**: ${customPromptDetails?.title ?? 'The main topic or most important theme of your conversation.'}
+2. **Overview**: ${customPromptDetails?.overview ?? 'A detailed breakdown of what you talked about, highlighting decisions and major insights.'}
 3. **Action Items**: ${customPromptDetails?.actionItems ?? 'A detailed list of tasks or commitments, including the context or reason behind each task, along with who is responsible for them and any deadlines.'}
-4. **Category**: ${customPromptDetails?.category ?? 'Classify the conversation under up to 3 categories (personal, education, health, finance, legal, philosophy, spiritual, science, entrepreneurship, parenting, romantic, travel, inspiration, technology, business, social, work, other).'}
-5. **Emoji**: A single emoji that represents the conversation theme.
-6. **Calendar Events**: ${customPromptDetails?.calendar ?? 'Any specific events mentioned during the conversation. Include the title, description, start time, and duration.'}
-7. **Reminders**: Include reminders as an array. Each reminder should have:
+4. **Category**: ${customPromptDetails?.category ?? 'How this conversation fits into different areas of your life (e.g., work, personal, health, finance, etc.).'}
+5. **Emoji**: A single emoji that best represents the conversation's theme.
+6. **Calendar Events**: ${customPromptDetails?.calendar ?? 'Any planned meetings, deadlines or specific events mentioned during the conversation. I will include the title, description, start time, and duration.'}
+7. **Reminders**: If you asked to be reminded of something, I'll include it here with a Title, Time and Description as an array. Each reminder will have:
    - **Reminder**: A brief title of the reminder.
    - **Description**: A detailed description including the purpose, time, place, and additional context from the transcript.
    - **Time**: A specific time or time range if mentioned in the transcript in ISO8601 format.
 8. **Brainstorming Questions**: Generate 2 or 3 questions based on the conversation that can be used to stimulate further thinking or discussion. These questions will be shown to the user for them to click and start a new conversation with AI.
-9. **Profile Insights**: Extract insights about the user's hobbies, interests, skills, profession, daily tasks, habits, lifestyle choices, learning points, and other relevant details.
+9. **Insights About You**: I will extract insights about your hobbies, interests, skills, profession, daily tasks, habits, lifestyle choices, learning points, and other relevant details.
 10. **Conversation Metrics**:
-  - Calculate sentiment score between -1 (negative) to 1 (positive)
-  - Determine speaking/listening ratio (0-1)
-  - Analyze tone distribution (calm: 0-1, excited: 0-1, etc.)
-  - Count interruptions and overlaps
-  - Identify main topics with time spent percentages
-  - Calculate empathy/politeness scores (0-1 scale)
+  - How positive or negative the conversation was. I will calculate sentiment score between -1 (negative) to 1 (positive)
+  - How engaged you were in the discussion.
+  - I will determine your speaking-to-listening ratio (0-1)
+  - Your overall tone (calm: 0-1, excited: 0-1,neutral etc.)
+  - I will count interruptions and overlaps
+  - Key topics discussed with time spent percentages
+  - I will calculate your empathy and politeness scores (0-1 scale)
 
-The date context for this conversation is ${DateTime.now().toIso8601String()}.
+This reflection is based on the conversation you just had, captured at **${DateTime.now().toIso8601String()}**.
+Now, let’s summarize what you discussed:
 
-Transcript: ${transcript.trim()}
+**Transcript**:
+${transcript.trim()}
 
-Respond in a JSON format with the following structure:
+I will respond in the following JSON format:
 {
   "title": "string",
   "overview": "string",
@@ -142,15 +146,15 @@ Respond in a JSON format with the following structure:
     "Question 3"
   ],
   "profileInsights": {
-    "core": "A general overview of the user based on insights.",
-    "lifestyle": "Details about lifestyle choices, health habits, and routine.",
-    "hobbies": "List of hobbies the user frequently engages in.",
-    "interests": "Topics the user shows interest in.",
-    "habits": "Repeated patterns in user behavior.",
-    "work": "Professional insights, job role, and tasks.",
-    "skills": "Skills the user seems to have or is developing.",
-    "learnings": "Everything AI has learned about the user.",
-    "others": "Any additional unclassified information."
+    "core": "A general overview of you based on insights.",
+    "lifestyle": "Details about your lifestyle choices, health habits, and routines.",
+    "hobbies": "Things you enjoy doing in your free time.",
+    "interests": "Topics that catch your attention.",
+    "habits": "Patterns in your behavior and activities.",
+    "work": "You are likely involved in {your profession, daily tasks, and work details in second-person}.",
+    "skills": "Skills you have or are currently developing.",
+    "learnings": "New things you’ve been exploring or improving.",
+    "others": "Any additional insights about you."
   },
   "conversationMetrics": {
     "sentiment": 0.72,
