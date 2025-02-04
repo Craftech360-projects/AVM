@@ -2,8 +2,8 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Capsaul (prod)",
-      "cwd": "Capsaul",
+      "name": "Altio (prod)",
+      "cwd": "Altio",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -13,8 +13,8 @@
       "flutterMode": "debug"
     },
     {
-      "name": "Capsaul (prod profile mode)",
-      "cwd": "Capsaul",
+      "name": "Altio (prod profile mode)",
+      "cwd": "Altio",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -24,8 +24,8 @@
       "flutterMode": "profile"
     },
     {
-      "name": "Capsaul (prod release mode)",
-      "cwd": "Capsaul",
+      "name": "Altio (prod release mode)",
+      "cwd": "Altio",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -35,8 +35,8 @@
       "flutterMode": "release"
     },
     {
-      "name": "Capsaul (dev)",
-      "cwd": "Capsaul",
+      "name": "Altio (dev)",
+      "cwd": "Altio",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -46,8 +46,8 @@
       "flutterMode": "debug"
     },
     {
-      "name": "Capsaul (dev profile mode)",
-      "cwd": "Capsaul",
+      "name": "Altio (dev profile mode)",
+      "cwd": "Altio",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -57,8 +57,8 @@
       "flutterMode": "profile"
     },
     {
-      "name": "Capsaul (dev release mode)",
-      "cwd": "Capsaul",
+      "name": "Altio (dev release mode)",
+      "cwd": "Altio",
       "request": "launch",
       "type": "dart",
       "args": [
