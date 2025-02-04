@@ -198,10 +198,18 @@ class LocalWalSync implements IWalSync {
       }
 
       final file = File(filePath);
-      await file.writeAsBytes(data);
+      if (data.isNotEmpty) {
+        await file.writeAsBytes(data);
+        debugPrint('WAL data saved to: $filePath');
+        debugPrint('File size: ${file.lengthSync()} bytes');
+      } else {
+        debugPrint('No data to write, skipping file creation');
+      }
 
-      debugPrint('WAL data saved to: $filePath');
-      debugPrint('File size: ${file.lengthSync()} bytes');
+      // await file.writeAsBytes(data);
+
+      // debugPrint('WAL data saved to: $filePath');
+      // debugPrint('File size: ${file.lengthSync()} bytes');
 
       activeWal!.data.clear();
     } catch (e) {

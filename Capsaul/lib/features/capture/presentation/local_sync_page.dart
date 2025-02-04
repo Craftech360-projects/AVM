@@ -1,245 +1,5 @@
-// import 'dart:io';
-
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:path_provider/path_provider.dart';
-
-// class LocalSyncPage extends StatefulWidget {
-//   const LocalSyncPage({super.key});
-
-//   @override
-//   _LocalSyncPageState createState() => _LocalSyncPageState();
-// }
-
-// class _LocalSyncPageState extends State<LocalSyncPage> {
-//   List<FileSystemEntity> _files = [];
-//   bool _loading = false;
-
-//   String _formatFileSize(int bytes) {
-//     if (bytes < 1024) return '$bytes B';
-//     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-//     if (bytes < 1024 * 1024 * 1024)
-//       return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
-//     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
-//   }
-
-//   String _getFileDateTime(String fileName) {
-//     try {
-//       if (fileName == 'continuous_audio_backup.bin') {
-//         return 'Continuous Recording';
-//       }
-//       final timeStamp = fileName.split('_').last.replaceAll('.bin', '');
-//       final dateTime =
-//           DateTime.fromMillisecondsSinceEpoch(int.parse(timeStamp) * 1000);
-//       return dateTime.toString();
-//     } catch (e) {
-//       return 'Unknown Date';
-//     }
-//   }
-
-//   String _getTimeFromFileName(String fileName) {
-//     try {
-//       final parts = fileName.split('_');
-//       if (parts.length < 2) return 'Unknown time';
-
-//       // Extract timestamp from filename like audio_1234567890_abcd1234.bin
-//       final timestampStr = parts[1];
-//       final timestamp = int.tryParse(timestampStr);
-//       if (timestamp == null) return 'Invalid timestamp';
-
-//       final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
-//       return dateTime.toString();
-//     } catch (e) {
-//       return 'Unknown time';
-//     }
-//   }
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _loadFiles();
-//   }
-
-//   Future<void> _loadFiles() async {
-//     final directory = await getApplicationDocumentsDirectory();
-//     final entities = directory.listSync();
-//     setState(() {
-//       _files = entities.where((e) => e.path.endsWith('.bin')).toList();
-//     });
-//   }
-
-//   Future<void> _sendFile(File file) async {
-//     setState(() => _loading = true);
-
-//     try {
-//       var uri = Uri.parse(
-//           'https://living-alien-polite.ngrok-free.app/v1/sync-local-files');
-//       var request = http.MultipartRequest('POST', uri);
-
-//       // Add uid header
-//       request.headers['uid'] = 'user123'; // Replace with actual user ID
-
-//       // Add file with proper name formatting
-//       var fileName = file.path.split('/').last;
-//       var multipartFile = await http.MultipartFile.fromPath(
-//           'files', // server expects 'files' as the field name
-//           file.path,
-//           filename: fileName // preserve original filename
-//           );
-//       request.files.add(multipartFile);
-
-//       // Send the request
-//       var streamedResponse = await request.send();
-//       var response = await http.Response.fromStream(streamedResponse);
-
-//       if (response.statusCode == 200) {
-//         if (mounted) {
-//           ScaffoldMessenger.of(context).showSnackBar(
-//             SnackBar(content: Text('File uploaded successfully')),
-//           );
-//         }
-//       } else {
-//         throw Exception(
-//             'Upload failed: ${response.statusCode} - ${response.body}');
-//       }
-//     } catch (e) {
-//       if (mounted) {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(content: Text('Error: $e')),
-//         );
-//       }
-//       debugPrint('Upload error: $e');
-//     } finally {
-//       if (mounted) {
-//         setState(() => _loading = false);
-//       }
-//     }
-//   }
-
-//   Future<void> _deleteFile(File file) async {
-//     try {
-//       await file.delete();
-//       _loadFiles(); // Refresh the list
-//       if (mounted) {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(content: Text('File deleted')),
-//         );
-//       }
-//     } catch (e) {
-//       if (mounted) {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(content: Text('Error deleting file: $e')),
-//         );
-//       }
-//     }
-//   }
-
-//   Future<void> _deleteAllFiles() async {
-//     try {
-//       setState(() => _loading = true);
-//       final directory = await getApplicationDocumentsDirectory();
-//       final entities = directory.listSync();
-//       final binFiles = entities.where((e) => e.path.endsWith('.bin'));
-
-//       for (var file in binFiles) {
-//         await File(file.path).delete();
-//       }
-
-//       await _loadFiles(); // Refresh the list
-//       if (mounted) {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(content: Text('All files deleted')),
-//         );
-//       }
-//     } catch (e) {
-//       if (mounted) {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(content: Text('Error deleting files: $e')),
-//         );
-//       }
-//     } finally {
-//       if (mounted) {
-//         setState(() => _loading = false);
-//       }
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Local Sync Files'),
-//         actions: [
-//           IconButton(
-//             icon: Icon(Icons.refresh),
-//             onPressed: _loadFiles,
-//           ),
-//           IconButton(
-//             icon: Icon(Icons.delete_forever),
-//             onPressed: () {
-//               showDialog(
-//                 context: context,
-//                 builder: (context) => AlertDialog(
-//                   title: Text('Delete All Files'),
-//                   content: Text('Are you sure you want to delete all files?'),
-//                   actions: [
-//                     TextButton(
-//                       child: Text('Cancel'),
-//                       onPressed: () => Navigator.of(context).pop(),
-//                     ),
-//                     TextButton(
-//                       child: Text('Delete'),
-//                       onPressed: () {
-//                         Navigator.of(context).pop();
-//                         _deleteAllFiles();
-//                       },
-//                     ),
-//                   ],
-//                 ),
-//               );
-//             },
-//           ),
-//         ],
-//       ),
-//       body: _loading
-//           ? Center(child: CircularProgressIndicator())
-//           : ListView.builder(
-//               itemCount: _files.length,
-//               itemBuilder: (context, index) {
-//                 final file = File(_files[index].path);
-//                 final fileName = file.path.split('/').last;
-//                 final fileSize = _formatFileSize(file.lengthSync());
-//                 final fileDate = _getTimeFromFileName(fileName);
-
-//                 return ListTile(
-//                   title: Text(fileName),
-//                   subtitle: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text('Size: $fileSize'),
-//                       Text('Time: $fileDate'),
-//                     ],
-//                   ),
-//                   trailing: Row(
-//                     mainAxisSize: MainAxisSize.min,
-//                     children: [
-//                       IconButton(
-//                         icon: Icon(Icons.delete, color: Colors.red),
-//                         onPressed: () => _deleteFile(file),
-//                       ),
-//                       IconButton(
-//                         icon: Icon(Icons.send),
-//                         onPressed: () => _sendFile(file),
-//                       ),
-//                     ],
-//                   ),
-//                 );
-//               },
-//             ),
-//     );
-//   }
-// }
-
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:capsaul/backend/preferences.dart';
@@ -257,6 +17,7 @@ class LocalSyncPage extends StatefulWidget {
 class _LocalSyncPageState extends State<LocalSyncPage> {
   List<FileSystemEntity> _files = [];
   bool _loading = false;
+  final Map<String, String> _taskStatuses = {}; // Task ID -> Status mapping
 
   String _formatFileSize(int bytes) {
     if (bytes < 1024) return '$bytes B';
@@ -274,23 +35,22 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
 
   Future<void> _loadFiles() async {
     final directory = await getApplicationDocumentsDirectory();
+    print(directory.path);
     final entities = directory.listSync();
     setState(() {
-      _files = entities.where((e) => e.path.endsWith('.bin')).toList();
+      _files = entities
+          .where((e) => e.path.endsWith('.wav') || e.path.endsWith('.bin'))
+          .toList();
     });
   }
 
   Future<void> _sendFile(File file) async {
     setState(() => _loading = true);
-
     try {
       var uri = Uri.parse(
           'https://living-alien-polite.ngrok-free.app/v1/sync-local-files');
       var request = http.MultipartRequest('POST', uri);
-
-      // Add uid header
-      request.headers['uid'] =
-          SharedPreferencesUtil().uid; // Replace with actual user ID
+      request.headers['uid'] = SharedPreferencesUtil().uid;
 
       var fileName = file.path.split('/').last;
       var multipartFile = await http.MultipartFile.fromPath('files', file.path,
@@ -299,9 +59,30 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
-
+      print(response.body);
+      print(response.statusCode);
       if (response.statusCode == 200) {
-        if (mounted) {
+        var jsonResponse = jsonDecode(response.body);
+        List<String> taskIds = [];
+        if (jsonResponse['task_id'] != null) {
+          taskIds.add(jsonResponse['task_id']);
+        } else if (jsonResponse['task_ids'] != null) {
+          taskIds = List<String>.from(jsonResponse['task_ids']);
+        }
+
+        if (taskIds.isNotEmpty) {
+          setState(() {
+            for (var taskId in taskIds) {
+              _taskStatuses[taskId] = 'Processing';
+            }
+          });
+          startTaskStatusCheck(taskIds);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(
+                    'File uploaded successfully. Task IDs: ${taskIds.join(", ")}')),
+          );
+        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('File uploaded successfully')),
           );
@@ -311,51 +92,22 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
             'Upload failed: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
     } finally {
-      if (mounted) {
-        setState(() => _loading = false);
-      }
+      setState(() => _loading = false);
     }
   }
-
-  // Future<void> _sendAllFiles() async {
-  //   setState(() => _loading = true);
-  //   try {
-  //     for (var entity in _files) {
-  //       var file = File(entity.path);
-  //       await _sendFile(file);
-  //     }
-  //     if (mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('All files uploaded successfully')),
-  //       );
-  //     }
-  //   } catch (e) {
-  //     if (mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBar(content: Text('Error sending files: $e')),
-  //       );
-  //     }
-  //   } finally {
-  //     if (mounted) {
-  //       setState(() => _loading = false);
-  //     }
-  //   }
-  // }
 
   Future<void> _sendAllFiles() async {
     setState(() => _loading = true);
     try {
       var uri = Uri.parse(
-          'https://living-alien-polite.ngrok-free.app/v1/sync-local-files'); // Update with your API endpoint
+          'https://living-alien-polite.ngrok-free.app/v1/sync-local-files');
       var request = http.MultipartRequest('POST', uri);
       request.headers['uid'] = SharedPreferencesUtil().uid;
-      // Add all files to the request
+
       for (var file in _files) {
         var fileName = file.path.split('/').last;
         request.files.add(
@@ -364,33 +116,130 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
         );
       }
 
-      var response = await request.send();
-
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      print(response.body);
+      print(response.statusCode);
       if (response.statusCode == 200) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('All files uploaded successfully')),
-          );
+        var jsonResponse = jsonDecode(response.body);
+
+        // Ensure taskIds is a List<String>
+        List<String> taskIds = [];
+        if (jsonResponse['task_id'] is String) {
+          taskIds.add(jsonResponse['task_id'] as String); // Single task ID
+        } else if (jsonResponse['task_id'] is List) {
+          taskIds =
+              List<String>.from(jsonResponse['task_id']); // Multiple task IDs
         }
+
+        print(taskIds);
+        print(jsonResponse);
+
+        setState(() {
+          for (var taskId in taskIds) {
+            _taskStatuses[taskId] = 'Processing';
+          }
+        });
+
+        startTaskStatusCheck(taskIds);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Files uploaded successfully. Task IDs: ${taskIds.join(", ")}',
+            ),
+          ),
+        );
       } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text('Failed to upload files: ${response.statusCode}')),
-          );
-        }
+        throw Exception(
+            'Upload failed: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error sending files: $e')),
-        );
-      }
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
     } finally {
-      if (mounted) {
-        setState(() => _loading = false);
+      setState(() => _loading = false);
+    }
+  }
+
+  Future<Map<String, dynamic>> checkTaskStatus(String taskId) async {
+    print('Checking task status for $taskId');
+    var uri = Uri.parse(
+        'https://living-alien-polite.ngrok-free.app/v1/status/$taskId');
+    var response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to fetch task status: ${response.statusCode}');
+    }
+  }
+
+  Timer? _statusCheckTimer;
+
+  void startTaskStatusCheck(List<String> taskIds) {
+    _statusCheckTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
+      for (var taskId in taskIds) {
+        try {
+          var status = await checkTaskStatus(taskId);
+          setState(() {
+            _taskStatuses[taskId] = status['status'];
+          });
+
+          if (status['status'] == 'completed') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Task $taskId completed!')),
+            );
+
+            taskIds.remove(taskId);
+            //  print(status.result);
+          } else if (status['status'] == 'failed') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                  content: Text('Task $taskId failed: ${status['error']}')),
+            );
+            taskIds.remove(taskId);
+          }
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error checking task status: $e')),
+          );
+        }
+
+        if (taskIds.isEmpty) {
+          _statusCheckTimer?.cancel();
+        }
       }
+    });
+  }
+
+  Future<void> _deleteFile(File file) async {
+    try {
+      await file.delete();
+      _loadFiles(); // Refresh the list
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting file: $e')),
+      );
+    }
+  }
+
+  Future<void> _deleteAllFiles() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final entities = directory.listSync();
+      final audioFiles = entities
+          .where((e) => e.path.endsWith('.wav') || e.path.endsWith('.bin'));
+      for (var file in audioFiles) {
+        await File(file.path).delete();
+      }
+      _loadFiles(); // Refresh the list
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error deleting files: $e')),
+      );
     }
   }
 
@@ -446,7 +295,6 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
                       final file = File(_files[index].path);
                       final fileName = file.path.split('/').last;
                       final fileSize = _formatFileSize(file.lengthSync());
-
                       return ListTile(
                         title: Text(fileName),
                         subtitle: Text('Size: $fileSize'),
@@ -467,40 +315,25 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
                     },
                   ),
                 ),
+                if (_taskStatuses.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Task Status:",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        ..._taskStatuses.entries.map(
+                          (entry) => ListTile(
+                            title: Text("Task ID: ${entry.key}"),
+                            subtitle: Text("Status: ${entry.value}"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
               ],
             ),
     );
-  }
-
-  Future<void> _deleteFile(File file) async {
-    try {
-      await file.delete();
-      _loadFiles(); // Refresh the list
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error deleting file: $e')),
-        );
-      }
-    }
-  }
-
-  Future<void> _deleteAllFiles() async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final entities = directory.listSync();
-      final binFiles = entities.where((e) => e.path.endsWith('.bin'));
-
-      for (var file in binFiles) {
-        await File(file.path).delete();
-      }
-      _loadFiles(); // Refresh the list
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error deleting files: $e')),
-        );
-      }
-    }
   }
 }
