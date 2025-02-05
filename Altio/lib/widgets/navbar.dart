@@ -6,6 +6,7 @@ import 'package:altio/core/theme/app_colors.dart';
 import 'package:altio/core/widgets/typing_indicator.dart';
 import 'package:altio/features/chat/presentation/chat_screen.dart';
 import 'package:altio/main.dart';
+import 'package:altio/pages/home/page.dart';
 import 'package:altio/src/common_widget/icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -123,20 +124,14 @@ class _CustomNavBarState extends State<CustomNavBar> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 600),
           height: 60,
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+          margin: EdgeInsets.symmetric(horizontal: 2),
+          padding: EdgeInsets.symmetric(horizontal: 4, vertical: 0),
           decoration: BoxDecoration(
             borderRadius: br15,
             border: Border.all(
               color: AppColors.white,
               width: 2,
             ),
-            boxShadow: const [
-              BoxShadow(
-                color: Color.fromARGB(118, 122, 122, 122),
-                blurRadius: 5,
-                offset: Offset(0, 5),
-              ),
-            ],
             color: AppColors.commonPink,
           ),
           child: Row(
@@ -144,10 +139,10 @@ class _CustomNavBarState extends State<CustomNavBar> {
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildLogo(),
-              if (!navbarState.isExpanded) _buildVerticalDivider(),
+              // if (!navbarState.isExpanded) _buildVerticalDivider(),
               if (!navbarState.isExpanded) _buildSearchButton(),
               if (!navbarState.isExpanded) _buildMessageButton(),
-              if (navbarState.isExpanded) _buildExpandedSection(),
+              if (navbarState.isExpanded) _buildExpandedSection(navbarState),
             ],
           ),
         ),
@@ -157,39 +152,24 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   Widget _buildLogo() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 5.w),
-      child: GestureDetector(
-        onTap: () async {
-          if (widget.onBackBtnPressed != null) {
-            widget.onBackBtnPressed!();
-          } else {
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: CustomIconButton(
+          iconPath: AppImages.memories,
+          size: 26,
+          onPressed: () {
             Provider.of<NavbarState>(context, listen: false).collapse();
-          }
-        },
-        child: Image.asset(
-          AppImages.appLogo,
-          height: 16.h,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildVerticalDivider() {
-    return VerticalDivider(
-      thickness: 0.5.w,
-      width: 0,
-      color: AppColors.brightGrey,
-      endIndent: 8.h,
-      indent: 8.h,
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => HomePageWrapper()));
+          }),
     );
   }
 
   Widget _buildSearchButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: CustomIconButton(
         iconPath: AppImages.search,
-        size: 24.h,
+        size: 26,
         onPressed: toggleSearchVisibility,
       ),
     );
@@ -197,21 +177,19 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   Widget _buildMessageButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: CustomIconButton(
         iconPath: AppImages.message,
-        size: 24.h,
+        size: 26,
         onPressed: toggleMessageVisibility,
       ),
     );
   }
 
-  Widget _buildExpandedSection() {
-    final navbarState = Provider.of<NavbarState>(context);
-
+  Widget _buildExpandedSection(navbarState) {
     return Expanded(
       child: Container(
-        padding: EdgeInsets.only(left: 4),
+        padding: EdgeInsets.only(left: 6, right: 6),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: br10,
@@ -241,7 +219,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
             ),
             navbarState.isChatVisible
                 ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 0.0),
                     child: widget.isUserMessageSent
                         ? TypingIndicator(
                             dotHeight: 6,

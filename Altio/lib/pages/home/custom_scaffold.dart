@@ -94,7 +94,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
     return Scaffold(
       appBar: widget.showAppBar == true
           ? AppBar(
-              titleSpacing: widget.titleSpacing ?? 0,
+              titleSpacing: widget.titleSpacing ?? 16,
               surfaceTintColor: AppColors.white,
               centerTitle: widget.centerTitle ?? true,
               automaticallyImplyLeading: false,

@@ -118,10 +118,10 @@ class UserMessage extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.purpleDark,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12.r),
-                      topRight: Radius.circular(12.r),
-                      bottomLeft: Radius.circular(12.r),
-                      bottomRight: Radius.circular(0.r),
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
+                      bottomLeft: Radius.circular(8),
+                      bottomRight: Radius.circular(0),
                     ),
                     boxShadow: [
                       BoxShadow(

@@ -21,7 +21,6 @@ import 'package:altio/scripts.dart';
 import 'package:altio/utils/audio/foreground.dart';
 import 'package:altio/utils/ble/connected.dart';
 import 'package:altio/utils/ble/scan.dart';
-import 'package:altio/utils/legal/terms_and_condition.dart';
 import 'package:altio/utils/other/notifications.dart';
 import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,7 +42,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     with WidgetsBindingObserver, TickerProviderStateMixin, WebSocketMixin {
   ForegroundUtil foregroundUtil = ForegroundUtil();
   bool? hasSeenTutorial;
-  bool? _hasDevice;
+  bool? hasDevice;
   List<Widget> screens = [Container(), const SizedBox(), const SizedBox()];
 
   List<Memory> memories = [];
@@ -129,7 +128,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     if (user != null) {
       bool? flag = await DeviceFlagService().fetchDeviceFlag(uid: user.uid);
       setState(() {
-        _hasDevice = flag;
+        hasDevice = flag;
       });
     }
   }
@@ -277,19 +276,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   @override
   Widget build(BuildContext context) {
-    final bool isTosAccepted = SharedPreferencesUtil().tosAccepted;
-
-    if (!isTosAccepted) {
-      return TermsAndConditionsWidget(
-        showAcceptBtn: true,
-        onAccept: () {
-          SharedPreferencesUtil().tosAccepted = true;
-          setState(() {});
-        },
-      );
-    }
-
-    
     return CapturePage(
       key: capturePageKey,
       device: _device,
@@ -297,7 +283,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       refreshMemories: _initiateMemories,
       refreshMessages: _refreshMessages,
       hasSeenTutorial: hasSeenTutorial ?? false,
-      hasDevice: _hasDevice ?? false,
+      hasDevice: hasDevice ?? false,
     );
   }
 

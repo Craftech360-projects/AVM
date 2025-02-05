@@ -11,7 +11,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:tuple/tuple.dart';
 
 class GreetingCard extends StatefulWidget {
   final GlobalKey? tutorialKey;
@@ -24,7 +23,6 @@ class GreetingCard extends StatefulWidget {
   final InternetStatus? internetStatus;
   final List<TranscriptSegment>? segments;
   final bool memoryCreating;
-  final List<Tuple2<String, String>> photos;
   final ScrollController? scrollController;
 
   const GreetingCard({
@@ -37,7 +35,6 @@ class GreetingCard extends StatefulWidget {
     this.internetStatus,
     this.segments,
     this.memoryCreating = false,
-    this.photos = const [],
     this.scrollController,
     this.avatarUrl,
     this.tutorialKey,

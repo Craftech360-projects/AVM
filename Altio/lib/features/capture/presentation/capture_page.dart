@@ -14,13 +14,13 @@ import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
 import 'package:altio/core/widgets/custom_dialog_box.dart';
 import 'package:altio/core/widgets/typing_indicator.dart';
-import 'package:altio/features/capture/logic/openglass_mixin.dart';
 import 'package:altio/features/capture/presentation/capture_memory_page.dart';
 import 'package:altio/features/capture/widgets/real_time_bot.dart';
 import 'package:altio/features/memories/bloc/memory_bloc.dart';
 import 'package:altio/pages/capture/location_service.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
 import 'package:altio/pages/settings/widgets/about_you.dart';
+import 'package:altio/pages/skeleton/screen_skeleton.dart';
 import 'package:altio/utils/audio/wav_bytes.dart';
 import 'package:altio/utils/ble/communication.dart';
 import 'package:altio/utils/features/backup_util.dart';
@@ -69,7 +69,6 @@ class CapturePageState extends State<CapturePage>
         WidgetsBindingObserver,
         PhoneRecorderMixin,
         WebSocketMixin,
-        OpenGlassMixin,
         TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
   @override
@@ -88,6 +87,7 @@ class CapturePageState extends State<CapturePage>
   late AnimationController _buttonFlipController;
   bool _isFlippingRight = true;
   bool _switchValue = SharedPreferencesUtil().notificationPlugin;
+  bool _isLoading = false;
 
   StreamSubscription? _bleBytesStream;
   WavBytesUtil? audioStorage;
@@ -98,8 +98,6 @@ class CapturePageState extends State<CapturePage>
   DateTime? currentTranscriptStartedAt;
   DateTime? currentTranscriptFinishedAt;
   static const quietSecondsForMemoryCreation = 60;
-
-  bool isGlasses = false;
   String conversationId = const Uuid().v4();
 
   double? streamStartedAtSecond;
@@ -109,14 +107,20 @@ class CapturePageState extends State<CapturePage>
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _isLoading = true;
+    });
     btDevice = widget.device;
     WavBytesUtil.clearTempWavFiles();
     initiateWebsocket();
-    startOpenGlass();
+
     initiateBytesStreamingProcessing();
     processCachedTranscript();
-
     dismissedList = List.generate(segments.length, (index) => false);
+
+    setState(() {
+      _isLoading = false;
+    });
 
     WidgetsBinding.instance.addObserver(this);
     SchedulerBinding.instance.addPostFrameCallback((_) async {
@@ -176,11 +180,9 @@ class CapturePageState extends State<CapturePage>
   }
 
   Future<bool> getNotificationPluginValue() async {
-    // Implement the logic to get the notification plugin value
     return SharedPreferencesUtil().notificationPlugin;
   }
 
-  // ignore: unused_element
   void _pluginNotification() async {
     String transcript = TranscriptSegment.segmentsAsString(segments);
     String friendlyReplyJson = await generateAltioReply(transcript);
@@ -205,7 +207,6 @@ class CapturePageState extends State<CapturePage>
     streamStartedAtSecond = null;
     firstStreamReceivedAt = null;
     secondsMissedOnReconnect = null;
-    photos = [];
     conversationId = const Uuid().v4();
   }
 
@@ -299,25 +300,15 @@ class CapturePageState extends State<CapturePage>
 
   int elapsedSeconds = 0;
 
-  Future<void> startOpenGlass() async {
-    if (btDevice == null) return;
-    if (!isGlasses) return;
-
-    await openGlassProcessing(
-        btDevice!, (p) => setState(() {}), setHasTranscripts);
-    closeWebSocket();
-  }
-
   void resetState(
       {bool restartBytesProcessing = true, BTDeviceStruct? btDevice}) {
     _bleBytesStream?.cancel();
     _memoryCreationTimer?.cancel();
-    if (!restartBytesProcessing && (segments.isNotEmpty || photos.isNotEmpty)) {
+    if (!restartBytesProcessing && (segments.isNotEmpty)) {
       _createMemory(forcedCreation: true);
     }
     if (btDevice != null) setState(() => this.btDevice = btDevice);
     if (restartBytesProcessing) {
-      startOpenGlass();
       initiateBytesStreamingProcessing();
       // restartWebSocket(); // DO NOT USE FOR NOW, this ties the websocket to the device, and logic is much more complex
     }
@@ -354,7 +345,6 @@ class CapturePageState extends State<CapturePage>
         startedAt: currentTranscriptStartedAt,
         finishedAt: currentTranscriptFinishedAt,
         geolocation: await LocationService().getGeolocationDetails(),
-        photos: photos,
         sendMessageToChat: sendMessageToChat,
       );
 
@@ -413,7 +403,7 @@ class CapturePageState extends State<CapturePage>
       streamStartedAtSecond = null;
       firstStreamReceivedAt = null;
       secondsMissedOnReconnect = null;
-      photos = [];
+
       conversationId = const Uuid().v4();
     }
   }
@@ -510,14 +500,13 @@ class CapturePageState extends State<CapturePage>
     final theme = Theme.of(context);
     super.build(context);
     return CustomScaffold(
-      showProfileIcon: true,
+      showProfileIcon: widget.hasDevice ? true : false,
       onProfileIconPressed: () => Navigator.push(
         context,
         PageRouteBuilder(
           transitionDuration: Duration(milliseconds: 500),
           pageBuilder: (context, animation, secondaryAnimation) =>
               AboutYouScreen(),
-          // NeuralScreen(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             var zoomInAnimation = Tween(begin: 0.9, end: 1.0).animate(
               CurvedAnimation(parent: animation, curve: Curves.easeOut),
@@ -546,150 +535,163 @@ class CapturePageState extends State<CapturePage>
               height: 70,
             ),
       showBackBtn: false,
-      body: Stack(children: [
-        widget.hasDevice
-            ? CaptureMemoryPage(
-                context: context,
-                hasTranscripts: _hasTranscripts,
-                wsConnectionState: wsConnectionState,
-                device: widget.device,
-                segments: segments,
-                memoryCreating: memoryCreating,
-                photos: photos,
-                scrollController: _scrollController,
-                onDismissmissedCaptureMemory: (direction) {
-                  _createMemory();
-                  setState(() {});
-                },
-                hasSeenTutorial: true,
-              )
-            : Center(
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 12),
-                  margin: EdgeInsets.all(28),
-                  decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: br8,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.black.withValues(alpha: 0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                          textAlign: TextAlign.center,
-                          "Ohhoo! Seems like you don't have a Capsaul with you 🙁",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.5,
-                              height: 1.2)),
-                      h8,
-                      Text(
-                        textAlign: TextAlign.center,
-                        "Don't worry! Click the link below to get your Capsaul and start capturing memories🤩",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            height: 1.2,
-                            fontSize: 13),
-                      ),
-                      h8,
-                      InkWell(
-                        onTap: () async {
-                          final Uri url = Uri.parse(
-                              'https://www.freeprivacypolicy.com/live/38486d16-4053-4bcd-8786-884b58c52ca2');
-                          if (await canLaunchUrl(url)) {
-                            await launchUrl(url);
-                          } else {
-                            throw 'Could not launch $url';
-                          }
-                        },
-                        child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: AppColors.purpleDark,
-                            borderRadius: br5,
-                          ),
-                          child: Text(
-                            'Get my Capsaul',
-                            style: TextStyle(color: AppColors.white),
-                          ),
+      body: _isLoading
+          ? ScreenSkeleton()
+          : Stack(children: [
+              widget.hasDevice
+                  ? CaptureMemoryPage(
+                      context: context,
+                      hasTranscripts: _hasTranscripts,
+                      wsConnectionState: wsConnectionState,
+                      device: widget.device,
+                      segments: segments,
+                      memoryCreating: memoryCreating,
+                      scrollController: _scrollController,
+                      onDismissmissedCaptureMemory: (direction) {
+                        _createMemory();
+                        setState(() {});
+                      },
+                      hasSeenTutorial: true,
+                    )
+                  : Center(
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 15, horizontal: 12),
+                        margin: EdgeInsets.all(28),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: br8,
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.black.withValues(alpha: 0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                                textAlign: TextAlign.center,
+                                "Ohoo! Seems like you don't have a Capsaul with you 🙁",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14.5,
+                                    height: 1.2)),
+                            h8,
+                            Text(
+                              textAlign: TextAlign.center,
+                              "Don't worry! Click the button below to get your Capsaul and start capturing memories🤩",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  height: 1.2,
+                                  fontSize: 13),
+                            ),
+                            h8,
+                            OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: AppColors.black,
+                                foregroundColor:
+                                    Color.fromRGBO(212, 175, 55, 1),
+                                // Text color
+                                side: BorderSide(
+                                    color: Color(0xFFFFD700),
+                                    width: 3), // Border
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 24),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                              ),
+                              onPressed: () async {
+                                final Uri url = Uri.parse(
+                                    'https://www.freeprivacypolicy.com/live/38486d16-4053-4bcd-8786-884b58c52ca2');
+                                if (await canLaunchUrl(url)) {
+                                  await launchUrl(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: Text(
+                                "Get my Capsaul",
+                                style: TextStyle(
+                                  fontSize: 14.5,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFFFFD700),
+                                ),
+                              ),
+                            ),
+                            Lottie.asset(
+                              AppAnimations.orderNow,
+                              controller: _lottieController,
+                              onLoaded: (composition) {
+                                _lottieController
+                                  ..duration = composition.duration
+                                  ..repeat();
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Text('Animation failed to load');
+                              },
+                            )
+                          ],
                         ),
                       ),
-                      Lottie.asset(
-                        AppAnimations.orderNow,
-                        controller: _lottieController,
-                        onLoaded: (composition) {
-                          _lottieController
-                            ..duration = composition.duration
-                            ..repeat();
+                    ),
+              Positioned(
+                bottom: 10,
+                right: 0,
+                child: Align(
+                  child: Column(
+                    children: [
+                      AnimatedBuilder(
+                        animation: _animation,
+                        builder: (context, child) {
+                          double flipValue = _isFlippingRight
+                              ? _animation.value
+                              : -_animation.value;
+
+                          Matrix4 transform = Matrix4.identity()
+                            ..setEntry(3, 2, 0.001)
+                            ..rotateY(flipValue);
+
+                          return Transform(
+                            alignment: Alignment.center,
+                            transform: transform,
+                            child: FloatingActionButton(
+                              key: _floatingActionKey,
+                              shape: const CircleBorder(),
+                              elevation: 8.0,
+                              backgroundColor: AppColors.purpleDark,
+                              onPressed: _showPopup,
+                              child: Image.asset(
+                                AppImages.botIcon,
+                                width: 45,
+                                height: 45,
+                              ),
+                            ),
+                          );
                         },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Text('Animation failed to load');
-                        },
-                      )
+                      ),
+                      h8,
+                      if (SharedPreferencesUtil().notificationPlugin)
+                        TypingIndicator(),
                     ],
                   ),
                 ),
               ),
-        Positioned(
-          bottom: 10,
-          right: 0,
-          child: Align(
-            child: Column(
-              children: [
-                AnimatedBuilder(
-                  animation: _animation,
-                  builder: (context, child) {
-                    double flipValue =
-                        _isFlippingRight ? _animation.value : -_animation.value;
-
-                    Matrix4 transform = Matrix4.identity()
-                      ..setEntry(3, 2, 0.001)
-                      ..rotateY(flipValue);
-
-                    return Transform(
-                      alignment: Alignment.center,
-                      transform: transform,
-                      child: FloatingActionButton(
-                        key: _floatingActionKey,
-                        shape: const CircleBorder(),
-                        elevation: 8.0,
-                        backgroundColor: AppColors.purpleDark,
-                        onPressed: _showPopup,
-                        child: Image.asset(
-                          AppImages.botIcon,
-                          width: 45,
-                          height: 45,
-                        ),
-                      ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: CustomNavBar(
+                  onMemorySearch: (query) {
+                    BlocProvider.of<MemoryBloc>(context).add(
+                      SearchMemory(query: query),
                     );
                   },
                 ),
-                h8,
-                if (SharedPreferencesUtil().notificationPlugin)
-                  TypingIndicator(),
-              ],
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: CustomNavBar(
-            onMemorySearch: (query) {
-              BlocProvider.of<MemoryBloc>(context).add(
-                SearchMemory(query: query),
-              );
-            },
-          ),
-        ),
-      ]),
+              ),
+            ]),
     );
   }
 }

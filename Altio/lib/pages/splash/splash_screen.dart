@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/core/assets/app_images.dart';
+import 'package:altio/features/chat/presentation/chat_screen.dart';
 import 'package:altio/features/wizard/pages/signin_page.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
-import 'package:altio/pages/home/page.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -34,7 +34,7 @@ class SplashScreenState extends State<SplashScreen>
           ? Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => const HomePageWrapper()),
+                  builder: (BuildContext context) => const ChatScreen()),
             )
           : Navigator.pushReplacement(
               context,

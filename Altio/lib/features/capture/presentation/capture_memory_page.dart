@@ -16,7 +16,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:tuple/tuple.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 // ignore: must_be_immutable
@@ -30,7 +29,6 @@ class CaptureMemoryPage extends StatefulWidget {
     this.internetStatus,
     this.segments,
     required this.memoryCreating,
-    required this.photos,
     this.scrollController,
     required this.onDismissmissedCaptureMemory,
     required this.hasSeenTutorial,
@@ -43,7 +41,6 @@ class CaptureMemoryPage extends StatefulWidget {
   InternetStatus? internetStatus;
   final List<TranscriptSegment>? segments;
   final bool memoryCreating;
-  final List<Tuple2<String, String>> photos;
   final ScrollController? scrollController;
   final Function(DismissDirection) onDismissmissedCaptureMemory;
   final bool hasSeenTutorial;
@@ -212,7 +209,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                                           connectivityState.status),
                                   segments: widget.segments,
                                   memoryCreating: widget.memoryCreating,
-                                  photos: widget.photos,
                                   scrollController: widget.scrollController,
                                 ),
                                 Container(
@@ -243,7 +239,6 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage> {
                           connectivityState.status),
                       segments: widget.segments,
                       memoryCreating: widget.memoryCreating,
-                      photos: widget.photos,
                       scrollController: widget.scrollController,
                       tutorialKey: _greetingCardKey,
                     ),

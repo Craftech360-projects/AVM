@@ -147,9 +147,9 @@ class AIMessage extends StatelessWidget {
                   color: Color(0xFFE5E4E2),
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(0),
-                    topRight: Radius.circular(12),
-                    bottomLeft: Radius.circular(12),
-                    bottomRight: Radius.circular(12),
+                    topRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
                   ),
                 ),
                 child: Column(

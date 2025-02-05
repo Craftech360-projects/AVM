@@ -124,8 +124,8 @@ void main() async {
 }
 
 class NavbarState extends ChangeNotifier {
-  bool _isExpanded = false;
-  bool isChatVisible = false;
+  bool _isExpanded = true;
+  bool isChatVisible = true;
   bool isMemoryVisible = false;
 
   bool get isExpanded => _isExpanded;
