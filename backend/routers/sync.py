@@ -2,13 +2,14 @@ import os
 import struct
 import threading
 import time
+import json
 from datetime import datetime
 from typing import List
-
+import uuid
 from fastapi import APIRouter, Header, UploadFile, File, Depends, HTTPException
 from opuslib import Decoder
 from pydub import AudioSegment
-
+from concurrent.futures import ThreadPoolExecutor
 from database.memories import get_closest_memory_to_timestamps, update_memory_segments
 from models.memory import CreateMemory
 from models.transcript_segment import TranscriptSegment
@@ -18,11 +19,44 @@ from utils.other.storage import get_syncing_file_temporal_signed_url, delete_syn
 from utils.stt.pre_recorded import fal_whisperx, fal_postprocessing
 from utils.stt.vad import vad_is_empty
 from utils.stt.whisperx import process_all_audio_files
+from database import get_db_connection
 router = APIRouter()
-
+from rq import Queue
 import shutil
 import wave
+from redis import Redis
+# Thread pool for background tasks
+executor = ThreadPoolExecutor(max_workers=4)
+redis_conn = Redis(host='localhost', port=6379) 
+task_queue = Queue('audio_processing', connection=redis_conn)
 
+def process_in_background(task_id, uid, user_dir):
+    print(f"Task {task_id} started processing.")
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        # Process all audio files in the directory
+        combined_transcripts = process_all_audio_files(directory=user_dir)
+
+        # Update task status to "completed" and save the result
+        cursor.execute('''
+            UPDATE tasks
+            SET status = %s, result = %s, updated_at = %s
+            WHERE task_id = %s
+        ''', ("completed", json.dumps(combined_transcripts), datetime.now(), task_id))
+        conn.commit()
+        print(f"Task {task_id} completed successfully.")
+    except Exception as e:
+        print(f"Task {task_id} failed: {str(e)}")
+        # Update task status to "failed" and save the error message
+        cursor.execute('''
+            UPDATE tasks
+            SET status = %s, error = %s, updated_at = %s
+            WHERE task_id = %s
+        ''', ("failed", str(e), datetime.now(), task_id))
+        conn.commit()
+    finally:
+        conn.close()
 
 def decode_opus_file_to_wav(opus_file_path, wav_file_path, sample_rate=16000, channels=1):
     decoder = Decoder(sample_rate, channels)
@@ -94,6 +128,8 @@ def retrieve_file_paths(files: List[UploadFile], uid: str):
         paths.append(path)
         with open(path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
+
+            
     return paths
 
 
@@ -218,27 +254,100 @@ async def sync_local_files(
         raise HTTPException(status_code=400, detail="Missing uid header")
 
     print("User ID:", uid)
-    print("files",files)
-    # Improve a version without timestamp, to consider uploads from the stored in v2 device bytes.
-    paths = retrieve_file_paths(files, uid)
-    print("step 1 - paths:", paths)
-    wav_paths = decode_files_to_wav(paths)
-    print("step 2 - wav_paths:", wav_paths)
     
-    def chunk_threads(threads):
-        chunk_size = 5
-        for i in range(0, len(threads), chunk_size):
-            [t.start() for t in threads[i:i + chunk_size]]
-            [t.join() for t in threads[i+i + chunk_size]]
+    user_dir = f"syncing/{uid}/"
+    os.makedirs(user_dir, exist_ok=True)
+    paths = []
 
-    print(f'step 3-, syncing/{uid}/')
-    combined_transcripts = process_all_audio_files(directory=f"syncing/{uid}/")
+    
+    # Save uploaded files to the user's directory
+    bin_paths = []
+    for file in files:
+        file_path = os.path.join(user_dir, file.filename)
+        with open(file_path, "wb") as buffer:
+            buffer.write(await file.read())
+        bin_paths.append(file_path)
 
-    response = {
-        # 'updated_memories': set(),
-        # 'new_memories': set(),
-        'transcripts': combined_transcripts
+
+    print(f"Files saved to {user_dir}: {[os.path.basename(p) for p in paths]}")
+        # Decode .bin files to .wav format
+    try:
+        wav_paths = decode_files_to_wav(bin_paths)
+    except HTTPException as e:
+        raise e  # Propagate the error to the client
+
+    print(f"Decoded files: {[os.path.basename(p) for p in wav_paths]}")
+
+    # Generate a unique task ID for this request
+    task_uuid = uuid.uuid4()
+    task_id = f"task_{uid}_{task_uuid}"
+    task_name = "sync_local_files"
+    # Save the initial task status in the database
+
+    print(f"Generated task_id: {task_id}")
+    print(f"Generated task_name: {task_name}")
+
+    # Save the initial task status in the database
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO tasks (task_id, task_name, uid, status, created_at, updated_at)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    ''', (task_id, task_name, uid, "processing", datetime.now(), datetime.now()))
+    conn.commit()
+
+    # Confirm the task is created in the database
+    cursor.execute('''
+        SELECT task_id, task_name, uid, status, created_at, updated_at
+        FROM tasks
+        WHERE task_id = %s
+    ''', (task_id,))
+    task = cursor.fetchone()
+    conn.close()
+    if task:
+        print(f"Task created in the database: {task}")
+    else:
+        print("Failed to create task in the database.")
+        raise HTTPException(status_code=500, detail="Failed to create task in the database.")
+
+    conn.close()
+
+    # Schedule the processing in the background
+    #executor.submit(process_in_background, task_id, uid, user_dir)
+
+     # Enqueue the task to Redis Queue
+    task_queue.enqueue(process_in_background, task_id, uid, user_dir)
+    # Respond immediately with the task ID
+    return {
+        "message": "Files received and are being processed.",
+        "task_id": task_id
     }
-    print('response:', response)
-    return response
 
+
+@router.get("/v1/status/{task_id}")
+def get_task_status(task_id: str):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT task_id, task_name, uid, status, result, error, created_at, updated_at
+        FROM tasks
+        WHERE task_id = %s
+    ''', (task_id,))
+    task = cursor.fetchone()
+    conn.close()
+
+    if task:
+        print(f"Task status: {task}")
+        return {
+            "task_id": task[0],
+            "task_name": task[1],
+            "uid": task[2],
+            "status": task[3],
+            "result": task[4],
+            "error": task[5],
+            "created_at": task[6],
+            "updated_at": task[7]
+        }
+    else:
+        print(f"Task {task_id} not found.")
+        return {"status": "not_found"}

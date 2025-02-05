@@ -20,6 +20,11 @@ from zapier import memory_created as zapier_memory_created_router
 # from basic import realtime as basic_realtime_router
 from basic import mentor as basic_realtime_mentor_router
 # ****************************************
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Load environment variables from .env
+
 
 app = FastAPI()
 app.mount("/templates/static", StaticFiles(directory="templates/static"), name="templates_static")

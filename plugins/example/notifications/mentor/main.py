@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 env_path = Path(__file__).parent.parent.parent / '.env'
 load_dotenv(env_path)
 
+load_dotenv() 
 app = Flask(__name__)
 
 # Create logs directory if it doesn't exist

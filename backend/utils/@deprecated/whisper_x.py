@@ -136,7 +136,7 @@ def load_audio(audio_file):
 @timeit
 def transcribe_audio_file(audio, language='en'):
     result = model.transcribe(audio, batch_size=batch_size, language=language)
-    print('Whisper transcription completed')
+    print('Whisper transcription completed',result)
     return result
 
 @timeit

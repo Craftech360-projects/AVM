@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from modal import Image, App, asgi_app, Secret
 from routers import workflow, chat, firmware, plugins, memories, transcribe_v2, notifications, \
     speech_profile, agents, facts, users, processing_memories, trends, sdcard, sync, apps, custom_auth, payment
-
+from database import get_db_connection
 if os.environ.get('SERVICE_ACCOUNT_JSON'):
     service_account_info = json.loads(os.environ["SERVICE_ACCOUNT_JSON"])
     credentials = firebase_admin.credentials.Certificate(service_account_info)
