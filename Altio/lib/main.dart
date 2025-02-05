@@ -181,29 +181,7 @@ class MyAppState extends State<MyApp> {
     super.initState();
     NotificationUtil.initializeNotificationsEventListeners();
     NotificationUtil.initializeIsolateReceivePort();
-    // _initiatePlugins();
   }
-
-  // Future<void> _initiatePlugins() async {
-  //   try {
-  //     plugins = SharedPreferencesUtil().pluginsList;
-  //     plugins = await retrievePlugins();
-
-  //     _edgeCasePluginNotAvailable();
-  //     setState(() {});
-  //   } catch (e, stackTrace) {
-  //     log('Plugin initialization failed: $e\n$stackTrace');
-  //   }
-  // }
-
-  // _edgeCasePluginNotAvailable() {
-  //   var selectedChatPlugin = SharedPreferencesUtil().selectedChatPluginId;
-  //   var plugin = plugins.firstWhereOrNull((p) => selectedChatPlugin == p.id);
-  //   if (selectedChatPlugin != 'no_selected' &&
-  //       (plugin == null || !plugin.worksWithChat())) {
-  //     SharedPreferencesUtil().selectedChatPluginId = 'no_selected';
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -221,8 +199,7 @@ class MyAppState extends State<MyApp> {
               ),
             ),
             BlocProvider(
-              create: (context) =>
-                  BluetoothBloc()..startListening('your_device_id'),
+              create: (_) => BluetoothBloc(),
             ),
             BlocProvider<ConnectivityBloc>(
               create: (context) => ConnectivityBloc(),

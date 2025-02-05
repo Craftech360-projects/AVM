@@ -8,6 +8,7 @@ import 'package:altio/backend/database/message_provider.dart';
 import 'package:altio/backend/database/transcript_segment.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/bt_device.dart';
+import 'package:altio/core/assets/app_animations.dart';
 import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
@@ -33,6 +34,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../pages/capture/phone_recorder_mixin.dart';
@@ -44,6 +47,7 @@ class CapturePage extends StatefulWidget {
   final BTDeviceStruct? device;
   final int batteryLevel;
   final bool? hasSeenTutorial;
+  final bool hasDevice;
 
   const CapturePage({
     super.key,
@@ -52,6 +56,7 @@ class CapturePage extends StatefulWidget {
     this.refreshMessages,
     this.batteryLevel = -1,
     this.hasSeenTutorial,
+    required this.hasDevice,
   });
 
   @override
@@ -79,7 +84,8 @@ class CapturePageState extends State<CapturePage>
   final GlobalKey _floatingActionKey = GlobalKey();
 
   late Animation<double> _animation;
-  late AnimationController _animationController;
+  late AnimationController _lottieController;
+  late AnimationController _buttonFlipController;
   bool _isFlippingRight = true;
   bool _switchValue = SharedPreferencesUtil().notificationPlugin;
 
@@ -99,6 +105,70 @@ class CapturePageState extends State<CapturePage>
   double? streamStartedAtSecond;
   DateTime? firstStreamReceivedAt;
   int? secondsMissedOnReconnect;
+
+  @override
+  void initState() {
+    super.initState();
+    btDevice = widget.device;
+    WavBytesUtil.clearTempWavFiles();
+    initiateWebsocket();
+    startOpenGlass();
+    initiateBytesStreamingProcessing();
+    processCachedTranscript();
+
+    dismissedList = List.generate(segments.length, (index) => false);
+
+    WidgetsBinding.instance.addObserver(this);
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (await LocationService().displayPermissionsDialog()) {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (c) => CustomDialogWidget(
+            icon: Icons.location_on_rounded,
+            title: "Location Permission Required 🌍",
+            message:
+                "We need your location permissions to add a location tag to your memories. This will help you remember where they happened.",
+            yesPressed: () async {
+              Navigator.of(context).pop();
+              await requestLocationPermission();
+            },
+          ),
+        );
+      }
+    });
+
+    _lottieController = AnimationController(vsync: this);
+
+    _buttonFlipController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    );
+
+    _animation = Tween<double>(begin: 0, end: 2 * 3.141592653589793).animate(
+      CurvedAnimation(
+        parent: _buttonFlipController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
+    _buttonFlipController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Future.delayed(const Duration(seconds: 5), () {
+          if (mounted) {
+            setState(() {
+              _isFlippingRight = !_isFlippingRight;
+            });
+            _buttonFlipController.reset();
+            _buttonFlipController.forward();
+          }
+        });
+      }
+    });
+
+    // Start the first flip
+    _buttonFlipController.forward();
+  }
 
   @override
   void didChangeDependencies() {
@@ -318,7 +388,7 @@ class CapturePageState extends State<CapturePage>
         createNotification(
           notificationId: 2,
           title:
-              'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
+              'Memory saved! ${memory.structured.target?.getEmoji() ?? ''} Relive it anytime.',
         );
       }
       if (backupsEnabled && mounted) {
@@ -404,73 +474,12 @@ class CapturePageState extends State<CapturePage>
   }
 
   @override
-  void initState() {
-    super.initState();
-    btDevice = widget.device;
-    WavBytesUtil.clearTempWavFiles();
-    initiateWebsocket();
-    startOpenGlass();
-    initiateBytesStreamingProcessing();
-    processCachedTranscript();
-
-    dismissedList = List.generate(segments.length, (index) => false);
-
-    WidgetsBinding.instance.addObserver(this);
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (await LocationService().displayPermissionsDialog()) {
-        if (!mounted) return;
-        showDialog(
-          context: context,
-          builder: (c) => CustomDialogWidget(
-            icon: Icons.location_on_rounded,
-            title: "Location Permission Required 🌍",
-            message:
-                "We need your location permissions to add a location tag to your memories. This will help you remember where they happened.",
-            yesPressed: () async {
-              Navigator.of(context).pop();
-              await requestLocationPermission();
-            },
-          ),
-        );
-      }
-    });
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
-
-    _animation = Tween<double>(begin: 0, end: 2 * 3.141592653589793).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        Future.delayed(const Duration(seconds: 5), () {
-          if (mounted) {
-            setState(() {
-              _isFlippingRight = !_isFlippingRight;
-            });
-            _animationController.reset();
-            _animationController.forward();
-          }
-        });
-      }
-    });
-
-    // Start the first flip
-    _animationController.forward();
-  }
-
-  @override
   void dispose() {
     _memoryCreationTimer?.cancel();
     _bleBytesStream?.cancel();
     _scrollController.dispose();
-    _animationController.dispose();
+    _lottieController.dispose();
+    _buttonFlipController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -538,21 +547,97 @@ class CapturePageState extends State<CapturePage>
             ),
       showBackBtn: false,
       body: Stack(children: [
-        CaptureMemoryPage(
-          context: context,
-          hasTranscripts: _hasTranscripts,
-          wsConnectionState: wsConnectionState,
-          device: widget.device,
-          segments: segments,
-          memoryCreating: memoryCreating,
-          photos: photos,
-          scrollController: _scrollController,
-          onDismissmissedCaptureMemory: (direction) {
-            _createMemory();
-            setState(() {});
-          },
-          hasSeenTutorial: true,
-        ),
+        widget.hasDevice
+            ? CaptureMemoryPage(
+                context: context,
+                hasTranscripts: _hasTranscripts,
+                wsConnectionState: wsConnectionState,
+                device: widget.device,
+                segments: segments,
+                memoryCreating: memoryCreating,
+                photos: photos,
+                scrollController: _scrollController,
+                onDismissmissedCaptureMemory: (direction) {
+                  _createMemory();
+                  setState(() {});
+                },
+                hasSeenTutorial: true,
+              )
+            : Center(
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 12),
+                  margin: EdgeInsets.all(28),
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: br8,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.black.withValues(alpha: 0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          textAlign: TextAlign.center,
+                          "Ohhoo! Seems like you don't have a Capsaul with you 🙁",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.5,
+                              height: 1.2)),
+                      h8,
+                      Text(
+                        textAlign: TextAlign.center,
+                        "Don't worry! Click the link below to get your Capsaul and start capturing memories🤩",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            height: 1.2,
+                            fontSize: 13),
+                      ),
+                      h8,
+                      InkWell(
+                        onTap: () async {
+                          final Uri url = Uri.parse(
+                              'https://www.freeprivacypolicy.com/live/38486d16-4053-4bcd-8786-884b58c52ca2');
+                          if (await canLaunchUrl(url)) {
+                            await launchUrl(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        },
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 3),
+                          decoration: BoxDecoration(
+                            color: AppColors.purpleDark,
+                            borderRadius: br5,
+                          ),
+                          child: Text(
+                            'Get my Capsaul',
+                            style: TextStyle(color: AppColors.white),
+                          ),
+                        ),
+                      ),
+                      Lottie.asset(
+                        AppAnimations.orderNow,
+                        controller: _lottieController,
+                        onLoaded: (composition) {
+                          _lottieController
+                            ..duration = composition.duration
+                            ..repeat();
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Text('Animation failed to load');
+                        },
+                      )
+                    ],
+                  ),
+                ),
+              ),
         Positioned(
           bottom: 10,
           right: 0,

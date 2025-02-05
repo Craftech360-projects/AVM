@@ -245,9 +245,9 @@ mixin WebSocketMixin {
     clearNotification(2);
     createNotification(
       notificationId: 2,
-      title: 'Connection Issue',
-      body: 'Unable to connect to the transcript service.'
-          ' Please restart the app or contact support if the problem persists.',
+      title: 'Connection hiccup detected.',
+      body: 'Oops! Trouble connecting to the transcript service. Try restarting the app.'
+          ' Contact support if the problem persists.',
     );
   } // should trigger a connection restored? as with internet?
 
@@ -255,8 +255,8 @@ mixin WebSocketMixin {
     clearNotification(3);
     createNotification(
       notificationId: 3,
-      title: 'Internet Connection Lost',
-      body: 'You are currently offline.',
+      title: 'Looks like you’re offline.',
+      body: 'Reconnect to stay updated. We’ll sync things once you’re back online.',
     );
   }
 
@@ -264,8 +264,8 @@ mixin WebSocketMixin {
     clearNotification(3);
     createNotification(
       notificationId: 3,
-      title: 'Internet Connection Restored',
-      body: 'You are back online.',
+      title: 'Online again! Resuming services seamlessly.',
+      body: 'Let’s pick up where we left off! Everything’s good to go.',
     );
   }
 

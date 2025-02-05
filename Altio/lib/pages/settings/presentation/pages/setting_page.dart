@@ -1,6 +1,5 @@
 // ignore_for_file: unused_local_variable
 
-import 'package:altio/backend/mixpanel.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
@@ -33,7 +32,7 @@ class SettingPage extends StatefulWidget {
 class _SettingPageState extends State<SettingPage> {
   String version = '';
   String buildVersion = '';
-  String selectedModel = "deepseek-r1-distill-llama-70b"; // Default to DeepSeek
+  String selectedModel = "llama-3.3-70b-versatile";
 
   @override
   void initState() {
@@ -109,10 +108,9 @@ class _SettingPageState extends State<SettingPage> {
       showBatteryLevel: true,
       body: Column(
         children: [
-          // ListView wrapped in Expanded to fill remaining space
           Expanded(
             child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 16.h),
+              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 16),
               children: [
                 BlocBuilder<BluetoothBloc, BluetoothState>(
                   builder: (context, state) {
@@ -127,15 +125,7 @@ class _SettingPageState extends State<SettingPage> {
 
                     return CustomListTile(
                       onTap: () {
-                        var deviceId = state is BluetoothConnected
-                            ? state.device.id
-                            : SharedPreferencesUtil().deviceId;
-                        var deviceName = state is BluetoothConnected
-                            ? state.device.name
-                            : SharedPreferencesUtil().deviceName;
-                        var deviceConnected = state is BluetoothConnected;
-
-                        if (deviceConnected) {
+                        if (state is BluetoothConnected) {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => ConnectedDevice(
@@ -144,29 +134,14 @@ class _SettingPageState extends State<SettingPage> {
                               ),
                             ),
                           );
-                          MixpanelManager().batteryIndicatorClicked();
-                        } else if (isDeviceDisconnected &&
-                            deviceId.isNotEmpty) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => ConnectedDevice(
-                                device: null,
-                                batteryLevel: -1,
-                              ),
-                              // const ConnectDevicePage(),
-                            ),
-                          );
-                          MixpanelManager().connectCapsaulClicked();
                         } else {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => FindDevicesPage(
                                 goNext: () {},
                               ),
-                              // const ConnectDevicePage(),
                             ),
                           );
-                          MixpanelManager().connectCapsaulClicked();
                         }
                       },
                       title: Row(
@@ -185,7 +160,7 @@ class _SettingPageState extends State<SettingPage> {
                                 color: AppColors.white,
                               ),
                             ),
-                            w8
+                            SizedBox(width: 8),
                           ],
                           Text(
                             deviceInfo,
@@ -193,10 +168,7 @@ class _SettingPageState extends State<SettingPage> {
                                 fontWeight: FontWeight.w500, fontSize: 17),
                           ),
                           Spacer(),
-                          Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: 16,
-                          )
+                          Icon(Icons.arrow_forward_ios_rounded, size: 16),
                         ],
                       ),
                     );

@@ -123,7 +123,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 600),
           height: 60,
-          padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
           decoration: BoxDecoration(
             borderRadius: br15,
             border: Border.all(

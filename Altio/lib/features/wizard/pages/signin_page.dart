@@ -73,12 +73,9 @@ class SigninPage extends StatelessWidget {
                           try {
                             final prefs = await SharedPreferences.getInstance();
                             final userCred = await signInWithGoogle();
-                            // ignore: unnecessary_null_comparison
-                            final token = userCred != null
-                                ? await userCred.user?.getIdToken()
-                                : null;
+                            final token = await userCred.user?.getIdToken();
 
-                            if (token != null) {
+                            if (token != null)  {
                               prefs.setString('firebase_token', token);
                               final user = FirebaseAuth.instance.currentUser!;
                               final prevUid = prefs.getString('uid') ?? '';

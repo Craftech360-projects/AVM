@@ -20,9 +20,9 @@ void stopBackgroundService() {
 Future<void> initializeBackgroundService({bool isStream = false}) async {
   final service = FlutterBackgroundService();
   createNotification(
-    title: 'Altio is running in background',
+    title: 'Capsaul is quietly listening',
     body:
-        'Altio is listening and transcribing your conversations in the background',
+        'Capturing every word and transcribing with ease.',
   );
 
   await service.configure(

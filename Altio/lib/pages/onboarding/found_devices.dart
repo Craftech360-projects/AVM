@@ -3,15 +3,18 @@ import 'dart:developer';
 
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/bt_device.dart';
+import 'package:altio/backend/services/device_flag.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
+import 'package:altio/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:altio/features/wizard/pages/finalize_page.dart';
 import 'package:altio/pages/home/page.dart';
 import 'package:altio/src/common_widget/elevated_button.dart';
 import 'package:altio/utils/ble/communication.dart';
 import 'package:altio/utils/ble/connect.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FoundDevices extends StatefulWidget {
   final List<BTDeviceStruct> deviceList;
@@ -35,45 +38,53 @@ class FoundDevicesState extends State<FoundDevices>
   String deviceName = '';
   String deviceId = '';
   String? _connectingToDeviceId;
+  final user = FirebaseAuth.instance.currentUser;
 
   Future<void> setBatteryPercentage(BTDeviceStruct btDevice) async {
     try {
       var battery = await retrieveBatteryLevel(btDevice.id);
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await DeviceFlagService()
+            .updateDeviceFlag(uid: user.uid, hasDevice: true);
+      }
       setState(() {
         batteryPercentage = battery;
         _isConnected = true;
         _isClicked = false;
         _connectingToDeviceId = null;
       });
-      await Future.delayed(const Duration(seconds: 2));
+
+      if (!mounted) return;
+      context.read<BluetoothBloc>().add(
+          BluetoothConnectedEvent(device: btDevice, batteryLevel: battery));
+
+      // Persist device info if needed.
       SharedPreferencesUtil().deviceId = btDevice.id;
       SharedPreferencesUtil().deviceName = btDevice.name;
+
+      // Add a delay for smoother UX.
       await Future.delayed(const Duration(seconds: 1));
 
       if (mounted) {
+        // Use the provided callback for navigation.
         if (SharedPreferencesUtil().onboardingCompleted) {
-          setState(() {});
-          Navigator.pop(context);
+          widget.goNext();
         } else {
           SharedPreferencesUtil().onboardingCompleted = true;
           Navigator.pushReplacement(
             context,
             PageRouteBuilder(
-              transitionDuration: Duration(milliseconds: 500),
+              transitionDuration: const Duration(milliseconds: 500),
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  FinalizePage(
-                goNext: () {},
-              ),
+                  FinalizePage(goNext: widget.goNext),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 var zoomOutAnimation = Tween(begin: 1.0, end: 0.9).animate(
                   CurvedAnimation(
                       parent: secondaryAnimation, curve: Curves.easeOut),
                 );
-                return ScaleTransition(
-                  scale: zoomOutAnimation,
-                  child: child,
-                );
+                return ScaleTransition(scale: zoomOutAnimation, child: child);
               },
             ),
           );
@@ -126,15 +137,16 @@ class FoundDevicesState extends State<FoundDevices>
                     fontSize: 12,
                   ),
                 ),
-          if (widget.deviceList.isNotEmpty) h16,
+          if (widget.deviceList.isNotEmpty) SizedBox(height: 16),
           if (!_isConnected) ..._devicesList(),
           if (_isConnected)
             Container(
               decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.black),
-                  borderRadius: br12),
-              height: 50.h,
-              width: double.maxFinite,
+                border: Border.all(color: AppColors.black),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              height: 50,
+              width: double.infinity,
               child: CustomElevatedButton(
                 backgroundColor: AppColors.white,
                 onPressed: () async {
@@ -142,8 +154,7 @@ class FoundDevicesState extends State<FoundDevices>
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomePageWrapper(),
-                      ),
+                          builder: (context) => const HomePageWrapper()),
                     );
                   }
                 },
@@ -155,9 +166,7 @@ class FoundDevicesState extends State<FoundDevices>
                       Text(
                         '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, 6)})',
                         style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                        ),
+                            fontWeight: FontWeight.w500, fontSize: 16),
                       ),
                       Text(
                         '🔋 ${batteryPercentage.toString()}%',
@@ -166,8 +175,7 @@ class FoundDevicesState extends State<FoundDevices>
                           fontSize: 18,
                           color: batteryPercentage <= 25
                               ? Colors.red
-                              : batteryPercentage > 25 &&
-                                      batteryPercentage <= 50
+                              : batteryPercentage <= 50
                                   ? Colors.orange
                                   : Colors.green,
                         ),
@@ -183,45 +191,43 @@ class FoundDevicesState extends State<FoundDevices>
   }
 
   List<Widget> _devicesList() {
-    return widget.deviceList
-        .map((device) => Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.black),
-                borderRadius: br12,
+    return widget.deviceList.map((device) {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.black),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        height: 55,
+        width: double.infinity,
+        child: CustomElevatedButton(
+          onPressed: !_isClicked ? () => handleTap(device) : () {},
+          backgroundColor: AppColors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${device.name} (${device.id.replaceAll(':', '').split('-').last.substring(0, 6)})',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
               ),
-              height: 55.h,
-              width: double.maxFinite,
-              child: CustomElevatedButton(
-                onPressed: !_isClicked ? () => handleTap(device) : () {},
-                backgroundColor: AppColors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${device.name} (${device.id.replaceAll(':', '').split('-').last.substring(0, 6)})',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
+              w4,
+              _connectingToDeviceId == device.id
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppColors.black),
                       ),
-                    ),
-                    w4,
-                    _connectingToDeviceId == device.id
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  AppColors.black),
-                            ),
-                          )
-                        : const SizedBox(),
-                  ],
-                ),
-              ),
-            ))
-        .toList();
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+        ),
+      );
+    }).toList();
   }
 }

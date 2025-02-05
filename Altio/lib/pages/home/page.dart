@@ -11,6 +11,7 @@ import 'package:altio/backend/mixpanel.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/bt_device.dart';
 import 'package:altio/backend/schema/plugin.dart';
+import 'package:altio/backend/services/device_flag.dart';
 import 'package:altio/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:altio/features/capture/logic/websocket_mixin.dart';
 import 'package:altio/features/capture/presentation/capture_page.dart';
@@ -22,8 +23,8 @@ import 'package:altio/utils/ble/connected.dart';
 import 'package:altio/utils/ble/scan.dart';
 import 'package:altio/utils/legal/terms_and_condition.dart';
 import 'package:altio/utils/other/notifications.dart';
-import 'package:altio/widgets/upgrade_alert.dart';
 import 'package:collection/collection.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -42,7 +43,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     with WidgetsBindingObserver, TickerProviderStateMixin, WebSocketMixin {
   ForegroundUtil foregroundUtil = ForegroundUtil();
   bool? hasSeenTutorial;
-
+  bool? _hasDevice;
   List<Widget> screens = [Container(), const SizedBox(), const SizedBox()];
 
   List<Memory> memories = [];
@@ -50,7 +51,6 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   FocusNode chatTextFieldFocusNode = FocusNode(canRequestFocus: true);
   GlobalKey<CapturePageState> capturePageKey = GlobalKey();
-  // GlobalKey<ChatPageState> chatPageKey = GlobalKey();
   StreamSubscription<OnConnectionStateChangedEvent>? _connectionStateListener;
   StreamSubscription<List<int>>? _bleBatteryLevelListener;
 
@@ -58,7 +58,81 @@ class _HomePageWrapperState extends State<HomePageWrapper>
   BTDeviceStruct? _device;
 
   List<Plugin> plugins = [];
-  final _upgrader = MyUpgrader(debugLogging: false, debugDisplayOnce: false);
+  // final _upgrader = MyUpgrader(debugLogging: false, debugDisplayOnce: false);
+  // Configure this later
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(seconds: 2), () {
+      var tutorialSeen = SharedPreferencesUtil().hasSeenTutorial;
+      setState(() {
+        hasSeenTutorial = tutorialSeen;
+      });
+    });
+    _loadDeviceFlag();
+    SharedPreferencesUtil().pageToShowFromNotification = 1;
+    SharedPreferencesUtil().onboardingCompleted = true;
+
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      requestNotificationPermissions();
+      foregroundUtil.requestPermissionForAndroid();
+    });
+    _refreshMessages();
+    _initiateMemories();
+    _initiatePlugins();
+    _setupHasSpeakerProfile();
+    _migrationScripts();
+    authenticateGCP();
+    //What all are needed and not needed!
+
+    if (SharedPreferencesUtil().deviceId.isNotEmpty) {
+      scanAndConnectDevice().then((device) {
+        if (!mounted) return;
+        _onConnected(device);
+        BlocProvider.of<BluetoothBloc>(context).startListening(device!.id);
+      });
+    }
+
+    createNotification(
+      title: 'Suit up with Capsaul today',
+      body: 'Your memories await. Don’t forget to wear Capsaul!',
+      notificationId: 4,
+      isMorningNotification: true,
+    );
+    createNotification(
+      title: 'Plan ahead for success.',
+      body: 'Crush tomorrow’s goals—see your action plan now.',
+      notificationId: 5,
+      isDailySummaryNotification: true,
+      payload: {'path': '/chat'},
+    );
+    if (SharedPreferencesUtil().subPageToShowFromNotification != '') {
+      final subPageRoute =
+          SharedPreferencesUtil().subPageToShowFromNotification;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        MyApp.navigatorKey.currentState?.push(
+          MaterialPageRoute(
+            builder: (context) =>
+                screensWithRespectToPath[subPageRoute] as Widget,
+          ),
+        );
+      });
+      SharedPreferencesUtil().subPageToShowFromNotification = '';
+    }
+  }
+
+  Future<void> _loadDeviceFlag() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      bool? flag = await DeviceFlagService().fetchDeviceFlag(uid: user.uid);
+      setState(() {
+        _hasDevice = flag;
+      });
+    }
+  }
 
   void someMethod() {
     // Check if the CapturePageState is available
@@ -123,75 +197,12 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   _migrationScripts() async {
     scriptMemoryVectorsExecuted();
-    // await migrateMemoriesToObjectBox();
     _initiateMemories();
   }
 
-  ///Screens with respect to subpage
   final Map<String, Widget> screensWithRespectToPath = {
     '/settings': const SettingPage(),
   };
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {});
-    Future.delayed(const Duration(seconds: 2), () {
-      var tutorialSeen = SharedPreferencesUtil().hasSeenTutorial;
-      setState(() {
-        hasSeenTutorial = tutorialSeen;
-      });
-    });
-
-    SharedPreferencesUtil().pageToShowFromNotification = 1;
-    SharedPreferencesUtil().onboardingCompleted = true;
-
-    WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      requestNotificationPermissions();
-      foregroundUtil.requestPermissionForAndroid();
-    });
-    _refreshMessages();
-    // executeBackupWithUid();
-    _initiateMemories();
-    _initiatePlugins();
-    _setupHasSpeakerProfile();
-    _migrationScripts();
-    authenticateGCP();
-    if (SharedPreferencesUtil().deviceId.isNotEmpty) {
-      scanAndConnectDevice().then((device) {
-        _onConnected(device);
-        BlocProvider.of<BluetoothBloc>(context).startListening(device!.id);
-      });
-    }
-
-    createNotification(
-      title: 'Don\'t forget to wear Capsaul today',
-      body: 'Wear your Capsaul and capture your memories today.',
-      notificationId: 4,
-      isMorningNotification: true,
-    );
-    createNotification(
-      title: 'Here is your action plan for tomorrow',
-      body: 'Check out your daily summary to see what you should do tomorrow.',
-      notificationId: 5,
-      isDailySummaryNotification: true,
-      payload: {'path': '/chat'},
-    );
-    if (SharedPreferencesUtil().subPageToShowFromNotification != '') {
-      final subPageRoute =
-          SharedPreferencesUtil().subPageToShowFromNotification;
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        MyApp.navigatorKey.currentState?.push(
-          MaterialPageRoute(
-            builder: (context) =>
-                screensWithRespectToPath[subPageRoute] as Widget,
-          ),
-        );
-      });
-      SharedPreferencesUtil().subPageToShowFromNotification = '';
-    }
-  }
 
   _initiateConnectionListener() async {
     if (_connectionStateListener != null) return;
@@ -210,8 +221,8 @@ class _HomePageWrapperState extends State<HomePageWrapper>
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
             if (SharedPreferencesUtil().showDisconnectionNotification) {
               createNotification(
-                title: 'Capsaul Disconnected',
-                body: 'Please reconnect to continue using Capsaul.',
+                title: 'Heads up! Capsaul is disconnected.',
+                body: 'Your Capsaul needs a quick reconnection to stay active.',
               );
               SharedPreferencesUtil().showDisconnectionNotification = false;
             } else {}
@@ -278,6 +289,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       );
     }
 
+    
     return CapturePage(
       key: capturePageKey,
       device: _device,
@@ -285,6 +297,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       refreshMemories: _initiateMemories,
       refreshMessages: _refreshMessages,
       hasSeenTutorial: hasSeenTutorial ?? false,
+      hasDevice: _hasDevice ?? false,
     );
   }
 

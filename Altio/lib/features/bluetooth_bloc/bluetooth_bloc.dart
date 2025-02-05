@@ -9,20 +9,22 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 // Define events
 abstract class BluetoothEvent extends Equatable {
   const BluetoothEvent();
+  @override
+  List<Object?> get props => [];
 }
 
-class BluetoothDeviceConnected extends BluetoothEvent {
+class BluetoothConnectedEvent extends BluetoothEvent {
   final BTDeviceStruct device;
-
-  const BluetoothDeviceConnected(this.device);
+  final int batteryLevel;
+  const BluetoothConnectedEvent(
+      {required this.device, required this.batteryLevel});
 
   @override
-  List<Object> get props => [device];
+  List<Object?> get props => [device, batteryLevel];
 }
 
-class BluetoothDeviceDisconnected extends BluetoothEvent {
-  @override
-  List<Object> get props => [];
+class BluetoothDisconnectedEvent extends BluetoothEvent {
+  const BluetoothDisconnectedEvent();
 }
 
 class BluetoothBatteryLevelUpdated extends BluetoothEvent {
@@ -37,37 +39,33 @@ class BluetoothBatteryLevelUpdated extends BluetoothEvent {
 // Define states
 abstract class BluetoothState extends Equatable {
   const BluetoothState();
+  @override
+  List<Object?> get props => [];
 }
 
-class BluetoothInitial extends BluetoothState {
-  @override
-  List<Object> get props => [];
-}
+class BluetoothInitial extends BluetoothState {}
 
 class BluetoothConnected extends BluetoothState {
   final BTDeviceStruct device;
   final int batteryLevel;
-
-  const BluetoothConnected(this.device, {this.batteryLevel = -1});
+  const BluetoothConnected({required this.device, required this.batteryLevel});
 
   @override
-  List<Object> get props => [device, batteryLevel];
+  List<Object?> get props => [device, batteryLevel];
 }
 
-class BluetoothDisconnected extends BluetoothState {
-  @override
-  List<Object> get props => [];
-}
+class BluetoothDisconnected extends BluetoothState {}
 
 // Define Bloc
 class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
   BluetoothBloc() : super(BluetoothInitial()) {
-    on<BluetoothDeviceConnected>((event, emit) async {
-      emit(BluetoothConnected(event.device));
+    on<BluetoothConnectedEvent>((event, emit) async {
+      emit(BluetoothConnected(
+          device: event.device, batteryLevel: event.batteryLevel));
       await _initiateBleBatteryListener(event.device.id, emit);
     });
 
-    on<BluetoothDeviceDisconnected>((event, emit) {
+    on<BluetoothDisconnectedEvent>((event, emit) {
       emit(BluetoothDisconnected());
       _resetBatteryLevel(emit);
     });
@@ -75,8 +73,8 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
     on<BluetoothBatteryLevelUpdated>((event, emit) {
       if (state is BluetoothConnected) {
         final connectedState = state as BluetoothConnected;
-        emit(BluetoothConnected(connectedState.device,
-            batteryLevel: event.batteryLevel));
+        emit(BluetoothConnected(
+            device: connectedState.device, batteryLevel: event.batteryLevel));
       }
     });
   }
@@ -91,17 +89,19 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
       deviceId: deviceId,
       onStateChanged: (state, device) {
         if (state == BluetoothConnectionState.disconnected) {
-          add(BluetoothDeviceDisconnected());
+          add(BluetoothDisconnectedEvent());
           if (retryCount < maxRetries) {
             retryCount++;
             startListening(deviceId);
           } else {
-            add(BluetoothDeviceDisconnected());
+            add(BluetoothDisconnectedEvent());
           }
         } else if (state == BluetoothConnectionState.connected &&
             device != null) {
           retryCount = 0;
-          add(BluetoothDeviceConnected(device));
+          add(BluetoothConnectedEvent(
+              device: BTDeviceStruct(id: device.id, name: device.name),
+              batteryLevel: -1));
         }
       },
     );
@@ -122,7 +122,7 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
     // Only reset the battery level to -1 without emitting a new state
     if (state is BluetoothConnected) {
       final connectedState = state as BluetoothConnected;
-      emit(BluetoothConnected(connectedState.device, batteryLevel: -1));
+      emit(BluetoothConnected(device: connectedState.device, batteryLevel: -1));
     }
   }
 

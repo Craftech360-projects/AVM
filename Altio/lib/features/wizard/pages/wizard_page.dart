@@ -1,4 +1,5 @@
 import 'package:altio/backend/preferences.dart';
+import 'package:altio/backend/services/device_flag.dart';
 import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/widgets/custom_dialog_box.dart';
@@ -9,12 +10,12 @@ import 'package:altio/pages/home/custom_scaffold.dart';
 import 'package:altio/pages/home/page.dart';
 import 'package:altio/pages/onboarding/page.dart';
 import 'package:altio/utils/features/backups.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OnboardingPage extends StatelessWidget {
-  // Change to StatelessWidget
   const OnboardingPage({super.key});
   static const name = 'OnBoardingPage';
 
@@ -160,13 +161,26 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
                             message:
                                 'Your personal growth journey\nwith AI that listens to\nall your queries',
                             buttonText: 'Connect my Capsaul',
-                            onSkip: () => Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomePageWrapper(),
-                              ),
-                              (route) => false,
-                            ),
+                            onSkip: () async {
+                              try {
+                                final user = FirebaseAuth.instance.currentUser;
+                                if (user != null) {
+                                  await DeviceFlagService().setDeviceFlag(
+                                      uid: user.uid, hasDevice: false);
+                                }
+                                if (!context.mounted) return;
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomePageWrapper(),
+                                  ),
+                                  (route) => false,
+                                );
+                              } catch (e) {
+                                if (!context.mounted) return;
+                                avmSnackBar(context, e.toString());
+                              }
+                            },
                             onPressed: () {
                               Navigator.pushAndRemoveUntil(
                                 context,

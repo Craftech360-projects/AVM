@@ -12,6 +12,7 @@ dependencies:
   awesome_notifications: ^0.10.0
   awesome_notifications_core: ^0.10.0
   bloc: ^8.1.4
+  cloud_firestore: ^5.6.2
   collection: 1.19.0
   connectivity_plus: ^6.1.1
   crypto: ^3.0.6

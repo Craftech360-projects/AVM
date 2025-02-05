@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:altio/backend/preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -29,7 +30,7 @@ Future<UserCredential> signInWithApple() async {
   final rawNonce = generateNonce();
   final nonce = sha256ofString(rawNonce);
 
-  // Request credential for the currently signed-in Apple account
+  // Request Apple ID credential
   final appleCredential = await SignInWithApple.getAppleIDCredential(
     scopes: [
       AppleIDAuthorizationScopes.email,
@@ -37,39 +38,36 @@ Future<UserCredential> signInWithApple() async {
     ],
     nonce: nonce,
   );
-  // If Apple provides email and name (only during the first sign-in), store them
+
+  // Store email and name from the credential if available (first sign-in)
   if (appleCredential.email != null) {
     SharedPreferencesUtil().email = appleCredential.email!;
-  } else {}
-
+  }
   if (appleCredential.givenName != null) {
     SharedPreferencesUtil().givenName = appleCredential.givenName!;
     SharedPreferencesUtil().familyName = appleCredential.familyName ?? '';
-  } else {}
+  }
+
   if (appleCredential.identityToken == null) {
     throw Exception('Identity token is null');
   }
 
-  // Create an OAuthCredential for Firebase Authentication
-  // Debugging the idToken and rawNonce
-
-// Create the OAuth credential for Firebase
+  // Create OAuth credential for Firebase Authentication
   final oauthCredential = OAuthProvider("apple.com").credential(
-    idToken: appleCredential.identityToken, // ID token must not be null
+    idToken: appleCredential.identityToken, // must not be null
     accessToken: appleCredential.authorizationCode,
-    rawNonce: rawNonce, // Ensure rawNonce is passed, not the hashed one
+    rawNonce: rawNonce, // pass the raw nonce
   );
-
-// Debug the OAuthCredential to see what's being passed
 
   // Sign in with Firebase
   UserCredential userCred =
       await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-  var user = FirebaseAuth.instance.currentUser!;
-  // If givenName is null (likely a second or subsequent sign-in), retrieve name from Firebase
+  final user = FirebaseAuth.instance.currentUser!;
+
+  // If givenName is missing (likely on subsequent sign-ins), derive it from displayName if available.
   if (SharedPreferencesUtil().givenName.isEmpty) {
     if (user.displayName != null) {
-      var nameParts = user.displayName!.split(' ');
+      final nameParts = user.displayName!.split(' ');
       SharedPreferencesUtil().givenName =
           nameParts.isNotEmpty ? nameParts[0] : '';
       SharedPreferencesUtil().familyName =
@@ -77,16 +75,34 @@ Future<UserCredential> signInWithApple() async {
     }
   }
 
-  // If email is not stored locally, retrieve it from Firebase user object
+  // Ensure email is stored locally.
   if (SharedPreferencesUtil().email.isEmpty) {
     SharedPreferencesUtil().email = user.email ?? '';
   }
 
+  // On the first sign-in, update the user profile with the retrieved names.
   if (appleCredential.givenName != null) {
     await user.updateProfile(
-        displayName:
-            '${SharedPreferencesUtil().givenName} ${SharedPreferencesUtil().familyName}');
+      displayName:
+          '${SharedPreferencesUtil().givenName} ${SharedPreferencesUtil().familyName}',
+    );
     await user.reload();
+  }
+
+  // Check if the user is new and create a Firestore document accordingly.
+  final additionalInfo = userCred.additionalUserInfo;
+  final isNewUser = additionalInfo?.isNewUser ?? false;
+  if (isNewUser) {
+    // Construct a username from the given and family name.
+    final username =
+        ('${SharedPreferencesUtil().givenName} ${SharedPreferencesUtil().familyName}')
+            .trim();
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      'user_id': user.uid,
+      'username': username,
+      'hasDevice': false, // default value
+      'createdAt': FieldValue.serverTimestamp(),
+    });
   }
 
   return userCred;
@@ -94,73 +110,43 @@ Future<UserCredential> signInWithApple() async {
 
 Future<UserCredential> signInWithGoogle() async {
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-  // Obtain the auth details from the request
   final GoogleSignInAuthentication? googleAuth =
       await googleUser?.authentication;
-  // Create a new credential
-  // store email + name, need to?
   final credential = GoogleAuthProvider.credential(
     accessToken: googleAuth?.accessToken,
     idToken: googleAuth?.idToken,
   );
 
-  // Once signed in, return the UserCredential
-  var result = await FirebaseAuth.instance.signInWithCredential(credential);
-  var givenName = result.additionalUserInfo?.profile?['given_name'] ?? '';
-  var familyName = result.additionalUserInfo?.profile?['family_name'] ?? '';
-  var email = result.additionalUserInfo?.profile?['email'] ?? '';
-  if (email != null) SharedPreferencesUtil().email = email;
-  if (givenName != null) {
-    SharedPreferencesUtil().givenName = givenName;
-    SharedPreferencesUtil().familyName = familyName;
-  }
-  return result;
-}
-
-Future<UserCredential> signInWithGoogle2() async {
-  // Trigger the Google Sign-In flow
-  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-  if (googleUser == null) {
-    // The user canceled the sign-in
-    return Future.error('Sign-in canceled');
-  }
-
-  // Obtain the auth details from the Google sign-in
-  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-  // Create a credential using the tokens
-  final credential = GoogleAuthProvider.credential(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
-  );
-
-  // Sign in to Firebase with the Google credential
+  // Sign in with Firebase
   UserCredential result =
       await FirebaseAuth.instance.signInWithCredential(credential);
 
-  // Retrieve user profile details from additionalUserInfo or FirebaseAuth user
-  var givenName = result.additionalUserInfo?.profile?['given_name'] ?? '';
-  var familyName = result.additionalUserInfo?.profile?['family_name'] ?? '';
-  var email = result.additionalUserInfo?.profile?['email'] ?? '';
+  // Get user details from the result
+  final user = result.user!;
+  final additionalInfo = result.additionalUserInfo;
+  final isNewUser = additionalInfo?.isNewUser ?? false;
 
-  // If email is not available in additionalUserInfo, fallback to FirebaseAuth user
-  var firebaseUser = FirebaseAuth.instance.currentUser;
-  if (email.isEmpty && firebaseUser != null) {
-    email = firebaseUser.email ?? '';
+  // Optional: Retrieve profile details from the sign in
+  final givenName = additionalInfo?.profile?['given_name'] ?? '';
+  final familyName = additionalInfo?.profile?['family_name'] ?? '';
+  // You can decide how to construct the username; here we simply concatenate them.
+  final username = '$givenName $familyName'.trim();
+
+  // Store user info in SharedPreferences if needed
+  if (additionalInfo?.profile?['email'] != null) {
+    SharedPreferencesUtil().email = additionalInfo?.profile?['email'];
   }
+  SharedPreferencesUtil().givenName = givenName;
+  SharedPreferencesUtil().familyName = familyName;
 
-  // Save email and name into SharedPreferences for future use
-  if (email.isNotEmpty) SharedPreferencesUtil().email = email;
-  if (givenName.isNotEmpty) {
-    SharedPreferencesUtil().givenName = givenName;
-    SharedPreferencesUtil().familyName = familyName;
-  } else if (firebaseUser != null && firebaseUser.displayName != null) {
-    // If names are missing, retrieve from Firebase user displayName
-    var nameParts = firebaseUser.displayName?.split(' ') ?? [];
-    SharedPreferencesUtil().givenName =
-        nameParts.isNotEmpty ? nameParts[0] : '';
-    SharedPreferencesUtil().familyName =
-        nameParts.length > 1 ? nameParts.last : '';
+  // For a new user, create a Firestore document with default values
+  if (isNewUser) {
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      'user_id': user.uid,
+      'username': username,
+      'hasDevice': false,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
   }
 
   return result;
@@ -180,16 +166,6 @@ Future<String?> getIdToken() async {
   }
   return newToken?.token;
 }
-
-// Future<void> signOut(BuildContext context) async {
-//   await FirebaseAuth.instance.signOut();
-//   try {
-//     await GoogleSignIn().signOut();
-//   } catch (e) {
-//     debugPrint(e.toString());
-//   }
-//   // context.pushReplacementNamed('auth');
-// }
 
 listenAuthStateChanges() {
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
