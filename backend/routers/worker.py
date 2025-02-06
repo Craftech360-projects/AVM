@@ -22,7 +22,7 @@ load_dotenv()
 
 # Create Redis connection
 # redis_conn = Redis(
-#     host='localhost', 
+#     host=(os.getenv('REDIS_DB_HOST')) if os.getenv('REDIS_DB_HOST') is not None else 'localhost', 
 #     port=int(os.getenv('REDIS_DB_PORT')) if os.getenv('REDIS_DB_PORT') is not None else 6379,
 #     username='default',
 #     password=os.getenv('REDIS_DB_PASSWORD'),

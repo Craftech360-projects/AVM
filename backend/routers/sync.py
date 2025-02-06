@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from typing import List
 import uuid
-from fastapi import APIRouter, Header, UploadFile, File, Depends, HTTPException
+from fastapi import APIRouter, Header, UploadFile, File, Depends, HTTPException, Query
 from opuslib import Decoder
 from pydub import AudioSegment
 from concurrent.futures import ThreadPoolExecutor
@@ -18,25 +18,94 @@ from utils.other import endpoints as auth
 from utils.other.storage import get_syncing_file_temporal_signed_url, delete_syncing_temporal_file
 from utils.stt.pre_recorded import fal_whisperx, fal_postprocessing
 from utils.stt.vad import vad_is_empty
-from utils.stt.whisperx import process_all_audio_files
+from utils.stt.whisperx import process_all_audio_files as whisperx_pipeline
 from database import get_db_connection
 router = APIRouter()
-from rq import Queue
 import shutil
 import wave
-from redis import Redis
+import aiohttp
+import asyncio
+
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
+DEEPGRAM_API_KEY = os.getenv('DEEPGRAM_API_KEY')
+DEEPGRAM_API_URL = "https://api.deepgram.com/v1/listen"
+
 # Thread pool for background tasks
 executor = ThreadPoolExecutor(max_workers=4)
-redis_conn = Redis(host='localhost', port=6379) 
-task_queue = Queue('audio_processing', connection=redis_conn)
 
-def process_in_background(task_id, uid, user_dir):
-    print(f"Task {task_id} started processing.")
+async def process_with_deepgram(audio_file):
+    """Process audio file using Deepgram API"""
+    headers = {
+        "Authorization": f"Token {DEEPGRAM_API_KEY}",
+        'Content-Type': 'audio/wav'
+    }
+    params = {
+        'smart_format': 'true',
+        'diarize': 'true',
+        'punctuate': 'true',
+        'utterances': 'true',
+        'model': 'nova-2',
+        'language': 'en'
+    }
+    try:
+        async with aiohttp.ClientSession() as session:
+            with open(audio_file, 'rb') as audio:
+                async with session.post(
+                    DEEPGRAM_API_URL,
+                    headers=headers,
+                    params=params,
+                    data=audio
+                ) as response:
+                    if response.status != 200:
+                        raise Exception(f"Deepgram API error: {response.status}")
+                    result = await response.json()
+                    print(result)
+                    
+                    # Convert Deepgram format to our format
+                    transcript = []
+                    for utterance in result['results']['utterances']:
+                        segment = {
+                            "text": utterance['transcript'],
+                            "speaker": f"speaker_{utterance['speaker']}",
+                            "start": utterance['start'],
+                            "end": utterance['end']
+                        }
+                        transcript.append(segment)
+                    return transcript
+    except Exception as e:
+        print(f"Error in Deepgram transcription: {str(e)}")
+        return []
+        
+def process_in_background(task_id, uid, user_dir, pipeline="whisperx"):
+    print(f"Task {task_id} started processing using {pipeline} pipeline.")
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        # Process all audio files in the directory
-        combined_transcripts = process_all_audio_files(directory=user_dir)
+        combined_transcripts = []
+        
+        if pipeline == "deepgram":
+            # Create event loop for async operations
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            
+            audio_files = [
+                os.path.join(user_dir, f) 
+                for f in os.listdir(user_dir) 
+                if f.endswith(('.wav', '.mp3'))
+            ]
+            
+            async def process_all():
+                tasks = [process_with_deepgram(audio_file) for audio_file in audio_files]
+                results = await asyncio.gather(*tasks)
+                return [item for sublist in results for item in sublist]
+            
+            combined_transcripts = loop.run_until_complete(process_all())
+            loop.close()
+        else:
+            combined_transcripts = whisperx_pipeline(directory=user_dir)
 
         # Update task status to "completed" and save the result
         cursor.execute('''
@@ -45,10 +114,10 @@ def process_in_background(task_id, uid, user_dir):
             WHERE task_id = %s
         ''', ("completed", json.dumps(combined_transcripts), datetime.now(), task_id))
         conn.commit()
-        print(f"Task {task_id} completed successfully.")
+        print(f"Task {task_id} completed successfully using {pipeline} pipeline.")
+        
     except Exception as e:
         print(f"Task {task_id} failed: {str(e)}")
-        # Update task status to "failed" and save the error message
         cursor.execute('''
             UPDATE tasks
             SET status = %s, error = %s, updated_at = %s
@@ -151,6 +220,16 @@ def decode_files_to_wav(files_path: List[str]):
         os.remove(path)
     return wav_files
 
+def merge_segments(segments, max_gap=120):
+    merged_segments = []
+    for segment in segments:
+        if merged_segments and (segment['start'] - merged_segments[-1]['end']) < max_gap:
+            # Merge with the previous segment
+            merged_segments[-1]['end'] = segment['end']
+            merged_segments[-1]['text'] += " " + segment['text']
+        else:
+            merged_segments.append(segment)
+    return merged_segments
 
 def retrieve_vad_segments(path: str, segmented_paths: set):
     start_timestamp = get_timestamp_from_path(path)
@@ -248,7 +327,8 @@ def process_segment(path: str, uid: str, response: dict):
 @router.post("/v1/sync-local-files")
 async def sync_local_files(
     files: List[UploadFile] = File(...), 
-    uid: str = Header(None)
+    uid: str = Header(None),
+    pipeline: str = Query("whisperx", enum=["whisperx", "deepgram"])  # This enables pipeline selection
 ):
     if not uid:
         raise HTTPException(status_code=400, detail="Missing uid header")
@@ -312,17 +392,29 @@ async def sync_local_files(
 
     conn.close()
 
-    # Schedule the processing in the background
-    #executor.submit(process_in_background, task_id, uid, user_dir)
-
-     # Enqueue the task to Redis Queue
-    task_queue.enqueue(process_in_background, task_id, uid, user_dir)
-    # Respond immediately with the task ID
+    # Schedule the processing in the background with pipeline selection
+    executor.submit(process_in_background, task_id, uid, user_dir, pipeline)
+    
     return {
-        "message": "Files received and are being processed.",
+        "message": f"Files received and are being processed using {pipeline} pipeline.",
         "task_id": task_id
     }
-
+def update_memory_with_transcript(uid, transcript_segments):
+    for segment in transcript_segments:
+        timestamp = segment['start']
+        closest_memory = get_closest_memory_to_timestamps(uid, timestamp, segment['end'])
+        if not closest_memory:
+            # Create a new memory
+            create_memory = CreateMemory(
+                started_at=datetime.fromtimestamp(segment['start']),
+                finished_at=datetime.fromtimestamp(segment['end']),
+                transcript_segments=[segment]
+            )
+            process_memory(uid, "en", create_memory)
+        else:
+            # Update existing memory
+            closest_memory['transcript_segments'].append(segment)
+            update_memory_segments(uid, closest_memory['id'], closest_memory['transcript_segments'])
 
 @router.get("/v1/status/{task_id}")
 def get_task_status(task_id: str):

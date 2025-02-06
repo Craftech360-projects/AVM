@@ -13,8 +13,8 @@ load_dotenv()
 # print(os.getenv('REDIS_DB_PASSWORD'))
 
 # redis_conn = Redis(
-#     host='localhost', 
-#     port=int(os.getenv('REDIS_DB_PORT')) if os.getenv('REDIS_DB_PORT') is not None else 6379,
+#     host=os.getenv('REDIS_DB_HOST'), 
+#     port=int(os.getenv('REDIS_DB_PORT')) ,
 #     username='default',
 #     password=os.getenv('REDIS_DB_PASSWORD'),
 #     ssl=True,  # Enable SSL for Upstash Redis
