@@ -36,9 +36,11 @@ import shutil
 import wave
 import aiohttp
 import asyncio
-from speechbrain.pretrained import SpeakerRecognition
-from pyannote.audio import Audio
-import numpy as np
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from tasks import process_audio_task
+from celery_config import celery_app
 
 # Load SpeechBrain speaker recognition model
 verification_model = SpeakerRecognition.from_hparams(
@@ -49,7 +51,6 @@ verification_model = SpeakerRecognition.from_hparams(
 # Path to the folder containing sample audio files for enrollment
 sample_folder = "sample"
 # Load environment variables from .env file
-from dotenv import load_dotenv
 load_dotenv()
 
 DEEPGRAM_API_KEY = os.getenv('DEEPGRAM_API_KEY')
@@ -207,51 +208,6 @@ async def process_with_deepgram(audio_file):
     except Exception as e:
         print(f"Error in Deepgram transcription for {audio_file}: {str(e)}")
         return []
-# async def process_with_deepgram(audio_file):
-#     """Process audio file using Deepgram API and map speakers to names."""
-#     headers = {
-#         "Authorization": f"Token {DEEPGRAM_API_KEY}",
-#         'Content-Type': 'audio/wav'
-#     }
-#     params = {
-#         'smart_format': 'true',
-#         'diarize': 'true',
-#         'punctuate': 'true',
-#         'utterances': 'true',
-#         'model': 'nova-2',
-#         'language': 'en'
-#     }
-#     try:
-#         async with aiohttp.ClientSession() as session:
-#             with open(audio_file, 'rb') as audio:
-#                 async with session.post(
-#                     DEEPGRAM_API_URL,
-#                     headers=headers,
-#                     params=params,
-#                     data=audio
-#                 ) as response:
-#                     if response.status != 200:
-#                         raise Exception(f"Deepgram API error: {response.status}")
-#                     result = await response.json()
-#                     print(result)
-
-#                     # Convert Deepgram format to our format
-#                     transcript = []
-#                     for utterance in result['results']['utterances']:
-#                         segment = {
-#                             "text": utterance['transcript'],
-#                             "speaker": f"speaker_{utterance['speaker']}",
-#                             "start": utterance['start'],
-#                             "end": utterance['end']
-#                         }
-#                         transcript.append(segment)
-
-#                     # Map speakers to names using SpeechBrain
-#                     transcript = map_speakers_to_names(audio_file, transcript)
-#                     return transcript
-#     except Exception as e:
-#         print(f"Error in Deepgram transcription: {str(e)}")
-#         return []
 
 
 def cleanup_audio_files(directory):
@@ -335,19 +291,15 @@ def process_in_background(task_id, uid, user_dir, pipeline="whisperx"):
 async def sync_local_files(
     files: List[UploadFile] = File(...), 
     uid: str = Header(None),
-    pipeline: str = Query("whisperx", enum=["whisperx", "deepgram"])  # This enables pipeline selection
+    pipeline: str = Query("whisperx", enum=["whisperx", "deepgram"])
 ):
     if not uid:
         raise HTTPException(status_code=400, detail="Missing uid header")
 
-    print("User ID:", uid)
-    
     user_dir = f"syncing/{uid}/"
     os.makedirs(user_dir, exist_ok=True)
-    paths = []
 
-    
-    # Save uploaded files to the user's directory
+    # Save uploaded files
     bin_paths = []
     for file in files:
         file_path = os.path.join(user_dir, file.filename)
@@ -355,100 +307,41 @@ async def sync_local_files(
             buffer.write(await file.read())
         bin_paths.append(file_path)
 
-
-    print(f"Files saved to {user_dir}: {[os.path.basename(p) for p in paths]}")
-        # Decode .bin files to .wav format
+    # Decode .bin files to .wav
     try:
         wav_paths = decode_files_to_wav(bin_paths)
     except HTTPException as e:
-        raise e  # Propagate the error to the client
+        raise e
 
-    print(f"Decoded files: {[os.path.basename(p) for p in wav_paths]}")
-
-    # Generate a unique task ID for this request
-    task_uuid = uuid.uuid4()
-    task_id = f"task_{uid}_{task_uuid}"
-    task_name = "sync_local_files"
-    # Save the initial task status in the database
-
-    print(f"Generated task_id: {task_id}")
-    print(f"Generated task_name: {task_name}")
-
-    # Save the initial task status in the database
+    # Generate task ID and save initial status
+    task_id = f"task_{uid}_{uuid.uuid4()}"
     conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('''
-        INSERT INTO tasks (task_id, task_name, uid, status, created_at, updated_at)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    ''', (task_id, task_name, uid, "processing", datetime.now(), datetime.now()))
-    conn.commit()
-
-    # Confirm the task is created in the database
-    cursor.execute('''
-        SELECT task_id, task_name, uid, status, created_at, updated_at
-        FROM tasks
-        WHERE task_id = %s
-    ''', (task_id,))
-    task = cursor.fetchone()
-    conn.close()
-    if task:
-        print(f"Task created in the database: {task}")
-    else:
-        print("Failed to create task in the database.")
-        raise HTTPException(status_code=500, detail="Failed to create task in the database.")
-
-    conn.close()
-
-    # Schedule the processing in the background with pipeline selection
-    executor.submit(process_in_background, task_id, uid, user_dir, pipeline)
     
-    return {
-        "message": f"Files received and are being processed using {pipeline} pipeline.",
-        "task_id": task_id
-    }
-# @router.post("/v1/sync-local-files")
-# async def sync_local_files(
-#     files: List[UploadFile] = File(...), 
-#     uid: str = Header(None),
-#     pipeline: str = Query("whisperx", enum=["whisperx", "deepgram"])  # This enables pipeline selection
-# ):
-#     if not uid:
-#         raise HTTPException(status_code=400, detail="Missing uid header")
+    try:
+        cursor.execute('''
+            INSERT INTO tasks (task_id, task_name, uid, status, created_at, updated_at)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        ''', (task_id, "sync_local_files", uid, "processing", datetime.now(), datetime.now()))
+        conn.commit()
 
-#     user_dir = f"syncing/{uid}/"
-#     os.makedirs(user_dir, exist_ok=True)
+        # Use celery_app.send_task instead of direct task call, heere now  its sending folder of the user
+        ##should i make its tosend the incommiing  file name only or should i just keep it like this?
 
-#     bin_paths = []
-#     for file in files:
-#         file_path = os.path.join(user_dir, file.filename)
-#         with open(file_path, "wb") as buffer:
-#             buffer.write(await file.read())
-#         bin_paths.append(file_path)
+        task = celery_app.send_task(
+            'tasks.process_audio',
+            args=[task_id, uid, user_dir, pipeline],
+            queue='audio_processing'
+        )
 
-#     try:
-#         wav_paths = decode_files_to_wav(bin_paths)
-#     except HTTPException as e:
-#         raise e  # Propagate the error to the client
+        return {
+            "message": f"Files received and queued for processing using {pipeline} pipeline.",
+            "task_id": task_id
+        }
+    finally:
+        cursor.close()
+        conn.close()
 
-#     task_uuid = uuid.uuid4()
-#     task_id = f"task_{uid}_{task_uuid}"
-
-#     conn = get_db_connection()
-#     cursor = conn.cursor()
-#     cursor.execute('''
-#         INSERT INTO tasks (task_id, task_name, uid, status, created_at, updated_at)
-#         VALUES (%s, %s, %s, %s, %s, %s)
-#     ''', (task_id, "sync_local_files", uid, "processing", datetime.now(), datetime.now()))
-#     conn.commit()
-#     conn.close()
-
-#     # Schedule the processing in the background with pipeline selection
-#     process_in_background.delay(task_id, uid, user_dir, pipeline)  # Use .delay() here
-
-#     return {
-#         "message": f"Files received and are being processed using {pipeline} pipeline.",
-#         "task_id": task_id
-#     }
 def decode_opus_file_to_wav(opus_file_path, wav_file_path, sample_rate=16000, channels=1):
     decoder = Decoder(sample_rate, channels)
     with open(opus_file_path, 'rb') as f:
@@ -573,14 +466,7 @@ def retrieve_vad_segments(path: str, segmented_paths: set):
     voice_segments = vad_is_empty(path, return_segments=True, cache=True)
     print('voice_segments:', voice_segments)
     segments = []
-    # should we merge more aggressively, to avoid too many small segments? ~ not for now
-    # Pros -> lesser segments, faster, less concurrency
-    # Cons -> less accuracy.
-
-    # edge case, multiple small segments that map towards the same memory .-.
-    # so ... let's merge them if distance < 120 seconds
-    # a better option would be to keep here 1s, and merge them like that after transcribing
-    # but FAL has 10 RPS limit, **let's merge it here for simplicity for now**
+   
    
     for i, segment in enumerate(voice_segments):
         if segments and (segment['start'] - segments[-1]['end']) < 120:
@@ -661,127 +547,6 @@ def process_segment(path: str, uid: str, response: dict):
         response['updated_memories'].add(closest_memory['id'])
         update_memory_segments(uid, closest_memory['id'], segments)
 
-# @router.post("/v1/sync-local-files")
-# async def sync_local_files(
-#     files: List[UploadFile] = File(...), 
-#     uid: str = Header(None),
-#     pipeline: str = Query("whisperx", enum=["whisperx", "deepgram"])  # This enables pipeline selection
-# ):
-#     if not uid:
-#         raise HTTPException(status_code=400, detail="Missing uid header")
-
-#     print("User ID:", uid)
-    
-#     user_dir = f"syncing/{uid}/"
-#     os.makedirs(user_dir, exist_ok=True)
-#     paths = []
-
-    
-#     # Save uploaded files to the user's directory
-#     bin_paths = []
-#     for file in files:
-#         file_path = os.path.join(user_dir, file.filename)
-#         with open(file_path, "wb") as buffer:
-#             buffer.write(await file.read())
-#         bin_paths.append(file_path)
-
-
-#     print(f"Files saved to {user_dir}: {[os.path.basename(p) for p in paths]}")
-#         # Decode .bin files to .wav format
-#     try:
-#         wav_paths = decode_files_to_wav(bin_paths)
-#     except HTTPException as e:
-#         raise e  # Propagate the error to the client
-
-#     print(f"Decoded files: {[os.path.basename(p) for p in wav_paths]}")
-
-#     # Generate a unique task ID for this request
-#     task_uuid = uuid.uuid4()
-#     task_id = f"task_{uid}_{task_uuid}"
-#     task_name = "sync_local_files"
-#     # Save the initial task status in the database
-
-#     print(f"Generated task_id: {task_id}")
-#     print(f"Generated task_name: {task_name}")
-
-#     # Save the initial task status in the database
-#     conn = get_db_connection()
-#     cursor = conn.cursor()
-#     cursor.execute('''
-#         INSERT INTO tasks (task_id, task_name, uid, status, created_at, updated_at)
-#         VALUES (%s, %s, %s, %s, %s, %s)
-#     ''', (task_id, task_name, uid, "processing", datetime.now(), datetime.now()))
-#     conn.commit()
-
-#     # Confirm the task is created in the database
-#     cursor.execute('''
-#         SELECT task_id, task_name, uid, status, created_at, updated_at
-#         FROM tasks
-#         WHERE task_id = %s
-#     ''', (task_id,))
-#     task = cursor.fetchone()
-#     conn.close()
-#     if task:
-#         print(f"Task created in the database: {task}")
-#     else:
-#         print("Failed to create task in the database.")
-#         raise HTTPException(status_code=500, detail="Failed to create task in the database.")
-
-#     conn.close()
-
-#     # Schedule the processing in the background with pipeline selection
-#     executor.submit(process_in_background, task_id, uid, user_dir, pipeline)
-    
-#     return {
-#         "message": f"Files received and are being processed using {pipeline} pipeline.",
-#         "task_id": task_id
-#     }
-
-
-
-# @router.post("/v1/sync-local-files")
-# async def sync_local_files(
-#     files: List[UploadFile] = File(...), 
-#     uid: str = Header(None),
-#     pipeline: str = Query("whisperx", enum=["whisperx", "deepgram"])
-# ):
-#     if not uid:
-#         raise HTTPException(status_code=400, detail="Missing uid header")
-
-#     user_dir = f"syncing/{uid}/"
-#     os.makedirs(user_dir, exist_ok=True)
-
-#     bin_paths = []
-#     for file in files:
-#         file_path = os.path.join(user_dir, file.filename)
-#         with open(file_path, "wb") as buffer:
-#             buffer.write(await file.read())
-#         bin_paths.append(file_path)
-
-#     try:
-#         wav_paths = decode_files_to_wav(bin_paths)
-#     except HTTPException as e:
-#         raise e  # Propagate the error to the client
-
-#     task_uuid = uuid.uuid4()
-#     task_id = f"task_{uid}_{task_uuid}"
-
-#     conn = get_db_connection()
-#     cursor = conn.cursor()
-#     cursor.execute('''
-#         INSERT INTO tasks (task_id, task_name, uid, status, created_at, updated_at)
-#         VALUES (%s, %s, %s, %s, %s, %s)
-#     ''', (task_id, "sync_local_files", uid, "processing", datetime.now(), datetime.now()))
-#     conn.commit()
-#     conn.close()
-
-#     # Submit the task to Celery
-#     process_in_background.delay(task_id, uid, user_dir, pipeline)
-
-#     return {
-#         "message": f"Files received and are being processed using {pipeline} pipeline.",
-#         "task_id": task_id
-#     }
 def update_memory_with_transcript(uid, transcript_segments):
     for segment in transcript_segments:
         timestamp = segment['start']
@@ -819,10 +584,9 @@ def get_task_status(task_id: str):
             "uid": task[2],
             "status": task[3],
             "result": task[4],
-            "error": task[5],
             "created_at": task[6],
             "updated_at": task[7]
         }
-    else:
-        print(f"Task {task_id} not found.")
-        return {"status": "not_found"}
+    
+    print(f"Task {task_id} not found.")
+    return {"status": "not_found"}

@@ -3,6 +3,8 @@ import os
 
 import firebase_admin
 from fastapi import FastAPI
+from celery_config import celery_app
+from tasks import process_audio_task  # Import the task explicitly
 
 from modal import Image, App, asgi_app, Secret
 from routers import workflow, chat, firmware, plugins, memories, transcribe_v2, notifications, \
@@ -16,6 +18,10 @@ else:
     firebase_admin.initialize_app()
 
 app = FastAPI()
+
+# Register Celery tasks
+celery_app.autodiscover_tasks(['tasks'])
+
 app.include_router(transcribe_v2.router)
 app.include_router(memories.router)
 app.include_router(facts.router)
