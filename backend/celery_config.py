@@ -1,12 +1,9 @@
 from celery import Celery
 
-REDIS_URL = 'redis://localhost:6379/0'
-
-celery_app = Celery(
-    'tasks',
-    broker=REDIS_URL,
-    backend=REDIS_URL,
-    include=['tasks']
+celery_app = Celery('tasks',
+                    broker='redis://redis:6379/0',  # Use service name instead of localhost
+                    backend='redis://redis:6379/0',
+                    include=['tasks']
 )
 
 # Celery Configuration

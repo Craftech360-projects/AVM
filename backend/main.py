@@ -75,7 +75,11 @@ for path in paths:
     if not os.path.exists(path):
         os.makedirs(path)
 
-
+# Test API endpoint
+@app.get('/test')
+async def test_connection():
+    return {"message": "Connection successful"}
+    
 # @deprecated("use modal/job_modal.py")
 # @modal_app.function(image=image, schedule=Cron('* * * * *'))
 # async def notifications_cronjob():

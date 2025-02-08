@@ -2,12 +2,19 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
  # Import the task
 # Database configuration
+# DB_CONFIG = {
+#     "dbname": "altio",  # Replace with your PostgreSQL database name
+#     "user": "your_username",        # Replace with your PostgreSQL username
+#     "password": "your_password",    # Replace with your PostgreSQL password
+#     "host": "localhost",            # Replace with your database host (e.g., "localhost" or an IP address)
+#     "port": 5432                    # Default PostgreSQL port
+# }
 DB_CONFIG = {
-    "dbname": "altio",  # Replace with your PostgreSQL database name
-    "user": "your_username",        # Replace with your PostgreSQL username
-    "password": "your_password",    # Replace with your PostgreSQL password
-    "host": "localhost",            # Replace with your database host (e.g., "localhost" or an IP address)
-    "port": 5432                    # Default PostgreSQL port
+    'dbname': 'your_db_name',
+    'user': 'your_db_user',
+    'password': 'your_db_password',
+    'host': 'db',  # Use the service name defined in docker-compose.yml
+    'port': '5432'
 }
 
 def get_db_connection():

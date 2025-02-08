@@ -1,23 +1,24 @@
 FROM python:3.11 AS builder
 
-ENV PATH="/opt/venv/bin:$PATH"
-RUN python -m venv /opt/venv
+ENV PATH="/opt/myenv/bin:$PATH"
+RUN python -m venv /opt/myenv
 
-COPY backend/requirements.txt /tmp/requirements.txt
+COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir --upgrade -r /tmp/requirements.txt
 
 FROM python:3.11-slim
 
 WORKDIR /app
-ENV PATH="/opt/venv/bin:$PATH"
+ENV PATH="/opt/myenv/bin:$PATH"
 
-RUN apt-get update && apt-get -y install ffmpeg curl unzip && rm -rf /var/lib/apt/lists/* && \
-    pip install --target /dd_tracer/python/ ddtrace
+RUN apt-get update && apt-get -y install ffmpeg curl unzip redis-server && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /opt/venv /opt/venv
-COPY --from=gcr.io/datadoghq/serverless-init:1 /datadog-init /app/datadog-init
-COPY backend/ .
+COPY --from=builder /opt/myenv /opt/myenv
+COPY . .
 
-EXPOSE 8080
-ENTRYPOINT ["/app/datadog-init"]
-CMD ["/dd_tracer/python/bin/ddtrace-run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+RUN pip install --no-cache-dir celery psycopg2-binary
+
+EXPOSE 8000
+EXPOSE 6379
+
+CMD ["sh", "-c", "redis-server & uvicorn main:app --host 0.0.0.0 --port 8000 & celery -A celery_config worker --loglevel=DEBUG -Q audio_processing --max-memory-per-child=500000 --max-tasks-per-child=1"]

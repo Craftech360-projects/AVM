@@ -314,7 +314,7 @@ async def sync_local_files(
         raise e
 
     # Generate task ID and save initial status
-    task_id = f"task_{uid}_{uuid.uuid4()}"
+    task_id = str(uuid.uuid4())  # Generates a valid UUID
     conn = get_db_connection()
     cursor = conn.cursor()
     
