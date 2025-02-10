@@ -8,6 +8,9 @@ const w4 = SizedBox(
 const w8 = SizedBox(
   width: 8,
 );
+const w10 = SizedBox(
+  width: 10,
+);
 const w16 = SizedBox(
   width: 16,
 );

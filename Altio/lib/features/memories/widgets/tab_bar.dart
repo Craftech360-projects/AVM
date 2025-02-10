@@ -59,7 +59,8 @@ class _CustomTabBarState extends State<CustomTabBar>
                 ),
                 indicatorWeight: 0,
                 labelPadding: EdgeInsets.zero,
-                tabs: widget.tabs),
+                tabs: widget.tabs,
+                labelStyle: Theme.of(context).textTheme.bodyMedium),
           ),
         ),
         Expanded(

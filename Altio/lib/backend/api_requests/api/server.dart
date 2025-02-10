@@ -5,15 +5,11 @@ import 'package:altio/backend/api_requests/api/shared.dart';
 import 'package:altio/backend/database/transcript_segment.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/plugin.dart';
-import 'package:altio/backend/schema/sample.dart';
 import 'package:altio/env/env.dart';
 import 'package:http/http.dart' as http;
-import 'package:instabug_flutter/instabug_flutter.dart';
-import 'package:instabug_http_client/instabug_http_client.dart';
 import 'package:path/path.dart';
 
 Future<List<TranscriptSegment>> transcribe(File file) async {
-  final client = InstabugHttpClient();
   var request = http.MultipartRequest(
     'POST',
     Uri.parse(
@@ -26,7 +22,7 @@ Future<List<TranscriptSegment>> transcribe(File file) async {
   });
 
   try {
-    var streamedResponse = await client.send(request);
+    var streamedResponse = await request.send();
     var response = await http.Response.fromStream(streamedResponse);
 
     if (response.statusCode == 200) {
@@ -42,57 +38,55 @@ Future<List<TranscriptSegment>> transcribe(File file) async {
   }
 }
 
-Future<bool> userHasSpeakerProfile(String uid) async {
-  var response = await makeApiCall(
-    url: '${Env.apiBaseUrl}v1/speech-profile?uid=$uid',
-    // url: 'https://5818-107-3-134-29.ngrok-free.app/v1/speech-profile',
-    headers: {},
-    method: 'GET',
-    body: '',
-  );
-  if (response == null) return false;
+// Future<bool> userHasSpeakerProfile(String uid) async {
+//   var response = await makeApiCall(
+//     url: '${Env.apiBaseUrl}v1/speech-profile?uid=$uid',
+//     headers: {},
+//     method: 'GET',
+//     body: '',
+//   );
+//   if (response == null) return false;
 
-  return jsonDecode(response.body)['has_profile'] ?? false;
-}
+//   return jsonDecode(response.body)['has_profile'] ?? false;
+// }
 
-Future<List<SpeakerIdSample>> getUserSamplesState(String uid) async {
-  var response = await makeApiCall(
-    url: '${Env.apiBaseUrl}samples?uid=$uid',
-    headers: {},
-    method: 'GET',
-    body: '',
-  );
-  if (response == null) return [];
+// Future<List<SpeakerIdSample>> getUserSamplesState(String uid) async {
+//   var response = await makeApiCall(
+//     url: '${Env.apiBaseUrl}samples?uid=$uid',
+//     headers: {},
+//     method: 'GET',
+//     body: '',
+//   );
+//   if (response == null) return [];
 
-  return SpeakerIdSample.fromJsonList(jsonDecode(response.body));
-}
+//   return SpeakerIdSample.fromJsonList(jsonDecode(response.body));
+// }
 
-Future<bool> uploadSample(File file, String uid) async {
-  var request = http.MultipartRequest(
-    'POST',
-    Uri.parse('${Env.apiBaseUrl}samples/upload?uid=$uid'),
-  );
-  request.files.add(await http.MultipartFile.fromPath('file', file.path,
-      filename: basename(file.path)));
+// Future<bool> uploadSample(File file, String uid) async {
+//   var request = http.MultipartRequest(
+//     'POST',
+//     Uri.parse('${Env.apiBaseUrl}samples/upload?uid=$uid'),
+//   );
+//   request.files.add(await http.MultipartFile.fromPath('file', file.path,
+//       filename: basename(file.path)));
 
-  try {
-    var streamedResponse = await request.send();
-    var response = await http.Response.fromStream(streamedResponse);
+//   try {
+//     var streamedResponse = await request.send();
+//     var response = await http.Response.fromStream(streamedResponse);
 
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception(
-          'Failed to upload sample. Status code: ${response.statusCode}');
-    }
-  } catch (e) {
-    throw Exception('An error occurred uploadSample: $e');
-  }
-}
+//     if (response.statusCode == 200) {
+//       return true;
+//     } else {
+//       throw Exception(
+//           'Failed to upload sample. Status code: ${response.statusCode}');
+//     }
+//   } catch (e) {
+//     throw Exception('An error occurred uploadSample: $e');
+//   }
+// }
 
 Future<void> uploadBackupApi(String backup) async {
-  // ignore: unused_local_variable
-  var response = await makeApiCall(
+  await makeApiCall(
     url: '${Env.apiBaseUrl}v1/backups?uid=${SharedPreferencesUtil().uid}',
     headers: {'Content-Type': 'application/json'},
     method: 'POST',
@@ -142,8 +136,7 @@ Future<List<Plugin>> retrievePlugins() async {
       var plugins = Plugin.fromJsonList(jsonDecode(response.body));
       SharedPreferencesUtil().pluginsList = plugins;
       return plugins;
-    } catch (e, stackTrace) {
-      CrashReporting.reportHandledCrash(e, stackTrace);
+    } catch (e) {
       return SharedPreferencesUtil().pluginsList;
     }
   }

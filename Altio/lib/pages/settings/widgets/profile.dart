@@ -2,6 +2,7 @@ import 'package:altio/backend/mixpanel.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
+import 'package:altio/core/widgets/custom_dialog_box.dart';
 import 'package:altio/core/widgets/typing_indicator.dart';
 import 'package:altio/features/wizard/pages/signin_page.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
@@ -9,7 +10,6 @@ import 'package:altio/pages/settings/widgets/about_you.dart';
 import 'package:altio/pages/settings/widgets/backup_btn.dart';
 import 'package:altio/pages/settings/widgets/change_name_widget.dart';
 import 'package:altio/pages/settings/widgets/restore_btn.dart';
-import 'package:altio/widgets/custom_dialog_box.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,8 +17,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.hasDevice});
   static const String name = 'profilePage';
+  final bool hasDevice;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -30,10 +31,10 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      title: const Center(
+      title: Center(
         child: Text(
           "Profile Settings",
-          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
+          style: Theme.of(context).textTheme.titleSmall,
         ),
       ),
       showBackBtn: true,
@@ -47,14 +48,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 _buildProfileTile(),
                 _buildNameTile(),
                 h16,
+                if (widget.hasDevice)
+                  const Divider(color: AppColors.purpleDark, height: 1),
+                if (widget.hasDevice) const BackupButton(),
+                if (widget.hasDevice) const RestoreButton(),
                 const Divider(color: AppColors.purpleDark, height: 1),
-                h16,
-                const BackupButton(),
-                h16,
-                const RestoreButton(),
-                h16,
-                const Divider(color: AppColors.purpleDark, height: 1),
-                h16,
                 _buildUserIdTile(),
                 _buildDeleteAccountTile(),
                 getSignOutButton(context),
@@ -67,14 +65,12 @@ class _ProfilePageState extends State<ProfilePage> {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(
-        SharedPreferencesUtil().givenName.isEmpty
-            ? 'About YOU'
-            : 'About ${SharedPreferencesUtil().givenName.toUpperCase()}',
-        style: const TextStyle(fontWeight: FontWeight.w600),
+        'About You',
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
-      subtitle: const Text(
+      subtitle: Text(
         'What Altio has learned about you',
-        style: TextStyle(fontWeight: FontWeight.w500),
+        style: Theme.of(context).textTheme.bodySmall,
       ),
       trailing: CircleAvatar(
         backgroundColor: AppColors.purpleDark,
@@ -85,26 +81,29 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       onTap: () {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 500),
-            pageBuilder: (context, animation, secondaryAnimation) =>
-                AboutYouScreen(),
-            // NeuralScreen(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-              var zoomInAnimation = Tween(begin: 0.9, end: 1.0).animate(
-                CurvedAnimation(parent: animation, curve: Curves.easeOut),
-              );
+        widget.hasDevice
+            ? Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: Duration(milliseconds: 500),
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      AboutYouScreen(),
+                  // NeuralScreen(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    var zoomInAnimation = Tween(begin: 0.9, end: 1.0).animate(
+                      CurvedAnimation(parent: animation, curve: Curves.easeOut),
+                    );
 
-              return ScaleTransition(
-                scale: zoomInAnimation,
-                child: child,
-              );
-            },
-          ),
-        );
+                    return ScaleTransition(
+                      scale: zoomInAnimation,
+                      child: child,
+                    );
+                  },
+                ),
+              )
+            : avmSnackBar(context,
+                "Altio couldn't find an active device associated with your account! Please connect a device.");
       },
     );
   }
@@ -113,14 +112,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(
-        SharedPreferencesUtil().givenName.isEmpty ? 'Set name' : 'Change name',
-        style: const TextStyle(fontWeight: FontWeight.w600),
+        SharedPreferencesUtil().givenName.isEmpty ? 'Set Name' : 'Change Name',
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
       subtitle: Text(
         SharedPreferencesUtil().givenName.isEmpty
             ? 'Not set'
             : SharedPreferencesUtil().givenName,
-        style: const TextStyle(fontWeight: FontWeight.w500),
+        style: Theme.of(context).textTheme.bodySmall,
       ),
       trailing: CircleAvatar(
         backgroundColor: AppColors.purpleDark,
@@ -145,9 +144,9 @@ class _ProfilePageState extends State<ProfilePage> {
   ListTile _buildUserIdTile() {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      title: const Text(
-        'Your User Id',
-        style: TextStyle(fontWeight: FontWeight.w600),
+      title: Text(
+        'User Id',
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
       trailing: CircleAvatar(
         backgroundColor: AppColors.purpleDark,
@@ -168,12 +167,9 @@ class _ProfilePageState extends State<ProfilePage> {
   ListTile _buildDeleteAccountTile() {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      title: const Text(
+      title: Text(
         'Delete Account',
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          color: AppColors.red,
-        ),
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
       trailing: CircleAvatar(
         backgroundColor: AppColors.purpleDark,
@@ -189,15 +185,6 @@ class _ProfilePageState extends State<ProfilePage> {
           context: context,
           builder: (ctx) {
             return SizedBox();
-            // return getDialog(
-            //   context,
-            //   () => Navigator.of(context).pop(),
-            //   () => launchUrl(Uri.parse('mailto:craftechapps@gmail.com')),
-            //   'Deleting Account?',
-            //   'Please send us an email at craftechapps@gmail.com',
-            //   okButtonText: 'Open Email',
-            //   singleButton: false,
-            // );
           },
         );
       },
@@ -244,9 +231,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget getSignOutButton(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      title: const Text(
+      title: Text(
         'Sign Out',
-        style: TextStyle(color: AppColors.red, fontWeight: FontWeight.w600),
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
       trailing: CircleAvatar(
         backgroundColor: AppColors.purpleDark,

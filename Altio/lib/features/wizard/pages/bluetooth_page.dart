@@ -20,26 +20,29 @@ class BluetoothPermissionHandler {
           bluetoothScanStatus.isPermanentlyDenied ||
           bluetoothConnectStatus.isPermanentlyDenied) {
         // Show dialog to open settings
-        final bool shouldOpenSettings = await showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Bluetooth Permission Required'),
-                content: const Text(
-                    'Bluetooth permission is required to connect with your Capsaul Wearable. '
-                    'Please enable it in Settings.'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    child: const Text('Open Settings'),
-                  ),
-                ],
-              ),
-            ) ??
-            false;
+        bool shouldOpenSettings = false;
+        if (context.mounted) {
+          shouldOpenSettings = await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Bluetooth Permission Required'),
+                  content: const Text(
+                      'Bluetooth permission is required to connect with your Capsaul Wearable. '
+                      'Please enable it in Settings.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: const Text('Open Settings'),
+                    ),
+                  ],
+                ),
+              ) ??
+              false;
+        }
 
         if (shouldOpenSettings) {
           await openAppSettings();

@@ -79,6 +79,7 @@ class _DeviceInfo {
 }
 
 class _ConnectedDeviceState extends State<ConnectedDevice> {
+
   @override
   Widget build(BuildContext context) {
     var deviceId = widget.device?.id ?? SharedPreferencesUtil().deviceId;

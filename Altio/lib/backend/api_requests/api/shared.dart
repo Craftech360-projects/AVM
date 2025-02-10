@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:altio/backend/auth.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:instabug_http_client/instabug_http_client.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 Future<String> getAuthHeader() async {
@@ -28,14 +27,12 @@ Future<http.Response?> makeApiCall({
       return null;
     }
 
-    final client = InstabugHttpClient();
-
     if (method == 'POST') {
-      return await client.post(Uri.parse(url), headers: headers, body: body);
+      return await http.post(Uri.parse(url), headers: headers, body: body);
     } else if (method == 'GET') {
-      return await client.get(Uri.parse(url), headers: headers);
+      return await http.get(Uri.parse(url), headers: headers);
     } else if (method == 'DELETE') {
-      return await client.delete(Uri.parse(url), headers: headers);
+      return await http.delete(Uri.parse(url), headers: headers);
     } else {
       throw Exception('Unsupported HTTP method: $method');
     }

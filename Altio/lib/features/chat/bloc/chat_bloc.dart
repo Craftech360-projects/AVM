@@ -9,7 +9,7 @@ import 'package:altio/backend/database/message.dart';
 import 'package:altio/backend/database/message_provider.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/plugin.dart';
-import 'package:altio/utils/rag.dart';
+import 'package:altio/utils/other/rag.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

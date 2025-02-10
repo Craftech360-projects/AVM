@@ -22,7 +22,7 @@ class MemoryCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.grey),
-        borderRadius: br5,
+        borderRadius: br8,
       ),
       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
       child: Row(
@@ -31,14 +31,14 @@ class MemoryCard extends StatelessWidget {
             borderRadius: br5,
             child: Image.memory(
               memory.memoryImg!,
-              height: 100.h,
-              width: 100.w,
+              height: 80.h,
+              width: 80.w,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset(
                   'assets/images/image_placeholder.png',
-                  height: 100.h,
-                  width: 100.w,
+                  height: 80.h,
+                  width: 80.w,
                   fit: BoxFit.fitHeight,
                 );
               },
@@ -53,15 +53,15 @@ class MemoryCard extends StatelessWidget {
                 Text(memory.structured.target?.title ?? 'No Title',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        height: 1.2)),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall
+                        ?.copyWith(fontWeight: FontWeight.w600, height: 1.2)),
                 h4,
                 Text(
                   '${DateFormat('d MMM').format(memory.createdAt)} -'
                   ' ${DateFormat('h:mm a').format(memory.createdAt)}',
-                  style: TextStyle(fontSize: 12),
+                  style: Theme.of(context).textTheme.labelSmall,
                 ),
               ],
             ),

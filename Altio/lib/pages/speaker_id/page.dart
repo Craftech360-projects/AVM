@@ -1,9 +1,6 @@
 import 'dart:async';
 
-import 'package:altio/backend/api_requests/api/server.dart';
-import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/bt_device.dart';
-import 'package:altio/backend/schema/sample.dart';
 import 'package:altio/pages/home/page.dart';
 import 'package:altio/utils/ble/connected.dart';
 import 'package:altio/utils/ble/scan.dart';
@@ -23,15 +20,15 @@ class _SpeakerIdPageState extends State<SpeakerIdPage>
     with TickerProviderStateMixin {
   TabController? _controller;
   final int _currentIdx = 0;
-  List<SpeakerIdSample> _samples = [];
+  // List<SpeakerIdSample> _samples = [];
 
   BTDeviceStruct? _device;
   StreamSubscription<OnConnectionStateChangedEvent>? _connectionStateListener;
 
   _init() async {
     _device = await scanAndConnectDevice();
-    _samples = await getUserSamplesState(SharedPreferencesUtil().uid);
-    _controller = TabController(length: 2 + _samples.length, vsync: this);
+    // _samples = await getUserSamplesState(SharedPreferencesUtil().uid);
+    // _controller = TabController(length: 2 + _samples.length, vsync: this);
     _initiateConnectionListener();
     setState(() {});
   }

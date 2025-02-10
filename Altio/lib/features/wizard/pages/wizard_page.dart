@@ -4,10 +4,10 @@ import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/widgets/custom_dialog_box.dart';
 import 'package:altio/core/widgets/typing_indicator.dart';
-import 'package:altio/features/chat/presentation/chat_screen.dart';
 import 'package:altio/features/wizard/bloc/wizard_bloc.dart';
 import 'package:altio/features/wizard/widgets/onboarding_button.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
+import 'package:altio/pages/home/page.dart';
 import 'package:altio/pages/onboarding/page.dart';
 import 'package:altio/utils/features/backups.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -147,10 +147,12 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
                                             true;
                                         await retrieveBackup(
                                             SharedPreferencesUtil().uid);
+                                        if (!context.mounted) return;
                                         avmSnackBar(context,
                                             "Auto-memory backup is active now");
                                         _nextPage();
                                         _isLoading = false;
+                                        if (!mounted) return;
                                         Navigator.pop(context);
                                       },
                                     );
@@ -172,11 +174,13 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ChatScreen(),
+                                    builder: (context) =>
+                                        HomePageWrapper(tabIndex: 2),
                                   ),
                                   (route) => false,
                                 );
-                                SharedPreferencesUtil().onboardingCompleted = true;
+                                SharedPreferencesUtil().onboardingCompleted =
+                                    true;
                               } catch (e) {
                                 if (!context.mounted) return;
                                 avmSnackBar(context, e.toString());

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class DeviceFlagService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final CollectionReference _usersCollection =
       FirebaseFirestore.instance.collection('users');
 
@@ -36,6 +37,26 @@ class DeviceFlagService {
     await _usersCollection.doc(uid).update({
       'hasDevice': hasDevice,
       'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+}
+
+class DeviceProvider with ChangeNotifier {
+  bool? _hasDevice;
+  bool? get hasDevice => _hasDevice;
+
+  DeviceProvider(String uid) {
+    // Subscribe to real-time updates for the user document.
+    FirebaseFirestore.instance.collection('users').doc(uid).snapshots().listen((docSnapshot) {
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        bool newValue = data?['hasDevice'] as bool? ?? false;
+        // Update only if there’s a change.
+        if (newValue != _hasDevice) {
+          _hasDevice = newValue;
+          notifyListeners();
+        }
+      }
     });
   }
 }

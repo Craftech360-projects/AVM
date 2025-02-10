@@ -1,7 +1,7 @@
 import 'package:altio/backend/database/transcript_segment.dart';
 import 'package:altio/core/theme/app_colors.dart';
 import 'package:altio/features/memories/bloc/memory_bloc.dart';
-import 'package:altio/src/common_widget/expandable_text.dart';
+import 'package:altio/core/widgets/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,12 +24,10 @@ class TranscriptTab extends StatelessWidget {
       builder: (context, state) {
         final transcriptSegments =
             state.memories[memoryAtIndex].transcriptSegments;
-        final started = state.memories[memoryAtIndex].startedAt ??
-            DateTime.now(); // Use startedAt or current time if null
+        final started =
+            state.memories[memoryAtIndex].startedAt ?? DateTime.now();
 
-        // Calculate dummy timeline times
-        final segmentDuration =
-            Duration(seconds: 7); // Assume 5 seconds for each segment
+        final segmentDuration = Duration(seconds: 7);
         final dummyTimes = List<DateTime>.generate(
           transcriptSegments.length,
           (index) => started.subtract(
@@ -39,14 +37,14 @@ class TranscriptTab extends StatelessWidget {
         return Timeline.tileBuilder(
           physics: const BouncingScrollPhysics(),
           theme: TimelineThemeData(
-            nodePosition: 0.0.h,
-            indicatorPosition: 0.05.h,
+            nodePosition: 0.0,
+            indicatorPosition: 0.0,
           ),
-          padding: EdgeInsets.symmetric(vertical: 20.h),
+          padding: EdgeInsets.symmetric(vertical: 20),
           builder: TimelineTileBuilder.connected(
             contentsBuilder: (context, index) => _TranscriptContent(
               segment: transcriptSegments[index],
-              time: dummyTimes[index], // Pass dummy time
+              time: dummyTimes[index],
             ),
             connectorBuilder: (_, index, __) {
               return SolidLineConnector(
@@ -70,7 +68,7 @@ class TranscriptTab extends StatelessWidget {
 
 class _TranscriptContent extends StatelessWidget {
   final TranscriptSegment segment;
-  final DateTime time; // Add time parameter
+  final DateTime time;
 
   const _TranscriptContent({
     required this.segment,
@@ -79,34 +77,28 @@ class _TranscriptContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final hour =
-        time.hour % 12 == 0 ? 12 : time.hour % 12; // Handle 12-hour format
-    final period = time.hour >= 12 ? 'PM' : 'AM'; // Determine AM or PM
+    final hour = time.hour % 12 == 0 ? 12 : time.hour % 12;
+    final period = time.hour >= 12 ? 'PM' : 'AM';
     final timeString =
         "${hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}:${time.second.toString().padLeft(2, '0')} $period";
 
     return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: Text(
-              timeString, // Use the formatted 12-hour time
-              style: textTheme.titleMedium?.copyWith(),
+              timeString,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: ExpandableText(
-              leadingText: 'Speaker ${segment.speaker} : ',
+              leadingText: 'Speaker ${segment.speaker}: ',
               text: segment.text,
-              style: textTheme.bodyMedium?.copyWith(
-                wordSpacing: 0,
-                letterSpacing: 0.1,
-              ),
             ),
           )
         ],

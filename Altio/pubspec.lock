@@ -892,22 +892,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  instabug_flutter:
-    dependency: "direct main"
-    description:
-      name: instabug_flutter
-      sha256: c17513d000a1d6ecf5ee9cd1d820760143985b5b006d06c65744db949988aa17
-      url: "https://pub.dev"
-    source: hosted
-    version: "14.1.0"
-  instabug_http_client:
-    dependency: "direct main"
-    description:
-      name: instabug_http_client
-      sha256: "60bda45012bb1b858047edaa6ae5d9e58a3e0fec070f3c858a7a0f134d012cb4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.5.0"
   integration_test:
     dependency: "direct dev"
     description: flutter
@@ -1987,10 +1971,10 @@ packages:
     dependency: "direct main"
     description:
       name: web_socket_channel
-      sha256: "9f187088ed104edd8662ca07af4b124465893caf063ba29758f97af57e61da8f"
+      sha256: "0b8e2457400d8a859b7b2030786835a28a8e80836ef64402abef392ff4f1d0e5"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   webdriver:
     dependency: transitive
     description:

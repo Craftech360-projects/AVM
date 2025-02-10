@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:altio/widgets/dialog.dart';
+
+import 'package:altio/core/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
 

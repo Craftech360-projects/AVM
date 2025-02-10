@@ -59,13 +59,16 @@ class _ZapierPageState extends State<ZapierPage> {
                     ),
                   ],
                 ),
-                Switch(
-                  inactiveTrackColor: AppColors.white,
-                  activeTrackColor: AppColors.purpleDark,
-                  activeColor: AppColors.commonPink,
-                  activeThumbImage: AssetImage(AppImages.appLogo),
-                  value: zapierEnabled,
-                  onChanged: _onSwitchChanged,
+                Transform.scale(
+                  scale: 0.8,
+                  child: Switch(
+                    inactiveTrackColor: AppColors.white,
+                    activeTrackColor: AppColors.purpleDark,
+                    activeColor: AppColors.commonPink,
+                    activeThumbImage: AssetImage(AppImages.appLogo),
+                    value: zapierEnabled,
+                    onChanged: _onSwitchChanged,
+                  ),
                 ),
               ],
             ),

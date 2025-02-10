@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:altio/backend/api_requests/api/server.dart';
-import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/bt_device.dart';
 import 'package:altio/backend/schema/sample.dart';
 import 'package:altio/utils/audio/wav_bytes.dart';
@@ -77,7 +74,7 @@ class _RecordSampleTabState extends State<RecordSampleTab>
 
   Future<void> confirmRecording() async {
     if ((audioStorage?.audioBytes ?? []).isEmpty) return;
-    var bytes = audioStorage!.audioBytes;
+    // var bytes = audioStorage!.audioBytes;
     setState(() {
       recording = false;
       speechRecorded = true;
@@ -87,11 +84,11 @@ class _RecordSampleTabState extends State<RecordSampleTab>
     await Future.delayed(
         const Duration(seconds: 2)); // wait for bytes streaming to stream all
     audioBytesStream?.cancel();
-    File file = await WavBytesUtil()
-        .createWavByCodec([bytes], filename: '${widget.sample.id}.wav');
+    // File file = await WavBytesUtil()
+    //     .createWavByCodec([bytes], filename: '${widget.sample.id}.wav');
     // File file = await WavBytesUtil.createWavFile(bytes,
     //     filename: '${widget.sample.id}.wav');
-    await uploadSample(file, SharedPreferencesUtil().uid); // optimistic request
+    // await uploadSample(file, SharedPreferencesUtil().uid);
     // handle failures + url: null, retry sample
   }
 

@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:altio/backend/api_requests/api/other.dart';
-//import 'package:altio/d/api_requests/api/pinecone.dart';
 import 'package:altio/backend/api_requests/api/prompt.dart';
 import 'package:altio/backend/api_requests/api/random_memory_img.dart';
 import 'package:altio/backend/database/geolocation.dart';
@@ -18,7 +17,6 @@ import 'package:altio/core/constants/constants.dart';
 import 'package:altio/utils/features/backup_util.dart';
 import 'package:altio/utils/features/calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../backend/database/box.dart';
@@ -117,7 +115,6 @@ Future<Memory?> memoryCreationBlock(
       );
       if (!retrievedFromCache) {
         if (!context.mounted) return null;
-        InstabugLog.logError('Unable to create memory structure.');
         avmSnackBar(context,
             "Unexpected error creating your memory. Please check your discarded memories.");
       }
@@ -158,17 +155,26 @@ Future<Memory?> memoryCreationBlock(
 
   if (!retrievedFromCache) {
     if (structured.title.isEmpty && !failed) {
-      avmSnackBar(context,
-          "Audio processing failed due to noise. Please try again in a quieter place!");
+      if (context.mounted) {
+        avmSnackBar(context,
+            "Audio processing failed due to noise. Please try again in a quieter place!");
+      }
     } else if (structured.title.isNotEmpty) {
       bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
-      avmSnackBar(context, "New memory created!");
-      backupsEnabled ? manualBackup(context) : null;
+      if (context.mounted) {
+        avmSnackBar(context, "New memory created!");
+      }
+      if (backupsEnabled && context.mounted) {
+        manualBackup(context);
+      }
     } else {
-      avmSnackBar(
-          context, "Memory stored as discarded due to background noise.");
+      if (context.mounted) {
+        avmSnackBar(
+            context, "Memory stored as discarded due to background noise.");
+      }
     }
   }
+
   return memory;
 }
 

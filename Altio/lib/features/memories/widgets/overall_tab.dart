@@ -8,14 +8,13 @@ import 'package:altio/backend/schema/plugin.dart';
 import 'package:altio/core/assets/app_vectors.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
+import 'package:altio/core/widgets/expandable_text.dart';
+import 'package:altio/core/widgets/expandable_text_widget.dart';
+import 'package:altio/core/widgets/list_tile.dart';
 import 'package:altio/features/chat/bloc/chat_bloc.dart';
-import 'package:altio/features/chat/presentation/chat_screen.dart';
 import 'package:altio/pages/settings/widgets/calendar.dart';
-import 'package:altio/src/common_widget/expandable_text.dart';
-import 'package:altio/src/common_widget/list_tile.dart';
 import 'package:altio/utils/features/calendar.dart';
 import 'package:altio/utils/other/temp.dart';
-import 'package:altio/widgets/expandable_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,12 +27,14 @@ class OverallTab extends StatefulWidget {
   final Structured target;
   final dynamic pluginsResponse;
   final Geolocation? geolocation;
+  final TabController? tabController;
 
   const OverallTab({
     super.key,
     required this.target,
     this.pluginsResponse,
     this.geolocation,
+    this.tabController,
   });
 
   @override
@@ -60,18 +61,13 @@ class OverallTabState extends State<OverallTab> {
               height: 14.h,
               width: 14.w,
             ),
-            title: Text(
-              'AI Summary',
-              style: textTheme.titleMedium,
-            ),
+            title: Text('AI Summary',
+                style: Theme.of(context).textTheme.bodyLarge),
           ),
           ExpandableText(
             text: widget.target.overview,
-            style: textTheme.bodyMedium?.copyWith(
-              color: AppColors.grey,
-            ),
           ),
-          h16,
+          h8,
 
           CustomListTile(
             leading: SvgPicture.asset(
@@ -79,17 +75,14 @@ class OverallTabState extends State<OverallTab> {
               height: 15.h,
               width: 15.w,
             ),
-            title:
-                Text('Brainstorm with Altio AI', style: textTheme.titleMedium),
+            title: Text('Brainstorm with Altio AI',
+                style: Theme.of(context).textTheme.bodyLarge),
           ),
           if (brainstormQns.isEmpty)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.h),
-              child: Text(
-                'Uhuh! Seems like no questions are available',
-                style: textTheme.bodyMedium?.copyWith(
-                  color: AppColors.grey,
-                ),
+            Text(
+              'Uhuh! Seems like no questions are available',
+              style: textTheme.bodyMedium?.copyWith(
+                color: AppColors.grey,
               ),
             )
           else
@@ -97,7 +90,7 @@ class OverallTabState extends State<OverallTab> {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 3),
                 child: Container(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   decoration: BoxDecoration(
                     color: AppColors.purpleDark,
                     borderRadius: br5,
@@ -108,37 +101,17 @@ class OverallTabState extends State<OverallTab> {
                       Expanded(
                         child: Text(
                           question,
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppColors.white,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: AppColors.white, height: 1.2),
                         ),
                       ),
                       w8,
                       InkWell(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              transitionDuration: Duration(milliseconds: 500),
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      ChatScreen(),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                var fadeInAnimation =
-                                    Tween(begin: 0.0, end: 1.0).animate(
-                                  CurvedAnimation(
-                                      parent: animation, curve: Curves.easeOut),
-                                );
-
-                                return FadeTransition(
-                                  opacity: fadeInAnimation,
-                                  child: child,
-                                );
-                              },
-                            ),
-                          );
+                          Navigator.of(context).pop();
+                          widget.tabController?.animateTo(2);
                           BlocProvider.of<ChatBloc>(context).add(
                             SendMessage(
                               question,
@@ -147,12 +120,8 @@ class OverallTabState extends State<OverallTab> {
                           );
                         },
                         child: Icon(
-                          opticalSize: 0.1,
-                          fill: 0.1,
-                          grade: 0.1,
-                          weight: 0.1,
-                          size: 28,
-                          Icons.arrow_circle_right_outlined,
+                          size: 22,
+                          Icons.double_arrow_sharp,
                           color: AppColors.white,
                         ),
                       )
@@ -163,24 +132,19 @@ class OverallTabState extends State<OverallTab> {
             }),
           h16,
 
-          /// Chapters
+          /// Events
           CustomListTile(
             leading: SvgPicture.asset(
               AppVectors.chapter,
               height: 16.h,
               width: 16.w,
             ),
-            title: Text('Events', style: textTheme.titleMedium),
+            title: Text('Events', style: Theme.of(context).textTheme.bodyLarge),
           ),
           if (events.isEmpty)
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.h),
-              child: Text(
-                'No events found',
-                style: textTheme.bodyMedium?.copyWith(
-                  color: AppColors.grey,
-                ),
-              ),
+            Text(
+              'No events found',
+              style: Theme.of(context).textTheme.bodyMedium,
             )
           else
             ...events.asMap().entries.map((entry) {
@@ -192,26 +156,29 @@ class OverallTabState extends State<OverallTab> {
                 children: [
                   Text(
                     '$index.',
-                    style: textTheme.bodyMedium?.copyWith(),
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(height: 1.2),
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             event.title,
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: AppColors.grey,
-                            ),
+                            style: textTheme.bodyMedium?.copyWith(height: 1.2),
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 4.0),
                             child: Text(
                               '${dateTimeFormat('MMM d, yyyy', event.startsAt)} at ${dateTimeFormat('h:mm a', event.startsAt)} ~ ${event.duration} minutes.',
-                              style: const TextStyle(
-                                  color: AppColors.grey, fontSize: 15),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(height: 1.2),
                             ),
                           ),
                         ],
@@ -252,7 +219,7 @@ class OverallTabState extends State<OverallTab> {
                 ],
               );
             }),
-          h16,
+          h8,
 
           /// Action Items Section
           CustomListTile(
@@ -263,15 +230,13 @@ class OverallTabState extends State<OverallTab> {
             ),
             title: Text(
               'Action Items',
-              style: textTheme.titleMedium,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
           if (actionItems.isEmpty)
             Text(
               'No action items found',
-              style: textTheme.bodyMedium?.copyWith(
-                color: AppColors.grey,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium,
             )
           else
             ...actionItems.map((actionItem) {
@@ -303,11 +268,11 @@ class OverallTabState extends State<OverallTab> {
                         actionItem.description,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: actionItem.completed
-                              ? AppColors.black
-                              : AppColors.grey,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: actionItem.completed
+                                  ? AppColors.black
+                                  : AppColors.grey,
+                            ),
                       ),
                     ),
                   ],
@@ -318,7 +283,7 @@ class OverallTabState extends State<OverallTab> {
 
           Container(
             decoration: BoxDecoration(
-                border: Border.all(color: AppColors.black), borderRadius: br2),
+                border: Border.all(color: AppColors.black), borderRadius: br5),
             margin: EdgeInsets.symmetric(vertical: 20),
             padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
             child: Column(
@@ -339,10 +304,10 @@ class OverallTabState extends State<OverallTab> {
                 ),
                 Text(
                   widget.geolocation?.address ?? "No address found!",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: AppColors.grey,
-                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(height: 1.2),
                 ),
                 h8,
                 if (widget.geolocation != null &&
@@ -434,7 +399,6 @@ class OverallTabState extends State<OverallTab> {
                       child: IconButton(
                         icon: const Icon(
                           Icons.close,
-                          color: AppColors.white,
                         ),
                         onPressed: () => Navigator.pop(context),
                         padding: EdgeInsets.zero,

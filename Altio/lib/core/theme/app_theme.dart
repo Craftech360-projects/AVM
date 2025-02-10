@@ -20,17 +20,50 @@ class AppTheme {
     brightness: Brightness.light,
     fontFamily: "Montserrat",
     textTheme: const TextTheme(
+      headlineLarge: TextStyle(
+        color: AppColors.black,
+        fontSize: 26,
+        fontWeight: FontWeight.w600,
+      ),
+      headlineMedium: TextStyle(
+        color: AppColors.black,
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+      ),
+      headlineSmall: TextStyle(
+        color: AppColors.black,
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 19,
+        fontWeight: FontWeight.w500,
+        color: AppColors.black,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 18,
+        fontWeight: FontWeight.w500,
+        color: AppColors.black,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 17,
+        fontWeight: FontWeight.w500,
+        color: AppColors.black,
+      ),
       bodyLarge: TextStyle(
         fontWeight: FontWeight.w500,
+        fontSize: 16,
+        color: AppColors.black,
       ),
       bodyMedium: TextStyle(
         fontWeight: FontWeight.w500,
+        fontSize: 14.5,
+        color: AppColors.black,
       ),
       bodySmall: TextStyle(
-        fontWeight: FontWeight.bold,
-      ),
-      headlineLarge: TextStyle(
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
+        fontSize: 13,
+        color: AppColors.black,
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -63,17 +96,53 @@ class AppTheme {
     brightness: Brightness.dark,
     fontFamily: "Montserrat",
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(
+      headlineLarge: TextStyle(
+        color: AppColors.white,
+        fontSize: 26,
         fontWeight: FontWeight.w600,
+      ),
+      headlineMedium: TextStyle(
+        color: AppColors.white,
+        fontSize: 24,
+        fontWeight: FontWeight.w600,
+      ),
+      headlineSmall: TextStyle(
+        color: AppColors.white,
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+      ),
+      titleLarge: TextStyle(
+        fontSize: 21,
+        fontWeight: FontWeight.w500,
+        color: AppColors.white,
+      ),
+      titleMedium: TextStyle(
+        fontSize: 19,
+        fontWeight: FontWeight.w500,
+        color: AppColors.white,
+      ),
+      titleSmall: TextStyle(
+        fontSize: 17,
+        fontWeight: FontWeight.w500,
+        color: AppColors.white,
+      ),
+      bodyLarge: TextStyle(
+        fontWeight: FontWeight.w500,
+        fontSize: 16,
+        height: 1.1,
+        color: AppColors.white,
       ),
       bodyMedium: TextStyle(
         fontWeight: FontWeight.w500,
+        fontSize: 14.5,
+        height: 1.2,
+        color: AppColors.white,
       ),
       bodySmall: TextStyle(
         fontWeight: FontWeight.w500,
-      ),
-      headlineLarge: TextStyle(
-        fontWeight: FontWeight.w600,
+        fontSize: 13,
+        height: 1.2,
+        color: AppColors.white,
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(

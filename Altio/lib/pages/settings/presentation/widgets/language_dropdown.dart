@@ -1,3 +1,4 @@
+import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -34,7 +35,7 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         color: AppColors.greyLavender,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: br8,
       ),
       child: DropdownButtonHideUnderline(
         // This removes the underline
@@ -46,6 +47,7 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
               child: SizedBox(
                 width: double.infinity,
                 child: Text(
+                  style: Theme.of(context).textTheme.bodyMedium,
                   e['name'],
                   overflow: TextOverflow.ellipsis,
                 ),

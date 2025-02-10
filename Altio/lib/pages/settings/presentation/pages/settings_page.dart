@@ -1,8 +1,8 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:altio/backend/preferences.dart';
+import 'package:altio/backend/services/device_flag.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
+import 'package:altio/core/widgets/list_tile.dart';
 import 'package:altio/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
 import 'package:altio/pages/home/device.dart';
@@ -13,32 +13,44 @@ import 'package:altio/pages/settings/widgets/developer_page.dart';
 import 'package:altio/pages/settings/widgets/item_add_on.dart';
 import 'package:altio/pages/settings/widgets/profile.dart';
 import 'package:altio/pages/settings/widgets/zapier_page.dart';
-import 'package:altio/src/common_widget/list_tile.dart';
 import 'package:altio/utils/other/temp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class SettingPage extends StatefulWidget {
-  const SettingPage({super.key});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
 
-  static const String name = 'settingPage';
+  static const String name = 'settingsPage';
 
   @override
-  State<SettingPage> createState() => _SettingPageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingPageState extends State<SettingPage> {
+class _SettingsPageState extends State<SettingsPage> {
   String version = '';
   String buildVersion = '';
   String selectedModel = "llama-3.3-70b-versatile";
+  bool? hasDevice;
 
   @override
   void initState() {
     super.initState();
     _getVersionInfo();
     _loadSelectedModel();
+    _loadDeviceFlag();
+  }
+
+  Future<void> _loadDeviceFlag() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      bool? flag = await DeviceFlagService().fetchDeviceFlag(uid: user.uid);
+      setState(() {
+        hasDevice = flag;
+      });
+    }
   }
 
   // Load the selected model from SharedPreferences
@@ -69,7 +81,7 @@ class _SettingPageState extends State<SettingPage> {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         color: AppColors.greyLavender,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: br8,
       ),
       child: DropdownButtonFormField<String>(
         value: selectedModel,
@@ -80,11 +92,17 @@ class _SettingPageState extends State<SettingPage> {
         items: [
           DropdownMenuItem(
             value: "deepseek-r1-distill-llama-70b",
-            child: Text("DeepSeek R1 Distill 70B"),
+            child: Text(
+              "DeepSeek R1 Distill 70B",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ),
           DropdownMenuItem(
             value: "llama-3.3-70b-versatile",
-            child: Text("LLaMA 3.3 70B Versatile"),
+            child: Text(
+              "LLaMA 3.3 70B Versatile",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ),
         ],
         onChanged: (value) {
@@ -98,11 +116,10 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return CustomScaffold(
       title: Text(
         "Settings",
-        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
+        style: Theme.of(context).textTheme.titleSmall,
       ),
       showBackBtn: true,
       showBatteryLevel: true,
@@ -114,7 +131,6 @@ class _SettingPageState extends State<SettingPage> {
               children: [
                 BlocBuilder<BluetoothBloc, BluetoothState>(
                   builder: (context, state) {
-                    bool isDeviceDisconnected = state is BluetoothDisconnected;
                     String deviceInfo = 'Device not connected';
                     int batteryLevel = -1;
 
@@ -160,72 +176,74 @@ class _SettingPageState extends State<SettingPage> {
                                 color: AppColors.white,
                               ),
                             ),
-                            SizedBox(width: 8),
+                            w8,
                           ],
                           Text(
                             deviceInfo,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 17),
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           Spacer(),
-                          Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                          Icon(Icons.arrow_forward_ios_rounded, size: 14),
                         ],
                       ),
                     );
                   },
                 ),
+                Divider(color: AppColors.black),
+                h4,
                 Text(
                   'AI Model',
-                  style: textTheme.titleMedium
-                      ?.copyWith(fontSize: 20.h, fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                h8,
-                _buildModelDropdown(), // 🔹 Add the dropdown widget
-
+                _buildModelDropdown(),
                 h16,
                 Text(
                   'Recording Settings',
-                  style: textTheme.titleMedium
-                      ?.copyWith(fontSize: 20.h, fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                h4,
                 const LanguageDropdown(),
-                h32,
+                h16,
                 Text(
                   'Add Ons',
-                  style: textTheme.titleMedium
-                      ?.copyWith(fontSize: 20.h, fontWeight: FontWeight.w600),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(fontWeight: FontWeight.w600),
                 ),
+                Divider(color: AppColors.black),
                 h4,
                 ItemAddOn(
                   title: 'Profile',
                   onTap: () {
-                    routeToPage(context, const ProfilePage());
+                    routeToPage(
+                        context, ProfilePage(hasDevice: hasDevice ?? false));
                   },
                   icon: Icons.person,
                 ),
-                ItemAddOn(
-                  title: 'Calendar',
-                  onTap: () {
-                    routeToPage(context, const CalendarPage());
-                  },
-                  icon: Icons.calendar_month,
-                ),
-                ItemAddOn(
-                  title: 'Developer Options',
-                  onTap: () {
-                    routeToPage(context, const DeveloperPage());
-                  },
-                  icon: Icons.settings_suggest,
-                ),
-                ItemAddOn(
-                  title: 'Zapier',
-                  onTap: () {
-                    routeToPage(context, const ZapierPage());
-                  },
-                  icon: Icons.settings_suggest,
-                ),
-                h16,
+                if (hasDevice ?? false)
+                  ItemAddOn(
+                    title: 'Calendar',
+                    onTap: () {
+                      routeToPage(context, const CalendarPage());
+                    },
+                    icon: Icons.calendar_month,
+                  ),
+                if (hasDevice ?? false)
+                  ItemAddOn(
+                    title: 'Developer Options',
+                    onTap: () {
+                      routeToPage(context, const DeveloperPage());
+                    },
+                    icon: Icons.settings_suggest,
+                  ),
+                if (hasDevice ?? false)
+                  ItemAddOn(
+                    title: 'Zapier',
+                    onTap: () {
+                      routeToPage(context, const ZapierPage());
+                    },
+                    icon: Icons.settings_suggest,
+                  ),
               ],
             ),
           ),
@@ -233,11 +251,7 @@ class _SettingPageState extends State<SettingPage> {
             alignment: Alignment.bottomCenter,
             child: Text(
               'Version: $version+$buildVersion',
-              style: const TextStyle(
-                  color: Color.fromARGB(255, 150, 150, 150),
-                  fontSize: 14,
-                  height: 3,
-                  fontWeight: FontWeight.w500),
+              style: Theme.of(context).textTheme.labelMedium,
             ),
           ),
         ],

@@ -5,8 +5,8 @@ import 'dart:typed_data';
 
 import 'package:altio/backend/database/transcript_segment.dart';
 import 'package:altio/pages/capture/background_service.dart';
-import 'package:altio/utils/enums.dart';
-import 'package:altio/utils/websockets.dart';
+import 'package:altio/utils/other/enums.dart';
+import 'package:altio/backend/websocket/websockets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -16,10 +16,6 @@ import 'package:record/record.dart';
 import 'package:web_socket_channel/io.dart';
 
 import 'microphone_transcribing_util.dart';
-
-// to be fixed.
-// - handle errors processing, no internet or anything
-// - Fix backend, use multichannel instead of single channel when recorded from device
 
 mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
   int lastOffset = 0;

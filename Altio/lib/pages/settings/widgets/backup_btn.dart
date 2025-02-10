@@ -5,8 +5,8 @@ import 'package:altio/backend/mixpanel.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/theme/app_colors.dart';
+import 'package:altio/core/widgets/custom_dialog_box.dart';
 import 'package:altio/utils/features/backups.dart';
-import 'package:altio/widgets/custom_dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,7 +22,7 @@ Future<bool> requestStoragePermission(BuildContext context) async {
     if (status.isGranted) {
       return true;
     } else {
-      // Permission is permanently denied, guide the user to settings
+      if (!context.mounted) return false;
       _showPermissionDeniedDialog(context);
       return false;
     }
@@ -76,23 +76,26 @@ class _BackupButtonState extends State<BackupButton> {
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
-          title: const Text('Backups & Restore',
-              style: TextStyle(fontWeight: FontWeight.w600)),
-          trailing: Switch(
-            inactiveTrackColor: AppColors.white,
-            activeTrackColor: AppColors.purpleDark,
-            activeColor: AppColors.commonPink,
-            activeThumbImage: AssetImage(AppImages.appLogo),
-            value: backupsEnabled,
-            onChanged: (bool value) {
-              setState(() {
-                if (backupsEnabled) {
-                  _showDisableBackupDialog(context);
-                } else {
-                  _enableBackups();
-                }
-              });
-            },
+          title: Text('Backups & Restore',
+              style: Theme.of(context).textTheme.bodyLarge),
+          trailing: Transform.scale(
+            scale: 0.8,
+            child: Switch(
+              inactiveTrackColor: AppColors.white,
+              activeTrackColor: AppColors.purpleDark,
+              activeColor: AppColors.commonPink,
+              activeThumbImage: AssetImage(AppImages.appLogo),
+              value: backupsEnabled,
+              onChanged: (bool value) {
+                setState(() {
+                  if (backupsEnabled) {
+                    _showDisableBackupDialog(context);
+                  } else {
+                    _enableBackups();
+                  }
+                });
+              },
+            ),
           ),
         ),
 
@@ -101,17 +104,17 @@ class _BackupButtonState extends State<BackupButton> {
           contentPadding: EdgeInsets.zero,
           title: Text(
             'Manual Backup',
-            style: TextStyle(
-                color: backupsEnabled ? AppColors.black : AppColors.greyLight,
-                fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           subtitle: backupsEnabled
-              ? const Text(
+              ? Text(
                   'Enabled',
-                  style: TextStyle(fontWeight: FontWeight.w500),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 )
-              : const Text('Disabled',
-                  style: TextStyle(fontWeight: FontWeight.w500)),
+              : Text(
+                  'Disabled',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
           trailing: CircleAvatar(
             backgroundColor:
                 backupsEnabled ? AppColors.purpleDark : AppColors.greyLight,

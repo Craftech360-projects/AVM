@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:altio/backend/auth.dart';
@@ -10,6 +9,7 @@ import 'package:altio/backend/growthbook.dart';
 import 'package:altio/backend/mixpanel.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/plugin.dart';
+import 'package:altio/backend/services/device_flag.dart';
 import 'package:altio/core/theme/app_theme.dart';
 import 'package:altio/env/dev_env.dart';
 import 'package:altio/env/env.dart';
@@ -22,7 +22,6 @@ import 'package:altio/firebase_options_dev.dart' as dev;
 import 'package:altio/firebase_options_prod.dart' as prod;
 import 'package:altio/flavors.dart';
 import 'package:altio/pages/splash/splash_screen.dart';
-import 'package:altio/src/config/simple_bloc_observer.dart';
 import 'package:altio/utils/features/calendar.dart';
 import 'package:altio/utils/other/notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,7 +31,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:opus_dart/opus_dart.dart';
 import 'package:opus_flutter/opus_flutter.dart' as opus_flutter;
@@ -63,8 +61,6 @@ void main() async {
     await SharedPreferencesUtil.init();
     await ObjectBoxUtil.init();
     await MixpanelManager.init();
-
-    Bloc.observer = const SimpleBlocObserver();
   } catch (e, stackTrace) {
     log('Initialization failed: $e\n$stackTrace');
   }
@@ -86,76 +82,50 @@ void main() async {
     await GrowthbookUtil.init();
     CalendarUtil.init();
   } catch (e, stackTrace) {
-    log('Optional initialization failed: $e\n$stackTrace'); // --> Needed or not Needed ?
+    log('Optional initialization failed: $e\n$stackTrace');
   }
 
   if (Env.oneSignalAppId != null) {
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
     OneSignal.initialize(Env.oneSignalAppId!);
-    OneSignal.login(SharedPreferencesUtil().uid); // --> Needed or not Needed ?
+    OneSignal.login(SharedPreferencesUtil().uid);
   }
 
-  if (Env.instabugApiKey != null) {
-    runZonedGuarded(
-      () {
-        Instabug.init(
-          token: Env.instabugApiKey!,
-          invocationEvents: [InvocationEvent.shake, InvocationEvent.screenshot],
-        );
-        if (isAuth) {
-          Instabug.identifyUser(
-            FirebaseAuth.instance.currentUser?.email ?? '',
-            SharedPreferencesUtil().fullName,
-            SharedPreferencesUtil().uid,
-          );
-        }
-
-        FlutterError.onError = (FlutterErrorDetails details) {
-          Zone.current.handleUncaughtError(
-              details.exception, details.stack ?? StackTrace.empty);
-        };
-        _getRunApp(isAuth);
-      },
-      CrashReporting.reportCrash,
-    );
-  } else {
-    _getRunApp(isAuth);
-  }
+  _getRunApp(isAuth);
 }
 
-class NavbarState extends ChangeNotifier {
-  bool _isExpanded = true;
-  bool isChatVisible = true;
-  bool isMemoryVisible = false;
+// class NavbarState extends ChangeNotifier {
+//   bool _isExpanded = true;
+//   bool isChatVisible = true;
+//   bool isMemoryVisible = false;
 
-  bool get isExpanded => _isExpanded;
+//   bool get isExpanded => _isExpanded;
 
-  void setChatVisibility(bool value) {
-    isChatVisible = value;
-    notifyListeners();
-  }
+//   void setChatVisibility(bool value) {
+//     isChatVisible = value;
+//     notifyListeners();
+//   }
 
-  void setMemoryVisibility(bool value) {
-    isMemoryVisible = value;
-    notifyListeners();
-  }
+//   void setMemoryVisibility(bool value) {
+//     isMemoryVisible = value;
+//     notifyListeners();
+//   }
 
-  void expand() {
-    _isExpanded = true;
-    notifyListeners();
-  }
+//   void expand() {
+//     _isExpanded = true;
+//     notifyListeners();
+//   }
 
-  void collapse() {
-    _isExpanded = false;
-    isChatVisible = false;
-    isMemoryVisible = false;
-    notifyListeners();
-  }
-}
+//   void collapse() {
+//     _isExpanded = false;
+//     isChatVisible = false;
+//     isMemoryVisible = false;
+//     notifyListeners();
+//   }
+// }
 
 _getRunApp(bool isAuth) {
-  return runApp(ChangeNotifierProvider(
-      create: (_) => NavbarState(), child: MyApp(isAuth: isAuth)));
+  return runApp(MyApp(isAuth: isAuth));
 }
 
 class MyApp extends StatefulWidget {
@@ -190,7 +160,14 @@ class MyAppState extends State<MyApp> {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (context) => MemoryBloc()),
+            // ChangeNotifierProvider(create: (_) => WebSocketService()),
+            ChangeNotifierProvider(
+              create: (_) =>
+                  DeviceProvider(FirebaseAuth.instance.currentUser!.uid),
+            ),
+            BlocProvider(
+              create: (context) => MemoryBloc(),
+            ),
             BlocProvider(
               create: (context) => ChatBloc(
                 SharedPreferencesUtil(),
@@ -204,10 +181,11 @@ class MyAppState extends State<MyApp> {
             BlocProvider<ConnectivityBloc>(
               create: (context) => ConnectivityBloc(),
             ),
-            ChangeNotifierProvider(create: (_) => ProfileProvider()),
+            ChangeNotifierProvider(
+              create: (_) => ProfileProvider(),
+            ),
           ],
           child: MaterialApp(
-            navigatorObservers: [InstabugNavigatorObserver()],
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             title: F.title,

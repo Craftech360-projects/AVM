@@ -9,7 +9,7 @@ import 'package:altio/core/theme/app_colors.dart';
 import 'package:altio/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:altio/features/wizard/pages/finalize_page.dart';
 import 'package:altio/pages/home/page.dart';
-import 'package:altio/src/common_widget/elevated_button.dart';
+import 'package:altio/core/widgets/elevated_button.dart';
 import 'package:altio/utils/ble/communication.dart';
 import 'package:altio/utils/ble/connect.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -69,7 +69,7 @@ class FoundDevicesState extends State<FoundDevices>
       if (mounted) {
         // Use the provided callback for navigation.
         if (SharedPreferencesUtil().onboardingCompleted) {
-          widget.goNext();
+          Navigator.pop(context);
         } else {
           SharedPreferencesUtil().onboardingCompleted = true;
           Navigator.pushReplacement(

@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison, duplicate_ignore
-
 import 'package:altio/backend/database/geolocation.dart';
 import 'package:altio/backend/database/memory.dart';
 import 'package:altio/core/constants/constants.dart';
@@ -20,11 +18,13 @@ import 'package:intl/intl.dart';
 class MemoryDetailPage extends StatefulWidget {
   final MemoryBloc memoryBloc;
   final int memoryAtIndex;
+  final TabController? tabController;
 
   const MemoryDetailPage({
     super.key,
     required this.memoryBloc,
     required this.memoryAtIndex,
+    this.tabController
   });
 
   static const String name = 'memoryDetailPage';
@@ -101,8 +101,6 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    // log(selectedMemory.toString());
     final categories =
         _getCategories(selectedMemory.structured.target?.category);
     _getFormattedTranscript(selectedMemory.transcript);
@@ -118,12 +116,13 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
         centerTitle: false,
         backgroundColor: AppColors.white,
         title: Text(
-            // ignore: unnecessary_null_comparison
-            selectedMemory.createdAt != null
-                ? '${DateFormat('d MMM').format(selectedMemory.createdAt)} -'
-                    ' ${DateFormat('h:mm a').format(selectedMemory.createdAt)}'
-                : 'No Date',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          // ignore: unnecessary_null_comparison
+          selectedMemory.createdAt != null
+              ? '${DateFormat('d MMM').format(selectedMemory.createdAt)} -'
+                  ' ${DateFormat('h:mm a').format(selectedMemory.createdAt)}'
+              : 'No Date',
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -171,17 +170,15 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
             Text(
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              selectedMemory.createdAt != null
-                  ? '${selectedMemory.structured.target?.title}'
-                  : "No title",
+              '${selectedMemory.structured.target?.title}',
               style:
-                  textTheme.labelLarge?.copyWith(fontSize: 20.h, height: 1.25),
+                  Theme.of(context).textTheme.bodyLarge?.copyWith(height: 1.25),
             ),
-            h4,
+            h8,
             if (categories.isNotEmpty)
               Wrap(
-                spacing: 8.w,
-                runSpacing: 8.h,
+                spacing: 4.w,
+                runSpacing: 4.h,
                 children: categories
                     .map(
                       (category) => CategoryChip(
@@ -199,6 +196,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
                 ],
                 children: [
                   OverallTab(
+                    tabController: widget.tabController,
                     target: selectedMemory.structured.target!,
                     geolocation:
                         selectedMemory.geolocation.target, // Pass geolocation

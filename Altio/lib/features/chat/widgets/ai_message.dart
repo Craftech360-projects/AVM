@@ -172,10 +172,7 @@ class AIMessage extends StatelessWidget {
                                 .replaceAll(r'\n', '\n')
                                 .replaceAll('**', '')
                                 .replaceAll('\\"', '"'),
-                        style: const TextStyle(
-                            fontSize: 13.5,
-                            fontWeight: FontWeight.w500,
-                            height: 1.2),
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     if (message.id == 1 && displayOptions) h4,
                     if (message.id == 1 && displayOptions)

@@ -1,4 +1,3 @@
-import 'package:altio/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class EmptyMemoriesWidget extends StatefulWidget {
@@ -32,10 +31,7 @@ class _EmptyMemoriesWidgetState extends State<EmptyMemoriesWidget> {
       child: Text(
         textAlign: TextAlign.center,
         'No memories found!\nConnect your Capsaul and get started',
-        style: TextStyle(
-            color: AppColors.greyMedium,
-            fontSize: 14,
-            fontWeight: FontWeight.w500),
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
     );
   }

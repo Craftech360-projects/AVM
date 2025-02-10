@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -8,7 +6,6 @@ import 'package:altio/backend/database/transcript_segment.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/utils/ble/communication.dart';
 import 'package:flutter/material.dart';
-import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:web_socket_channel/io.dart';
 
 enum WebsocketConnectionStatus {
@@ -70,20 +67,12 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
   String codec,
 ) async {
   final recordingsLanguage = SharedPreferencesUtil().recordingsLanguage;
-
-  const deepgramapikey = "5a04d9c8dfa5cf9bbe3ab6913194a42332308413";
-  // const deepgramapikey = "e19942922008143bf76a75cb75b92853faa0b0da";
   String? codecType = SharedPreferencesUtil().getCodecType('NewCodec');
 
   String encoding = codecType == "opus" ? 'opus' : 'linear16';
-  const String language = 'en-US';
   final int sampleRate = codecType == "opus" ? 16000 : 8000;
-  final String codec = codecType;
-  const int channels = 1;
   final String apiType = SharedPreferencesUtil().getApiType('NewApiKey') ?? '';
-  // Uri uri = Uri.parse(
-  //   'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&channels=1',
-  // );
+
   Uri uri = Uri.parse(
     'wss://api.deepgram.com/v1/listen?encoding=$encoding&sample_rate=$sampleRate&language=$recordingsLanguage&model=nova-2-general&no_delay=true&endpointing=100&interim_results=false&smart_format=true&diarize=true',
   );
@@ -213,9 +202,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
               final segment = TranscriptSegment(
                 text: text,
                 speaker: speaker,
-                isUser: false, // Adjust as needed
-                start:
-                    0.0, // You might want to add a start/end time if available
+                isUser: false,
+                start: 0.0,
                 end: 0.0,
               );
               onMessageReceived([segment]);
@@ -243,13 +231,8 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     await channel.ready;
     onWebsocketConnectionSuccess();
     return channel;
-  } catch (err, stackTrace) {
+  } catch (err) {
     onWebsocketConnectionFailed(err);
-    CrashReporting.reportHandledCrash(
-      err,
-      stackTrace,
-      // level: NonFatalExceptionLevel.warning,
-    );
     return null;
   }
 }

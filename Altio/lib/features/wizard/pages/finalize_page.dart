@@ -2,9 +2,9 @@ import 'package:altio/backend/preferences.dart';
 import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
-import 'package:altio/features/chat/presentation/chat_screen.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
-import 'package:altio/src/common_widget/elevated_button.dart';
+import 'package:altio/pages/home/page.dart';
+import 'package:altio/core/widgets/elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -56,7 +56,7 @@ class FinalizePage extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const ChatScreen(),
+                          builder: (context) => const HomePageWrapper(tabIndex: 2),
                         ),
                       );
                     }

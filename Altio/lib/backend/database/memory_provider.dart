@@ -23,11 +23,28 @@ class MemoryProvider {
   MemoryProvider._internal();
 
 // Action Items Method
-
   int updateActionItem(ActionItem item) => _boxActionItem.put(item);
 
-  // Method to get the Memory box
+  List<ActionItem> getAllActionItems() {
+    return _boxActionItem.getAll();
+  }
 
+  List<ActionItem> getActionItemsOrdered() {
+    return _boxActionItem
+        .query()
+        .order(ActionItem_.createdAt, flags: Order.descending)
+        .build()
+        .find();
+  }
+
+  List<ActionItem> getActionItemsByStatus(bool completed) {
+    return _boxActionItem
+        .query(ActionItem_.completed.equals(completed))
+        .build()
+        .find();
+  }
+
+  // Method to get the Memory box
   List<Memory> getMemories() => _box.getAll();
   int getMemoriesCount() => _box.count();
 

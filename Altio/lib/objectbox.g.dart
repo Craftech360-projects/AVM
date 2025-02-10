@@ -164,7 +164,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(3, 9190753393137293311),
       name: 'ActionItem',
-      lastPropertyId: const obx_int.IdUid(4, 3090374185978757862),
+      lastPropertyId: const obx_int.IdUid(5, 7318055412594893911),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -188,7 +188,12 @@ final _entities = <obx_int.ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const obx_int.IdUid(3, 2460795322279972178),
-            relationTarget: 'Structured')
+            relationTarget: 'Structured'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 7318055412594893911),
+            name: 'createdAt',
+            type: 10,
+            flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[]),
@@ -819,11 +824,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (ActionItem object, fb.Builder fbb) {
           final descriptionOffset = fbb.writeString(object.description);
-          fbb.startTable(5);
+          fbb.startTable(6);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, descriptionOffset);
           fbb.addBool(2, object.completed);
           fbb.addInt64(3, object.structured.targetId);
+          fbb.addInt64(4, object.createdAt.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -837,8 +843,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final completedParam =
               const fb.BoolReader().vTableGet(buffer, rootOffset, 8, false);
+          final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0));
           final object = ActionItem(descriptionParam,
-              id: idParam, completed: completedParam);
+              id: idParam,
+              completed: completedParam,
+              createdAt: createdAtParam);
           object.structured.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
           object.structured.attach(store);
@@ -1411,6 +1421,10 @@ class ActionItem_ {
   /// See [ActionItem.structured].
   static final structured = obx.QueryRelationToOne<ActionItem, Structured>(
       _entities[2].properties[3]);
+
+  /// See [ActionItem.createdAt].
+  static final createdAt =
+      obx.QueryDateProperty<ActionItem>(_entities[2].properties[4]);
 }
 
 /// [PluginResponse] entity fields to define ObjectBox queries.

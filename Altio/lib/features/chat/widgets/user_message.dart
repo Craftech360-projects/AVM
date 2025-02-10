@@ -139,14 +139,11 @@ class UserMessage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        message?.text ?? '',
-                        style: TextStyle(
-                          fontSize: 13.5,
-                          color: AppColors.white,
-                          height: 1.2,
-                        ),
-                      ),
+                      Text(message?.text ?? '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: AppColors.white)),
                       h4,
                       if (message?.createdAt != null) ...[
                         Row(

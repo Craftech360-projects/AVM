@@ -1,6 +1,6 @@
 import 'package:altio/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ExpandableText extends StatefulWidget {
   const ExpandableText({
@@ -69,7 +69,7 @@ class _ExpandableTextState extends State<ExpandableText> {
         children: [
           AnimatedSize(
             duration: const Duration(milliseconds: 500),
-            curve: Curves.ease,
+            curve: Curves.easeOut,
             child: _expanded
                 ? SelectableText.rich(
                     TextSpan(
@@ -77,18 +77,15 @@ class _ExpandableTextState extends State<ExpandableText> {
                         if (widget.leadingText != null)
                           TextSpan(
                             text: widget.leadingText,
-                            style: theme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.h,
-                            ),
+                            style: theme.bodyMedium
+                                ?.copyWith(color: AppColors.blue),
                           ),
                         TextSpan(
                           text: widget.text,
-                          style: widget.style ?? theme.bodyLarge,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
-                    style: widget.style,
                   )
                 : Text.rich(
                     TextSpan(
@@ -96,14 +93,12 @@ class _ExpandableTextState extends State<ExpandableText> {
                         if (widget.leadingText != null)
                           TextSpan(
                             text: widget.leadingText,
-                            style: theme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16.h,
-                            ),
+                            style: theme.bodyMedium
+                                ?.copyWith(color: AppColors.blue),
                           ),
                         TextSpan(
                           text: widget.text,
-                          style: widget.style ?? theme.bodyLarge,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),

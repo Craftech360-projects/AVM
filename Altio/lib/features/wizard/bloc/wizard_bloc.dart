@@ -15,17 +15,31 @@ class WizardBloc extends Bloc<WizardEvent, WizardState> {
 
       bool notificationGranted =
           await PermissionsService.requestNotificationPermission(context);
+      if (!context.mounted) return;
       bool hasLocationPermission =
           await PermissionsService.requestLocationPermission(context);
+      if (!context.mounted) return;
       bool hasInternetConnection =
           await PermissionsService.checkInternetConnection(context);
 
-      if (notificationGranted &&
-          hasLocationPermission &&
-          hasInternetConnection) {
-        emit(PermissionsGranted());
-      } else {
-        emit(const PermissionsDenied("Some permissions are missing."));
+      if (!isClosed) {
+        if (notificationGranted &&
+            hasLocationPermission &&
+            hasInternetConnection) {
+          emit(PermissionsGranted());
+        } else {
+          emit(const PermissionsDenied("Some permissions are missing."));
+        }
+      }
+
+      if (!isClosed) {
+        if (notificationGranted &&
+            hasLocationPermission &&
+            hasInternetConnection) {
+          emit(PermissionsGranted());
+        } else {
+          emit(const PermissionsDenied("Some permissions are missing."));
+        }
       }
     });
 

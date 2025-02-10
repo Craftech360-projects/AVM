@@ -137,7 +137,7 @@
     },
     {
       "id": "3:9190753393137293311",
-      "lastPropertyId": "4:3090374185978757862",
+      "lastPropertyId": "5:7318055412594893911",
       "name": "ActionItem",
       "properties": [
         {
@@ -163,6 +163,11 @@
           "flags": 520,
           "indexId": "3:2460795322279972178",
           "relationTarget": "Structured"
+        },
+        {
+          "id": "5:7318055412594893911",
+          "name": "createdAt",
+          "type": 10
         }
       ],
       "relations": []

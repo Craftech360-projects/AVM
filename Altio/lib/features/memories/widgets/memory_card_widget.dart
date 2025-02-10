@@ -13,10 +13,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MemoryCardWidget extends StatelessWidget {
-  MemoryCardWidget({super.key, required this.memoryBloc});
+  const MemoryCardWidget(
+      {super.key,
+      required this.memoryBloc,
+      this.tabController,
+      this.isLoading = false});
 
   final MemoryBloc memoryBloc;
-  bool _isLoading = false;
+  final TabController? tabController;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +39,7 @@ class MemoryCardWidget extends StatelessWidget {
 
           bool isAnyMemorySelected = state.selectedMemories.contains(true);
 
-          return _isLoading
+          return isLoading
               ? Padding(
                   padding: const EdgeInsets.only(top: 50.0),
                   child: Column(
@@ -65,14 +70,12 @@ class MemoryCardWidget extends StatelessWidget {
                                     yesText: "Delete",
                                     yesPressed: () {
                                       try {
-                                        _isLoading = true;
                                         memoryBloc.add(BatchDeleteMemory());
                                         Navigator.of(context).pop();
                                       } catch (e) {
                                         log(e.toString());
                                         avmSnackBar(context,
                                             "Something went wrong! Please try again later");
-                                        _isLoading = false;
                                       }
                                     });
                               });
@@ -88,7 +91,7 @@ class MemoryCardWidget extends StatelessWidget {
                       ),
                     ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 70),
+                    padding: const EdgeInsets.only(top: 10, bottom: 40),
                     child: Column(
                       children: List.generate(
                         state.memories.length,
@@ -158,6 +161,7 @@ class MemoryCardWidget extends StatelessWidget {
                                         pageBuilder: (context, animation,
                                                 secondaryAnimation) =>
                                             MemoryDetailPage(
+                                          tabController: tabController,
                                           memoryBloc: memoryBloc,
                                           memoryAtIndex: index,
                                         ),

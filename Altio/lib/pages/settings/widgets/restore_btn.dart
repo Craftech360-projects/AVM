@@ -53,9 +53,9 @@ class RestoreButtonState extends State<RestoreButton> {
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
-          title: const Text(
+          title: Text(
             'Restore Latest Backup',
-            style: TextStyle(fontWeight: FontWeight.w600),
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
           trailing: isRestoreInProgress
               ? const SizedBox(

@@ -18,18 +18,21 @@ Widget buildPopupContent(
         style: TextStyle(fontSize: 14),
       ),
       w8,
-      Switch(
-        inactiveTrackColor: AppColors.white,
-        activeTrackColor: AppColors.purpleDark,
-        activeColor: AppColors.commonPink,
-        activeThumbImage: AssetImage(AppImages.appLogo),
-        value: switchValue,
-        onChanged: (value) {
-          SharedPreferencesUtil().notificationPlugin = value;
-          setState(() {
-            setValue(value);
-          });
-        },
+      Transform.scale(
+        scale: 0.8,
+        child: Switch(
+          inactiveTrackColor: AppColors.white,
+          activeTrackColor: AppColors.purpleDark,
+          activeColor: AppColors.commonPink,
+          activeThumbImage: AssetImage(AppImages.appLogo),
+          value: switchValue,
+          onChanged: (value) {
+            SharedPreferencesUtil().notificationPlugin = value;
+            setState(() {
+              setValue(value);
+            });
+          },
+        ),
       ),
     ],
   );

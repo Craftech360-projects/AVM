@@ -103,8 +103,12 @@ class TermsAndConditionsWidget extends StatelessWidget {
     },
   ];
 
-  TermsAndConditionsWidget(
-      {super.key, this.onAccept, required this.showAcceptBtn});
+  TermsAndConditionsWidget({
+    super.key,
+    this.onAccept,
+    required this.showAcceptBtn,
+  });
+  
   final bool showAcceptBtn;
   final VoidCallback? onAccept;
 

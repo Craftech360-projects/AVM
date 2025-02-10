@@ -11,7 +11,7 @@ class ScreenSkeleton extends StatelessWidget {
       child: Column(
         // mainAxisSize: MainAxisSize.min,
         children: [
-          const Skeleton(height: 180, width: double.infinity),
+          const Skeleton(height: 160, width: double.infinity),
           h32,
           Expanded(
             child: ListView.builder(

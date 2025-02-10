@@ -6,7 +6,7 @@ import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
 import 'package:altio/core/widgets/battery_widget.dart';
-import 'package:altio/pages/settings/presentation/pages/setting_page.dart';
+import 'package:altio/pages/settings/presentation/pages/settings_page.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -94,7 +94,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
     return Scaffold(
       appBar: widget.showAppBar == true
           ? AppBar(
-              titleSpacing: widget.titleSpacing ?? 16,
+              titleSpacing: widget.titleSpacing ?? 10,
               surfaceTintColor: AppColors.white,
               centerTitle: widget.centerTitle ?? true,
               automaticallyImplyLeading: false,
@@ -136,7 +136,6 @@ class CustomScaffoldState extends State<CustomScaffold> {
                     ),
                   ),
                 w8,
-                w4,
                 if (widget.showGearIcon)
                   GestureDetector(
                     onTap: () {
@@ -146,7 +145,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
                           transitionDuration: Duration(milliseconds: 500),
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
-                                  SettingPage(),
+                                  SettingsPage(),
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
                             var fadeInAnimation =
@@ -168,12 +167,11 @@ class CustomScaffoldState extends State<CustomScaffold> {
                       AppImages.gearIcon,
                     ),
                   ),
-                w16,
+                w10,
               ],
             )
           : null,
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 08),
         decoration: theme.brightness == Brightness.light
             ? const BoxDecoration(
                 gradient: LinearGradient(

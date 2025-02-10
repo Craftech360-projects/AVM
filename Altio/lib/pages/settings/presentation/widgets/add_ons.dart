@@ -1,4 +1,4 @@
-import 'package:altio/src/common_widget/list_tile.dart';
+import 'package:altio/core/widgets/list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

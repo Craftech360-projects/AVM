@@ -40,7 +40,9 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
         }
       });
     } else {
-      avmSnackBar(context, "Failed to fetch firmware details.");
+      if (mounted) {
+        avmSnackBar(context, "Failed to fetch firmware details.");
+      }
     }
   }
 
@@ -285,8 +287,10 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
                         characteristic: characteristic,
                       );
                     } catch (e) {
-                      avmSnackBar(context,
-                          "Failed to install firmware! Please try again");
+                      if (context.mounted) {
+                        avmSnackBar(context,
+                            "Failed to install firmware! Please try again");
+                      }
                     }
                   }
                 },

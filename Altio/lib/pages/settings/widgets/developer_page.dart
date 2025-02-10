@@ -5,7 +5,7 @@ import 'package:altio/backend/preferences.dart';
 import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
-import 'package:altio/features/capture/logic/websocket_mixin.dart';
+import 'package:altio/backend/websocket/websocket_mixin.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
 import 'package:altio/pages/settings/widgets/custom_expandible_widget.dart';
 import 'package:altio/pages/settings/widgets/custom_prompt_page.dart';

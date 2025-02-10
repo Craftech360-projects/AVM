@@ -4,7 +4,6 @@ import 'package:altio/backend/database/profile_entity.dart';
 import 'package:altio/backend/database/profile_provider.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
-import 'package:altio/pages/home/custom_scaffold.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
@@ -13,7 +12,11 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
 String fixEmoji(String brokenEmoji) {
-  return utf8.decode(latin1.encode(brokenEmoji));
+  try {
+    return utf8.decode(latin1.encode(brokenEmoji));
+  } catch (e) {
+    return brokenEmoji;
+  }
 }
 
 class AboutYouScreen extends StatelessWidget {
@@ -21,19 +24,10 @@ class AboutYouScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      showRefreshIcon: true,
-      showBackBtn: true,
-      title: Text(
-        "Altio Mirror",
-        style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-      ),
-      onRefresh: () => context.read<ProfileProvider>().resetProfile(),
-      body: Consumer<ProfileProvider>(
-        builder: (context, provider, _) {
-          return _ProfileView(profile: provider.profile);
-        },
-      ),
+    return Consumer<ProfileProvider>(
+      builder: (context, provider, _) {
+        return _ProfileView(profile: provider.profile);
+      },
     );
   }
 }
@@ -45,13 +39,6 @@ class _ProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print("Profile Habbits:====> ${profile.habits}");
-    // print("Profile Hobbies:====> ${profile.hobbies}");
-    // print("Profile Interests:====> ${profile.interests}");
-    // print("Profile Learnings:====> ${profile.learnings}");
-    // print("Profile Lifestyle: ${profile.lifestyle}");
-    // print("Profile Skills:====> ${profile.skills}");
-    // print("Profile Others:====> ${profile.others}");
     return CustomScrollView(
       slivers: [
         _buildProfileHeader(),
@@ -82,7 +69,9 @@ class _ProfileView extends StatelessWidget {
               ),
               h8,
               Text(
-                profile.core,
+                profile.core.isEmpty
+                    ? "No identity information available yet."
+                    : profile.core,
                 style: TextStyle(height: 1.2, fontSize: 13.5),
               ),
             ],
@@ -98,15 +87,14 @@ class _ProfileView extends StatelessWidget {
   }
 
   Widget _buildProfileHeader() {
-    String fixedEmoji = fixEmoji(profile.emoji);
+    String fixedEmoji = profile.emoji.isEmpty ? "🙂" : fixEmoji(profile.emoji);
     return SliverToBoxAdapter(
-      child: Container(
-        padding: EdgeInsets.zero,
-        margin: EdgeInsets.only(bottom: 20, top: 0),
-        child: Text(
-          textAlign: TextAlign.center,
-          fixedEmoji,
-          style: const TextStyle(fontSize: 40, fontFamily: "NotoColorEmoji"),
+      child: Text(
+        fixedEmoji,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 40,
+          fontFamily: "NotoColorEmoji",
         ),
       ),
     );
@@ -358,7 +346,7 @@ class _ProfileView extends StatelessWidget {
 
   Widget _buildWorkSection() {
     return SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.only(left: 16, right: 16, bottom: 50),
       sliver: SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
@@ -373,10 +361,13 @@ class _ProfileView extends StatelessWidget {
                   color: AppColors.blueGreyDark,
                 ),
               ),
-              if (profile.work.isNotEmpty) Text(profile.work),
-              Divider(
-                color: AppColors.black,
-              ),
+              profile.work.isNotEmpty
+                  ? Text(profile.work)
+                  : const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text("No work details available."),
+                    ),
+              const Divider(color: AppColors.black),
             ],
           ),
         ),

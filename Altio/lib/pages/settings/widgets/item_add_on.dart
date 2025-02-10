@@ -1,5 +1,4 @@
 import 'package:altio/core/constants/constants.dart';
-import 'package:altio/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ItemAddOn extends StatelessWidget {
@@ -22,27 +21,21 @@ class ItemAddOn extends StatelessWidget {
             borderRadius: br12,
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
+            padding: const EdgeInsets.symmetric(vertical: 3),
             child: Row(
               children: [
                 Text(
                   title ?? '',
-                  style: const TextStyle(
-                      fontSize: 17, fontWeight: FontWeight.w500),
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const Spacer(),
-                Container(
+                SizedBox(
                   width: 32,
                   height: 32,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(0, 238, 228, 255),
-                    shape: BoxShape.circle,
-                  ),
                   child: const Center(
                     child: Icon(
                       Icons.arrow_forward_ios,
-                      color: AppColors.grey,
-                      size: 16,
+                      size: 14,
                     ),
                   ),
                 ),

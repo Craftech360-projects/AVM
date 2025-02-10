@@ -10,7 +10,7 @@ import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
 import 'package:altio/features/wizard/pages/wizard_page.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
-import 'package:altio/src/common_widget/elevated_button.dart';
+import 'package:altio/core/widgets/elevated_button.dart';
 import 'package:altio/utils/legal/terms_and_condition.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';

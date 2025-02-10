@@ -8,19 +8,11 @@ import 'package:altio/backend/database/message_provider.dart';
 import 'package:altio/backend/database/transcript_segment.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/bt_device.dart';
-import 'package:altio/core/assets/app_animations.dart';
-import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
-import 'package:altio/core/theme/app_colors.dart';
 import 'package:altio/core/widgets/custom_dialog_box.dart';
-import 'package:altio/core/widgets/typing_indicator.dart';
 import 'package:altio/features/capture/presentation/capture_memory_page.dart';
-import 'package:altio/features/capture/widgets/real_time_bot.dart';
 import 'package:altio/features/memories/bloc/memory_bloc.dart';
 import 'package:altio/pages/capture/location_service.dart';
-import 'package:altio/pages/home/custom_scaffold.dart';
-import 'package:altio/pages/settings/widgets/about_you.dart';
-import 'package:altio/pages/skeleton/screen_skeleton.dart';
 import 'package:altio/utils/audio/wav_bytes.dart';
 import 'package:altio/utils/ble/communication.dart';
 import 'package:altio/utils/features/backup_util.dart';
@@ -28,36 +20,32 @@ import 'package:altio/utils/features/backups.dart';
 import 'package:altio/utils/memories/integrations.dart';
 import 'package:altio/utils/memories/process.dart';
 import 'package:altio/utils/other/notifications.dart';
-import 'package:altio/utils/websockets.dart';
-import 'package:altio/widgets/navbar.dart';
+import 'package:altio/backend/websocket/websockets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
-import 'package:lottie/lottie.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../pages/capture/phone_recorder_mixin.dart';
-import '../logic/websocket_mixin.dart';
+import '../../../backend/websocket/websocket_mixin.dart';
 
 class CapturePage extends StatefulWidget {
-  final Function? refreshMemories;
-  final Function? refreshMessages;
+  final Function refreshMemories;
+  final Function refreshMessages;
   final BTDeviceStruct? device;
   final int batteryLevel;
-  final bool? hasSeenTutorial;
-  final bool hasDevice;
+  final bool hasSeenTutorial;
+  final TabController? tabController;
 
-  const CapturePage({
-    super.key,
-    this.device,
-    this.refreshMemories,
-    this.refreshMessages,
-    this.batteryLevel = -1,
-    this.hasSeenTutorial,
-    required this.hasDevice,
-  });
+  const CapturePage(
+      {super.key,
+      required this.device,
+      required this.refreshMemories,
+      required this.refreshMessages,
+      this.batteryLevel = -1,
+      required this.hasSeenTutorial,
+      this.tabController});
 
   @override
   State<CapturePage> createState() => CapturePageState();
@@ -68,8 +56,7 @@ class CapturePageState extends State<CapturePage>
         AutomaticKeepAliveClientMixin,
         WidgetsBindingObserver,
         PhoneRecorderMixin,
-        WebSocketMixin,
-        TickerProviderStateMixin {
+        WebSocketMixin {
   final ScrollController _scrollController = ScrollController();
   @override
   bool get wantKeepAlive => true;
@@ -77,18 +64,7 @@ class CapturePageState extends State<CapturePage>
   List<bool> dismissedList = [];
   BTDeviceStruct? btDevice;
   bool _hasTranscripts = false;
-  FocusNode memoriesTextFieldFocusNode = FocusNode(canRequestFocus: true);
   static const defaultQuietSecondsForMemoryCreation = 60;
-
-  final GlobalKey _floatingActionKey = GlobalKey();
-
-  late Animation<double> _animation;
-  late AnimationController _lottieController;
-  late AnimationController _buttonFlipController;
-  bool _isFlippingRight = true;
-  bool _switchValue = SharedPreferencesUtil().notificationPlugin;
-  bool _isLoading = false;
-
   StreamSubscription? _bleBytesStream;
   WavBytesUtil? audioStorage;
 
@@ -98,6 +74,7 @@ class CapturePageState extends State<CapturePage>
   DateTime? currentTranscriptStartedAt;
   DateTime? currentTranscriptFinishedAt;
   static const quietSecondsForMemoryCreation = 60;
+
   String conversationId = const Uuid().v4();
 
   double? streamStartedAtSecond;
@@ -105,84 +82,16 @@ class CapturePageState extends State<CapturePage>
   int? secondsMissedOnReconnect;
 
   @override
-  void initState() {
-    super.initState();
-    setState(() {
-      _isLoading = true;
-    });
-    btDevice = widget.device;
-    WavBytesUtil.clearTempWavFiles();
-    initiateWebsocket();
-
-    initiateBytesStreamingProcessing();
-    processCachedTranscript();
-    dismissedList = List.generate(segments.length, (index) => false);
-
-    setState(() {
-      _isLoading = false;
-    });
-
-    WidgetsBinding.instance.addObserver(this);
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      if (await LocationService().displayPermissionsDialog()) {
-        if (!mounted) return;
-        showDialog(
-          context: context,
-          builder: (c) => CustomDialogWidget(
-            icon: Icons.location_on_rounded,
-            title: "Location Permission Required 🌍",
-            message:
-                "We need your location permissions to add a location tag to your memories. This will help you remember where they happened.",
-            yesPressed: () async {
-              Navigator.of(context).pop();
-              await requestLocationPermission();
-            },
-          ),
-        );
-      }
-    });
-
-    _lottieController = AnimationController(vsync: this);
-
-    _buttonFlipController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    );
-
-    _animation = Tween<double>(begin: 0, end: 2 * 3.141592653589793).animate(
-      CurvedAnimation(
-        parent: _buttonFlipController,
-        curve: Curves.easeInOut,
-      ),
-    );
-
-    _buttonFlipController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        Future.delayed(const Duration(seconds: 5), () {
-          if (mounted) {
-            setState(() {
-              _isFlippingRight = !_isFlippingRight;
-            });
-            _buttonFlipController.reset();
-            _buttonFlipController.forward();
-          }
-        });
-      }
-    });
-
-    // Start the first flip
-    _buttonFlipController.forward();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }
 
   Future<bool> getNotificationPluginValue() async {
+    // Implement the logic to get the notification plugin value
     return SharedPreferencesUtil().notificationPlugin;
   }
 
+  // ignore: unused_element
   void _pluginNotification() async {
     String transcript = TranscriptSegment.segmentsAsString(segments);
     String friendlyReplyJson = await generateAltioReply(transcript);
@@ -191,7 +100,7 @@ class CapturePageState extends State<CapturePage>
         friendlyReplyMap['reply'] ?? 'Default friendly reply';
     createMessagingNotification('Altio', friendlyReply);
 
-    await widget.refreshMemories!();
+    await widget.refreshMemories();
     SharedPreferencesUtil().transcriptSegments = [];
     segments = [];
     if (mounted) {
@@ -228,9 +137,15 @@ class CapturePageState extends State<CapturePage>
           setState(() {});
         }
       },
-      onConnectionFailed: (err) {},
-      onConnectionClosed: (int? closeCode, String? closeReason) {},
-      onConnectionError: (err) {},
+      onConnectionFailed: (err) {
+        debugPrint("Websocket connection failed: $err");
+      },
+      onConnectionClosed: (int? closeCode, String? closeReason) {
+        debugPrint("Websocket connection closed: $closeReason");
+      },
+      onConnectionError: (err) {
+        debugPrint("Websocket connection error: $err");
+      },
       onMessageReceived: (List<TranscriptSegment> newSegments) async {
         if (newSegments.isEmpty) return;
 
@@ -322,7 +237,7 @@ class CapturePageState extends State<CapturePage>
   void sendMessageToChat(Message message, Memory? memory) {
     if (memory != null) message.memories.add(memory);
     MessageProvider().saveMessage(message);
-    widget.refreshMessages!();
+    widget.refreshMessages();
   }
 
   _createMemory({bool forcedCreation = false}) async {
@@ -337,6 +252,8 @@ class CapturePageState extends State<CapturePage>
 
     Memory? memory;
     try {
+      final geolocation = await LocationService().getGeolocationDetails();
+      if (!mounted) return;
       memory = await processTranscriptContent(
         context,
         TranscriptSegment.segmentsAsString(segments),
@@ -344,19 +261,14 @@ class CapturePageState extends State<CapturePage>
         null,
         startedAt: currentTranscriptStartedAt,
         finishedAt: currentTranscriptFinishedAt,
-        geolocation: await LocationService().getGeolocationDetails(),
+        geolocation: geolocation,
         sendMessageToChat: sendMessageToChat,
       );
-
-      if (mounted) {
-        avmSnackBar(context, "Memory processed successfully!");
-      }
     } catch (e) {
       if (mounted) {
         avmSnackBar(context, "Something went wrong while creating the memory.");
       }
     }
-
     if (memory == null) {
       setHasTranscripts(false);
       if (mounted) {
@@ -367,45 +279,39 @@ class CapturePageState extends State<CapturePage>
 
     if (!memory.discarded) {
       executeBackupWithUid();
-      if (mounted) {
-        context
-            .read<MemoryBloc>()
-            .add(DisplayedMemory(isNonDiscarded: !memory.discarded));
-      }
+      if (!mounted) return;
+      context
+          .read<MemoryBloc>()
+          .add(DisplayedMemory(isNonDiscarded: !memory.discarded));
 
       if (!memory.discarded &&
           SharedPreferencesUtil().postMemoryNotificationIsChecked) {
         createNotification(
           notificationId: 2,
           title:
-              'Memory saved! ${memory.structured.target?.getEmoji() ?? ''} Relive it anytime.',
+              'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
         );
       }
-      if (backupsEnabled && mounted) {
-        manualBackup(context);
-      }
+      backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
     }
 
+    await widget.refreshMemories();
+    SharedPreferencesUtil().transcriptSegments = [];
+    segments = [];
+
+    // Reset the states
     if (mounted) {
-      await widget.refreshMemories!();
-      SharedPreferencesUtil().transcriptSegments = [];
-      segments = [];
-
-      // Reset the states
       setState(() => memoryCreating = false);
-
-      // Perform cleanup
-      audioStorage?.clearAudioBytes();
-      setHasTranscripts(false);
-      currentTranscriptStartedAt = null;
-      currentTranscriptFinishedAt = null;
-      elapsedSeconds = 0;
-      streamStartedAtSecond = null;
-      firstStreamReceivedAt = null;
-      secondsMissedOnReconnect = null;
-
-      conversationId = const Uuid().v4();
     }
+    audioStorage?.clearAudioBytes();
+    setHasTranscripts(false);
+    currentTranscriptStartedAt = null;
+    currentTranscriptFinishedAt = null;
+    elapsedSeconds = 0;
+    streamStartedAtSecond = null;
+    firstStreamReceivedAt = null;
+    secondsMissedOnReconnect = null;
+    conversationId = const Uuid().v4();
   }
 
   setHasTranscripts(bool hasTranscripts) {
@@ -420,6 +326,7 @@ class CapturePageState extends State<CapturePage>
     if (segments.isEmpty) return;
     String transcript = TranscriptSegment.segmentsAsString(
         SharedPreferencesUtil().transcriptSegments);
+    if (!mounted) return;
     processTranscriptContent(
       context,
       transcript,
@@ -428,39 +335,47 @@ class CapturePageState extends State<CapturePage>
       retrievedFromCache: true,
       sendMessageToChat: sendMessageToChat,
     ).then((m) {
-      if (m != null && !m.discarded) executeBackupWithUid();
+      if (m != null && !m.discarded) {
+        if (mounted) {
+          executeBackupWithUid();
+        }
+      }
     });
     SharedPreferencesUtil().transcriptSegments = [];
     // include created at and finished at for this cached transcript
   }
 
-  void _showPopup() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return AlertDialog(
-              backgroundColor: AppColors.white,
-              contentPadding: const EdgeInsets.all(12),
-              shape: RoundedRectangleBorder(borderRadius: br2),
-              content: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: buildPopupContent(
-                  setState,
-                  _switchValue,
-                  (bool value) {
-                    setState(() {
-                      _switchValue = value;
-                    });
-                  },
-                ),
-              ),
-            );
-          },
+  @override
+  void initState() {
+    super.initState();
+    btDevice = widget.device;
+    WavBytesUtil.clearTempWavFiles();
+    initiateWebsocket();
+    initiateBytesStreamingProcessing();
+    processCachedTranscript();
+
+    dismissedList = List.generate(segments.length, (index) => false);
+
+    WidgetsBinding.instance.addObserver(this);
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      if (await LocationService().displayPermissionsDialog()) {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (c) => CustomDialogWidget(
+            icon: Icons.location_on_rounded,
+            title: "Enable Location Services? 🌍",
+            message:
+                "We need your location permissions to add a location tag to your memories. This will help you remember where they happened.",
+            yesPressed: () async {
+              if (!mounted) return;
+              Navigator.of(context).pop();
+              await requestLocationPermission();
+            },
+          ),
         );
-      },
-    );
+      }
+    });
   }
 
   @override
@@ -468,8 +383,6 @@ class CapturePageState extends State<CapturePage>
     _memoryCreationTimer?.cancel();
     _bleBytesStream?.cancel();
     _scrollController.dispose();
-    _lottieController.dispose();
-    _buttonFlipController.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -497,201 +410,23 @@ class CapturePageState extends State<CapturePage>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     super.build(context);
-    return CustomScaffold(
-      showProfileIcon: widget.hasDevice ? true : false,
-      onProfileIconPressed: () => Navigator.push(
-        context,
-        PageRouteBuilder(
-          transitionDuration: Duration(milliseconds: 500),
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              AboutYouScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            var zoomInAnimation = Tween(begin: 0.9, end: 1.0).animate(
-              CurvedAnimation(parent: animation, curve: Curves.easeOut),
-            );
-
-            return ScaleTransition(
-              scale: zoomInAnimation,
-              child: child,
-            );
-          },
-        ),
-      ),
-      titleSpacing: 10.0,
-      centerTitle: false,
-      showBatteryLevel: true,
-      showGearIcon: true,
-      title: theme.brightness == Brightness.light
-          ? Image.asset(
-              AppImages.appLogo,
-              width: 70,
-              height: 70,
-            )
-          : Image.asset(
-              AppImages.appLogoW,
-              width: 70,
-              height: 70,
-            ),
-      showBackBtn: false,
-      body: _isLoading
-          ? ScreenSkeleton()
-          : Stack(children: [
-              widget.hasDevice
-                  ? CaptureMemoryPage(
-                      context: context,
-                      hasTranscripts: _hasTranscripts,
-                      wsConnectionState: wsConnectionState,
-                      device: widget.device,
-                      segments: segments,
-                      memoryCreating: memoryCreating,
-                      scrollController: _scrollController,
-                      onDismissmissedCaptureMemory: (direction) {
-                        _createMemory();
-                        setState(() {});
-                      },
-                      hasSeenTutorial: true,
-                    )
-                  : Center(
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 12),
-                        margin: EdgeInsets.all(28),
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: br8,
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.black.withValues(alpha: 0.1),
-                              blurRadius: 10,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                                textAlign: TextAlign.center,
-                                "Ohoo! Seems like you don't have a Capsaul with you 🙁",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14.5,
-                                    height: 1.2)),
-                            h8,
-                            Text(
-                              textAlign: TextAlign.center,
-                              "Don't worry! Click the button below to get your Capsaul and start capturing memories🤩",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  height: 1.2,
-                                  fontSize: 13),
-                            ),
-                            h8,
-                            OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: AppColors.black,
-                                foregroundColor:
-                                    Color.fromRGBO(212, 175, 55, 1),
-                                // Text color
-                                side: BorderSide(
-                                    color: Color(0xFFFFD700),
-                                    width: 3), // Border
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 12, horizontal: 24),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              onPressed: () async {
-                                final Uri url = Uri.parse(
-                                    'https://www.freeprivacypolicy.com/live/38486d16-4053-4bcd-8786-884b58c52ca2');
-                                if (await canLaunchUrl(url)) {
-                                  await launchUrl(url);
-                                } else {
-                                  throw 'Could not launch $url';
-                                }
-                              },
-                              child: Text(
-                                "Get my Capsaul",
-                                style: TextStyle(
-                                  fontSize: 14.5,
-                                  fontWeight: FontWeight.w600,
-                                  color: Color(0xFFFFD700),
-                                ),
-                              ),
-                            ),
-                            Lottie.asset(
-                              AppAnimations.orderNow,
-                              controller: _lottieController,
-                              onLoaded: (composition) {
-                                _lottieController
-                                  ..duration = composition.duration
-                                  ..repeat();
-                              },
-                              errorBuilder: (context, error, stackTrace) {
-                                return Text('Animation failed to load');
-                              },
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-              Positioned(
-                bottom: 10,
-                right: 0,
-                child: Align(
-                  child: Column(
-                    children: [
-                      AnimatedBuilder(
-                        animation: _animation,
-                        builder: (context, child) {
-                          double flipValue = _isFlippingRight
-                              ? _animation.value
-                              : -_animation.value;
-
-                          Matrix4 transform = Matrix4.identity()
-                            ..setEntry(3, 2, 0.001)
-                            ..rotateY(flipValue);
-
-                          return Transform(
-                            alignment: Alignment.center,
-                            transform: transform,
-                            child: FloatingActionButton(
-                              key: _floatingActionKey,
-                              shape: const CircleBorder(),
-                              elevation: 8.0,
-                              backgroundColor: AppColors.purpleDark,
-                              onPressed: _showPopup,
-                              child: Image.asset(
-                                AppImages.botIcon,
-                                width: 45,
-                                height: 45,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      h8,
-                      if (SharedPreferencesUtil().notificationPlugin)
-                        TypingIndicator(),
-                    ],
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: CustomNavBar(
-                  onMemorySearch: (query) {
-                    BlocProvider.of<MemoryBloc>(context).add(
-                      SearchMemory(query: query),
-                    );
-                  },
-                ),
-              ),
-            ]),
+    if (!mounted) return Container();
+    return CaptureMemoryPage(
+      context: context,
+      tabController: widget.tabController,
+      hasTranscripts: _hasTranscripts,
+      device: widget.device,
+      segments: segments,
+      memoryCreating: memoryCreating,
+      scrollController: _scrollController,
+      onDismissmissedCaptureMemory: (direction) {
+        _createMemory();
+        if (mounted) {
+          setState(() {});
+        }
+      },
+      hasSeenTutorial: widget.hasSeenTutorial,
     );
   }
 }

@@ -323,10 +323,16 @@ class ActionItem {
   int id = 0;
 
   String description;
-  bool completed = false;
+  bool completed;
+  DateTime createdAt;
   final structured = ToOne<Structured>();
 
-  ActionItem(this.description, {this.id = 0, this.completed = false});
+  ActionItem(
+    this.description, {
+    this.id = 0,
+    this.completed = false,
+    DateTime? createdAt, // Add this parameter
+  }) : createdAt = createdAt ?? DateTime.now();
 }
 
 @Entity()
