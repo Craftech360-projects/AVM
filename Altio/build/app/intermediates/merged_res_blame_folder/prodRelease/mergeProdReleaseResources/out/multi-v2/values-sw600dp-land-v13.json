@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.craftech360.avm.app-mergeProdReleaseResources-74:/values-sw600dp-land-v13/values-sw600dp-land-v13.xml",
+            "map": [
+                {
+                    "source": "/Users/craftech360/.gradle/caches/transforms-4/f37f5741a854b965103778f648551dc6/transformed/jetified-instabug-core-14.1.0/res/values-sw600dp-land-v13/values-sw600dp-land-v13.xml",
+                    "from": {
+                        "startLines": "2,3,4",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,116,180",
+                        "endColumns": "60,63,52",
+                        "endOffsets": "111,175,228"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,82 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/craftech360/Library/Developer/Xcode/DerivedData/Runner-dtmpqeioqutlshhjfsfbpomckroi/Build/Intermediates.noindex/ArchiveIntermediates/prod/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/flutter_foreground_task.framework/flutter_foreground_task'
+relocations:
+  - { offset: 0x60939, size: 0x8, addend: 0x0, symName: _flutter_foreground_taskVersionString, symObjAddr: 0x0, symBinAddr: 0xA3C0, symSize: 0x0 }
+  - { offset: 0x6096E, size: 0x8, addend: 0x0, symName: _flutter_foreground_taskVersionNumber, symObjAddr: 0x38, symBinAddr: 0xA3F8, symSize: 0x0 }
+  - { offset: 0x609AB, size: 0x8, addend: 0x0, symName: '+[FlutterForegroundTaskPlugin registerWithRegistrar:]', symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0xC }
+  - { offset: 0x609B9, size: 0x8, addend: 0x0, symName: '+[FlutterForegroundTaskPlugin registerWithRegistrar:]', symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0xC }
+  - { offset: 0x609F6, size: 0x8, addend: 0x0, symName: '+[FlutterForegroundTaskPlugin setPluginRegistrantCallback:]', symObjAddr: 0xC, symBinAddr: 0x400C, symSize: 0xC }
+  - { offset: 0x60B47, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC14sharedInstanceACvpZ', symObjAddr: 0xDEA0, symBinAddr: 0x166F8, symSize: 0x0 }
+  - { offset: 0x60FAE, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC14sharedInstance_WZ', symObjAddr: 0x0, symBinAddr: 0x4018, symSize: 0x2C }
+  - { offset: 0x61016, size: 0x8, addend: 0x0, symName: '_$sSbs5Error_pSgIegyg_SbSo7NSErrorCSgIeyByy_TR', symObjAddr: 0xA68, symBinAddr: 0x4A80, symSize: 0x64 }
+  - { offset: 0x61044, size: 0x8, addend: 0x0, symName: '_$sSo17FlutterMethodCallCypSgIegn_Ieggg_AByXlSgIeyBy_IeyByy_TR', symObjAddr: 0x1048, symBinAddr: 0x5060, symSize: 0x90 }
+  - { offset: 0x6105C, size: 0x8, addend: 0x0, symName: '_$syXlSgIeyBy_ypSgIegn_TR', symObjAddr: 0x10D8, symBinAddr: 0x50F0, symSize: 0xE0 }
+  - { offset: 0x61074, size: 0x8, addend: 0x0, symName: '_$sypSgIegn_yXlSgIeyBy_TR', symObjAddr: 0x12E4, symBinAddr: 0x52FC, symSize: 0x78 }
+  - { offset: 0x6108C, size: 0x8, addend: 0x0, symName: '_$sSo7NSTimerCIeghg_ABIeyBhy_TR', symObjAddr: 0x15BC, symBinAddr: 0x55D4, symSize: 0x4C }
+  - { offset: 0x610A4, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceCfETo', symObjAddr: 0x16A4, symBinAddr: 0x56BC, symSize: 0x80 }
+  - { offset: 0x610D3, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC24backgroundServiceManager33_1C7A31668DED3EFD35D4E67C27355C94LLAA010BackgroundjK0CSgvpfi', symObjAddr: 0x1724, symBinAddr: 0x573C, symSize: 0x8 }
+  - { offset: 0x610EB, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceCMa', symObjAddr: 0x1734, symBinAddr: 0x5744, symSize: 0x20 }
+  - { offset: 0x610FF, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC15startRepeatTask33_CA784E00E4462FA8B41F46EE420D77FFLLyyFySo7NSTimerCYbcfU_TA', symObjAddr: 0x17F8, symBinAddr: 0x5788, symSize: 0x8 }
+  - { offset: 0x61113, size: 0x8, addend: 0x0, symName: _block_copy_helper, symObjAddr: 0x1800, symBinAddr: 0x5790, symSize: 0x10 }
+  - { offset: 0x61127, size: 0x8, addend: 0x0, symName: _block_destroy_helper, symObjAddr: 0x1810, symBinAddr: 0x57A0, symSize: 0x8 }
+  - { offset: 0x6113B, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC05startD4Task33_CA784E00E4462FA8B41F46EE420D77FFLLyyFyypSgcfU_TA', symObjAddr: 0x1818, symBinAddr: 0x57A8, symSize: 0x20 }
+  - { offset: 0x6116D, size: 0x8, addend: 0x0, symName: '_$sypSgWOh', symObjAddr: 0x1838, symBinAddr: 0x57C8, symSize: 0x40 }
+  - { offset: 0x61181, size: 0x8, addend: 0x0, symName: ___swift_instantiateConcreteTypeFromMangledName, symObjAddr: 0x1878, symBinAddr: 0x5808, symSize: 0x40 }
+  - { offset: 0x61195, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC19executeDartCallback33_CA784E00E4462FA8B41F46EE420D77FFLL14callbackHandleys5Int64V_tFySbcfU_TA', symObjAddr: 0x18DC, symBinAddr: 0x586C, symSize: 0x8 }
+  - { offset: 0x611BE, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC04stopD4Task33_CA784E00E4462FA8B41F46EE420D77FFLL10onCompleteyySbc_tFyypSgcfU_TA', symObjAddr: 0x18E8, symBinAddr: 0x5878, symSize: 0xC }
+  - { offset: 0x611D2, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC19executeDartCallback33_CA784E00E4462FA8B41F46EE420D77FFLL14callbackHandleys5Int64V_tFySbcfU_ySo17FlutterMethodCallC_yypSgctcACcfu_yAJ_yAKctcfu0_TA', symObjAddr: 0x1CD4, symBinAddr: 0x5C58, symSize: 0x8 }
+  - { offset: 0x611E6, size: 0x8, addend: 0x0, symName: '_$syXlSgIeyBy_ypSgIegn_TRTA', symObjAddr: 0x1D00, symBinAddr: 0x5C84, symSize: 0x8 }
+  - { offset: 0x611FA, size: 0x8, addend: 0x0, symName: '_$sypSgWOc', symObjAddr: 0x1D08, symBinAddr: 0x5C8C, symSize: 0x48 }
+  - { offset: 0x6120E, size: 0x8, addend: 0x0, symName: ___swift_project_boxed_opaque_existential_0, symObjAddr: 0x1D50, symBinAddr: 0x5CD4, symSize: 0x24 }
+  - { offset: 0x61222, size: 0x8, addend: 0x0, symName: ___swift_destroy_boxed_opaque_existential_0, symObjAddr: 0x1D74, symBinAddr: 0x5CF8, symSize: 0x20 }
+  - { offset: 0x61236, size: 0x8, addend: 0x0, symName: '_$sSo8NSObjectCMa', symObjAddr: 0x1D94, symBinAddr: 0x5D18, symSize: 0x3C }
+  - { offset: 0x6124A, size: 0x8, addend: 0x0, symName: '_$sypSgWOb', symObjAddr: 0x1DD0, symBinAddr: 0x5D54, symSize: 0x48 }
+  - { offset: 0x6125E, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC3run6actionyAA0dE6ActionO_tFySbcfU_TA', symObjAddr: 0x1E18, symBinAddr: 0x5D9C, symSize: 0x38 }
+  - { offset: 0x612DA, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC32requestNotificationAuthorization33_CA784E00E4462FA8B41F46EE420D77FFLLyyFySb_s5Error_pSgtcfU_TA', symObjAddr: 0x1E80, symBinAddr: 0x5E04, symSize: 0x8 }
+  - { offset: 0x61301, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceCACycfc', symObjAddr: 0x2C, symBinAddr: 0x4044, symSize: 0x164 }
+  - { offset: 0x61326, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceCACycfcTo', symObjAddr: 0x190, symBinAddr: 0x41A8, symSize: 0x20 }
+  - { offset: 0x6192F, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC3run6actionyAA0dE6ActionO_tF', symObjAddr: 0x1B0, symBinAddr: 0x41C8, symSize: 0x700 }
+  - { offset: 0x61E17, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC32requestNotificationAuthorization33_CA784E00E4462FA8B41F46EE420D77FFLLyyFySb_s5Error_pSgtcfU_', symObjAddr: 0x8C0, symBinAddr: 0x48D8, symSize: 0x1A8 }
+  - { offset: 0x61FD4, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC16sendNotification33_CA784E00E4462FA8B41F46EE420D77FFLLyyF', symObjAddr: 0xACC, symBinAddr: 0x4AE4, symSize: 0x1F8 }
+  - { offset: 0x62102, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC21removeAllNotification33_CA784E00E4462FA8B41F46EE420D77FFLLyyF', symObjAddr: 0xCC4, symBinAddr: 0x4CDC, symSize: 0xAC }
+  - { offset: 0x62151, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC19executeDartCallback33_CA784E00E4462FA8B41F46EE420D77FFLL14callbackHandleys5Int64V_tF', symObjAddr: 0xD70, symBinAddr: 0x4D88, symSize: 0x1C0 }
+  - { offset: 0x62235, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC19executeDartCallback33_CA784E00E4462FA8B41F46EE420D77FFLL14callbackHandleys5Int64V_tFySbcfU_ySo17FlutterMethodCallC_yypSgctcACcfu_yAJ_yAKctcfu0_', symObjAddr: 0xF30, symBinAddr: 0x4F48, symSize: 0x118 }
+  - { offset: 0x622D4, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC19executeDartCallback33_CA784E00E4462FA8B41F46EE420D77FFLL14callbackHandleys5Int64V_tFySbcfU_Tf4dnn_n', symObjAddr: 0x1900, symBinAddr: 0x5884, symSize: 0x3D4 }
+  - { offset: 0x625D6, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC05startD4Task33_CA784E00E4462FA8B41F46EE420D77FFLLyyF', symObjAddr: 0x11B8, symBinAddr: 0x51D0, symSize: 0x12C }
+  - { offset: 0x626A0, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC15startRepeatTask33_CA784E00E4462FA8B41F46EE420D77FFLLyyF', symObjAddr: 0x135C, symBinAddr: 0x5374, symSize: 0x1D8 }
+  - { offset: 0x627BC, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC15startRepeatTask33_CA784E00E4462FA8B41F46EE420D77FFLLyyFySo7NSTimerCYbcfU_', symObjAddr: 0x1534, symBinAddr: 0x554C, symSize: 0x88 }
+  - { offset: 0x6287A, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceC04stopD4Task33_CA784E00E4462FA8B41F46EE420D77FFLL10onCompleteyySbc_tFyypSgcfU_', symObjAddr: 0x1608, symBinAddr: 0x5620, symSize: 0x6C }
+  - { offset: 0x62927, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task17BackgroundServiceCfD', symObjAddr: 0x1674, symBinAddr: 0x568C, symSize: 0x30 }
+  - { offset: 0x62AB8, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task24BackgroundServiceManagerCACycfcTo', symObjAddr: 0x0, symBinAddr: 0x5E48, symSize: 0x3C }
+  - { offset: 0x62B59, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task24BackgroundServiceManagerCMa', symObjAddr: 0x6C, symBinAddr: 0x5EB4, symSize: 0x20 }
+  - { offset: 0x62B78, size: 0x8, addend: 0x0, symName: '_$ss22__RawDictionaryStorageC4findys10_HashTableV6BucketV6bucket_Sb5foundtxSHRzlFSS_Tg5', symObjAddr: 0x8C, symBinAddr: 0x5ED4, symSize: 0x64 }
+  - { offset: 0x62BC6, size: 0x8, addend: 0x0, symName: '_$ss22__RawDictionaryStorageC4find_9hashValues10_HashTableV6BucketV6bucket_Sb5foundtx_SitSHRzlFSS_Tg5', symObjAddr: 0xF0, symBinAddr: 0x5F38, symSize: 0xE0 }
+  - { offset: 0x62C49, size: 0x8, addend: 0x0, symName: '_$sypWOc', symObjAddr: 0x9A0, symBinAddr: 0x6720, symSize: 0x3C }
+  - { offset: 0x62C77, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task24BackgroundServiceManagerCACycfcTo', symObjAddr: 0x0, symBinAddr: 0x5E48, symSize: 0x3C }
+  - { offset: 0x62CB2, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task24BackgroundServiceManagerCfD', symObjAddr: 0x3C, symBinAddr: 0x5E84, symSize: 0x30 }
+  - { offset: 0x62D4C, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task24BackgroundServiceManagerC11saveOptions33_3351EAE53E1AE3EDE49392C944A73CC2LL4callySo17FlutterMethodCallC_tFTf4nd_n', symObjAddr: 0x1D0, symBinAddr: 0x6018, symSize: 0x708 }
+  - { offset: 0x62F2F, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task24BackgroundServiceManagerC13updateOptions33_3351EAE53E1AE3EDE49392C944A73CC2LL4callySo17FlutterMethodCallC_tFTf4nd_n', symObjAddr: 0x9DC, symBinAddr: 0x675C, symSize: 0x664 }
+  - { offset: 0x63098, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task24BackgroundServiceManagerC12clearOptions33_3351EAE53E1AE3EDE49392C944A73CC2LLyyFTf4d_n', symObjAddr: 0x1040, symBinAddr: 0x6DC0, symSize: 0x1DC }
+  - { offset: 0x631E9, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC15registerPluginsySo0eH8Registry_pXCSgvpZ', symObjAddr: 0xA310, symBinAddr: 0x16700, symSize: 0x0 }
+  - { offset: 0x63620, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginCfETo', symObjAddr: 0xB7C, symBinAddr: 0x7B18, symSize: 0x38 }
+  - { offset: 0x6364F, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginCMa', symObjAddr: 0xD94, symBinAddr: 0x7D30, symSize: 0x20 }
+  - { offset: 0x63679, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC12initChannels33_1C7A31668DED3EFD35D4E67C27355C94LLyySo0E15BinaryMessenger_pFySo0E10MethodCallC_yypSgctcACcfu_yAH_yAIctcfu0_TA', symObjAddr: 0x1178, symBinAddr: 0x8058, symSize: 0x20 }
+  - { offset: 0x636BD, size: 0x8, addend: 0x0, symName: _block_copy_helper, symObjAddr: 0x1198, symBinAddr: 0x8078, symSize: 0x10 }
+  - { offset: 0x636D1, size: 0x8, addend: 0x0, symName: _block_destroy_helper, symObjAddr: 0x11A8, symBinAddr: 0x8088, symSize: 0x8 }
+  - { offset: 0x637CF, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC8register4withySo0eH9Registrar_p_tFZ', symObjAddr: 0x0, symBinAddr: 0x6F9C, symSize: 0x4 }
+  - { offset: 0x637E3, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginCACycfC', symObjAddr: 0x4, symBinAddr: 0x6FA0, symSize: 0x20 }
+  - { offset: 0x63804, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC8register4withySo0eH9Registrar_p_tFZTo', symObjAddr: 0x24, symBinAddr: 0x6FC0, symSize: 0x30 }
+  - { offset: 0x6382E, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC03setH18RegistrantCallbackyyySo0eH8Registry_pXCFZ', symObjAddr: 0x54, symBinAddr: 0x6FF0, symSize: 0xC }
+  - { offset: 0x6387B, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC03setH18RegistrantCallbackyyySo0eH8Registry_pXCFZTo', symObjAddr: 0x60, symBinAddr: 0x6FFC, symSize: 0xC }
+  - { offset: 0x63893, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC03setH18RegistrantCallbackyyySo0eH8Registry_pXCFZTo', symObjAddr: 0x60, symBinAddr: 0x6FFC, symSize: 0xC }
+  - { offset: 0x639BC, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC12onMethodCall33_1C7A31668DED3EFD35D4E67C27355C94LL4call6resultySo0ejK0C_yypSgctF', symObjAddr: 0x6C, symBinAddr: 0x7008, symSize: 0x690 }
+  - { offset: 0x63D8C, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC22userNotificationCenter_10didReceive21withCompletionHandlerySo06UNUserjK0C_So22UNNotificationResponseCyyctF', symObjAddr: 0x6FC, symBinAddr: 0x7698, symSize: 0x178 }
+  - { offset: 0x63EF4, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC22userNotificationCenter_11willPresent21withCompletionHandlerySo06UNUserjK0C_So14UNNotificationCySo0R19PresentationOptionsVctF', symObjAddr: 0x880, symBinAddr: 0x781C, symSize: 0x184 }
+  - { offset: 0x63FF6, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginCACycfc', symObjAddr: 0xAB0, symBinAddr: 0x7A4C, symSize: 0x48 }
+  - { offset: 0x64029, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginCACycfcTo', symObjAddr: 0xAF8, symBinAddr: 0x7A94, symSize: 0x54 }
+  - { offset: 0x6405E, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginCfD', symObjAddr: 0xB4C, symBinAddr: 0x7AE8, symSize: 0x30 }
+  - { offset: 0x64151, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC8register4withySo0eH9Registrar_p_tFZTf4nd_n', symObjAddr: 0xBB4, symBinAddr: 0x7B50, symSize: 0x1E0 }
+  - { offset: 0x64296, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC22userNotificationCenter_10didReceive21withCompletionHandlerySo06UNUserjK0C_So22UNNotificationResponseCyyctF13$sIeyB_Ieg_TRIeyB_Tf1nncn_nTf4dnng_n', symObjAddr: 0xE70, symBinAddr: 0x7D50, symSize: 0x16C }
+  - { offset: 0x6435B, size: 0x8, addend: 0x0, symName: '_$s23flutter_foreground_task32SwiftFlutterForegroundTaskPluginC22userNotificationCenter_11willPresent21withCompletionHandlerySo06UNUserjK0C_So14UNNotificationCySo0R19PresentationOptionsVctF06$sSo33rsT16VIeyBy_ABIegy_TRALIeyBy_Tf1nncn_nTf4dnng_n', symObjAddr: 0xFDC, symBinAddr: 0x7EBC, symSize: 0x178 }
+...

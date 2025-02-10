@@ -1,0 +1,11 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/craftech360/Library/Developer/Xcode/DerivedData/Runner-dtmpqeioqutlshhjfsfbpomckroi/Build/Intermediates.noindex/ArchiveIntermediates/prod/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/device_info_plus.framework/device_info_plus'
+relocations:
+  - { offset: 0x3D1B, size: 0x8, addend: 0x0, symName: _device_info_plusVersionString, symObjAddr: 0x0, symBinAddr: 0x4880, symSize: 0x0 }
+  - { offset: 0x3D4F, size: 0x8, addend: 0x0, symName: _device_info_plusVersionNumber, symObjAddr: 0x30, symBinAddr: 0x48B0, symSize: 0x0 }
+  - { offset: 0x3D8B, size: 0x8, addend: 0x0, symName: '+[FPPDeviceInfoPlusPlugin registerWithRegistrar:]', symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0xA4 }
+  - { offset: 0x3DA8, size: 0x8, addend: 0x0, symName: '+[FPPDeviceInfoPlusPlugin registerWithRegistrar:]', symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0xA4 }
+  - { offset: 0x3E01, size: 0x8, addend: 0x0, symName: '-[FPPDeviceInfoPlusPlugin handleMethodCall:result:]', symObjAddr: 0xA4, symBinAddr: 0x40A4, symSize: 0x458 }
+  - { offset: 0x3F2A, size: 0x8, addend: 0x0, symName: '-[FPPDeviceInfoPlusPlugin isDevicePhysical]', symObjAddr: 0x4FC, symBinAddr: 0x44FC, symSize: 0x8 }
+...

@@ -1,0 +1,1 @@
+ /Users/craftech360/Desktop/Capsaul/Altio/.dart_tool/flutter_build/242600fd6a70f63d30727d537e0046a7/native_assets.yaml: 

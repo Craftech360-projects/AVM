@@ -46,7 +46,7 @@ class CustomPrompt {
 Future<SummaryResult> summarizeMemory(
   String transcript,
   List<Memory> previousMemories, {
-  bool forceProcess = false,
+  bool forceProcess = true,
   bool ignoreCache = false,
   DateTime? conversationDate,
   CustomPrompt? customPromptDetails,
@@ -135,7 +135,7 @@ Respond in a JSON format with the following structure:
 
   var structuredResponse =
       extractJson(await executeGptPrompt(prompt, ignoreCache: ignoreCache));
-
+  log('structuredResponse: $structuredResponse');
   try {
     // Parse structuredResponse as JSON
     var parsedResponse = jsonDecode(structuredResponse);

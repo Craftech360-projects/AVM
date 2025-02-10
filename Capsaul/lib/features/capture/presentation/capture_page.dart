@@ -323,7 +323,89 @@ class CapturePageState extends State<CapturePage>
     MessageProvider().saveMessage(message);
     widget.refreshMessages!();
   }
+void createMemory2({String? transcript, bool forcedCreation = true}) async {
+  bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
+  if (memoryCreating) return;
 
+  if (mounted) {
+    setState(() {
+      memoryCreating = true;
+    });
+  }
+
+  Memory? memory;
+  try {
+    memory = await processTranscriptContent(
+      context,
+      transcript ?? TranscriptSegment.segmentsAsString(segments),
+      segments,
+      null,
+      startedAt: currentTranscriptStartedAt,
+      finishedAt: currentTranscriptFinishedAt,
+      geolocation: await LocationService().getGeolocationDetails(),
+      photos: photos,
+      sendMessageToChat: sendMessageToChat,
+    );
+
+    if (mounted) {
+      avmSnackBar(context, "Memory processed successfully!");
+    }
+  } catch (e) {
+    if (mounted) {
+      avmSnackBar(context, "Something went wrong while creating the memory.");
+    }
+  }
+
+  if (memory == null) {
+    setHasTranscripts(false);
+    if (mounted) {
+      setState(() => memoryCreating = false);
+    }
+    return;
+  }
+
+  if (!memory.discarded) {
+    executeBackupWithUid();
+    if (mounted) {
+      context
+          .read<MemoryBloc>()
+          .add(DisplayedMemory(isNonDiscarded: !memory.discarded));
+    }
+
+    if (!memory.discarded &&
+        SharedPreferencesUtil().postMemoryNotificationIsChecked) {
+      createNotification(
+        notificationId: 2,
+        title:
+            'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
+      );
+    }
+    if (backupsEnabled && mounted) {
+      manualBackup(context);
+    }
+  }
+
+  if (mounted) {
+    await widget.refreshMemories!();
+    SharedPreferencesUtil().transcriptSegments = [];
+    segments = [];
+
+    // Reset the states
+    setState(() => memoryCreating = false);
+
+    // Perform cleanup
+    audioStorage?.clearAudioBytes();
+    setHasTranscripts(false);
+    currentTranscriptStartedAt = null;
+    currentTranscriptFinishedAt = null;
+    elapsedSeconds = 0;
+    streamStartedAtSecond = null;
+    firstStreamReceivedAt = null;
+    secondsMissedOnReconnect = null;
+    photos = [];
+    conversationId = const Uuid().v4();
+  }
+}
   _createMemory({bool forcedCreation = false}) async {
     bool backupsEnabled = SharedPreferencesUtil().backupsEnabled;
     if (memoryCreating) return;

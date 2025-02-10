@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/cardview_dark_background"
+    android:layout_margin="20dp"
+    android:id="@+id/ib_core_lyt_sample_layout"
+    android:layout_height="match_parent">
+
+</RelativeLayout>

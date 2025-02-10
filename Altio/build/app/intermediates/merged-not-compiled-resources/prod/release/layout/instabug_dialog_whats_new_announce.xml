@@ -1,0 +1,43 @@
+<com.instabug.survey.announcements.ui.custom.DynamicRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/instabug_announcement_dialog_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="?attr/survey_container_bg"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/instabug_announcement_title"
+        style="@style/InstabugAnnouncementTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Thanks for updating app name, here you are what’s new in this version:" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/instabug_announcement_features_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/instabug_announcement_title"
+        android:layout_marginLeft="@dimen/instabug_dialog_container_padding"
+        android:layout_marginTop="@dimen/instabug_dialog_container_padding"
+        android:layout_marginRight="@dimen/instabug_dialog_container_padding"
+        tools:listitem="@layout/instabug_announcement_new_feature_item" />
+
+    <Button
+        android:id="@+id/instabug_btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/survey_button_height"
+        android:layout_below="@+id/instabug_announcement_features_grid_view"
+        android:layout_marginLeft="@dimen/instabug_dialog_container_padding"
+        android:layout_marginTop="@dimen/survey_button_margin_top"
+        android:layout_marginRight="@dimen/instabug_dialog_container_padding"
+        android:background="@drawable/ibg_survey_large_action_button"
+        android:gravity="center"
+        android:text="@string/instabug_str_action_submit"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/survey_button_text_size" />
+</com.instabug.survey.announcements.ui.custom.DynamicRelativeLayout>

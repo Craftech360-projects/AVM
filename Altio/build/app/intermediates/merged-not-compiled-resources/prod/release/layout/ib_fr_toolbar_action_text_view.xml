@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:id="@+id/instabug_toolbar_text"
+    style="@style/InstabugTopDialogButton"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_centerVertical="true"
+    android:layout_margin="0dp"
+    android:ellipsize="end"
+    android:foreground="?android:selectableItemBackground"
+    android:lines="1"
+    android:rotation="0"
+    android:textAllCaps="true"
+    android:textColor="@android:color/white" />

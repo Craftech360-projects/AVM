@@ -1,0 +1,31 @@
+{
+  "name": "awesome_notifications_core",
+  "version": "0.0.1",
+  "summary": "Provides a convenient way to automatically manage all versions of awesome_notifications plugins, ensuring that they are always compatible with each other.",
+  "description": "Provides a convenient way to automatically manage all versions of awesome_notifications plugins, ensuring that they are always compatible with each other.",
+  "homepage": "http://example.com",
+  "license": {
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Your Company": "email@example.com"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "Classes/**/*",
+  "dependencies": {
+    "Flutter": [
+
+    ]
+  },
+  "platforms": {
+    "ios": "11.0"
+  },
+  "pod_target_xcconfig": {
+    "DEFINES_MODULE": "YES",
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "i386"
+  },
+  "swift_versions": "5.0",
+  "swift_version": "5.0"
+}

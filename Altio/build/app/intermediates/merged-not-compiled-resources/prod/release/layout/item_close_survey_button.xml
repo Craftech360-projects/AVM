@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/survey_partial_close_btn"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:contentDescription="@string/ib_dismiss_survey_content_description"
+    android:minWidth="48dp"
+    android:minHeight="48dp"
+    android:layout_gravity="right"
+    android:padding="@dimen/instabug_container_padding"
+    android:src="@drawable/ibg_ic_close"
+    android:visibility="visible" />

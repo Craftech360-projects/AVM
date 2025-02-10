@@ -1,0 +1,381 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/craftech360/Library/Developer/Xcode/DerivedData/Runner-dtmpqeioqutlshhjfsfbpomckroi/Build/Intermediates.noindex/ArchiveIntermediates/prod/IntermediateBuildFilesPath/UninstalledProducts/iphoneos/instabug_flutter.framework/instabug_flutter'
+relocations:
+  - { offset: 0x5E13A, size: 0x8, addend: 0x0, symName: _instabug_flutterVersionString, symObjAddr: 0x0, symBinAddr: 0x16E40, symSize: 0x0 }
+  - { offset: 0x5E16F, size: 0x8, addend: 0x0, symName: _instabug_flutterVersionNumber, symObjAddr: 0x30, symBinAddr: 0x16E70, symSize: 0x0 }
+  - { offset: 0x5E1AC, size: 0x8, addend: 0x0, symName: _InitApmApi, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x4C }
+  - { offset: 0x5E1C6, size: 0x8, addend: 0x0, symName: _traces, symObjAddr: 0x4B00, symBinAddr: 0x28558, symSize: 0x0 }
+  - { offset: 0x5E1E7, size: 0x8, addend: 0x0, symName: _InitApmApi, symObjAddr: 0x0, symBinAddr: 0x4000, symSize: 0x4C }
+  - { offset: 0x5E27C, size: 0x8, addend: 0x0, symName: '-[ApmApi init]', symObjAddr: 0x4C, symBinAddr: 0x404C, symSize: 0x64 }
+  - { offset: 0x5E2B3, size: 0x8, addend: 0x0, symName: '-[ApmApi setEnabledIsEnabled:error:]', symObjAddr: 0xB0, symBinAddr: 0x40B0, symSize: 0x24 }
+  - { offset: 0x5E2FE, size: 0x8, addend: 0x0, symName: '-[ApmApi isEnabledWithCompletion:]', symObjAddr: 0xD4, symBinAddr: 0x40D4, symSize: 0x70 }
+  - { offset: 0x5E37A, size: 0x8, addend: 0x0, symName: '-[ApmApi setScreenLoadingEnabledIsEnabled:error:]', symObjAddr: 0x144, symBinAddr: 0x4144, symSize: 0x30 }
+  - { offset: 0x5E3C5, size: 0x8, addend: 0x0, symName: '-[ApmApi isScreenLoadingEnabledWithCompletion:]', symObjAddr: 0x174, symBinAddr: 0x4174, symSize: 0x70 }
+  - { offset: 0x5E441, size: 0x8, addend: 0x0, symName: '-[ApmApi setColdAppLaunchEnabledIsEnabled:error:]', symObjAddr: 0x1E4, symBinAddr: 0x41E4, symSize: 0x24 }
+  - { offset: 0x5E48C, size: 0x8, addend: 0x0, symName: '-[ApmApi setAutoUITraceEnabledIsEnabled:error:]', symObjAddr: 0x208, symBinAddr: 0x4208, symSize: 0x24 }
+  - { offset: 0x5E4D7, size: 0x8, addend: 0x0, symName: '-[ApmApi startExecutionTraceId:name:completion:]', symObjAddr: 0x22C, symBinAddr: 0x422C, symSize: 0xA4 }
+  - { offset: 0x5E560, size: 0x8, addend: 0x0, symName: '-[ApmApi setExecutionTraceAttributeId:key:value:error:]', symObjAddr: 0x2D0, symBinAddr: 0x42D0, symSize: 0x84 }
+  - { offset: 0x5E5DB, size: 0x8, addend: 0x0, symName: '-[ApmApi endExecutionTraceId:error:]', symObjAddr: 0x354, symBinAddr: 0x4354, symSize: 0x40 }
+  - { offset: 0x5E636, size: 0x8, addend: 0x0, symName: '-[ApmApi startFlowName:error:]', symObjAddr: 0x394, symBinAddr: 0x4394, symSize: 0xC }
+  - { offset: 0x5E67F, size: 0x8, addend: 0x0, symName: '-[ApmApi setFlowAttributeName:key:value:error:]', symObjAddr: 0x3A0, symBinAddr: 0x43A0, symSize: 0xC }
+  - { offset: 0x5E6E4, size: 0x8, addend: 0x0, symName: '-[ApmApi endFlowName:error:]', symObjAddr: 0x3AC, symBinAddr: 0x43AC, symSize: 0xC }
+  - { offset: 0x5E72D, size: 0x8, addend: 0x0, symName: '-[ApmApi startUITraceName:error:]', symObjAddr: 0x3B8, symBinAddr: 0x43B8, symSize: 0xC }
+  - { offset: 0x5E776, size: 0x8, addend: 0x0, symName: '-[ApmApi endUITraceWithError:]', symObjAddr: 0x3C4, symBinAddr: 0x43C4, symSize: 0xC }
+  - { offset: 0x5E7B1, size: 0x8, addend: 0x0, symName: '-[ApmApi endAppLaunchWithError:]', symObjAddr: 0x3D0, symBinAddr: 0x43D0, symSize: 0xC }
+  - { offset: 0x5E7EC, size: 0x8, addend: 0x0, symName: '-[ApmApi networkLogAndroidData:error:]', symObjAddr: 0x3DC, symBinAddr: 0x43DC, symSize: 0x4 }
+  - { offset: 0x5E833, size: 0x8, addend: 0x0, symName: '-[ApmApi startCpUiTraceScreenName:microTimeStamp:traceId:error:]', symObjAddr: 0x3E0, symBinAddr: 0x43E0, symSize: 0x44 }
+  - { offset: 0x5E8AA, size: 0x8, addend: 0x0, symName: '-[ApmApi reportScreenLoadingCPStartTimeStampMicro:durationMicro:uiTraceId:error:]', symObjAddr: 0x424, symBinAddr: 0x4424, symSize: 0x60 }
+  - { offset: 0x5E931, size: 0x8, addend: 0x0, symName: '-[ApmApi endScreenLoadingCPTimeStampMicro:uiTraceId:error:]', symObjAddr: 0x484, symBinAddr: 0x4484, symSize: 0x20 }
+  - { offset: 0x5E998, size: 0x8, addend: 0x0, symName: '-[ApmApi isEndScreenLoadingEnabledWithCompletion:]', symObjAddr: 0x4A4, symBinAddr: 0x44A4, symSize: 0x70 }
+  - { offset: 0x5EBE3, size: 0x8, addend: 0x0, symName: _ApmHostApiGetCodec, symObjAddr: 0x0, symBinAddr: 0x4514, symSize: 0x44 }
+  - { offset: 0x5EBF1, size: 0x8, addend: 0x0, symName: _ApmHostApiGetCodec, symObjAddr: 0x0, symBinAddr: 0x4514, symSize: 0x44 }
+  - { offset: 0x5EC17, size: 0x8, addend: 0x0, symName: _ApmHostApiGetCodec.sSharedObject, symObjAddr: 0x94D8, symBinAddr: 0x28560, symSize: 0x0 }
+  - { offset: 0x5EC27, size: 0x8, addend: 0x0, symName: _ApmHostApiSetup, symObjAddr: 0x44, symBinAddr: 0x4558, symSize: 0xC1C }
+  - { offset: 0x5EFEA, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke, symObjAddr: 0xC60, symBinAddr: 0x5174, symSize: 0xD8 }
+  - { offset: 0x5F0D3, size: 0x8, addend: 0x0, symName: _GetNullableObjectAtIndex, symObjAddr: 0xD38, symBinAddr: 0x524C, symSize: 0x70 }
+  - { offset: 0x5F11E, size: 0x8, addend: 0x0, symName: _wrapResult, symObjAddr: 0xDA8, symBinAddr: 0x52BC, symSize: 0x1EC }
+  - { offset: 0x5F159, size: 0x8, addend: 0x0, symName: ___copy_helper_block_e8_32s, symObjAddr: 0xF94, symBinAddr: 0x54A8, symSize: 0x8 }
+  - { offset: 0x5F180, size: 0x8, addend: 0x0, symName: ___destroy_helper_block_e8_32s, symObjAddr: 0xF9C, symBinAddr: 0x54B0, symSize: 0x8 }
+  - { offset: 0x5F19F, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke.5, symObjAddr: 0xFA4, symBinAddr: 0x54B8, symSize: 0x84 }
+  - { offset: 0x5F1F6, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_2, symObjAddr: 0x1028, symBinAddr: 0x553C, symSize: 0x48 }
+  - { offset: 0x5F28B, size: 0x8, addend: 0x0, symName: ___copy_helper_block_e8_32b, symObjAddr: 0x1070, symBinAddr: 0x5584, symSize: 0x10 }
+  - { offset: 0x5F2B4, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke.9, symObjAddr: 0x1080, symBinAddr: 0x5594, symSize: 0xD8 }
+  - { offset: 0x5F39D, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_2.12, symObjAddr: 0x1158, symBinAddr: 0x566C, symSize: 0x84 }
+  - { offset: 0x5F3F4, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_3, symObjAddr: 0x11DC, symBinAddr: 0x56F0, symSize: 0x48 }
+  - { offset: 0x5F489, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_4, symObjAddr: 0x1224, symBinAddr: 0x5738, symSize: 0xD8 }
+  - { offset: 0x5F572, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_5, symObjAddr: 0x12FC, symBinAddr: 0x5810, symSize: 0xD8 }
+  - { offset: 0x5F65B, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_6, symObjAddr: 0x13D4, symBinAddr: 0x58E8, symSize: 0xF8 }
+  - { offset: 0x5F722, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_7, symObjAddr: 0x14CC, symBinAddr: 0x59E0, symSize: 0x48 }
+  - { offset: 0x5F7B7, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke.22, symObjAddr: 0x1514, symBinAddr: 0x5A28, symSize: 0xD8 }
+  - { offset: 0x5F8A0, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_2.25, symObjAddr: 0x15EC, symBinAddr: 0x5B00, symSize: 0x128 }
+  - { offset: 0x5F9E1, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_3.28, symObjAddr: 0x1714, symBinAddr: 0x5C28, symSize: 0xD8 }
+  - { offset: 0x5FACA, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_4.31, symObjAddr: 0x17EC, symBinAddr: 0x5D00, symSize: 0x128 }
+  - { offset: 0x5FC0B, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_5.34, symObjAddr: 0x1914, symBinAddr: 0x5E28, symSize: 0xD8 }
+  - { offset: 0x5FCF4, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_6.37, symObjAddr: 0x19EC, symBinAddr: 0x5F00, symSize: 0xD8 }
+  - { offset: 0x5FDE4, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_7.40, symObjAddr: 0x1AC4, symBinAddr: 0x5FD8, symSize: 0x94 }
+  - { offset: 0x5FE96, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_8, symObjAddr: 0x1B58, symBinAddr: 0x606C, symSize: 0x94 }
+  - { offset: 0x5FF48, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_9, symObjAddr: 0x1BEC, symBinAddr: 0x6100, symSize: 0xD8 }
+  - { offset: 0x60038, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_10, symObjAddr: 0x1CC4, symBinAddr: 0x61D8, symSize: 0x128 }
+  - { offset: 0x60182, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_11, symObjAddr: 0x1DEC, symBinAddr: 0x6300, symSize: 0x128 }
+  - { offset: 0x602CC, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_12, symObjAddr: 0x1F14, symBinAddr: 0x6428, symSize: 0xFC }
+  - { offset: 0x603E9, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_13, symObjAddr: 0x2010, symBinAddr: 0x6524, symSize: 0x84 }
+  - { offset: 0x60444, size: 0x8, addend: 0x0, symName: ___ApmHostApiSetup_block_invoke_14, symObjAddr: 0x2094, symBinAddr: 0x65A8, symSize: 0x48 }
+  - { offset: 0x60ECF, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry sdkLogLevels]', symObjAddr: 0x0, symBinAddr: 0x65F0, symSize: 0x148 }
+  - { offset: 0x60EDD, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry sdkLogLevels]', symObjAddr: 0x0, symBinAddr: 0x65F0, symSize: 0x148 }
+  - { offset: 0x60F10, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry invocationEvents]', symObjAddr: 0x148, symBinAddr: 0x6738, symSize: 0x178 }
+  - { offset: 0x60F43, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry invocationOptions]', symObjAddr: 0x2C0, symBinAddr: 0x68B0, symSize: 0x148 }
+  - { offset: 0x60F76, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry colorThemes]', symObjAddr: 0x408, symBinAddr: 0x69F8, symSize: 0xDC }
+  - { offset: 0x60FA9, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry floatingButtonEdges]', symObjAddr: 0x4E4, symBinAddr: 0x6AD4, symSize: 0xDC }
+  - { offset: 0x60FDC, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry recordButtonPositions]', symObjAddr: 0x5C0, symBinAddr: 0x6BB0, symSize: 0x148 }
+  - { offset: 0x6100F, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry welcomeMessageStates]', symObjAddr: 0x708, symBinAddr: 0x6CF8, symSize: 0x110 }
+  - { offset: 0x61042, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry reportTypes]', symObjAddr: 0x818, symBinAddr: 0x6E08, symSize: 0x110 }
+  - { offset: 0x61075, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry dismissTypes]', symObjAddr: 0x928, symBinAddr: 0x6F18, symSize: 0x110 }
+  - { offset: 0x610A8, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry actionTypes]', symObjAddr: 0xA38, symBinAddr: 0x7028, symSize: 0x148 }
+  - { offset: 0x610DB, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry extendedBugReportStates]', symObjAddr: 0xB80, symBinAddr: 0x7170, symSize: 0x110 }
+  - { offset: 0x6110E, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry nonFatalExceptionLevel]', symObjAddr: 0xC90, symBinAddr: 0x7280, symSize: 0x148 }
+  - { offset: 0x61141, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry reproModes]', symObjAddr: 0xDD8, symBinAddr: 0x73C8, symSize: 0x110 }
+  - { offset: 0x61174, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry locales]', symObjAddr: 0xEE8, symBinAddr: 0x74D8, symSize: 0x548 }
+  - { offset: 0x611A7, size: 0x8, addend: 0x0, symName: '+[ArgsRegistry placeholders]', symObjAddr: 0x1430, symBinAddr: 0x7A20, symSize: 0x664 }
+  - { offset: 0x61256, size: 0x8, addend: 0x0, symName: _InitBugReportingApi, symObjAddr: 0x0, symBinAddr: 0x8084, symSize: 0x7C }
+  - { offset: 0x612A4, size: 0x8, addend: 0x0, symName: _InitBugReportingApi, symObjAddr: 0x0, symBinAddr: 0x8084, symSize: 0x7C }
+  - { offset: 0x61349, size: 0x8, addend: 0x0, symName: '-[BugReportingApi initWithFlutterApi:]', symObjAddr: 0x7C, symBinAddr: 0x8100, symSize: 0x64 }
+  - { offset: 0x61390, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setEnabledIsEnabled:error:]', symObjAddr: 0xE0, symBinAddr: 0x8164, symSize: 0x24 }
+  - { offset: 0x613DB, size: 0x8, addend: 0x0, symName: '-[BugReportingApi showReportType:invocationOptions:error:]', symObjAddr: 0x104, symBinAddr: 0x8188, symSize: 0x1C8 }
+  - { offset: 0x61475, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setInvocationEventsEvents:error:]', symObjAddr: 0x2CC, symBinAddr: 0x8350, symSize: 0x158 }
+  - { offset: 0x614EF, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setReportTypesTypes:error:]', symObjAddr: 0x424, symBinAddr: 0x84A8, symSize: 0x158 }
+  - { offset: 0x61569, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setExtendedBugReportModeMode:error:]', symObjAddr: 0x57C, symBinAddr: 0x8600, symSize: 0x8C }
+  - { offset: 0x615C4, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setInvocationOptionsOptions:error:]', symObjAddr: 0x608, symBinAddr: 0x868C, symSize: 0x158 }
+  - { offset: 0x6163E, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setFloatingButtonEdgeEdge:offset:error:]', symObjAddr: 0x760, symBinAddr: 0x87E4, symSize: 0xC4 }
+  - { offset: 0x616A9, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setVideoRecordingFloatingButtonPositionPosition:error:]', symObjAddr: 0x824, symBinAddr: 0x88A8, symSize: 0x8C }
+  - { offset: 0x61704, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setShakingThresholdForiPhoneThreshold:error:]', symObjAddr: 0x8B0, symBinAddr: 0x8934, symSize: 0x20 }
+  - { offset: 0x6174F, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setShakingThresholdForiPadThreshold:error:]', symObjAddr: 0x8D0, symBinAddr: 0x8954, symSize: 0x20 }
+  - { offset: 0x6179A, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setShakingThresholdForAndroidThreshold:error:]', symObjAddr: 0x8F0, symBinAddr: 0x8974, symSize: 0x4 }
+  - { offset: 0x617E1, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setEnabledAttachmentTypesScreenshot:extraScreenshot:galleryImage:screenRecording:error:]', symObjAddr: 0x8F4, symBinAddr: 0x8978, symSize: 0xD4 }
+  - { offset: 0x6186C, size: 0x8, addend: 0x0, symName: '-[BugReportingApi bindOnInvokeCallbackWithError:]', symObjAddr: 0x9C8, symBinAddr: 0x8A4C, symSize: 0x58 }
+  - { offset: 0x618AB, size: 0x8, addend: 0x0, symName: '___49-[BugReportingApi bindOnInvokeCallbackWithError:]_block_invoke', symObjAddr: 0xA20, symBinAddr: 0x8AA4, symSize: 0x14 }
+  - { offset: 0x618EA, size: 0x8, addend: 0x0, symName: '___49-[BugReportingApi bindOnInvokeCallbackWithError:]_block_invoke_2', symObjAddr: 0xA34, symBinAddr: 0x8AB8, symSize: 0x4 }
+  - { offset: 0x6191D, size: 0x8, addend: 0x0, symName: '-[BugReportingApi bindOnDismissCallbackWithError:]', symObjAddr: 0xA48, symBinAddr: 0x8ABC, symSize: 0x58 }
+  - { offset: 0x6195C, size: 0x8, addend: 0x0, symName: '___50-[BugReportingApi bindOnDismissCallbackWithError:]_block_invoke', symObjAddr: 0xAA0, symBinAddr: 0x8B14, symSize: 0x5C }
+  - { offset: 0x619B8, size: 0x8, addend: 0x0, symName: '___50-[BugReportingApi bindOnDismissCallbackWithError:]_block_invoke', symObjAddr: 0xAA0, symBinAddr: 0x8B14, symSize: 0x5C }
+  - { offset: 0x619E8, size: 0x8, addend: 0x0, symName: '___50-[BugReportingApi bindOnDismissCallbackWithError:]_block_invoke_2', symObjAddr: 0xAFC, symBinAddr: 0x8B70, symSize: 0x4 }
+  - { offset: 0x61A1B, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setDisclaimerTextText:error:]', symObjAddr: 0xB00, symBinAddr: 0x8B74, symSize: 0xC }
+  - { offset: 0x61A64, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setCommentMinimumCharacterCountLimit:reportTypes:error:]', symObjAddr: 0xB0C, symBinAddr: 0x8B80, symSize: 0x268 }
+  - { offset: 0x61AEE, size: 0x8, addend: 0x0, symName: '-[BugReportingApi flutterApi]', symObjAddr: 0xD74, symBinAddr: 0x8DE8, symSize: 0x8 }
+  - { offset: 0x61B25, size: 0x8, addend: 0x0, symName: '-[BugReportingApi setFlutterApi:]', symObjAddr: 0xD7C, symBinAddr: 0x8DF0, symSize: 0xC }
+  - { offset: 0x61B66, size: 0x8, addend: 0x0, symName: '-[BugReportingApi .cxx_destruct]', symObjAddr: 0xD88, symBinAddr: 0x8DFC, symSize: 0xC }
+  - { offset: 0x61E44, size: 0x8, addend: 0x0, symName: _BugReportingFlutterApiGetCodec, symObjAddr: 0x0, symBinAddr: 0x8E08, symSize: 0x44 }
+  - { offset: 0x61E52, size: 0x8, addend: 0x0, symName: _BugReportingFlutterApiGetCodec, symObjAddr: 0x0, symBinAddr: 0x8E08, symSize: 0x44 }
+  - { offset: 0x61E78, size: 0x8, addend: 0x0, symName: _BugReportingFlutterApiGetCodec.sSharedObject, symObjAddr: 0x8F18, symBinAddr: 0x28568, symSize: 0x0 }
+  - { offset: 0x61E88, size: 0x8, addend: 0x0, symName: _BugReportingHostApiGetCodec, symObjAddr: 0x408, symBinAddr: 0x91F8, symSize: 0x44 }
+  - { offset: 0x61EAE, size: 0x8, addend: 0x0, symName: _BugReportingHostApiGetCodec.sSharedObject, symObjAddr: 0x8F20, symBinAddr: 0x28570, symSize: 0x0 }
+  - { offset: 0x61EE9, size: 0x8, addend: 0x0, symName: '-[BugReportingFlutterApi initWithBinaryMessenger:]', symObjAddr: 0x44, symBinAddr: 0x8E4C, symSize: 0x78 }
+  - { offset: 0x61F30, size: 0x8, addend: 0x0, symName: '-[BugReportingFlutterApi onSdkInvokeWithCompletion:]', symObjAddr: 0xBC, symBinAddr: 0x8EC4, symSize: 0xFC }
+  - { offset: 0x61F91, size: 0x8, addend: 0x0, symName: '___52-[BugReportingFlutterApi onSdkInvokeWithCompletion:]_block_invoke', symObjAddr: 0x1B8, symBinAddr: 0x8FC0, symSize: 0x10 }
+  - { offset: 0x61FEB, size: 0x8, addend: 0x0, symName: '-[BugReportingFlutterApi onSdkDismissDismissType:reportType:completion:]', symObjAddr: 0x1E0, symBinAddr: 0x8FD0, symSize: 0x1F8 }
+  - { offset: 0x6206C, size: 0x8, addend: 0x0, symName: '___72-[BugReportingFlutterApi onSdkDismissDismissType:reportType:completion:]_block_invoke', symObjAddr: 0x3D8, symBinAddr: 0x91C8, symSize: 0x10 }
+  - { offset: 0x620C6, size: 0x8, addend: 0x0, symName: '-[BugReportingFlutterApi binaryMessenger]', symObjAddr: 0x3E8, symBinAddr: 0x91D8, symSize: 0x8 }
+  - { offset: 0x620FD, size: 0x8, addend: 0x0, symName: '-[BugReportingFlutterApi setBinaryMessenger:]', symObjAddr: 0x3F0, symBinAddr: 0x91E0, symSize: 0xC }
+  - { offset: 0x6213E, size: 0x8, addend: 0x0, symName: '-[BugReportingFlutterApi .cxx_destruct]', symObjAddr: 0x3FC, symBinAddr: 0x91EC, symSize: 0xC }
+  - { offset: 0x62171, size: 0x8, addend: 0x0, symName: _BugReportingHostApiSetup, symObjAddr: 0x44C, symBinAddr: 0x923C, symSize: 0x9C0 }
+  - { offset: 0x6247E, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke, symObjAddr: 0xE0C, symBinAddr: 0x9BFC, symSize: 0xD0 }
+  - { offset: 0x6258A, size: 0x8, addend: 0x0, symName: _wrapResult, symObjAddr: 0xF4C, symBinAddr: 0x9CCC, symSize: 0x1C0 }
+  - { offset: 0x625C3, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke.27, symObjAddr: 0x1114, symBinAddr: 0x9E8C, symSize: 0xF4 }
+  - { offset: 0x626CA, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_2, symObjAddr: 0x1208, symBinAddr: 0x9F80, symSize: 0xD0 }
+  - { offset: 0x627A5, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_3, symObjAddr: 0x12D8, symBinAddr: 0xA050, symSize: 0xD0 }
+  - { offset: 0x62880, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_4, symObjAddr: 0x13A8, symBinAddr: 0xA120, symSize: 0xD0 }
+  - { offset: 0x6295B, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_5, symObjAddr: 0x1478, symBinAddr: 0xA1F0, symSize: 0xD0 }
+  - { offset: 0x62A36, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_6, symObjAddr: 0x1548, symBinAddr: 0xA2C0, symSize: 0xF4 }
+  - { offset: 0x62B3D, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_7, symObjAddr: 0x163C, symBinAddr: 0xA3B4, symSize: 0xD0 }
+  - { offset: 0x62C18, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_8, symObjAddr: 0x170C, symBinAddr: 0xA484, symSize: 0xD0 }
+  - { offset: 0x62CF3, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_9, symObjAddr: 0x17DC, symBinAddr: 0xA554, symSize: 0xD0 }
+  - { offset: 0x62DCF, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_10, symObjAddr: 0x18AC, symBinAddr: 0xA624, symSize: 0xD0 }
+  - { offset: 0x62EB1, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_11, symObjAddr: 0x197C, symBinAddr: 0xA6F4, symSize: 0x144 }
+  - { offset: 0x6301A, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_12, symObjAddr: 0x1AC0, symBinAddr: 0xA838, symSize: 0x8C }
+  - { offset: 0x630BE, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_13, symObjAddr: 0x1B4C, symBinAddr: 0xA8C4, symSize: 0x8C }
+  - { offset: 0x63162, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_14, symObjAddr: 0x1BD8, symBinAddr: 0xA950, symSize: 0xD0 }
+  - { offset: 0x63244, size: 0x8, addend: 0x0, symName: ___BugReportingHostApiSetup_block_invoke_15, symObjAddr: 0x1CA8, symBinAddr: 0xAA20, symSize: 0xF4 }
+  - { offset: 0x63B74, size: 0x8, addend: 0x0, symName: _InitCrashReportingApi, symObjAddr: 0x0, symBinAddr: 0xAB14, symSize: 0x4C }
+  - { offset: 0x63B93, size: 0x8, addend: 0x0, symName: _InitCrashReportingApi, symObjAddr: 0x0, symBinAddr: 0xAB14, symSize: 0x4C }
+  - { offset: 0x63C28, size: 0x8, addend: 0x0, symName: '-[CrashReportingApi setEnabledIsEnabled:error:]', symObjAddr: 0x4C, symBinAddr: 0xAB60, symSize: 0x24 }
+  - { offset: 0x63C7F, size: 0x8, addend: 0x0, symName: '-[CrashReportingApi sendJsonCrash:isHandled:error:]', symObjAddr: 0x70, symBinAddr: 0xAB84, symSize: 0xC4 }
+  - { offset: 0x63D16, size: 0x8, addend: 0x0, symName: '-[CrashReportingApi sendNonFatalErrorJsonCrash:userAttributes:fingerprint:nonFatalExceptionLevel:error:]', symObjAddr: 0x134, symBinAddr: 0xAC48, symSize: 0x134 }
+  - { offset: 0x63E95, size: 0x8, addend: 0x0, symName: _CrashReportingHostApiGetCodec, symObjAddr: 0x0, symBinAddr: 0xAD7C, symSize: 0x44 }
+  - { offset: 0x63EA3, size: 0x8, addend: 0x0, symName: _CrashReportingHostApiGetCodec, symObjAddr: 0x0, symBinAddr: 0xAD7C, symSize: 0x44 }
+  - { offset: 0x63EC9, size: 0x8, addend: 0x0, symName: _CrashReportingHostApiGetCodec.sSharedObject, symObjAddr: 0x2E60, symBinAddr: 0x28578, symSize: 0x0 }
+  - { offset: 0x63ED9, size: 0x8, addend: 0x0, symName: _CrashReportingHostApiSetup, symObjAddr: 0x44, symBinAddr: 0xADC0, symSize: 0x234 }
+  - { offset: 0x63F97, size: 0x8, addend: 0x0, symName: ___CrashReportingHostApiSetup_block_invoke, symObjAddr: 0x278, symBinAddr: 0xAFF4, symSize: 0xD0 }
+  - { offset: 0x640CA, size: 0x8, addend: 0x0, symName: ___CrashReportingHostApiSetup_block_invoke.5, symObjAddr: 0x588, symBinAddr: 0xB0C4, symSize: 0xF4 }
+  - { offset: 0x641D1, size: 0x8, addend: 0x0, symName: ___CrashReportingHostApiSetup_block_invoke_2, symObjAddr: 0x67C, symBinAddr: 0xB1B8, symSize: 0x144 }
+  - { offset: 0x64534, size: 0x8, addend: 0x0, symName: _InitFeatureRequestsApi, symObjAddr: 0x0, symBinAddr: 0xB2FC, symSize: 0x4C }
+  - { offset: 0x64553, size: 0x8, addend: 0x0, symName: _InitFeatureRequestsApi, symObjAddr: 0x0, symBinAddr: 0xB2FC, symSize: 0x4C }
+  - { offset: 0x645E8, size: 0x8, addend: 0x0, symName: '-[FeatureRequestsApi showWithError:]', symObjAddr: 0x4C, symBinAddr: 0xB348, symSize: 0xC }
+  - { offset: 0x64623, size: 0x8, addend: 0x0, symName: '-[FeatureRequestsApi setEmailFieldRequiredIsRequired:actionTypes:error:]', symObjAddr: 0x58, symBinAddr: 0xB354, symSize: 0x184 }
+  - { offset: 0x64765, size: 0x8, addend: 0x0, symName: _FeatureRequestsHostApiGetCodec, symObjAddr: 0x0, symBinAddr: 0xB4D8, symSize: 0x44 }
+  - { offset: 0x64773, size: 0x8, addend: 0x0, symName: _FeatureRequestsHostApiGetCodec, symObjAddr: 0x0, symBinAddr: 0xB4D8, symSize: 0x44 }
+  - { offset: 0x64799, size: 0x8, addend: 0x0, symName: _FeatureRequestsHostApiGetCodec.sSharedObject, symObjAddr: 0x2618, symBinAddr: 0x28580, symSize: 0x0 }
+  - { offset: 0x647A9, size: 0x8, addend: 0x0, symName: _FeatureRequestsHostApiSetup, symObjAddr: 0x44, symBinAddr: 0xB51C, symSize: 0x1A0 }
+  - { offset: 0x6483A, size: 0x8, addend: 0x0, symName: ___FeatureRequestsHostApiSetup_block_invoke, symObjAddr: 0x1E4, symBinAddr: 0xB6BC, symSize: 0x8C }
+  - { offset: 0x64900, size: 0x8, addend: 0x0, symName: ___FeatureRequestsHostApiSetup_block_invoke.5, symObjAddr: 0x440, symBinAddr: 0xB748, symSize: 0xF4 }
+  - { offset: 0x64BD6, size: 0x8, addend: 0x0, symName: _InitInstabugApi, symObjAddr: 0x0, symBinAddr: 0xB83C, symSize: 0x4C }
+  - { offset: 0x64C09, size: 0x8, addend: 0x0, symName: _InitInstabugApi, symObjAddr: 0x0, symBinAddr: 0xB83C, symSize: 0x4C }
+  - { offset: 0x64C9E, size: 0x8, addend: 0x0, symName: '-[InstabugApi setEnabledIsEnabled:error:]', symObjAddr: 0x4C, symBinAddr: 0xB888, symSize: 0x24 }
+  - { offset: 0x64CE9, size: 0x8, addend: 0x0, symName: '-[InstabugApi isBuiltWithError:]', symObjAddr: 0x70, symBinAddr: 0xB8AC, symSize: 0x10 }
+  - { offset: 0x64D28, size: 0x8, addend: 0x0, symName: '-[InstabugApi isEnabledWithError:]', symObjAddr: 0x80, symBinAddr: 0xB8BC, symSize: 0x34 }
+  - { offset: 0x64D67, size: 0x8, addend: 0x0, symName: '-[InstabugApi initToken:invocationEvents:debugLogsLevel:error:]', symObjAddr: 0xB4, symBinAddr: 0xB8F0, symSize: 0x2AC }
+  - { offset: 0x64E84, size: 0x8, addend: 0x0, symName: '-[InstabugApi showWithError:]', symObjAddr: 0x360, symBinAddr: 0xBB9C, symSize: 0xC }
+  - { offset: 0x64EBF, size: 0x8, addend: 0x0, symName: '-[InstabugApi showWelcomeMessageWithModeMode:error:]', symObjAddr: 0x36C, symBinAddr: 0xBBA8, symSize: 0x8C }
+  - { offset: 0x64F1A, size: 0x8, addend: 0x0, symName: '-[InstabugApi identifyUserEmail:name:userId:error:]', symObjAddr: 0x3F8, symBinAddr: 0xBC34, symSize: 0x1C }
+  - { offset: 0x64F85, size: 0x8, addend: 0x0, symName: '-[InstabugApi setUserDataData:error:]', symObjAddr: 0x414, symBinAddr: 0xBC50, symSize: 0xC }
+  - { offset: 0x64FCE, size: 0x8, addend: 0x0, symName: '-[InstabugApi logUserEventName:error:]', symObjAddr: 0x420, symBinAddr: 0xBC5C, symSize: 0xC }
+  - { offset: 0x65017, size: 0x8, addend: 0x0, symName: '-[InstabugApi logOutWithError:]', symObjAddr: 0x42C, symBinAddr: 0xBC68, symSize: 0xC }
+  - { offset: 0x65052, size: 0x8, addend: 0x0, symName: '-[InstabugApi setLocaleLocale:error:]', symObjAddr: 0x438, symBinAddr: 0xBC74, symSize: 0x8C }
+  - { offset: 0x650AD, size: 0x8, addend: 0x0, symName: '-[InstabugApi setColorThemeTheme:error:]', symObjAddr: 0x4C4, symBinAddr: 0xBD00, symSize: 0x8C }
+  - { offset: 0x65108, size: 0x8, addend: 0x0, symName: '-[InstabugApi setWelcomeMessageModeMode:error:]', symObjAddr: 0x550, symBinAddr: 0xBD8C, symSize: 0x8C }
+  - { offset: 0x65163, size: 0x8, addend: 0x0, symName: '-[InstabugApi setPrimaryColorColor:error:]', symObjAddr: 0x5DC, symBinAddr: 0xBE18, symSize: 0xD8 }
+  - { offset: 0x651AE, size: 0x8, addend: 0x0, symName: '-[InstabugApi setSessionProfilerEnabledEnabled:error:]', symObjAddr: 0x6B4, symBinAddr: 0xBEF0, symSize: 0x30 }
+  - { offset: 0x651F9, size: 0x8, addend: 0x0, symName: '-[InstabugApi setValueForStringWithKeyValue:key:error:]', symObjAddr: 0x6E4, symBinAddr: 0xBF20, symSize: 0x12C }
+  - { offset: 0x652B0, size: 0x8, addend: 0x0, symName: '-[InstabugApi appendTagsTags:error:]', symObjAddr: 0x810, symBinAddr: 0xC04C, symSize: 0xC }
+  - { offset: 0x652F9, size: 0x8, addend: 0x0, symName: '-[InstabugApi resetTagsWithError:]', symObjAddr: 0x81C, symBinAddr: 0xC058, symSize: 0xC }
+  - { offset: 0x65334, size: 0x8, addend: 0x0, symName: '-[InstabugApi getTagsWithCompletion:]', symObjAddr: 0x828, symBinAddr: 0xC064, symSize: 0x6C }
+  - { offset: 0x65394, size: 0x8, addend: 0x0, symName: '-[InstabugApi addExperimentsExperiments:error:]', symObjAddr: 0x894, symBinAddr: 0xC0D0, symSize: 0xC }
+  - { offset: 0x653DD, size: 0x8, addend: 0x0, symName: '-[InstabugApi removeExperimentsExperiments:error:]', symObjAddr: 0x8A0, symBinAddr: 0xC0DC, symSize: 0xC }
+  - { offset: 0x65426, size: 0x8, addend: 0x0, symName: '-[InstabugApi clearAllExperimentsWithError:]', symObjAddr: 0x8AC, symBinAddr: 0xC0E8, symSize: 0xC }
+  - { offset: 0x65461, size: 0x8, addend: 0x0, symName: '-[InstabugApi setUserAttributeValue:key:error:]', symObjAddr: 0x8B8, symBinAddr: 0xC0F4, symSize: 0xC }
+  - { offset: 0x654B8, size: 0x8, addend: 0x0, symName: '-[InstabugApi removeUserAttributeKey:error:]', symObjAddr: 0x8C4, symBinAddr: 0xC100, symSize: 0xC }
+  - { offset: 0x65501, size: 0x8, addend: 0x0, symName: '-[InstabugApi getUserAttributeForKeyKey:completion:]', symObjAddr: 0x8D0, symBinAddr: 0xC10C, symSize: 0x74 }
+  - { offset: 0x65571, size: 0x8, addend: 0x0, symName: '-[InstabugApi getUserAttributesWithCompletion:]', symObjAddr: 0x944, symBinAddr: 0xC180, symSize: 0x6C }
+  - { offset: 0x655D1, size: 0x8, addend: 0x0, symName: '-[InstabugApi setReproStepsConfigBugMode:crashMode:sessionReplayMode:error:]', symObjAddr: 0x9B0, symBinAddr: 0xC1EC, symSize: 0x174 }
+  - { offset: 0x65699, size: 0x8, addend: 0x0, symName: '-[InstabugApi getImageForAsset:]', symObjAddr: 0xB24, symBinAddr: 0xC360, symSize: 0xA0 }
+  - { offset: 0x656FC, size: 0x8, addend: 0x0, symName: '-[InstabugApi setCustomBrandingImageLight:dark:error:]', symObjAddr: 0xBC4, symBinAddr: 0xC400, symSize: 0x134 }
+  - { offset: 0x6579A, size: 0x8, addend: 0x0, symName: '-[InstabugApi reportScreenChangeScreenName:error:]', symObjAddr: 0xCF8, symBinAddr: 0xC534, symSize: 0xF0 }
+  - { offset: 0x65822, size: 0x8, addend: 0x0, symName: '-[InstabugApi getFontForAsset:error:]', symObjAddr: 0xDE8, symBinAddr: 0xC624, symSize: 0x17C }
+  - { offset: 0x65A35, size: 0x8, addend: 0x0, symName: '-[InstabugApi setFontFont:error:]', symObjAddr: 0xF64, symBinAddr: 0xC7A0, symSize: 0x3C }
+  - { offset: 0x65A98, size: 0x8, addend: 0x0, symName: '-[InstabugApi addFileAttachmentWithURLFilePath:fileName:error:]', symObjAddr: 0xFA0, symBinAddr: 0xC7DC, symSize: 0x48 }
+  - { offset: 0x65AEF, size: 0x8, addend: 0x0, symName: '-[InstabugApi addFileAttachmentWithDataData:fileName:error:]', symObjAddr: 0xFE8, symBinAddr: 0xC824, symSize: 0x44 }
+  - { offset: 0x65B46, size: 0x8, addend: 0x0, symName: '-[InstabugApi clearFileAttachmentsWithError:]', symObjAddr: 0x102C, symBinAddr: 0xC868, symSize: 0xC }
+  - { offset: 0x65B83, size: 0x8, addend: 0x0, symName: '-[InstabugApi networkLogData:error:]', symObjAddr: 0x1038, symBinAddr: 0xC874, symSize: 0x62C }
+  - { offset: 0x65D36, size: 0x8, addend: 0x0, symName: '-[InstabugApi willRedirectToStoreWithError:]', symObjAddr: 0x1664, symBinAddr: 0xCEA0, symSize: 0xC }
+  - { offset: 0x65D73, size: 0x8, addend: 0x0, symName: '-[InstabugApi addFeatureFlagsFeatureFlagsMap:error:]', symObjAddr: 0x1670, symBinAddr: 0xCEAC, symSize: 0x1A0 }
+  - { offset: 0x65E0A, size: 0x8, addend: 0x0, symName: '-[InstabugApi removeAllFeatureFlagsWithError:]', symObjAddr: 0x1810, symBinAddr: 0xD04C, symSize: 0xC }
+  - { offset: 0x65E47, size: 0x8, addend: 0x0, symName: '-[InstabugApi removeFeatureFlagsFeatureFlags:error:]', symObjAddr: 0x181C, symBinAddr: 0xD058, symSize: 0x1B8 }
+  - { offset: 0x65EF0, size: 0x8, addend: 0x0, symName: '-[InstabugApi registerFeatureFlagChangeListenerWithError:]', symObjAddr: 0x19D4, symBinAddr: 0xD210, symSize: 0x4 }
+  - { offset: 0x65F2D, size: 0x8, addend: 0x0, symName: '-[InstabugApi isW3CFeatureFlagsEnabledWithError:]', symObjAddr: 0x19D8, symBinAddr: 0xD214, symSize: 0x140 }
+  - { offset: 0x66196, size: 0x8, addend: 0x0, symName: '+[InstabugFlutterPlugin registerWithRegistrar:]', symObjAddr: 0x0, symBinAddr: 0xD354, symSize: 0x148 }
+  - { offset: 0x661A4, size: 0x8, addend: 0x0, symName: '+[InstabugFlutterPlugin registerWithRegistrar:]', symObjAddr: 0x0, symBinAddr: 0xD354, symSize: 0x148 }
+  - { offset: 0x66480, size: 0x8, addend: 0x0, symName: _InitInstabugLogApi, symObjAddr: 0x0, symBinAddr: 0xD49C, symSize: 0x4C }
+  - { offset: 0x6649F, size: 0x8, addend: 0x0, symName: _InitInstabugLogApi, symObjAddr: 0x0, symBinAddr: 0xD49C, symSize: 0x4C }
+  - { offset: 0x66534, size: 0x8, addend: 0x0, symName: '-[InstabugLogApi logVerboseMessage:error:]', symObjAddr: 0x4C, symBinAddr: 0xD4E8, symSize: 0xC }
+  - { offset: 0x6657D, size: 0x8, addend: 0x0, symName: '-[InstabugLogApi logDebugMessage:error:]', symObjAddr: 0x58, symBinAddr: 0xD4F4, symSize: 0xC }
+  - { offset: 0x665C6, size: 0x8, addend: 0x0, symName: '-[InstabugLogApi logInfoMessage:error:]', symObjAddr: 0x64, symBinAddr: 0xD500, symSize: 0xC }
+  - { offset: 0x6660F, size: 0x8, addend: 0x0, symName: '-[InstabugLogApi logWarnMessage:error:]', symObjAddr: 0x70, symBinAddr: 0xD50C, symSize: 0xC }
+  - { offset: 0x66658, size: 0x8, addend: 0x0, symName: '-[InstabugLogApi logErrorMessage:error:]', symObjAddr: 0x7C, symBinAddr: 0xD518, symSize: 0xC }
+  - { offset: 0x666A1, size: 0x8, addend: 0x0, symName: '-[InstabugLogApi clearAllLogsWithError:]', symObjAddr: 0x88, symBinAddr: 0xD524, symSize: 0xC }
+  - { offset: 0x6675F, size: 0x8, addend: 0x0, symName: _InstabugLogHostApiGetCodec, symObjAddr: 0x0, symBinAddr: 0xD530, symSize: 0x44 }
+  - { offset: 0x6676D, size: 0x8, addend: 0x0, symName: _InstabugLogHostApiGetCodec, symObjAddr: 0x0, symBinAddr: 0xD530, symSize: 0x44 }
+  - { offset: 0x66793, size: 0x8, addend: 0x0, symName: _InstabugLogHostApiGetCodec.sSharedObject, symObjAddr: 0x3AA0, symBinAddr: 0x28588, symSize: 0x0 }
+  - { offset: 0x667A3, size: 0x8, addend: 0x0, symName: _InstabugLogHostApiSetup, symObjAddr: 0x44, symBinAddr: 0xD574, symSize: 0x3F8 }
+  - { offset: 0x668E8, size: 0x8, addend: 0x0, symName: ___InstabugLogHostApiSetup_block_invoke, symObjAddr: 0x43C, symBinAddr: 0xD96C, symSize: 0xCC }
+  - { offset: 0x669BD, size: 0x8, addend: 0x0, symName: _GetNullableObjectAtIndex, symObjAddr: 0x508, symBinAddr: 0xDA38, symSize: 0x70 }
+  - { offset: 0x66A2D, size: 0x8, addend: 0x0, symName: ___InstabugLogHostApiSetup_block_invoke.5, symObjAddr: 0x748, symBinAddr: 0xDAA8, symSize: 0xCC }
+  - { offset: 0x66B02, size: 0x8, addend: 0x0, symName: ___InstabugLogHostApiSetup_block_invoke_2, symObjAddr: 0x814, symBinAddr: 0xDB74, symSize: 0xCC }
+  - { offset: 0x66BD7, size: 0x8, addend: 0x0, symName: ___InstabugLogHostApiSetup_block_invoke_3, symObjAddr: 0x8E0, symBinAddr: 0xDC40, symSize: 0xCC }
+  - { offset: 0x66CAC, size: 0x8, addend: 0x0, symName: ___InstabugLogHostApiSetup_block_invoke_4, symObjAddr: 0x9AC, symBinAddr: 0xDD0C, symSize: 0xCC }
+  - { offset: 0x66D81, size: 0x8, addend: 0x0, symName: ___InstabugLogHostApiSetup_block_invoke_5, symObjAddr: 0xA78, symBinAddr: 0xDDD8, symSize: 0x8C }
+  - { offset: 0x6712E, size: 0x8, addend: 0x0, symName: _FeatureFlagsFlutterApiGetCodec, symObjAddr: 0x0, symBinAddr: 0xDE64, symSize: 0x44 }
+  - { offset: 0x6713C, size: 0x8, addend: 0x0, symName: _FeatureFlagsFlutterApiGetCodec, symObjAddr: 0x0, symBinAddr: 0xDE64, symSize: 0x44 }
+  - { offset: 0x67162, size: 0x8, addend: 0x0, symName: _FeatureFlagsFlutterApiGetCodec.sSharedObject, symObjAddr: 0x112C0, symBinAddr: 0x28590, symSize: 0x0 }
+  - { offset: 0x67172, size: 0x8, addend: 0x0, symName: _InstabugHostApiGetCodec, symObjAddr: 0x350, symBinAddr: 0xE19C, symSize: 0x44 }
+  - { offset: 0x67198, size: 0x8, addend: 0x0, symName: _InstabugHostApiGetCodec.sSharedObject, symObjAddr: 0x112C8, symBinAddr: 0x28598, symSize: 0x0 }
+  - { offset: 0x671D3, size: 0x8, addend: 0x0, symName: '-[FeatureFlagsFlutterApi initWithBinaryMessenger:]', symObjAddr: 0x44, symBinAddr: 0xDEA8, symSize: 0x78 }
+  - { offset: 0x6721A, size: 0x8, addend: 0x0, symName: '-[FeatureFlagsFlutterApi onW3CFeatureFlagChangeIsW3cExternalTraceIDEnabled:isW3cExternalGeneratedHeaderEnabled:isW3cCaughtHeaderEnabled:completion:]', symObjAddr: 0xBC, symBinAddr: 0xDF20, symSize: 0x24C }
+  - { offset: 0x672AB, size: 0x8, addend: 0x0, symName: '___148-[FeatureFlagsFlutterApi onW3CFeatureFlagChangeIsW3cExternalTraceIDEnabled:isW3cExternalGeneratedHeaderEnabled:isW3cCaughtHeaderEnabled:completion:]_block_invoke', symObjAddr: 0x308, symBinAddr: 0xE16C, symSize: 0x10 }
+  - { offset: 0x67305, size: 0x8, addend: 0x0, symName: '-[FeatureFlagsFlutterApi binaryMessenger]', symObjAddr: 0x330, symBinAddr: 0xE17C, symSize: 0x8 }
+  - { offset: 0x6733C, size: 0x8, addend: 0x0, symName: '-[FeatureFlagsFlutterApi setBinaryMessenger:]', symObjAddr: 0x338, symBinAddr: 0xE184, symSize: 0xC }
+  - { offset: 0x6737D, size: 0x8, addend: 0x0, symName: '-[FeatureFlagsFlutterApi .cxx_destruct]', symObjAddr: 0x344, symBinAddr: 0xE190, symSize: 0xC }
+  - { offset: 0x673B0, size: 0x8, addend: 0x0, symName: _InstabugHostApiSetup, symObjAddr: 0x394, symBinAddr: 0xE1E0, symSize: 0x17FC }
+  - { offset: 0x67B0C, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke, symObjAddr: 0x1B90, symBinAddr: 0xF9DC, symSize: 0xD8 }
+  - { offset: 0x67C4B, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke.23, symObjAddr: 0x1ECC, symBinAddr: 0xFAB4, symSize: 0xA8 }
+  - { offset: 0x67D09, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_2, symObjAddr: 0x1F74, symBinAddr: 0xFB5C, symSize: 0xA8 }
+  - { offset: 0x67DC7, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_3, symObjAddr: 0x201C, symBinAddr: 0xFC04, symSize: 0x128 }
+  - { offset: 0x67F08, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_4, symObjAddr: 0x2144, symBinAddr: 0xFD2C, symSize: 0x94 }
+  - { offset: 0x67FB5, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_5, symObjAddr: 0x21D8, symBinAddr: 0xFDC0, symSize: 0xD8 }
+  - { offset: 0x6809E, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_6, symObjAddr: 0x22B0, symBinAddr: 0xFE98, symSize: 0x128 }
+  - { offset: 0x681DF, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_7, symObjAddr: 0x23D8, symBinAddr: 0xFFC0, symSize: 0xD8 }
+  - { offset: 0x682C8, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_8, symObjAddr: 0x24B0, symBinAddr: 0x10098, symSize: 0xD8 }
+  - { offset: 0x683B1, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_9, symObjAddr: 0x2588, symBinAddr: 0x10170, symSize: 0x94 }
+  - { offset: 0x6845E, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_10, symObjAddr: 0x261C, symBinAddr: 0x10204, symSize: 0xD8 }
+  - { offset: 0x6854E, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_11, symObjAddr: 0x26F4, symBinAddr: 0x102DC, symSize: 0xD8 }
+  - { offset: 0x6863E, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_12, symObjAddr: 0x27CC, symBinAddr: 0x103B4, symSize: 0xD8 }
+  - { offset: 0x6872E, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_13, symObjAddr: 0x28A4, symBinAddr: 0x1048C, symSize: 0xD8 }
+  - { offset: 0x6881E, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_14, symObjAddr: 0x297C, symBinAddr: 0x10564, symSize: 0xD8 }
+  - { offset: 0x6890E, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_15, symObjAddr: 0x2A54, symBinAddr: 0x1063C, symSize: 0xFC }
+  - { offset: 0x68A2B, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_16, symObjAddr: 0x2B50, symBinAddr: 0x10738, symSize: 0xD8 }
+  - { offset: 0x68B1B, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_17, symObjAddr: 0x2C28, symBinAddr: 0x10810, symSize: 0x94 }
+  - { offset: 0x68BCD, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_18, symObjAddr: 0x2CBC, symBinAddr: 0x108A4, symSize: 0x84 }
+  - { offset: 0x68C28, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_19, symObjAddr: 0x2D40, symBinAddr: 0x10928, symSize: 0x48 }
+  - { offset: 0x68CC2, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke.61, symObjAddr: 0x2D88, symBinAddr: 0x10970, symSize: 0xD8 }
+  - { offset: 0x68DB2, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_2.64, symObjAddr: 0x2E60, symBinAddr: 0x10A48, symSize: 0xD8 }
+  - { offset: 0x68EA2, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_3.67, symObjAddr: 0x2F38, symBinAddr: 0x10B20, symSize: 0x94 }
+  - { offset: 0x68F54, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_4.70, symObjAddr: 0x2FCC, symBinAddr: 0x10BB4, symSize: 0xD8 }
+  - { offset: 0x69044, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_5.73, symObjAddr: 0x30A4, symBinAddr: 0x10C8C, symSize: 0xD8 }
+  - { offset: 0x69134, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_6.76, symObjAddr: 0x317C, symBinAddr: 0x10D64, symSize: 0x94 }
+  - { offset: 0x691E6, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_7.79, symObjAddr: 0x3210, symBinAddr: 0x10DF8, symSize: 0xFC }
+  - { offset: 0x69303, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_8.82, symObjAddr: 0x330C, symBinAddr: 0x10EF4, symSize: 0xD8 }
+  - { offset: 0x693F3, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_9.85, symObjAddr: 0x33E4, symBinAddr: 0x10FCC, symSize: 0xBC }
+  - { offset: 0x6949F, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_10.86, symObjAddr: 0x34A0, symBinAddr: 0x11088, symSize: 0x48 }
+  - { offset: 0x69539, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke.90, symObjAddr: 0x34E8, symBinAddr: 0x110D0, symSize: 0x84 }
+  - { offset: 0x69594, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_2.91, symObjAddr: 0x356C, symBinAddr: 0x11154, symSize: 0x48 }
+  - { offset: 0x6962E, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke.95, symObjAddr: 0x35B4, symBinAddr: 0x1119C, symSize: 0x128 }
+  - { offset: 0x69778, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_2.98, symObjAddr: 0x36DC, symBinAddr: 0x112C4, symSize: 0xD8 }
+  - { offset: 0x69868, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_3.101, symObjAddr: 0x37B4, symBinAddr: 0x1139C, symSize: 0xFC }
+  - { offset: 0x69985, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_4.104, symObjAddr: 0x38B0, symBinAddr: 0x11498, symSize: 0xD8 }
+  - { offset: 0x69A75, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_5.107, symObjAddr: 0x3988, symBinAddr: 0x11570, symSize: 0xFC }
+  - { offset: 0x69B92, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_6.110, symObjAddr: 0x3A84, symBinAddr: 0x1166C, symSize: 0xFC }
+  - { offset: 0x69CAF, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_7.113, symObjAddr: 0x3B80, symBinAddr: 0x11768, symSize: 0x94 }
+  - { offset: 0x69D61, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_8.116, symObjAddr: 0x3C14, symBinAddr: 0x117FC, symSize: 0xD8 }
+  - { offset: 0x69E51, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_9.119, symObjAddr: 0x3CEC, symBinAddr: 0x118D4, symSize: 0x94 }
+  - { offset: 0x69F03, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_10.122, symObjAddr: 0x3D80, symBinAddr: 0x11968, symSize: 0xA8 }
+  - { offset: 0x69FC7, size: 0x8, addend: 0x0, symName: ___InstabugHostApiSetup_block_invoke_11.125, symObjAddr: 0x3E28, symBinAddr: 0x11A10, symSize: 0x94 }
+  - { offset: 0x6B2EC, size: 0x8, addend: 0x0, symName: _InitRepliesApi, symObjAddr: 0x0, symBinAddr: 0x11AA4, symSize: 0x7C }
+  - { offset: 0x6B33A, size: 0x8, addend: 0x0, symName: _InitRepliesApi, symObjAddr: 0x0, symBinAddr: 0x11AA4, symSize: 0x7C }
+  - { offset: 0x6B3DF, size: 0x8, addend: 0x0, symName: '-[RepliesApi initWithFlutterApi:]', symObjAddr: 0x7C, symBinAddr: 0x11B20, symSize: 0x64 }
+  - { offset: 0x6B426, size: 0x8, addend: 0x0, symName: '-[RepliesApi setEnabledIsEnabled:error:]', symObjAddr: 0xE0, symBinAddr: 0x11B84, symSize: 0x24 }
+  - { offset: 0x6B47D, size: 0x8, addend: 0x0, symName: '-[RepliesApi showWithError:]', symObjAddr: 0x104, symBinAddr: 0x11BA8, symSize: 0xC }
+  - { offset: 0x6B4B8, size: 0x8, addend: 0x0, symName: '-[RepliesApi setInAppNotificationsEnabledIsEnabled:error:]', symObjAddr: 0x110, symBinAddr: 0x11BB4, symSize: 0x24 }
+  - { offset: 0x6B50F, size: 0x8, addend: 0x0, symName: '-[RepliesApi setInAppNotificationSoundIsEnabled:error:]', symObjAddr: 0x134, symBinAddr: 0x11BD8, symSize: 0x4 }
+  - { offset: 0x6B556, size: 0x8, addend: 0x0, symName: '-[RepliesApi getUnreadRepliesCountWithCompletion:]', symObjAddr: 0x138, symBinAddr: 0x11BDC, symSize: 0x80 }
+  - { offset: 0x6B5B6, size: 0x8, addend: 0x0, symName: '-[RepliesApi hasChatsWithCompletion:]', symObjAddr: 0x1B8, symBinAddr: 0x11C5C, symSize: 0x80 }
+  - { offset: 0x6B616, size: 0x8, addend: 0x0, symName: '-[RepliesApi bindOnNewReplyCallbackWithError:]', symObjAddr: 0x238, symBinAddr: 0x11CDC, symSize: 0x58 }
+  - { offset: 0x6B655, size: 0x8, addend: 0x0, symName: '___46-[RepliesApi bindOnNewReplyCallbackWithError:]_block_invoke', symObjAddr: 0x290, symBinAddr: 0x11D34, symSize: 0x14 }
+  - { offset: 0x6B694, size: 0x8, addend: 0x0, symName: '___46-[RepliesApi bindOnNewReplyCallbackWithError:]_block_invoke_2', symObjAddr: 0x2A4, symBinAddr: 0x11D48, symSize: 0x4 }
+  - { offset: 0x6B6C7, size: 0x8, addend: 0x0, symName: '-[RepliesApi flutterApi]', symObjAddr: 0x2B8, symBinAddr: 0x11D4C, symSize: 0x8 }
+  - { offset: 0x6B6FE, size: 0x8, addend: 0x0, symName: '-[RepliesApi setFlutterApi:]', symObjAddr: 0x2C0, symBinAddr: 0x11D54, symSize: 0xC }
+  - { offset: 0x6B73F, size: 0x8, addend: 0x0, symName: '-[RepliesApi .cxx_destruct]', symObjAddr: 0x2CC, symBinAddr: 0x11D60, symSize: 0xC }
+  - { offset: 0x6B99E, size: 0x8, addend: 0x0, symName: _RepliesFlutterApiGetCodec, symObjAddr: 0x0, symBinAddr: 0x11D6C, symSize: 0x44 }
+  - { offset: 0x6B9AC, size: 0x8, addend: 0x0, symName: _RepliesFlutterApiGetCodec, symObjAddr: 0x0, symBinAddr: 0x11D6C, symSize: 0x44 }
+  - { offset: 0x6B9D2, size: 0x8, addend: 0x0, symName: _RepliesFlutterApiGetCodec.sSharedObject, symObjAddr: 0x54A8, symBinAddr: 0x285A0, symSize: 0x0 }
+  - { offset: 0x6B9E2, size: 0x8, addend: 0x0, symName: _RepliesHostApiGetCodec, symObjAddr: 0x200, symBinAddr: 0x11F54, symSize: 0x44 }
+  - { offset: 0x6BA08, size: 0x8, addend: 0x0, symName: _RepliesHostApiGetCodec.sSharedObject, symObjAddr: 0x54B0, symBinAddr: 0x285A8, symSize: 0x0 }
+  - { offset: 0x6BA43, size: 0x8, addend: 0x0, symName: '-[RepliesFlutterApi initWithBinaryMessenger:]', symObjAddr: 0x44, symBinAddr: 0x11DB0, symSize: 0x78 }
+  - { offset: 0x6BA8A, size: 0x8, addend: 0x0, symName: '-[RepliesFlutterApi onNewReplyWithCompletion:]', symObjAddr: 0xBC, symBinAddr: 0x11E28, symSize: 0xFC }
+  - { offset: 0x6BAEB, size: 0x8, addend: 0x0, symName: '___46-[RepliesFlutterApi onNewReplyWithCompletion:]_block_invoke', symObjAddr: 0x1B8, symBinAddr: 0x11F24, symSize: 0x10 }
+  - { offset: 0x6BB45, size: 0x8, addend: 0x0, symName: '-[RepliesFlutterApi binaryMessenger]', symObjAddr: 0x1E0, symBinAddr: 0x11F34, symSize: 0x8 }
+  - { offset: 0x6BB7C, size: 0x8, addend: 0x0, symName: '-[RepliesFlutterApi setBinaryMessenger:]', symObjAddr: 0x1E8, symBinAddr: 0x11F3C, symSize: 0xC }
+  - { offset: 0x6BBBD, size: 0x8, addend: 0x0, symName: '-[RepliesFlutterApi .cxx_destruct]', symObjAddr: 0x1F4, symBinAddr: 0x11F48, symSize: 0xC }
+  - { offset: 0x6BBF0, size: 0x8, addend: 0x0, symName: _RepliesHostApiSetup, symObjAddr: 0x244, symBinAddr: 0x11F98, symSize: 0x48C }
+  - { offset: 0x6BD62, size: 0x8, addend: 0x0, symName: ___RepliesHostApiSetup_block_invoke, symObjAddr: 0x6D0, symBinAddr: 0x12424, symSize: 0xD4 }
+  - { offset: 0x6BE9D, size: 0x8, addend: 0x0, symName: ___RepliesHostApiSetup_block_invoke.21, symObjAddr: 0xA08, symBinAddr: 0x124F8, symSize: 0x94 }
+  - { offset: 0x6BF4A, size: 0x8, addend: 0x0, symName: ___RepliesHostApiSetup_block_invoke_2, symObjAddr: 0xA9C, symBinAddr: 0x1258C, symSize: 0xD4 }
+  - { offset: 0x6C02D, size: 0x8, addend: 0x0, symName: ___RepliesHostApiSetup_block_invoke_3, symObjAddr: 0xB70, symBinAddr: 0x12660, symSize: 0xD4 }
+  - { offset: 0x6C110, size: 0x8, addend: 0x0, symName: ___RepliesHostApiSetup_block_invoke_4, symObjAddr: 0xC44, symBinAddr: 0x12734, symSize: 0x84 }
+  - { offset: 0x6C167, size: 0x8, addend: 0x0, symName: ___RepliesHostApiSetup_block_invoke_5, symObjAddr: 0xCC8, symBinAddr: 0x127B8, symSize: 0x48 }
+  - { offset: 0x6C1FC, size: 0x8, addend: 0x0, symName: ___RepliesHostApiSetup_block_invoke.31, symObjAddr: 0xD10, symBinAddr: 0x12800, symSize: 0x84 }
+  - { offset: 0x6C253, size: 0x8, addend: 0x0, symName: ___RepliesHostApiSetup_block_invoke_2.32, symObjAddr: 0xD94, symBinAddr: 0x12884, symSize: 0x48 }
+  - { offset: 0x6C2E8, size: 0x8, addend: 0x0, symName: ___RepliesHostApiSetup_block_invoke_3.35, symObjAddr: 0xDDC, symBinAddr: 0x128CC, symSize: 0x94 }
+  - { offset: 0x6C8B8, size: 0x8, addend: 0x0, symName: _InitSessionReplayApi, symObjAddr: 0x0, symBinAddr: 0x12960, symSize: 0x4C }
+  - { offset: 0x6C8D7, size: 0x8, addend: 0x0, symName: _InitSessionReplayApi, symObjAddr: 0x0, symBinAddr: 0x12960, symSize: 0x4C }
+  - { offset: 0x6C96C, size: 0x8, addend: 0x0, symName: '-[SessionReplayApi setEnabledIsEnabled:error:]', symObjAddr: 0x4C, symBinAddr: 0x129AC, symSize: 0x24 }
+  - { offset: 0x6C9B7, size: 0x8, addend: 0x0, symName: '-[SessionReplayApi setInstabugLogsEnabledIsEnabled:error:]', symObjAddr: 0x70, symBinAddr: 0x129D0, symSize: 0x24 }
+  - { offset: 0x6CA02, size: 0x8, addend: 0x0, symName: '-[SessionReplayApi setNetworkLogsEnabledIsEnabled:error:]', symObjAddr: 0x94, symBinAddr: 0x129F4, symSize: 0x24 }
+  - { offset: 0x6CA4D, size: 0x8, addend: 0x0, symName: '-[SessionReplayApi setUserStepsEnabledIsEnabled:error:]', symObjAddr: 0xB8, symBinAddr: 0x12A18, symSize: 0x24 }
+  - { offset: 0x6CA98, size: 0x8, addend: 0x0, symName: '-[SessionReplayApi getSessionReplayLinkWithCompletion:]', symObjAddr: 0xDC, symBinAddr: 0x12A3C, symSize: 0x60 }
+  - { offset: 0x6CC19, size: 0x8, addend: 0x0, symName: _SessionReplayHostApiGetCodec, symObjAddr: 0x0, symBinAddr: 0x12A9C, symSize: 0x44 }
+  - { offset: 0x6CC27, size: 0x8, addend: 0x0, symName: _SessionReplayHostApiGetCodec, symObjAddr: 0x0, symBinAddr: 0x12A9C, symSize: 0x44 }
+  - { offset: 0x6CC4D, size: 0x8, addend: 0x0, symName: _SessionReplayHostApiGetCodec.sSharedObject, symObjAddr: 0x3A58, symBinAddr: 0x285B0, symSize: 0x0 }
+  - { offset: 0x6CC5D, size: 0x8, addend: 0x0, symName: _SessionReplayHostApiSetup, symObjAddr: 0x44, symBinAddr: 0x12AE0, symSize: 0x364 }
+  - { offset: 0x6CD75, size: 0x8, addend: 0x0, symName: ___SessionReplayHostApiSetup_block_invoke, symObjAddr: 0x3A8, symBinAddr: 0x12E44, symSize: 0xD4 }
+  - { offset: 0x6CEB0, size: 0x8, addend: 0x0, symName: ___SessionReplayHostApiSetup_block_invoke.5, symObjAddr: 0x6E8, symBinAddr: 0x12F18, symSize: 0xD4 }
+  - { offset: 0x6CF93, size: 0x8, addend: 0x0, symName: ___SessionReplayHostApiSetup_block_invoke_2, symObjAddr: 0x7BC, symBinAddr: 0x12FEC, symSize: 0xD4 }
+  - { offset: 0x6D076, size: 0x8, addend: 0x0, symName: ___SessionReplayHostApiSetup_block_invoke_3, symObjAddr: 0x890, symBinAddr: 0x130C0, symSize: 0xD4 }
+  - { offset: 0x6D159, size: 0x8, addend: 0x0, symName: ___SessionReplayHostApiSetup_block_invoke_4, symObjAddr: 0x964, symBinAddr: 0x13194, symSize: 0x84 }
+  - { offset: 0x6D1B0, size: 0x8, addend: 0x0, symName: ___SessionReplayHostApiSetup_block_invoke_5, symObjAddr: 0x9E8, symBinAddr: 0x13218, symSize: 0x48 }
+  - { offset: 0x6D569, size: 0x8, addend: 0x0, symName: _InitSurveysApi, symObjAddr: 0x0, symBinAddr: 0x13260, symSize: 0x7C }
+  - { offset: 0x6D5B7, size: 0x8, addend: 0x0, symName: _InitSurveysApi, symObjAddr: 0x0, symBinAddr: 0x13260, symSize: 0x7C }
+  - { offset: 0x6D65C, size: 0x8, addend: 0x0, symName: '-[SurveysApi initWithFlutterApi:]', symObjAddr: 0x7C, symBinAddr: 0x132DC, symSize: 0x64 }
+  - { offset: 0x6D6A3, size: 0x8, addend: 0x0, symName: '-[SurveysApi setEnabledIsEnabled:error:]', symObjAddr: 0xE0, symBinAddr: 0x13340, symSize: 0x24 }
+  - { offset: 0x6D6FA, size: 0x8, addend: 0x0, symName: '-[SurveysApi showSurveyIfAvailableWithError:]', symObjAddr: 0x104, symBinAddr: 0x13364, symSize: 0xC }
+  - { offset: 0x6D735, size: 0x8, addend: 0x0, symName: '-[SurveysApi showSurveySurveyToken:error:]', symObjAddr: 0x110, symBinAddr: 0x13370, symSize: 0xC }
+  - { offset: 0x6D77E, size: 0x8, addend: 0x0, symName: '-[SurveysApi setAutoShowingEnabledIsEnabled:error:]', symObjAddr: 0x11C, symBinAddr: 0x1337C, symSize: 0x24 }
+  - { offset: 0x6D7D5, size: 0x8, addend: 0x0, symName: '-[SurveysApi setShouldShowWelcomeScreenShouldShowWelcomeScreen:error:]', symObjAddr: 0x140, symBinAddr: 0x133A0, symSize: 0x24 }
+  - { offset: 0x6D82C, size: 0x8, addend: 0x0, symName: '-[SurveysApi setAppStoreURLAppStoreURL:error:]', symObjAddr: 0x164, symBinAddr: 0x133C4, symSize: 0xC }
+  - { offset: 0x6D875, size: 0x8, addend: 0x0, symName: '-[SurveysApi hasRespondedToSurveySurveyToken:completion:]', symObjAddr: 0x170, symBinAddr: 0x133D0, symSize: 0x94 }
+  - { offset: 0x6D8C4, size: 0x8, addend: 0x0, symName: '___57-[SurveysApi hasRespondedToSurveySurveyToken:completion:]_block_invoke', symObjAddr: 0x204, symBinAddr: 0x13464, symSize: 0x50 }
+  - { offset: 0x6D948, size: 0x8, addend: 0x0, symName: '-[SurveysApi getAvailableSurveysWithCompletion:]', symObjAddr: 0x26C, symBinAddr: 0x134B4, symSize: 0x84 }
+  - { offset: 0x6D987, size: 0x8, addend: 0x0, symName: '___48-[SurveysApi getAvailableSurveysWithCompletion:]_block_invoke', symObjAddr: 0x2F0, symBinAddr: 0x13538, symSize: 0x158 }
+  - { offset: 0x6DA2A, size: 0x8, addend: 0x0, symName: '-[SurveysApi bindOnShowSurveyCallbackWithError:]', symObjAddr: 0x448, symBinAddr: 0x13690, symSize: 0x58 }
+  - { offset: 0x6DA69, size: 0x8, addend: 0x0, symName: '___48-[SurveysApi bindOnShowSurveyCallbackWithError:]_block_invoke', symObjAddr: 0x4A0, symBinAddr: 0x136E8, symSize: 0x14 }
+  - { offset: 0x6DAA8, size: 0x8, addend: 0x0, symName: '___48-[SurveysApi bindOnShowSurveyCallbackWithError:]_block_invoke_2', symObjAddr: 0x4B4, symBinAddr: 0x136FC, symSize: 0x4 }
+  - { offset: 0x6DADB, size: 0x8, addend: 0x0, symName: '-[SurveysApi bindOnDismissSurveyCallbackWithError:]', symObjAddr: 0x4C0, symBinAddr: 0x13700, symSize: 0x58 }
+  - { offset: 0x6DB1A, size: 0x8, addend: 0x0, symName: '___51-[SurveysApi bindOnDismissSurveyCallbackWithError:]_block_invoke', symObjAddr: 0x518, symBinAddr: 0x13758, symSize: 0x14 }
+  - { offset: 0x6DB59, size: 0x8, addend: 0x0, symName: '___51-[SurveysApi bindOnDismissSurveyCallbackWithError:]_block_invoke_2', symObjAddr: 0x52C, symBinAddr: 0x1376C, symSize: 0x4 }
+  - { offset: 0x6DB8C, size: 0x8, addend: 0x0, symName: '-[SurveysApi flutterApi]', symObjAddr: 0x530, symBinAddr: 0x13770, symSize: 0x8 }
+  - { offset: 0x6DBC3, size: 0x8, addend: 0x0, symName: '-[SurveysApi setFlutterApi:]', symObjAddr: 0x538, symBinAddr: 0x13778, symSize: 0xC }
+  - { offset: 0x6DC04, size: 0x8, addend: 0x0, symName: '-[SurveysApi .cxx_destruct]', symObjAddr: 0x544, symBinAddr: 0x13784, symSize: 0xC }
+  - { offset: 0x6E060, size: 0x8, addend: 0x0, symName: _SurveysFlutterApiGetCodec, symObjAddr: 0x0, symBinAddr: 0x13790, symSize: 0x44 }
+  - { offset: 0x6E06E, size: 0x8, addend: 0x0, symName: _SurveysFlutterApiGetCodec, symObjAddr: 0x0, symBinAddr: 0x13790, symSize: 0x44 }
+  - { offset: 0x6E094, size: 0x8, addend: 0x0, symName: _SurveysFlutterApiGetCodec.sSharedObject, symObjAddr: 0x6B28, symBinAddr: 0x285B8, symSize: 0x0 }
+  - { offset: 0x6E0A4, size: 0x8, addend: 0x0, symName: _SurveysHostApiGetCodec, symObjAddr: 0x30C, symBinAddr: 0x13A84, symSize: 0x44 }
+  - { offset: 0x6E0CA, size: 0x8, addend: 0x0, symName: _SurveysHostApiGetCodec.sSharedObject, symObjAddr: 0x6B30, symBinAddr: 0x285C0, symSize: 0x0 }
+  - { offset: 0x6E105, size: 0x8, addend: 0x0, symName: '-[SurveysFlutterApi initWithBinaryMessenger:]', symObjAddr: 0x44, symBinAddr: 0x137D4, symSize: 0x78 }
+  - { offset: 0x6E14C, size: 0x8, addend: 0x0, symName: '-[SurveysFlutterApi onShowSurveyWithCompletion:]', symObjAddr: 0xBC, symBinAddr: 0x1384C, symSize: 0xFC }
+  - { offset: 0x6E1AD, size: 0x8, addend: 0x0, symName: '___48-[SurveysFlutterApi onShowSurveyWithCompletion:]_block_invoke', symObjAddr: 0x1B8, symBinAddr: 0x13948, symSize: 0x10 }
+  - { offset: 0x6E207, size: 0x8, addend: 0x0, symName: '-[SurveysFlutterApi onDismissSurveyWithCompletion:]', symObjAddr: 0x1E0, symBinAddr: 0x13958, symSize: 0xFC }
+  - { offset: 0x6E268, size: 0x8, addend: 0x0, symName: '___51-[SurveysFlutterApi onDismissSurveyWithCompletion:]_block_invoke', symObjAddr: 0x2DC, symBinAddr: 0x13A54, symSize: 0x10 }
+  - { offset: 0x6E2C2, size: 0x8, addend: 0x0, symName: '-[SurveysFlutterApi binaryMessenger]', symObjAddr: 0x2EC, symBinAddr: 0x13A64, symSize: 0x8 }
+  - { offset: 0x6E2F9, size: 0x8, addend: 0x0, symName: '-[SurveysFlutterApi setBinaryMessenger:]', symObjAddr: 0x2F4, symBinAddr: 0x13A6C, symSize: 0xC }
+  - { offset: 0x6E33A, size: 0x8, addend: 0x0, symName: '-[SurveysFlutterApi .cxx_destruct]', symObjAddr: 0x300, symBinAddr: 0x13A78, symSize: 0xC }
+  - { offset: 0x6E36D, size: 0x8, addend: 0x0, symName: _SurveysHostApiSetup, symObjAddr: 0x350, symBinAddr: 0x13AC8, symSize: 0x648 }
+  - { offset: 0x6E566, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke, symObjAddr: 0x998, symBinAddr: 0x14110, symSize: 0xD4 }
+  - { offset: 0x6E6A1, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke.24, symObjAddr: 0xCD0, symBinAddr: 0x141E4, symSize: 0x94 }
+  - { offset: 0x6E74E, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke_2, symObjAddr: 0xD64, symBinAddr: 0x14278, symSize: 0xD4 }
+  - { offset: 0x6E831, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke_3, symObjAddr: 0xE38, symBinAddr: 0x1434C, symSize: 0xD4 }
+  - { offset: 0x6E914, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke_4, symObjAddr: 0xF0C, symBinAddr: 0x14420, symSize: 0xD4 }
+  - { offset: 0x6E9F7, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke_5, symObjAddr: 0xFE0, symBinAddr: 0x144F4, symSize: 0xD4 }
+  - { offset: 0x6EADA, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke_6, symObjAddr: 0x10B4, symBinAddr: 0x145C8, symSize: 0xB8 }
+  - { offset: 0x6EB7A, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke_7, symObjAddr: 0x116C, symBinAddr: 0x14680, symSize: 0x48 }
+  - { offset: 0x6EC0F, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke.38, symObjAddr: 0x11B4, symBinAddr: 0x146C8, symSize: 0x84 }
+  - { offset: 0x6EC66, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke_2.39, symObjAddr: 0x1238, symBinAddr: 0x1474C, symSize: 0x48 }
+  - { offset: 0x6ECFB, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke.43, symObjAddr: 0x1280, symBinAddr: 0x14794, symSize: 0x94 }
+  - { offset: 0x6EDA8, size: 0x8, addend: 0x0, symName: ___SurveysHostApiSetup_block_invoke_2.46, symObjAddr: 0x1314, symBinAddr: 0x14828, symSize: 0x94 }
+...

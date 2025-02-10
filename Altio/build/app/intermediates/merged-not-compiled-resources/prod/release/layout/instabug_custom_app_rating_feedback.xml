@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/instabug_survey_dialog_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/instabug_dialog_bg_color"
+    android:clickable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:fillViewport="false"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <!-- -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?attr/survey_container_bg"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ib_survey_custom_dialog_illustration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                app:srcCompat="@drawable/ib_ic_survey_apprating_light" />
+
+            <include
+                layout="@layout/survey_question_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ib_survey_custom_dialog_illustration"
+                android:layout_margin="@dimen/ib_core_dimen_16" />
+
+            <!-- close button used in parial view -->
+            <include
+                layout="@layout/item_close_survey_button"
+                android:visibility="visible" />
+
+            <include
+                android:id="@+id/ib_survey_custom_dialog_action_buttons_layout"
+                layout="@layout/ib_survey_custom_dialog_action_buttons" />
+
+            <include
+                layout="@layout/instabug_lyt_pbi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ib_survey_custom_dialog_action_buttons_layout"
+                android:layout_marginTop="-8dp"
+                android:layout_marginBottom="6dp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</RelativeLayout>

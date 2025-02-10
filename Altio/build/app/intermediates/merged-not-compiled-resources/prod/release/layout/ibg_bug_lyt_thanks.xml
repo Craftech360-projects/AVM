@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/instabug_success_dialog_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/instabug_dialog_bg_color"
+    android:gravity="center"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ib_success_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/instabug_background_color"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingTop="32dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="32dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="16dp">
+
+            <ImageView
+                android:id="@+id/instabug_img_thanks"
+                android:layout_width="104dp"
+                android:layout_height="104dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/ibg_bug_shape_thanks_background"
+                app:srcCompat="@drawable/ibg_bug_ic_done" />
+
+            <TextView
+                android:id="@+id/instabug_fragment_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/instabug_custom_survey_thanks_title"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/instabug_txt_success_note"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/instabug_str_success_note"
+                android:textColor="?attr/ibg_bug_thanks_subtitle_color"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/instabug_lyt_pbi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

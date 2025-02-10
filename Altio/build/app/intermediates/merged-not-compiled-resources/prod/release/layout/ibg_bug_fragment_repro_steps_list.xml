@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/instabug_vus_list_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/instabug_background_color"
+    android:orientation="vertical"
+    android:visibility="invisible">
+
+    <TextView
+        android:id="@+id/instabug_vus_list_header"
+        style="@style/InstabugReproStepsListHeaderTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:importantForAccessibility="yes"
+        android:text="@string/IBGReproStepsListHeader"
+        android:textColor="?attr/ibg_bug_vus_header_text_color"
+        tools:targetApi="jelly_bean" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/instabug_vus_empty_label"
+            style="@style/InstabugReproStepsEmptyViewTextStyle"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ibg_bug_vus_empty_view_background_light"
+            android:focusable="true"
+            android:minHeight="72dp"
+            android:text="@string/IBGReproStepsListEmptyStateLabel"
+            android:textColor="?attr/ibg_bug_vus_empty_state_label_color"
+            android:visibility="invisible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/instabug_vus_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/ib_core_padding_xsmall"
+            android:layout_marginRight="@dimen/ib_core_padding_xsmall"
+            android:divider="@null"
+            android:visibility="gone" />
+    </RelativeLayout>
+</LinearLayout>

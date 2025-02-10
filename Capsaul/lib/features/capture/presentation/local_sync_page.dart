@@ -2,7 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:capsaul/backend/database/transcript_segment.dart'; // Add this import
 import 'package:capsaul/backend/preferences.dart';
+import 'package:capsaul/utils/features/backups.dart';
+import 'package:capsaul/utils/memories/process.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -13,6 +16,8 @@ class LocalSyncPage extends StatefulWidget {
   @override
   _LocalSyncPageState createState() => _LocalSyncPageState();
 }
+
+// Remove the TranscriptSegment class from here since we're importing it
 
 class _LocalSyncPageState extends State<LocalSyncPage> {
   List<FileSystemEntity> _files = [];
@@ -47,9 +52,13 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
   Future<void> _sendFile(File file) async {
     setState(() => _loading = true);
     try {
+      // var uri = Uri.parse(
+      //     'https://living-alien-polite.ngrok-free.app/v1/sync-local-files');
       var uri = Uri.parse(
-          'https://living-alien-polite.ngrok-free.app/v1/sync-local-files');
+              'https://living-alien-polite.ngrok-free.app/v1/sync-local-files')
+          .replace(queryParameters: {'pipeline': 'deepgram'});
       var request = http.MultipartRequest('POST', uri);
+      print(uri);
       request.headers['uid'] = SharedPreferencesUtil().uid;
 
       var fileName = file.path.split('/').last;
@@ -103,8 +112,11 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
   Future<void> _sendAllFiles() async {
     setState(() => _loading = true);
     try {
+      // var uri = Uri.parse(
+      //     'https://living-alien-polite.ngrok-free.app/v1/sync-local-files');
       var uri = Uri.parse(
-          'https://living-alien-polite.ngrok-free.app/v1/sync-local-files');
+              'https://living-alien-polite.ngrok-free.app/v1/sync-local-files')
+          .replace(queryParameters: {'pipeline': 'deepgram'});
       var request = http.MultipartRequest('POST', uri);
       request.headers['uid'] = SharedPreferencesUtil().uid;
 
@@ -171,7 +183,38 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
     var response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      print(response.body);
+      final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      final List<dynamic> result = jsonDecode(jsonResponse['result']);
+      // Extract and format the transcript segments
+      final List<String> formattedSegments = result.map((item) {
+        return '${item['text']},${item['speaker']},    ${item['start']}, ${item['end']},';
+      }).toList();
+
+      // Join the formatted segments into a single string
+      final String fullTranscript = formattedSegments.join('\n\n');
+
+      print("create memory");
+      // Convert the JSON data to TranscriptSegment objects using the imported class
+      final List<TranscriptSegment> segments = result.map((item) {
+        return TranscriptSegment.fromJson(item);
+      }).toList();
+
+      print("create memory");
+      if (mounted) {
+        processTranscriptContent(
+          context,
+          fullTranscript, // Pass empty string as fullTranscript since we're using segments
+          segments,
+          null,
+          retrievedFromCache: true,
+          sendMessageToChat: sendMessageToChat,
+        ).then((m) {
+          if (mounted && m != null && !m.discarded) executeBackupWithUid();
+        });
+      }
+
+      return jsonResponse;
     } else {
       throw Exception('Failed to fetch task status: ${response.statusCode}');
     }
@@ -179,40 +222,68 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
 
   Timer? _statusCheckTimer;
 
+  get sendMessageToChat => null;
+
   void startTaskStatusCheck(List<String> taskIds) {
-    _statusCheckTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
-      for (var taskId in taskIds) {
+    print("timer started");
+    _statusCheckTimer = Timer.periodic(Duration(seconds: 15), (timer) async {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      // Create a copy of the taskIds list for iteration
+      List<String> taskIdsCopy = List.from(taskIds);
+
+      for (var taskId in taskIdsCopy) {
         try {
           var status = await checkTaskStatus(taskId);
+          if (!mounted) {
+            timer.cancel();
+            return;
+          }
+
           setState(() {
             _taskStatuses[taskId] = status['status'];
           });
 
           if (status['status'] == 'completed') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Task $taskId completed!')),
-            );
-
-            taskIds.remove(taskId);
-            //  print(status.result);
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Task $taskId completed!')),
+              );
+            }
+            // Remove the taskId from the original list outside of the loop
+            //  taskIds.remove(taskId);
           } else if (status['status'] == 'failed') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text('Task $taskId failed: ${status['error']}')),
-            );
-            taskIds.remove(taskId);
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content: Text('Task $taskId failed: ${status['error']}')),
+              );
+            }
+            // Remove the taskId from the original list outside of the loop
+            // taskIds.remove(taskId);
           }
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error checking task status: $e')),
-          );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error checking task status: $e')),
+            );
+          }
         }
 
         if (taskIds.isEmpty) {
-          _statusCheckTimer?.cancel();
+          timer.cancel();
         }
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _statusCheckTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _deleteFile(File file) async {

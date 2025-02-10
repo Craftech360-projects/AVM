@@ -1,0 +1,17 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/craftech360/.pub-cache/git/flutter_workmanager-b783000c18f6e066f3d81d5ecc352f3ce61860f6/android/src/main/AndroidManifest.xml:1:1-2:12
+INJECTED from /Users/craftech360/.pub-cache/git/flutter_workmanager-b783000c18f6e066f3d81d5ecc352f3ce61860f6/android/src/main/AndroidManifest.xml:1:1-2:12
+	package
+		ADDED from /Users/craftech360/.pub-cache/git/flutter_workmanager-b783000c18f6e066f3d81d5ecc352f3ce61860f6/android/src/main/AndroidManifest.xml:1:70-112
+		INJECTED from /Users/craftech360/.pub-cache/git/flutter_workmanager-b783000c18f6e066f3d81d5ecc352f3ce61860f6/android/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/craftech360/.pub-cache/git/flutter_workmanager-b783000c18f6e066f3d81d5ecc352f3ce61860f6/android/src/main/AndroidManifest.xml:1:11-69
+uses-sdk
+INJECTED from /Users/craftech360/.pub-cache/git/flutter_workmanager-b783000c18f6e066f3d81d5ecc352f3ce61860f6/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/craftech360/.pub-cache/git/flutter_workmanager-b783000c18f6e066f3d81d5ecc352f3ce61860f6/android/src/main/AndroidManifest.xml
+INJECTED from /Users/craftech360/.pub-cache/git/flutter_workmanager-b783000c18f6e066f3d81d5ecc352f3ce61860f6/android/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/craftech360/.pub-cache/git/flutter_workmanager-b783000c18f6e066f3d81d5ecc352f3ce61860f6/android/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/craftech360/.pub-cache/git/flutter_workmanager-b783000c18f6e066f3d81d5ecc352f3ce61860f6/android/src/main/AndroidManifest.xml

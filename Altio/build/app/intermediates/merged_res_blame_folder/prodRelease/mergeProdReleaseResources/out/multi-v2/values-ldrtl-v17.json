@@ -1,0 +1,55 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.craftech360.avm.app-mergeProdReleaseResources-74:/values-ldrtl-v17/values-ldrtl-v17.xml",
+            "map": [
+                {
+                    "source": "/Users/craftech360/.gradle/caches/transforms-4/569cd843220488b9ac7e08550f63e968/transformed/jetified-instabug-bug-14.1.0/res/values-ldrtl-v17/values-ldrtl-v17.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "61",
+                        "endOffsets": "112"
+                    },
+                    "to": {
+                        "startLines": "4",
+                        "startColumns": "4",
+                        "startOffsets": "332",
+                        "endColumns": "61",
+                        "endOffsets": "389"
+                    }
+                },
+                {
+                    "source": "/Users/craftech360/.gradle/caches/transforms-4/25c5479cdf0b91be52700c86d853fbdc/transformed/jetified-instabug-survey-14.1.0/res/values-ldrtl-v17/values-ldrtl-v17.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "14",
+                        "endColumns": "12",
+                        "endOffsets": "913"
+                    },
+                    "to": {
+                        "startLines": "5",
+                        "startColumns": "4",
+                        "startOffsets": "394",
+                        "endLines": "17",
+                        "endColumns": "12",
+                        "endOffsets": "1252"
+                    }
+                },
+                {
+                    "source": "/Users/craftech360/.gradle/caches/transforms-4/4504918b31eb77a064ef54c1cffcde67/transformed/material-1.12.0/res/values-ldrtl-v17/values-ldrtl-v17.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,191",
+                        "endColumns": "135,140",
+                        "endOffsets": "186,327"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.instabug.flutter" >
+
+    <uses-sdk android:minSdkVersion="16" />
+
+    <application>
+        <meta-data
+            android:name="com.instabug.library.ibg_platform"
+            android:value="FLUTTER" />
+    </application>
+
+</manifest>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/instabug_survey_dialog_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:orientation="vertical">
+        <!-- shadow used in partial view -->
+        <include layout="@layout/layout_shadow" />
+        <!-- -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/survey_container_bg"
+            android:orientation="vertical">
+
+            <!-- close button used in parial view -->
+            <include layout="@layout/item_close_survey_button" />
+
+            <RelativeLayout
+                android:id="@+id/thanks_container_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="@dimen/instabug_dialog_container_padding"
+                android:layout_marginRight="@dimen/instabug_dialog_container_padding"
+                android:focusableInTouchMode="true"
+                android:focusedByDefault="true"
+                android:importantForAccessibility="yes"
+                android:screenReaderFocusable="true"
+                tools:targetApi="p">
+
+                <ImageView
+                    android:id="@+id/instabug_img_thanks"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/ibg_survey_ic_thanks_background"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ibg_survey_ic_survey_thankyou" />
+
+                <TextView
+                    android:id="@+id/txt_rate_us_title"
+                    style="@style/InstabugResizableText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/instabug_img_thanks"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:importantForAccessibility="no"
+                    android:maxLines="2"
+                    android:screenReaderFocusable="false"
+                    android:textSize="@dimen/survey_rate_us_title_text_size"
+                    app:autoSizeMaxTextSize="@dimen/survey_rate_us_title_text_size"
+                    tools:text="@string/instabug_custom_survey_thanks_title" />
+
+                <TextView
+                    android:id="@+id/txt_rate_us_question"
+                    style="@style/InstabugSurveyThanksMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txt_rate_us_title"
+                    android:importantForAccessibility="no"
+                    android:screenReaderFocusable="false" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

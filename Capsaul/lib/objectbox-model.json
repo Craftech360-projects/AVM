@@ -4,429 +4,137 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:1521024926543535",
-      "lastPropertyId": "10:6152224387307342739",
-      "name": "Memory",
-      "properties": [
-        {
-          "id": "1:8192907449372324122",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:1146945244623312213",
-          "name": "createdAt",
-          "type": 10,
-          "flags": 8,
-          "indexId": "1:4862313103417962125"
-        },
-        {
-          "id": "3:1067066826133615759",
-          "name": "transcript",
-          "type": 9
-        },
-        {
-          "id": "4:8255028376208853529",
-          "name": "recordingFilePath",
-          "type": 9
-        },
-        {
-          "id": "5:1519520653454061032",
-          "name": "discarded",
-          "type": 1,
-          "flags": 8,
-          "indexId": "2:2359101042900121877"
-        },
-        {
-          "id": "6:1385167281437281076",
-          "name": "structuredId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "4:7578069314509735145",
-          "relationTarget": "Structured"
-        },
-        {
-          "id": "7:8550625374874609345",
-          "name": "startedAt",
-          "type": 10
-        },
-        {
-          "id": "8:970897693726655020",
-          "name": "finishedAt",
-          "type": 10
-        },
-        {
-          "id": "9:750321095880134980",
-          "name": "geolocationId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "10:1684776336187677600",
-          "relationTarget": "Geolocation"
-        },
-        {
-          "id": "10:6152224387307342739",
-          "name": "memoryImg",
-          "type": 23
-        }
-      ],
-      "relations": [
-        {
-          "id": "2:4703245221378113920",
-          "name": "transcriptSegments",
-          "targetId": "6:4187059965573492189"
-        },
-        {
-          "id": "3:7136919903563407649",
-          "name": "photos",
-          "targetId": "8:2420068094328998058"
-        }
-      ]
-    },
-    {
-      "id": "2:6427539297124375252",
-      "lastPropertyId": "9:7524614902799169714",
-      "name": "Structured",
-      "properties": [
-        {
-          "id": "1:3948118750863357078",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:9195755445020816093",
-          "name": "title",
-          "type": 9
-        },
-        {
-          "id": "3:2794378035287238174",
-          "name": "overview",
-          "type": 9
-        },
-        {
-          "id": "6:1092528478436176027",
-          "name": "emoji",
-          "type": 9
-        },
-        {
-          "id": "7:4057508104512714772",
-          "name": "category",
-          "type": 30
-        },
-        {
-          "id": "8:4321600440594391155",
-          "name": "geolocationId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "11:8287585027820134538",
-          "relationTarget": "Geolocation"
-        },
-        {
-          "id": "9:7524614902799169714",
-          "name": "brainstormingQuestions",
-          "type": 30
-        }
-      ],
-      "relations": []
-    },
-    {
-      "id": "3:9190753393137293311",
-      "lastPropertyId": "4:3090374185978757862",
+      "id": "1:8036148132068118001",
+      "lastPropertyId": "4:4190799669083640745",
       "name": "ActionItem",
       "properties": [
         {
-          "id": "1:2694083310188604862",
+          "id": "1:4728322683863436001",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:6712185592055014870",
+          "id": "2:6445950827382429172",
           "name": "description",
           "type": 9
         },
         {
-          "id": "3:54520819618183643",
+          "id": "3:3853600398963482666",
           "name": "completed",
           "type": 1
         },
         {
-          "id": "4:3090374185978757862",
+          "id": "4:4190799669083640745",
           "name": "structuredId",
           "type": 11,
           "flags": 520,
-          "indexId": "3:2460795322279972178",
+          "indexId": "1:8484256310503226671",
           "relationTarget": "Structured"
         }
       ],
       "relations": []
     },
     {
-      "id": "4:8944838570398231806",
-      "lastPropertyId": "6:4389894679139533208",
-      "name": "PluginResponse",
-      "properties": [
-        {
-          "id": "1:6229771852928788263",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "4:691957194881154364",
-          "name": "memoryId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "6:2436940497868764355",
-          "relationTarget": "Memory"
-        },
-        {
-          "id": "5:2860027525438426963",
-          "name": "content",
-          "type": 9
-        },
-        {
-          "id": "6:4389894679139533208",
-          "name": "pluginId",
-          "type": 9
-        }
-      ],
-      "relations": []
-    },
-    {
-      "id": "5:3905873968765933532",
-      "lastPropertyId": "8:7987152535571781370",
-      "name": "Message",
-      "properties": [
-        {
-          "id": "1:1878881834426487468",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:9040753066664612555",
-          "name": "createdAt",
-          "type": 10,
-          "flags": 8,
-          "indexId": "7:296619579137476887"
-        },
-        {
-          "id": "3:3367360249871802822",
-          "name": "text",
-          "type": 9
-        },
-        {
-          "id": "4:3325943223378277861",
-          "name": "sender",
-          "type": 9
-        },
-        {
-          "id": "5:5337649766892625543",
-          "name": "type",
-          "type": 9
-        },
-        {
-          "id": "6:3615800576746497622",
-          "name": "pluginId",
-          "type": 9
-        },
-        {
-          "id": "7:2294662025678668284",
-          "name": "fromIntegration",
-          "type": 1
-        },
-        {
-          "id": "8:7987152535571781370",
-          "name": "isPinned",
-          "type": 1
-        }
-      ],
-      "relations": [
-        {
-          "id": "1:7091380547659316419",
-          "name": "memories",
-          "targetId": "1:1521024926543535"
-        }
-      ]
-    },
-    {
-      "id": "6:4187059965573492189",
-      "lastPropertyId": "7:4627200910621033983",
-      "name": "TranscriptSegment",
-      "properties": [
-        {
-          "id": "1:4980495793887661277",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:9071133227098548567",
-          "name": "text",
-          "type": 9
-        },
-        {
-          "id": "3:9196505048325675409",
-          "name": "speaker",
-          "type": 9
-        },
-        {
-          "id": "4:407443881337783951",
-          "name": "speakerId",
-          "type": 6
-        },
-        {
-          "id": "5:5971131167901661375",
-          "name": "isUser",
-          "type": 1
-        },
-        {
-          "id": "6:4843588352934686711",
-          "name": "start",
-          "type": 8
-        },
-        {
-          "id": "7:4627200910621033983",
-          "name": "end",
-          "type": 8
-        }
-      ],
-      "relations": []
-    },
-    {
-      "id": "7:265133176252396324",
-      "lastPropertyId": "7:7098116187702997412",
+      "id": "2:8683463074894343904",
+      "lastPropertyId": "7:7414831688204979981",
       "name": "Event",
       "properties": [
         {
-          "id": "1:1288962548328890994",
+          "id": "1:3668174102468190636",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:4790234918480393406",
+          "id": "2:2630649399331743527",
           "name": "title",
           "type": 9
         },
         {
-          "id": "3:2151476491244407949",
+          "id": "3:4271706833034117324",
           "name": "startsAt",
           "type": 10
         },
         {
-          "id": "4:7841939327187751919",
+          "id": "4:3325956932898971917",
           "name": "duration",
           "type": 6
         },
         {
-          "id": "5:6399120598852890710",
+          "id": "5:3062394262633958959",
           "name": "description",
           "type": 9
         },
         {
-          "id": "6:8016636007871233432",
+          "id": "6:945402601915257758",
           "name": "created",
           "type": 1
         },
         {
-          "id": "7:7098116187702997412",
+          "id": "7:7414831688204979981",
           "name": "structuredId",
           "type": 11,
           "flags": 520,
-          "indexId": "8:5225160858485949527",
+          "indexId": "2:2630891838825256550",
           "relationTarget": "Structured"
         }
       ],
       "relations": []
     },
     {
-      "id": "8:2420068094328998058",
-      "lastPropertyId": "4:1039156685420731048",
-      "name": "MemoryPhoto",
-      "properties": [
-        {
-          "id": "1:1608680924662484644",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:6322407607045937555",
-          "name": "base64",
-          "type": 9
-        },
-        {
-          "id": "3:8935840048941751960",
-          "name": "description",
-          "type": 9
-        },
-        {
-          "id": "4:1039156685420731048",
-          "name": "memoryId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "9:7717987872558258803",
-          "relationTarget": "Memory"
-        }
-      ],
-      "relations": []
-    },
-    {
-      "id": "9:1071480816298889546",
-      "lastPropertyId": "10:102446081966318350",
+      "id": "3:7038469144393591080",
+      "lastPropertyId": "10:3134110549503434546",
       "name": "Geolocation",
       "properties": [
         {
-          "id": "1:5439776793324625302",
+          "id": "1:2219356856051175760",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:5029098691628262168",
+          "id": "2:2049689183104281078",
           "name": "latitude",
           "type": 8
         },
         {
-          "id": "3:360317290538166924",
+          "id": "3:8605478466601101426",
           "name": "longitude",
           "type": 8
         },
         {
-          "id": "4:6460297489623782570",
+          "id": "4:8831115018213313377",
           "name": "altitude",
           "type": 8
         },
         {
-          "id": "5:1607165285192119527",
+          "id": "5:307815701059481004",
           "name": "accuracy",
           "type": 8
         },
         {
-          "id": "6:1237058507785607166",
+          "id": "6:653364603637707516",
           "name": "time",
           "type": 10
         },
         {
-          "id": "7:4474409428020468496",
+          "id": "7:8734312639566830963",
           "name": "googlePlaceId",
           "type": 9
         },
         {
-          "id": "8:7722465006277032933",
+          "id": "8:368305490711218948",
           "name": "address",
           "type": 9
         },
         {
-          "id": "9:3289333230014969644",
+          "id": "9:362322589684798142",
           "name": "locationType",
           "type": 9
         },
         {
-          "id": "10:102446081966318350",
+          "id": "10:3134110549503434546",
           "name": "placeName",
           "type": 9
         }
@@ -434,66 +142,351 @@
       "relations": []
     },
     {
-      "id": "10:1791464344042370718",
-      "lastPropertyId": "7:5904086194715316121",
-      "name": "Prompt",
+      "id": "4:3672868196576239042",
+      "lastPropertyId": "10:5020277065742049376",
+      "name": "Memory",
       "properties": [
         {
-          "id": "1:7346941563501739858",
+          "id": "1:7033552514217892029",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:7551540904143517179",
+          "id": "2:1413994696250979640",
+          "name": "createdAt",
+          "type": 10,
+          "flags": 8,
+          "indexId": "3:810367088359668463"
+        },
+        {
+          "id": "3:8108340960313786731",
+          "name": "startedAt",
+          "type": 10
+        },
+        {
+          "id": "4:2286663480732464945",
+          "name": "finishedAt",
+          "type": 10
+        },
+        {
+          "id": "5:3589683577098586785",
+          "name": "transcript",
+          "type": 9
+        },
+        {
+          "id": "6:8963483432680375533",
+          "name": "memoryImg",
+          "type": 23
+        },
+        {
+          "id": "7:85721238634003536",
+          "name": "recordingFilePath",
+          "type": 9
+        },
+        {
+          "id": "8:8933642756957611822",
+          "name": "structuredId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "4:6570678883539173167",
+          "relationTarget": "Structured"
+        },
+        {
+          "id": "9:10707869826710570",
+          "name": "discarded",
+          "type": 1,
+          "flags": 8,
+          "indexId": "5:7000470046299003330"
+        },
+        {
+          "id": "10:5020277065742049376",
+          "name": "geolocationId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "6:4459188239878047754",
+          "relationTarget": "Geolocation"
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:5367469121255619994",
+          "name": "transcriptSegments",
+          "targetId": "10:7216638479910593553"
+        },
+        {
+          "id": "2:3802188489226434857",
+          "name": "photos",
+          "targetId": "5:5958939658312731269"
+        }
+      ]
+    },
+    {
+      "id": "5:5958939658312731269",
+      "lastPropertyId": "4:2372355543779359055",
+      "name": "MemoryPhoto",
+      "properties": [
+        {
+          "id": "1:6380509726761437317",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7259973117512198473",
+          "name": "base64",
+          "type": 9
+        },
+        {
+          "id": "3:5290415067085375987",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "4:2372355543779359055",
+          "name": "memoryId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "7:5123561766613628324",
+          "relationTarget": "Memory"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:1561913663715313686",
+      "lastPropertyId": "8:594162870083448648",
+      "name": "Message",
+      "properties": [
+        {
+          "id": "1:1078466061361864782",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8091287123281086583",
+          "name": "createdAt",
+          "type": 10,
+          "flags": 8,
+          "indexId": "8:1490261299707579324"
+        },
+        {
+          "id": "3:1799038479966763039",
+          "name": "isPinned",
+          "type": 1
+        },
+        {
+          "id": "4:4008753767762596096",
+          "name": "text",
+          "type": 9
+        },
+        {
+          "id": "5:3289222125061476382",
+          "name": "sender",
+          "type": 9
+        },
+        {
+          "id": "6:3134777097501303017",
+          "name": "pluginId",
+          "type": 9
+        },
+        {
+          "id": "7:4770653186854215641",
+          "name": "fromIntegration",
+          "type": 1
+        },
+        {
+          "id": "8:594162870083448648",
+          "name": "type",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "3:5760252895862670004",
+          "name": "memories",
+          "targetId": "4:3672868196576239042"
+        }
+      ]
+    },
+    {
+      "id": "7:7837663660054687515",
+      "lastPropertyId": "4:5034997960100490150",
+      "name": "PluginResponse",
+      "properties": [
+        {
+          "id": "1:1298988156467276674",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3571067935821611253",
+          "name": "pluginId",
+          "type": 9
+        },
+        {
+          "id": "3:3458406869278357642",
+          "name": "content",
+          "type": 9
+        },
+        {
+          "id": "4:5034997960100490150",
+          "name": "memoryId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "9:1629118327775521841",
+          "relationTarget": "Memory"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "8:6564049486656383859",
+      "lastPropertyId": "7:4282881311842800508",
+      "name": "Prompt",
+      "properties": [
+        {
+          "id": "1:6950540085522963647",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8954567031484786872",
           "name": "prompt",
           "type": 9
         },
         {
-          "id": "3:7266600431611326852",
+          "id": "3:3238504001891547808",
           "name": "title",
           "type": 9
         },
         {
-          "id": "4:8725035361320662901",
+          "id": "4:615006733671754793",
           "name": "overview",
           "type": 9
         },
         {
-          "id": "5:3523574139793422341",
+          "id": "5:1206949580631255230",
           "name": "actionItem",
           "type": 9
         },
         {
-          "id": "6:4986031735481618974",
+          "id": "6:921987903510578175",
           "name": "category",
           "type": 9
         },
         {
-          "id": "7:5904086194715316121",
+          "id": "7:4282881311842800508",
           "name": "calender",
           "type": 9
         }
       ],
       "relations": []
+    },
+    {
+      "id": "9:4919759918965866097",
+      "lastPropertyId": "7:3687397016139865743",
+      "name": "Structured",
+      "properties": [
+        {
+          "id": "1:6298719952520074949",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1152886923681770577",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:4637812684603505817",
+          "name": "overview",
+          "type": 9
+        },
+        {
+          "id": "4:3452344779117458488",
+          "name": "emoji",
+          "type": 9
+        },
+        {
+          "id": "5:6326107995187469244",
+          "name": "category",
+          "type": 30
+        },
+        {
+          "id": "6:6987818477138139415",
+          "name": "geolocationId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "10:5560334963421504351",
+          "relationTarget": "Geolocation"
+        },
+        {
+          "id": "7:3687397016139865743",
+          "name": "brainstormingQuestions",
+          "type": 30
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:7216638479910593553",
+      "lastPropertyId": "7:8962084889328162293",
+      "name": "TranscriptSegment",
+      "properties": [
+        {
+          "id": "1:4101418628652484408",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1359830674819833380",
+          "name": "text",
+          "type": 9
+        },
+        {
+          "id": "3:3387635442187918173",
+          "name": "speaker",
+          "type": 9
+        },
+        {
+          "id": "4:1120218897199219777",
+          "name": "speakerId",
+          "type": 6
+        },
+        {
+          "id": "5:718821611858495958",
+          "name": "isUser",
+          "type": 1
+        },
+        {
+          "id": "6:935443767662854525",
+          "name": "start",
+          "type": 8
+        },
+        {
+          "id": "7:8962084889328162293",
+          "name": "end",
+          "type": 8
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "10:1791464344042370718",
-  "lastIndexId": "11:8287585027820134538",
-  "lastRelationId": "3:7136919903563407649",
+  "lastEntityId": "10:7216638479910593553",
+  "lastIndexId": "10:5560334963421504351",
+  "lastRelationId": "3:5760252895862670004",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
-  "retiredIndexUids": [
-    2159273736567567467
-  ],
-  "retiredPropertyUids": [
-    2626201971202508244,
-    1809459319638310611,
-    6229900676402028868,
-    8014962203152976278
-  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
   "retiredRelationUids": [],
   "version": 1
 }

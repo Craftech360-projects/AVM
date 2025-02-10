@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageButton style="@style/InstabugTopDialogButton"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_centerVertical="true"
+    android:id="@+id/instabug_toolbar_icon"
+    android:layout_margin="0dp"
+    tools:ignore="ResourceName"
+    android:foreground="?android:selectableItemBackground"
+    android:rotation="@integer/instabug_icon_lang_rotation"
+    xmlns:tools="http://schemas.android.com/tools" />

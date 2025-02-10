@@ -1,0 +1,86 @@
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ib_reporting_container"
+    style="@style/InstabugBaseContainer">
+
+    <ScrollView
+        android:id="@+id/ib_bug_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="60dp"
+        android:clipToPadding="false"
+        android:scrollbarStyle="insideOverlay">
+
+        <LinearLayout
+            android:id="@+id/instabug_bug_reporting_edit_texts_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/ib_dimen_bug_attachments_space_padding">
+
+            <com.instabug.library.ui.custom.InstabugEditText
+                android:id="@+id/instabug_edit_text_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/instabug_str_email_hint"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                app:ib_edit_label="@string/ib_email_label"
+                tools:text="mgamal@instabug.com" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/instabug_divider" />
+
+            <com.instabug.library.ui.custom.InstabugEditText
+                android:id="@+id/instabug_edit_text_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textAutoCorrect|textMultiLine|textCapSentences"
+                app:ib_edit_label="@string/ib_description_label"
+                tools:text="Hello\nOther\nWorld" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/instabug_divider" />
+
+            <TextView
+                android:id="@+id/instabug_text_view_disclaimer"
+                style="@style/InstabugEditTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/instabug_theme_hint_text_color"
+                android:visibility="gone"
+                tools:text="Hello\nOther\nWorld" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/instabug_lyt_attachments_list"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/ib_dimen_bug_attachments_row_height"
+                android:layout_marginTop="12dp" />
+
+            <TextView
+                android:id="@+id/instabug_text_view_repro_steps_disclaimer"
+                style="@style/InstabugReproStepsDisclaimerTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/ib_bug_text_color"
+                tools:text="Hello Other\nWorld" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/instabug_lyt_consent_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/ibg_bug_consent_list_item"
+                tools:itemCount="2"/>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <include layout="@layout/ibg_bug_attachments_action_bar" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
