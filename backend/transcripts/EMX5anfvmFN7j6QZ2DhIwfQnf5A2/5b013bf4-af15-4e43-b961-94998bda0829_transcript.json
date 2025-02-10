@@ -1,0 +1,68 @@
+[
+    {
+        "text": "So that's what I am testing.",
+        "speaker": "speaker_0",
+        "start": 0.24,
+        "end": 2.1
+    },
+    {
+        "text": "So in one minute, it will create one new audio file. So then",
+        "speaker": "speaker_0",
+        "start": 2.96,
+        "end": 8.1
+    },
+    {
+        "text": "I will send that file to this",
+        "speaker": "speaker_0",
+        "start": 8.48,
+        "end": 10.82
+    },
+    {
+        "text": "Docker Hub",
+        "speaker": "speaker_0",
+        "start": 13.295,
+        "end": 14.195
+    },
+    {
+        "text": "server. Then it need to process this file and create one new way for my audio. Then it need to use",
+        "speaker": "speaker_0",
+        "start": 15.855,
+        "end": 23.154999
+    },
+    {
+        "text": "Deepgram if we for converting",
+        "speaker": "speaker_0",
+        "start": 23.935,
+        "end": 26.115
+    },
+    {
+        "text": "to transcript and send it back to my application when I am checking",
+        "speaker": "speaker_0",
+        "start": 26.539999,
+        "end": 32.079998
+    },
+    {
+        "text": "the update.",
+        "speaker": "speaker_0",
+        "start": 33.5,
+        "end": 34.16
+    },
+    {
+        "text": "So after using that result, it need to create a memory using",
+        "speaker": "speaker_0",
+        "start": 34.78,
+        "end": 39.6
+    },
+    {
+        "text": "a",
+        "speaker": "speaker_0",
+        "start": 40.46,
+        "end": 40.9
+    },
+    {
+        "text": "Models. So that's what I am checking.",
+        "speaker": "speaker_0",
+        "start": 0.16,
+        "end": 2.1799998
+    }
+]

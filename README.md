@@ -66,3 +66,6 @@ transcriptions of meetings, chats, and voice memos wherever you are.
 ## Licensing
 
 Omi is available under <a href="https://github.com/BasedHardware/omi/blob/main/LICENSE">MIT License</a>
+
+
+source myenv/bin/activate

@@ -1,7 +1,60 @@
 
+# services:
+#   web:
+#     build: .
+#     command: uvicorn main:app --host 0.0.0.0 --port 8080
+#     environment:
+#       - GOOGLE_APPLICATION_CREDENTIALS=/app/google-credentials.json
+#     depends_on:
+#       redis:
+#         condition: service_healthy
+#       db:
+#         condition: service_healthy
+#     ports:
+#       - "8080:8080"
+
+#   celery:
+#     build: .
+#     command: celery -A celery_config worker --loglevel=DEBUG -Q audio_processing --max-memory-per-child=500000 --max-tasks-per-child=1
+#     environment:
+#       - GOOGLE_APPLICATION_CREDENTIALS=/app/google-credentials.json
+#     depends_on:
+#       redis:
+#         condition: service_healthy
+#       db:
+#         condition: service_healthy
+
+#   redis:
+#     image: redis:7
+#     command: ["redis-server", "--save", "", "--appendonly", "no"]
+#     ports:
+#       - "6379:6379"
+#     healthcheck:
+#       test: ["CMD", "redis-cli", "ping"]
+#       interval: 5s
+#       timeout: 3s
+#       retries: 3
+
+#   db:
+#     image: postgres:14
+#     environment:
+#       POSTGRES_DB: your_db_name
+#       POSTGRES_USER: your_db_user
+#       POSTGRES_PASSWORD: your_db_password
+#     ports:
+#       - "5432:5432"
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U your_db_user -d your_db_name"]
+#       interval: 5s
+#       timeout: 3s
+#       retries: 3
+
+
+
+
 services:
   web:
-    build: .
+    image: rahulpscraftech360/my-web-app:latest
     command: uvicorn main:app --host 0.0.0.0 --port 8080
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/google-credentials.json
@@ -14,7 +67,7 @@ services:
       - "8080:8080"
 
   celery:
-    build: .
+    image: rahulpscraftech360/my-celery-worker:latest
     command: celery -A celery_config worker --loglevel=DEBUG -Q audio_processing --max-memory-per-child=500000 --max-tasks-per-child=1
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/google-credentials.json
