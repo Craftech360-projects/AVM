@@ -5,13 +5,14 @@ import 'package:capsaul/backend/preferences.dart';
 import 'package:capsaul/backend/schema/bt_device.dart';
 import 'package:capsaul/core/constants/constants.dart';
 import 'package:capsaul/core/theme/app_colors.dart';
+import 'package:capsaul/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:capsaul/features/wizard/pages/finalize_page.dart';
 import 'package:capsaul/pages/home/page.dart';
 import 'package:capsaul/src/common_widget/elevated_button.dart';
 import 'package:capsaul/utils/ble/communication.dart';
 import 'package:capsaul/utils/ble/connect.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FoundDevices extends StatefulWidget {
   final List<BTDeviceStruct> deviceList;
@@ -39,30 +40,44 @@ class FoundDevicesState extends State<FoundDevices>
   Future<void> setBatteryPercentage(BTDeviceStruct btDevice) async {
     try {
       var battery = await retrieveBatteryLevel(btDevice.id);
+
       setState(() {
         batteryPercentage = battery;
         _isConnected = true;
         _isClicked = false;
         _connectingToDeviceId = null;
       });
-      await Future.delayed(const Duration(seconds: 2));
+
+      if (!mounted) return;
+      context.read<BluetoothBloc>().add(BluetoothDeviceConnected(btDevice));
+
+      // Persist device info if needed.
       SharedPreferencesUtil().deviceId = btDevice.id;
       SharedPreferencesUtil().deviceName = btDevice.name;
+
+      // Add a delay for smoother UX.
       await Future.delayed(const Duration(seconds: 1));
 
       if (mounted) {
+        // Use the provided callback for navigation.
         if (SharedPreferencesUtil().onboardingCompleted) {
-          setState(() {});
           Navigator.pop(context);
-          // // previous users
-          // routeToPage(context, const HomePageWrapper(), replace: true);
         } else {
           SharedPreferencesUtil().onboardingCompleted = true;
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => FinalizePage(
-                goNext: () {},
-              ),
+          Navigator.pushReplacement(
+            context,
+            PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 500),
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  FinalizePage(goNext: widget.goNext),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                var zoomOutAnimation = Tween(begin: 1.0, end: 0.9).animate(
+                  CurvedAnimation(
+                      parent: secondaryAnimation, curve: Curves.easeOut),
+                );
+                return ScaleTransition(scale: zoomOutAnimation, child: child);
+              },
             ),
           );
         }
@@ -114,25 +129,24 @@ class FoundDevicesState extends State<FoundDevices>
                     fontSize: 12,
                   ),
                 ),
-          if (widget.deviceList.isNotEmpty) const SizedBox(height: 16),
+          if (widget.deviceList.isNotEmpty) SizedBox(height: 16),
           if (!_isConnected) ..._devicesList(),
           if (_isConnected)
             Container(
               decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.black),
-                  borderRadius: br12),
-              height: 50.h,
-              width: double.maxFinite,
+                border: Border.all(color: AppColors.black),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              height: 50,
+              width: double.infinity,
               child: CustomElevatedButton(
                 backgroundColor: AppColors.white,
-                
                 onPressed: () async {
                   if (SharedPreferencesUtil().onboardingCompleted) {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const HomePageWrapper(),
-                      ),
+                          builder: (context) => const HomePageWrapper()),
                     );
                   }
                 },
@@ -144,9 +158,7 @@ class FoundDevicesState extends State<FoundDevices>
                       Text(
                         '$deviceName (${deviceId.replaceAll(':', '').split('-').last.substring(0, 6)})',
                         style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                        ),
+                            fontWeight: FontWeight.w500, fontSize: 16),
                       ),
                       Text(
                         '🔋 ${batteryPercentage.toString()}%',
@@ -155,8 +167,7 @@ class FoundDevicesState extends State<FoundDevices>
                           fontSize: 18,
                           color: batteryPercentage <= 25
                               ? Colors.red
-                              : batteryPercentage > 25 &&
-                                      batteryPercentage <= 50
+                              : batteryPercentage <= 50
                                   ? Colors.orange
                                   : Colors.green,
                         ),
@@ -172,45 +183,43 @@ class FoundDevicesState extends State<FoundDevices>
   }
 
   List<Widget> _devicesList() {
-    return widget.deviceList
-        .map((device) => Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.black),
-                borderRadius: br12,
+    return widget.deviceList.map((device) {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.black),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        height: 55,
+        width: double.infinity,
+        child: CustomElevatedButton(
+          onPressed: !_isClicked ? () => handleTap(device) : () {},
+          backgroundColor: AppColors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${device.name} (${device.id.replaceAll(':', '').split('-').last.substring(0, 6)})',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
               ),
-              height: 55.h,
-              width: double.maxFinite,
-              child: CustomElevatedButton(
-                onPressed: !_isClicked ? () => handleTap(device) : () {},
-                backgroundColor: AppColors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${device.name} (${device.id.replaceAll(':', '').split('-').last.substring(0, 6)})',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
+              w4,
+              _connectingToDeviceId == device.id
+                  ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(AppColors.black),
                       ),
-                    ),
-                    w4,
-                    _connectingToDeviceId == device.id
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  AppColors.black),
-                            ),
-                          )
-                        : const SizedBox(),
-                  ],
-                ),
-              ),
-            ))
-        .toList();
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+        ),
+      );
+    }).toList();
   }
 }

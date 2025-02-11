@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:developer';
 
-import 'package:capsaul/backend/api_requests/api/server.dart';
 import 'package:capsaul/backend/auth.dart';
 import 'package:capsaul/backend/database/box.dart';
 import 'package:capsaul/backend/database/memory_provider.dart';
@@ -22,18 +20,14 @@ import 'package:capsaul/firebase_options_dev.dart' as dev;
 import 'package:capsaul/firebase_options_prod.dart' as prod;
 import 'package:capsaul/flavors.dart';
 import 'package:capsaul/pages/splash/splash_screen.dart';
-import 'package:capsaul/src/config/simple_bloc_observer.dart';
 import 'package:capsaul/utils/features/calendar.dart';
 import 'package:capsaul/utils/other/notifications.dart';
-import 'package:collection/collection.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart' as ble;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:instabug_flutter/instabug_flutter.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:opus_dart/opus_dart.dart';
 import 'package:opus_flutter/opus_flutter.dart' as opus_flutter;
@@ -48,25 +42,29 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   ble.FlutterBluePlus.setLogLevel(ble.LogLevel.info, color: true);
-  if (F.env == Environment.prod) {
-    await Firebase.initializeApp(
-      options: prod.DefaultFirebaseOptions.currentPlatform,
-    );
-  } else {
-    await Firebase.initializeApp(
-      options: dev.DefaultFirebaseOptions.currentPlatform,
-    );
+  try {
+    if (F.env == Environment.prod) {
+      await Firebase.initializeApp(
+        options: prod.DefaultFirebaseOptions.currentPlatform,
+      );
+    } else {
+      await Firebase.initializeApp(
+        options: dev.DefaultFirebaseOptions.currentPlatform,
+      );
+    }
+
+    await initializeNotifications();
+    await SharedPreferencesUtil.init();
+    await ObjectBoxUtil.init();
+    await MixpanelManager.init();
+  } catch (e, stackTrace) {
+    log('Initialization failed: $e\n$stackTrace');
   }
 
-  await initializeNotifications();
-  await SharedPreferencesUtil.init();
-  await ObjectBoxUtil.init();
-  await MixpanelManager.init();
-  // AppLogger.init();
-  Bloc.observer = const SimpleBlocObserver();
-
   listenAuthTokenChanges();
+
   bool isAuth = false;
+
   try {
     isAuth = (await getIdToken()) != null;
   } catch (e) {
@@ -75,10 +73,13 @@ void main() async {
 
   if (isAuth) MixpanelManager().identify();
 
-  initOpus(await opus_flutter.load());
-
-  await GrowthbookUtil.init();
-  CalendarUtil.init();
+  try {
+    initOpus(await opus_flutter.load());
+    await GrowthbookUtil.init();
+    CalendarUtil.init();
+  } catch (e, stackTrace) {
+    log('Optional initialization failed: $e\n$stackTrace');
+  }
 
   if (Env.oneSignalAppId != null) {
     OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
@@ -86,32 +87,38 @@ void main() async {
     OneSignal.login(SharedPreferencesUtil().uid);
   }
 
-  if (Env.instabugApiKey != null) {
-    runZonedGuarded(
-      () {
-        Instabug.init(
-          token: Env.instabugApiKey!,
-          invocationEvents: [InvocationEvent.shake, InvocationEvent.screenshot],
-        );
-        if (isAuth) {
-          Instabug.identifyUser(
-            FirebaseAuth.instance.currentUser?.email ?? '',
-            SharedPreferencesUtil().fullName,
-            SharedPreferencesUtil().uid,
-          );
-        }
-        FlutterError.onError = (FlutterErrorDetails details) {
-          Zone.current.handleUncaughtError(
-              details.exception, details.stack ?? StackTrace.empty);
-        };
-        _getRunApp(isAuth);
-      },
-      CrashReporting.reportCrash,
-    );
-  } else {
-    _getRunApp(isAuth);
-  }
+  _getRunApp(isAuth);
 }
+
+// class NavbarState extends ChangeNotifier {
+//   bool _isExpanded = true;
+//   bool isChatVisible = true;
+//   bool isMemoryVisible = false;
+
+//   bool get isExpanded => _isExpanded;
+
+//   void setChatVisibility(bool value) {
+//     isChatVisible = value;
+//     notifyListeners();
+//   }
+
+//   void setMemoryVisibility(bool value) {
+//     isMemoryVisible = value;
+//     notifyListeners();
+//   }
+
+//   void expand() {
+//     _isExpanded = true;
+//     notifyListeners();
+//   }
+
+//   void collapse() {
+//     _isExpanded = false;
+//     isChatVisible = false;
+//     isMemoryVisible = false;
+//     notifyListeners();
+//   }
+// }
 
 _getRunApp(bool isAuth) {
   return runApp(MyApp(isAuth: isAuth));
@@ -137,27 +144,9 @@ class MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    super.initState();
     NotificationUtil.initializeNotificationsEventListeners();
     NotificationUtil.initializeIsolateReceivePort();
-    _initiatePlugins();
-    super.initState();
-  }
-
-  Future<void> _initiatePlugins() async {
-    plugins = SharedPreferencesUtil().pluginsList;
-    plugins = await retrievePlugins();
-
-    _edgeCasePluginNotAvailable();
-    setState(() {});
-  }
-
-  _edgeCasePluginNotAvailable() {
-    var selectedChatPlugin = SharedPreferencesUtil().selectedChatPluginId;
-    var plugin = plugins.firstWhereOrNull((p) => selectedChatPlugin == p.id);
-    if (selectedChatPlugin != 'no_selected' &&
-        (plugin == null || !plugin.worksWithChat())) {
-      SharedPreferencesUtil().selectedChatPluginId = 'no_selected';
-    }
   }
 
   @override
@@ -167,7 +156,14 @@ class MyAppState extends State<MyApp> {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (context) => MemoryBloc()),
+            // ChangeNotifierProvider(create: (_) => WebSocketService()),
+            // ChangeNotifierProvider(
+            //   create: (_) =>
+            //       DeviceProvider(FirebaseAuth.instance.currentUser!.uid),
+            // ),
+            BlocProvider(
+              create: (context) => MemoryBloc(),
+            ),
             BlocProvider(
               create: (context) => ChatBloc(
                 SharedPreferencesUtil(),
@@ -176,15 +172,16 @@ class MyAppState extends State<MyApp> {
               ),
             ),
             BlocProvider(
-              create: (context) =>
-                  BluetoothBloc()..startListening('your_device_id'),
+              create: (_) => BluetoothBloc(),
             ),
             BlocProvider<ConnectivityBloc>(
               create: (context) => ConnectivityBloc(),
             ),
+            // ChangeNotifierProvider(
+            //   create: (_) => ProfileProvider(),
+            // ),
           ],
           child: MaterialApp(
-            navigatorObservers: [InstabugNavigatorObserver()],
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme,
             title: F.title,

@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field
-
 import 'dart:async';
 
 import 'package:capsaul/backend/api_requests/api/prompt.dart';
@@ -14,7 +12,6 @@ import 'package:capsaul/features/chat/bloc/chat_bloc.dart';
 import 'package:capsaul/features/chat/widgets/ai_message.dart';
 import 'package:capsaul/features/chat/widgets/user_message.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -35,11 +32,9 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen>
     with SingleTickerProviderStateMixin {
-  final TextEditingController _aiChatController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   late ChatBloc _chatBloc;
   late AnimationController _animationController;
-  final bool _isScrolled = false;
   late Animation<double> _animation;
   late Timer _dailySummaryTimer;
 

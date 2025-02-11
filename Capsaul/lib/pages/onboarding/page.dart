@@ -71,7 +71,7 @@ class FindDevicesPageState extends State<FindDevicesPage>
                 },
                 () {},
                 'Enable Bluetooth',
-                'Capsaul needs Bluetooth to connect to your wearable. Please enable Bluetooth and try again.',
+                'Altio needs bluetooth to connect with your wearable. Please enable bluetooth and try again.',
                 singleButton: true,
               ),
             );
