@@ -52,10 +52,7 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
   Future<void> _sendFile(File file) async {
     setState(() => _loading = true);
     try {
-      // var uri = Uri.parse(
-      //     'https://living-alien-polite.ngrok-free.app/v1/sync-local-files');
-      var uri = Uri.parse(
-              'https://living-alien-polite.ngrok-free.app/v1/sync-local-files')
+      var uri = Uri.parse('http://139.59.94.45:8080/v1/sync-local-files')
           .replace(queryParameters: {'pipeline': 'deepgram'});
       var request = http.MultipartRequest('POST', uri);
       print(uri);
@@ -96,6 +93,19 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
             SnackBar(content: Text('File uploaded successfully')),
           );
         }
+
+        // Check if the file exists before attempting to delete it
+        if (await file.exists()) {
+          // Delete the file from the device
+          try {
+            await file.delete();
+            print('Deleted file: ${file.path}');
+          } catch (e) {
+            print('Error deleting file: ${file.path} - $e');
+          }
+        } else {
+          print('File does not exist: ${file.path}');
+        }
       } else {
         throw Exception(
             'Upload failed: ${response.statusCode} - ${response.body}');
@@ -113,9 +123,8 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
     setState(() => _loading = true);
     try {
       // var uri = Uri.parse(
-      //     'https://living-alien-polite.ngrok-free.app/v1/sync-local-files');
-      var uri = Uri.parse(
-              'https://living-alien-polite.ngrok-free.app/v1/sync-local-files')
+      //     'https://living-alien-polite.ngrok-free.app/v1/sync-local-files')
+      var uri = Uri.parse('http://139.59.94.45:8080/v1/sync-local-files')
           .replace(queryParameters: {'pipeline': 'deepgram'});
       var request = http.MultipartRequest('POST', uri);
       request.headers['uid'] = SharedPreferencesUtil().uid;
@@ -162,6 +171,21 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
             ),
           ),
         );
+
+        // Delete the files from the device
+        for (var file in _files) {
+          try {
+            await file.delete();
+            print('Deleted file: ${file.path}');
+          } catch (e) {
+            print('Error deleting file: ${file.path} - $e');
+          }
+        }
+
+        // Clear the _files list
+        setState(() {
+          _files.clear();
+        });
       } else {
         throw Exception(
             'Upload failed: ${response.statusCode} - ${response.body}');
@@ -178,8 +202,9 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
 
   Future<Map<String, dynamic>> checkTaskStatus(String taskId) async {
     print('Checking task status for $taskId');
-    var uri = Uri.parse(
-        'https://living-alien-polite.ngrok-free.app/v1/status/$taskId');
+    // var uri = Uri.parse(
+    //     'https://living-alien-polite.ngrok-free.app/v1/status/$taskId');
+    var uri = Uri.parse('http://139.59.94.45:8080/v1/status/$taskId');
     var response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -254,7 +279,7 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
               );
             }
             // Remove the taskId from the original list outside of the loop
-            //  taskIds.remove(taskId);
+            taskIds.remove(taskId);
           } else if (status['status'] == 'failed') {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -263,7 +288,7 @@ class _LocalSyncPageState extends State<LocalSyncPage> {
               );
             }
             // Remove the taskId from the original list outside of the loop
-            // taskIds.remove(taskId);
+            taskIds.remove(taskId);
           }
         } catch (e) {
           if (mounted) {
