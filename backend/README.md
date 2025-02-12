@@ -46,16 +46,10 @@ clear task
 
 celery -A celery_config purge -f
 
-
-
 build docker for linux
 
 docker buildx create --use
 docker buildx build --platform linux/amd64,linux/arm64 -t rahulpscraftech360/my-web-app:latest -f Dockerfile --push .
 docker buildx build --platform linux/amd64,linux/arm64 -t rahulpscraftech360/my-celery-worker:latest -f Dockerfile --push .
-
-
-
-
 
 ngrok http --url=living-alien-polite.ngrok-free.app 8080
