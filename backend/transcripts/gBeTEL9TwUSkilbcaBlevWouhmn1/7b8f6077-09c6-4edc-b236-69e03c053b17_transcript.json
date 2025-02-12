@@ -1,0 +1,44 @@
+[
+    {
+        "text": "Yes.",
+        "speaker": "speaker_0",
+        "start": 34.84,
+        "end": 35.34
+    },
+    {
+        "text": "Where",
+        "speaker": "speaker_0",
+        "start": 38.815002,
+        "end": 39.315002
+    },
+    {
+        "text": "you went?",
+        "speaker": "speaker_0",
+        "start": 39.695,
+        "end": 40.435
+    },
+    {
+        "text": "There?",
+        "speaker": "speaker_0",
+        "start": 42.335,
+        "end": 42.835
+    },
+    {
+        "text": "Bangalore",
+        "speaker": "speaker_0",
+        "start": 43.415,
+        "end": 43.915
+    },
+    {
+        "text": "Palace.",
+        "speaker": "speaker_0",
+        "start": 44.495003,
+        "end": 44.995003
+    },
+    {
+        "text": "Bangalore Palace.",
+        "speaker": "speaker_0",
+        "start": 45.455,
+        "end": 46.515
+    }
+]

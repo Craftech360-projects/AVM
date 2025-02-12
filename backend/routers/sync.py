@@ -29,7 +29,7 @@ from utils.other import endpoints as auth
 from utils.other.storage import get_syncing_file_temporal_signed_url, delete_syncing_temporal_file
 from utils.stt.pre_recorded import fal_whisperx, fal_postprocessing
 from utils.stt.vad import vad_is_empty
-from utils.stt.whisperx import process_all_audio_files as whisperx_pipeline
+# from utils.stt.whisperx import process_all_audio_files as whisperx_pipeline
 from database import get_db_connection
 router = APIRouter()
 import shutil
@@ -41,10 +41,10 @@ from pyannote.audio import Audio
 import numpy as np
 
 # Load SpeechBrain speaker recognition model
-verification_model = SpeakerRecognition.from_hparams(
-    source="speechbrain/spkrec-ecapa-voxceleb",
-    savedir="pretrained_models/spkrec-ecapa-voxceleb"
-)
+# verification_model = SpeakerRecognition.from_hparams(
+#     source="speechbrain/spkrec-ecapa-voxceleb",
+#     savedir="pretrained_models/spkrec-ecapa-voxceleb"
+# )
 
 # Path to the folder containing sample audio files for enrollment
 sample_folder = "sample"
@@ -57,80 +57,80 @@ DEEPGRAM_API_URL = "https://api.deepgram.com/v1/listen"
 
 # Thread pool for background tasks
 executor = ThreadPoolExecutor(max_workers=4)
-speaker_embeddings = {}
-for enrollment_audio in os.listdir(sample_folder):
-    enrollment_audio_path = os.path.join(sample_folder, enrollment_audio)
-    signal = verification_model.load_audio(enrollment_audio_path)
-    embedding = verification_model.encode_batch(signal.unsqueeze(0)).squeeze().cpu().numpy()
-    speaker_embeddings[enrollment_audio] = embedding  # Use filename as key
+# speaker_embeddings = {}
+# for enrollment_audio in os.listdir(sample_folder):
+#     enrollment_audio_path = os.path.join(sample_folder, enrollment_audio)
+#     signal = verification_model.load_audio(enrollment_audio_path)
+#     embedding = verification_model.encode_batch(signal.unsqueeze(0)).squeeze().cpu().numpy()
+#     speaker_embeddings[enrollment_audio] = embedding  # Use filename as key
 
-def map_speakers_to_names(audio_file, transcript):
-    """Map Deepgram speaker labels (e.g., speaker_0) to actual names using SpeechBrain."""
-    audio_loader = Audio(sample_rate=16000)
-    waveform, _ = audio_loader(audio_file)
-    if waveform.ndim == 2 and waveform.shape[0] == 1:
-        waveform = waveform.squeeze(0)
+# def map_speakers_to_names(audio_file, transcript):
+#     """Map Deepgram speaker labels (e.g., speaker_0) to actual names using SpeechBrain."""
+#     audio_loader = Audio(sample_rate=16000)
+#     waveform, _ = audio_loader(audio_file)
+#     if waveform.ndim == 2 and waveform.shape[0] == 1:
+#         waveform = waveform.squeeze(0)
 
-    # Dictionary to store mappings from speaker_X to actual names
-    speaker_mapping = {}
+#     # Dictionary to store mappings from speaker_X to actual names
+#     speaker_mapping = {}
 
-    for segment in transcript:
-        # Debug: Print segment structure
-        print(f"Segment: {segment}")
+#     for segment in transcript:
+#         # Debug: Print segment structure
+#         print(f"Segment: {segment}")
 
-        # Check if 'speaker' key exists
-        if 'speaker' not in segment:
-            print("Warning: 'speaker' key not found in segment. Skipping...")
-            continue
+#         # Check if 'speaker' key exists
+#         if 'speaker' not in segment:
+#             print("Warning: 'speaker' key not found in segment. Skipping...")
+#             continue
 
-        speaker_label = segment['speaker']
-        start_time = segment['start']
-        end_time = segment['end']
+#         speaker_label = segment['speaker']
+#         start_time = segment['start']
+#         end_time = segment['end']
 
-        # Skip if this speaker_X has already been mapped
-        if speaker_label in speaker_mapping:
-            segment['speaker'] = speaker_mapping[speaker_label]
-            continue
+#         # Skip if this speaker_X has already been mapped
+#         if speaker_label in speaker_mapping:
+#             segment['speaker'] = speaker_mapping[speaker_label]
+#             continue
 
-        # Extract the audio segment corresponding to this speaker_X
-        segment_audio = waveform[int(start_time * 16000):int(end_time * 16000)]
-        if segment_audio.size == 0:
-            speaker_mapping[speaker_label] = speaker_label  # Retain original label if no audio
-            segment['speaker'] = speaker_label
-            continue
+#         # Extract the audio segment corresponding to this speaker_X
+#         segment_audio = waveform[int(start_time * 16000):int(end_time * 16000)]
+#         if segment_audio.size == 0:
+#             speaker_mapping[speaker_label] = speaker_label  # Retain original label if no audio
+#             segment['speaker'] = speaker_label
+#             continue
 
-        # Generate embedding for the segment
-        segment_tensor = torch.tensor(segment_audio).unsqueeze(0)
-        segment_embedding = verification_model.encode_batch(segment_tensor).squeeze().cpu().numpy()
-        if segment_embedding.ndim == 2:
-            segment_embedding = segment_embedding.squeeze()
+#         # Generate embedding for the segment
+#         segment_tensor = torch.tensor(segment_audio).unsqueeze(0)
+#         segment_embedding = verification_model.encode_batch(segment_tensor).squeeze().cpu().numpy()
+#         if segment_embedding.ndim == 2:
+#             segment_embedding = segment_embedding.squeeze()
 
-        # Compare with pre-enrolled speaker embeddings
-        best_match = None
-        best_score = -np.inf
-        for speaker_name, speaker_embedding in speaker_embeddings.items():
-            if speaker_embedding.ndim == 2:
-                speaker_embedding = speaker_embedding.squeeze()
-            # Normalize embeddings
-            segment_embedding_norm = segment_embedding / np.linalg.norm(segment_embedding)
-            speaker_embedding_norm = speaker_embedding / np.linalg.norm(speaker_embedding)
-            score = float(np.dot(segment_embedding_norm, speaker_embedding_norm))
-            print(f"Segment [{start_time:.2f} - {end_time:.2f}] -> {speaker_name.split('.')[0]} (Score: {score:.4f})")
-            if score > best_score:
-                best_score = score
-                best_match = speaker_name
+#         # Compare with pre-enrolled speaker embeddings
+#         best_match = None
+#         best_score = -np.inf
+#         for speaker_name, speaker_embedding in speaker_embeddings.items():
+#             if speaker_embedding.ndim == 2:
+#                 speaker_embedding = speaker_embedding.squeeze()
+#             # Normalize embeddings
+#             segment_embedding_norm = segment_embedding / np.linalg.norm(segment_embedding)
+#             speaker_embedding_norm = speaker_embedding / np.linalg.norm(speaker_embedding)
+#             score = float(np.dot(segment_embedding_norm, speaker_embedding_norm))
+#             print(f"Segment [{start_time:.2f} - {end_time:.2f}] -> {speaker_name.split('.')[0]} (Score: {score:.4f})")
+#             if score > best_score:
+#                 best_score = score
+#                 best_match = speaker_name
 
-        # Assign name or retain original label
-        if best_score >= 0.6:  # Threshold for matching
-            speaker_mapping[speaker_label] = best_match.split(".")[0]
-        else:
-            speaker_mapping[speaker_label] = speaker_label  # Retain original label
+#         # Assign name or retain original label
+#         if best_score >= 0.6:  # Threshold for matching
+#             speaker_mapping[speaker_label] = best_match.split(".")[0]
+#         else:
+#             speaker_mapping[speaker_label] = speaker_label  # Retain original label
 
-        # Update the segment's speaker label
-        segment['speaker'] = speaker_mapping[speaker_label]
+#         # Update the segment's speaker label
+#         segment['speaker'] = speaker_mapping[speaker_label]
 
-    print('Speaker mapping completed')
-    return transcript
+#     print('Speaker mapping completed')
+#     return transcript
 
 import json
 import os
@@ -256,8 +256,8 @@ def process_in_background(task_id, uid, user_dir, pipeline="whisperx"):
             combined_transcripts = loop.run_until_complete(process_all())
             loop.close()
             # combined_transcripts = merge_segments(combined_transcripts, max_gap=120)
-        else:
-            combined_transcripts = whisperx_pipeline(directory=user_dir)
+        #else:
+        #     combined_transcripts = whisperx_pipeline(directory=user_dir)
 
         # Save the final transcript as a JSON file
         output_dir = os.path.join("transcripts", uid)

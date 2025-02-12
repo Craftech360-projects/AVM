@@ -8,7 +8,7 @@ from datetime import datetime
 import json
 from database import get_db_connection
 import torch
-from utils.stt.whisperx import process_all_audio_files as whisperx_pipeline
+# from utils.stt.whisperx import process_all_audio_files as whisperx_pipeline
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG,
@@ -102,10 +102,10 @@ def process_audio_files(user_dir, pipeline):
                 return transcripts, processed_files
             finally:
                 loop.close()
-        else:
-            # Process with whisperx
-            processed_files = [os.path.join(user_dir, f) for f in audio_files]
-            return whisperx_pipeline(directory=user_dir), processed_files
+        # else:
+        #     # Process with whisperx
+        #     processed_files = [os.path.join(user_dir, f) for f in audio_files]
+        #     return whisperx_pipeline(directory=user_dir), processed_files
 
     except Exception as e:
         logger.error(f"Error in audio processing: {str(e)}")

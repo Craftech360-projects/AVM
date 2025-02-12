@@ -4,7 +4,7 @@ from psycopg2.extras import RealDictCursor
 # Database configuration
 # DB_CONFIG = {
 #     "dbname": "altio",  # Replace with your PostgreSQL database name
-#     "user": "your_username",        # Replace with your PostgreSQL username
+#     "user": "craftech360",        # Replace with your PostgreSQL username
 #     "password": "your_password",    # Replace with your PostgreSQL password
 #     "host": "localhost",            # Replace with your database host (e.g., "localhost" or an IP address)
 #     "port": 5432                    # Default PostgreSQL port
