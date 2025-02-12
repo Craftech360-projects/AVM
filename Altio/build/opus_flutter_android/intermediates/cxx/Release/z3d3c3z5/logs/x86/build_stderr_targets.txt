@@ -1,3 +1,0 @@
-fcntl(): Bad file descriptor
-/bin/sh: line 0: cd: /Users/craftech360/.pub-cache/git/opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8/opus_flutter_android/android/libopusenc/../: No such file or directory
-find: /Users/craftech360/.pub-cache/git/opus_flutter-67ba9d8704a93c8a30b9266f4df6663e0b08e3c8/opus_flutter_android/android/libopusenc/src: No such file or directory

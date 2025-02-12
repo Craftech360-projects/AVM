@@ -1,1 +1,0 @@
-Mac/OBXCodeGen.framework/Versions/A/Resources/setup.rb

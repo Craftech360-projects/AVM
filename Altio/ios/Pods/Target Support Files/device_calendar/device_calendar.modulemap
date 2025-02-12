@@ -1,6 +1,0 @@
-framework module device_calendar {
-  umbrella header "device_calendar-umbrella.h"
-
-  export *
-  module * { export * }
-}
