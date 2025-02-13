@@ -18,6 +18,26 @@ import android.graphics.BitmapFactory
 class NotificationOnKillService: Service() {
     private lateinit var title: String
     private lateinit var description: String
+    private val CHANNEL_ID = "com.craftech360.avm"
+
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannel()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Notification permission"
+            val descriptionText = "You need to enable notifications to receive your pro-active feedback."
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+                description = descriptionText
+            }
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         title = intent?.getStringExtra("title") ?: ""
@@ -29,7 +49,6 @@ class NotificationOnKillService: Service() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onTaskRemoved(rootIntent: Intent?) {
         try {
-            
             if (title.isBlank() || description.isBlank()) {
                 Log.d("NotificationOnKillService", "Title or description is empty, notification will not be shown")
                 return
@@ -37,7 +56,7 @@ class NotificationOnKillService: Service() {
             val notificationIntent = packageManager.getLaunchIntentForPackage(packageName)
             val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
     
-            val notificationBuilder = NotificationCompat.Builder(this, "com.craftech360.avm")
+            val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(getSmallIconForNotification())
                 .setContentTitle(title)
                 .setContentText(description)
@@ -71,7 +90,5 @@ class NotificationOnKillService: Service() {
             R.mipmap.ic_launcher
         }
     }
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent?): IBinder? = null
 }

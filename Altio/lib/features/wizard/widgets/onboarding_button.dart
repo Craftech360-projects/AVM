@@ -2,7 +2,6 @@ import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
 import 'package:altio/core/widgets/elevated_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OnboardingButton extends StatelessWidget {
   const OnboardingButton({
@@ -41,8 +40,7 @@ class OnboardingButton extends StatelessWidget {
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(vertical: 08),
-          padding: EdgeInsets.all(4.h),
+          padding: EdgeInsets.all(4),
           decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: br15,
@@ -53,23 +51,20 @@ class OnboardingButton extends StatelessWidget {
               IconButton(
                 icon: Icon(
                   Icons.close,
-                  size: 24.h,
+                  size: 24,
                   color: AppColors.black,
                 ),
                 onPressed: onSkip,
               ),
               Expanded(
                 child: SizedBox(
-                  height: 50.h,
+                  height: 50,
                   width: double.maxFinite,
                   child: CustomElevatedButton(
                     onPressed: onPressed,
-                    child: Text(
-                      buttonText,
-                      style: textTheme.bodyLarge?.copyWith(
-                        color: AppColors.white,
-                      ),
-                    ),
+                    child: Text(buttonText,
+                        style: textTheme.bodyLarge
+                            ?.copyWith(color: AppColors.white)),
                   ),
                 ),
               ),

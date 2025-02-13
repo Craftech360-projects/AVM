@@ -108,7 +108,7 @@ class TermsAndConditionsWidget extends StatelessWidget {
     this.onAccept,
     required this.showAcceptBtn,
   });
-  
+
   final bool showAcceptBtn;
   final VoidCallback? onAccept;
 
@@ -161,26 +161,26 @@ class TermsAndConditionsWidget extends StatelessWidget {
           ),
           if (showAcceptBtn)
             Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                width: double.infinity,
+              bottom: MediaQuery.of(context).size.height * 0.015,
+              left: 16,
+              right: 16,
+              child: SizedBox(
                 child: ElevatedButton(
                   onPressed: onAccept,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.purpleDark,
                     foregroundColor: AppColors.white,
-                    shape: RoundedRectangleBorder(borderRadius: br8),
+                    shape: RoundedRectangleBorder(borderRadius: br10),
                   ),
-                  child: const Text(
+                  child: Text(
                     'I Accept the Terms',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppColors.white,
+                        ),
                   ),
                 ),
               ),
-            ),
+            )
         ],
       ),
     );

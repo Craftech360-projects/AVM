@@ -81,7 +81,10 @@ void avmSnackBar(BuildContext context, String content) {
       ),
       behavior: SnackBarBehavior.floating,
       elevation: 1.5,
-      margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+      margin: EdgeInsets.only(
+          left: 6,
+          right: 6,
+          bottom: MediaQuery.of(context).size.height * 0.015),
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
     ),
   );

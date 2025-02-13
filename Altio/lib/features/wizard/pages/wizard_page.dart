@@ -84,9 +84,11 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
           : Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                // height: MediaQuery.of(context).size.height * 0.6,
-                margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                margin: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).size.height * 0.015,
+                    left: 16,
+                    right: 16,
+                    top: 10),
                 child: Stack(
                   children: [
                     Align(

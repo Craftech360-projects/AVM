@@ -69,7 +69,9 @@ class FoundDevicesState extends State<FoundDevices>
       if (mounted) {
         // Use the provided callback for navigation.
         if (SharedPreferencesUtil().onboardingCompleted) {
-          Navigator.pop(context);
+          Navigator.pushReplacement(context, MaterialPageRoute(
+            builder: (context) => const HomePageWrapper(tabIndex: 0),
+          ));
         } else {
           SharedPreferencesUtil().onboardingCompleted = true;
           Navigator.pushReplacement(

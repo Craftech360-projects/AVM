@@ -29,20 +29,23 @@ class SplashScreenState extends State<SplashScreen>
       });
     });
 
-    Timer(const Duration(milliseconds: 4000), () {
-      SharedPreferencesUtil().onboardingCompleted && widget.isAuth
-          ? Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      HomePageWrapper(tabIndex: 2)),
-            )
-          : Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => const SigninPage()),
-            );
-    });
+    Timer(
+      const Duration(milliseconds: 4000),
+      () {
+        SharedPreferencesUtil().onboardingCompleted && widget.isAuth
+            ? Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        HomePageWrapper(tabIndex: 2)),
+              )
+            : Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => const SigninPage()),
+              );
+      },
+    );
   }
 
   @override

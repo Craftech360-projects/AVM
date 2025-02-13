@@ -68,82 +68,16 @@ class _HomePageWrapperState extends State<HomePageWrapper>
 
   List<Plugin> plugins = [];
 
-  void someMethod() {
-    if (capturePageKey.currentState != null) {
-      capturePageKey.currentState!.initiateBytesStreamingProcessing();
-    }
-  }
-
-  _initiateMemories() async {
-    memories = MemoryProvider()
-        .getMemoriesOrdered(includeDiscarded: true)
-        .reversed
-        .toList();
-    setState(() {});
-  }
-
-  _refreshMessages() async {
-    messages = MessageProvider().getMessages();
-    setState(() {});
-  }
-
-  // _setupHasSpeakerProfile() async {
-  //   SharedPreferencesUtil().hasSpeakerProfile =
-  //       await userHasSpeakerProfile(SharedPreferencesUtil().uid);
-  //   MixpanelManager().setUserProperty(
-  //       'Speaker Profile', SharedPreferencesUtil().hasSpeakerProfile);
-  //   setState(() {});
-  // }
-
-  // _edgeCasePluginNotAvailable() {
-  //   var selectedChatPlugin = SharedPreferencesUtil().selectedChatPluginId;
-  //   var plugin = plugins.firstWhereOrNull((p) => selectedChatPlugin == p.id);
-  //   if (selectedChatPlugin != 'no_selected' &&
-  //       (plugin == null || !plugin.worksWithChat())) {
-  //     SharedPreferencesUtil().selectedChatPluginId = 'no_selected';
-  //   }
-  // }
-
-  // Future<void> _initiatePlugins() async {
-  //   plugins = SharedPreferencesUtil().pluginsList;
-  //   plugins = await retrievePlugins();
-  //   _edgeCasePluginNotAvailable();
-  //   setState(() {});
-  // }
-
-  String event = '';
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.paused) {
-      event = 'App is paused';
-    } else if (state == AppLifecycleState.resumed) {
-      event = 'App is resumed';
-    } else if (state == AppLifecycleState.hidden) {
-      event = 'App is hidden';
-    } else if (state == AppLifecycleState.detached) {
-      event = 'App is detached';
-    }
-  }
-
-  _migrationScripts() async {
-    scriptMemoryVectorsExecuted();
-    _initiateMemories();
-  }
-
-  final Map<String, Widget> screensWithRespectToPath = {
-    '/settingsPage': const SettingsPage(),
-  };
-
   @override
   void initState() {
     super.initState();
+
     setState(() {
       _isLoading = true;
     });
 
-    _controller = TabController(length: 5, initialIndex: 2, vsync: this);
+    _controller = TabController(
+        length: 5, initialIndex: widget.tabIndex ?? 2, vsync: this);
 
     Future.delayed(const Duration(seconds: 2), () {
       var tutorialSeen = SharedPreferencesUtil().hasSeenTutorial;
@@ -157,7 +91,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     SharedPreferencesUtil().onboardingCompleted = true;
 
     WidgetsBinding.instance.addObserver(this);
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {         ====> Permission should be request in some other way
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {         ====> Permission should be requested in some other way
     //   requestNotificationPermissions();
     //   foregroundUtil.requestPermissionForAndroid();
     // });
@@ -203,6 +137,50 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     }
   }
 
+  void someMethod() {
+    if (capturePageKey.currentState != null) {
+      capturePageKey.currentState!.initiateBytesStreamingProcessing();
+    }
+  }
+
+  _initiateMemories() async {
+    memories = MemoryProvider()
+        .getMemoriesOrdered(includeDiscarded: true)
+        .reversed
+        .toList();
+    setState(() {});
+  }
+
+  _refreshMessages() async {
+    messages = MessageProvider().getMessages();
+    setState(() {});
+  }
+
+  String event = '';
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      event = 'App is paused';
+    } else if (state == AppLifecycleState.resumed) {
+      event = 'App is resumed';
+    } else if (state == AppLifecycleState.hidden) {
+      event = 'App is hidden';
+    } else if (state == AppLifecycleState.detached) {
+      event = 'App is detached';
+    }
+  }
+
+  _migrationScripts() async {
+    scriptMemoryVectorsExecuted();
+    _initiateMemories();
+  }
+
+  final Map<String, Widget> screensWithRespectToPath = {
+    '/settingsPage': const SettingsPage(),
+  };
+
   _initiateConnectionListener() async {
     if (_connectionStateListener != null) return;
     //when disconnected manually need to remove this connection state listener
@@ -214,7 +192,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
               ?.resetState(restartBytesProcessing: false);
           setState(() {
             _device = null;
-            batteryLevel = -1; // Reset battery level
+            batteryLevel = -1;
           });
           if (SharedPreferencesUtil().reconnectNotificationIsChecked) {
             if (SharedPreferencesUtil().showDisconnectionNotification) {
@@ -302,21 +280,31 @@ class _HomePageWrapperState extends State<HomePageWrapper>
         resizeToAvoidBottomInset: true,
         showBatteryLevel: true,
         showGearIcon: true,
-        title: theme.brightness == Brightness.light
-            ? Image.asset(
-                AppImages.appLogo,
-                width: 70,
-                height: 70,
-              )
-            : Image.asset(
-                AppImages.appLogoW,
-                width: 70,
-                height: 70,
-              ),
-        // showBackBtn: true,
+        title: GestureDetector(
+          onTap: () {
+            if (_controller.index != 0) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomePageWrapper(tabIndex: 0),
+                ),
+              );
+            }
+          },
+          child: theme.brightness == Brightness.light
+              ? Image.asset(
+                  AppImages.appLogo,
+                  width: 70,
+                  height: 70,
+                )
+              : Image.asset(
+                  AppImages.appLogoW,
+                  width: 70,
+                  height: 70,
+                ),
+        ),
         device: _device,
         batteryLevel: batteryLevel,
-        tabIndex: widget.tabIndex ?? _controller.index,
         body: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
@@ -360,7 +348,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                           return Align(
                             alignment: Alignment.bottomCenter,
                             child: CustomNavBar(
-                              isChat: _controller.index == 1,
+                              isChat: _controller.index == 2,
                               isMemory: _controller.index == 0,
                               onTabChange: (index) =>
                                   _controller.animateTo(index),

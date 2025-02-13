@@ -116,9 +116,10 @@ class _CustomNavBarState extends State<CustomNavBar> {
           padding: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.02),
           child: Padding(
-            padding: EdgeInsets.symmetric(
-                vertical: MediaQuery.of(context).size.height * 0.010,
-                horizontal: MediaQuery.of(context).size.width * 0.005),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).size.height * 0.015,
+                left: MediaQuery.of(context).size.width * 0.005,
+                right: MediaQuery.of(context).size.width * 0.005),
             child: GestureDetector(
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 600),
@@ -143,11 +144,14 @@ class _CustomNavBarState extends State<CustomNavBar> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _currentTabIndex == 0 ? _actionItems() : _buildHomeBtn(),
+                    _currentTabIndex == 0 && deviceProvider.hasDevice == true
+                        ? _actionItems()
+                        : _buildHomeBtn(),
                     if (!isExpanded && deviceProvider.hasDevice == true)
                       _buildSearchButton(),
                     if (!isExpanded) _buildMessageButton(),
-                    if (!isExpanded) _aboutYou(),
+                    if (!isExpanded && deviceProvider.hasDevice == true)
+                      _aboutYou(),
                     if (isExpanded && (isMemoryVisible || isChatVisible))
                       _buildExpandedSection(textTheme),
                   ],

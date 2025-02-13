@@ -8,6 +8,7 @@ import 'package:altio/backend/database/message_provider.dart';
 import 'package:altio/backend/database/transcript_segment.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/bt_device.dart';
+import 'package:altio/backend/websocket/websockets.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/widgets/custom_dialog_box.dart';
 import 'package:altio/features/capture/presentation/capture_memory_page.dart';
@@ -20,15 +21,14 @@ import 'package:altio/utils/features/backups.dart';
 import 'package:altio/utils/memories/integrations.dart';
 import 'package:altio/utils/memories/process.dart';
 import 'package:altio/utils/other/notifications.dart';
-import 'package:altio/backend/websocket/websockets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../pages/capture/phone_recorder_mixin.dart';
 import '../../../backend/websocket/websocket_mixin.dart';
+import '../../../pages/capture/phone_recorder_mixin.dart';
 
 class CapturePage extends StatefulWidget {
   final Function refreshMemories;
@@ -198,6 +198,7 @@ class CapturePageState extends State<CapturePage>
 
   Future<void> initiateBytesStreamingProcessing() async {
     if (btDevice == null) return;
+
     BleAudioCodec codec = await getAudioCodec(btDevice!.id);
     audioStorage = WavBytesUtil(codec: codec);
     _bleBytesStream = await getBleAudioBytesListener(

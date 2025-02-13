@@ -377,7 +377,7 @@ class _ProfileView extends StatelessWidget {
 
   Widget _buildListSection(String title, List<String> items) {
     return SliverPadding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(bottom: 20, top: 10, left: 16, right: 16),
       sliver: SliverToBoxAdapter(
         child: ExpansionTile(
           title: Text(

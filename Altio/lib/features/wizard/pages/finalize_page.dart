@@ -2,11 +2,10 @@ import 'package:altio/backend/preferences.dart';
 import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
+import 'package:altio/core/widgets/elevated_button.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
 import 'package:altio/pages/home/page.dart';
-import 'package:altio/core/widgets/elevated_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FinalizePage extends StatelessWidget {
   final VoidCallback goNext;
@@ -19,15 +18,19 @@ class FinalizePage extends StatelessWidget {
       body: Align(
         alignment: Alignment.bottomCenter,
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.6,
-          margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 22),
+          height: MediaQuery.of(context).size.height,
+          margin: EdgeInsets.only(
+              bottom: MediaQuery.of(context).size.height * 0.015,
+              left: 16,
+              right: 16,
+              top: 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
                 AppImages.appLogo,
-                height: 30.h,
+                height: 30,
               ),
               ConstrainedBox(
                 constraints: BoxConstraints(
@@ -43,11 +46,10 @@ class FinalizePage extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                     border: Border.all(color: AppColors.black),
                     borderRadius: br12),
-                height: 55.h,
+                height: 55,
                 width: double.maxFinite,
                 child: CustomElevatedButton(
                   backgroundColor: AppColors.white,
@@ -56,7 +58,8 @@ class FinalizePage extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomePageWrapper(tabIndex: 2),
+                          builder: (context) =>
+                              const HomePageWrapper(tabIndex: 2),
                         ),
                       );
                     }

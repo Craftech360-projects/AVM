@@ -580,8 +580,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                               right: 0,
                               child: _buildScrollGradient()),
                         Positioned(
-                          bottom: 0,
-                          right: 8,
+                          bottom: MediaQuery.of(context).size.width * 0.010,
+                          right: 10,
                           child: Column(
                             children: [
                               AnimatedBuilder(
