@@ -46,10 +46,10 @@ class _GreetingCardState extends State<GreetingCard> {
       onTap: () {
         if (widget.segments != null && widget.segments!.isNotEmpty) {
           showModalBottomSheet(
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(16),
-                topRight: const Radius.circular(16),
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
               ),
             ),
             backgroundColor: AppColors.purpleDark,
@@ -64,7 +64,7 @@ class _GreetingCardState extends State<GreetingCard> {
                     children: [
                       InkWell(
                         onTap: () => Navigator.pop(context),
-                        child: Icon(
+                        child: const Icon(
                           Icons.close_rounded,
                           size: 30,
                           color: AppColors.white,
@@ -109,20 +109,18 @@ class _GreetingCardState extends State<GreetingCard> {
                             children: [
                               Text(
                                 'Hi! ${SharedPreferencesUtil().givenName}',
-                                style: const TextStyle(
-                                  fontSize: 19,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.white,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall
+                                    ?.copyWith(color: AppColors.white),
                               ),
                               h4,
-                              const Text(
-                                'Change is inevitable. Always strive for the next big thing!',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
+                              Text(
+                                  'Change is inevitable. Always strive for the next big thing!',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(fontWeight: FontWeight.w600)),
                             ],
                           ),
                         ),
@@ -148,13 +146,14 @@ class _GreetingCardState extends State<GreetingCard> {
                                         ? AppColors.white.withValues(alpha: 0.9)
                                         : AppColors.grey,
                                   ),
-                                  SizedBox(width: 4),
+                                  w4,
                                   Text(
                                     'Internet',
                                     style: TextStyle(
                                       color: connectivityState
                                               is ConnectivityConnected
-                                          ? AppColors.white.withValues(alpha: 0.9)
+                                          ? AppColors.white
+                                              .withValues(alpha: 0.9)
                                           : AppColors.grey,
                                       fontSize: 14,
                                       height: 1.5,

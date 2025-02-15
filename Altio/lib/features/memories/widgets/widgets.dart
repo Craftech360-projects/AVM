@@ -465,7 +465,7 @@ void showOptionsBottomSheet(
                           title:
                               const Text('Trigger Memory Created Integration'),
                           leading: loadingPluginIntegrationTest
-                              ? SizedBox(
+                              ? const SizedBox(
                                   height: 24,
                                   width: 24,
                                   child: CircularProgressIndicator(
@@ -486,7 +486,7 @@ void showOptionsBottomSheet(
                               // Check if the widget is still mounted before proceeding
                               if (!context.mounted) return;
 
-                              showDialog(
+                              await showDialog(
                                 context: context,
                                 builder: (c) => getDialog(
                                   context,
@@ -498,13 +498,13 @@ void showOptionsBottomSheet(
                                   singleButton: true,
                                 ),
                               );
-                            } catch (e) {
+                            } on Exception catch (e) {
                               // Handle any errors that occur during the async operation
                               log(e.toString());
 
                               // Check if the widget is still mounted before showing an error dialog
                               if (context.mounted) {
-                                showDialog(
+                                await showDialog(
                                   context: context,
                                   builder: (c) => getDialog(
                                     context,

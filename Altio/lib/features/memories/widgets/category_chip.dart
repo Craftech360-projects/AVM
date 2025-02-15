@@ -18,10 +18,10 @@ class CategoryChip extends StatelessWidget {
       backgroundColor: AppColors.purpleDark,
       label: Text(
         tagName,
-        style: TextStyle(color: AppColors.white),
+        style: const TextStyle(color: AppColors.white),
       ),
       shape: RoundedRectangleBorder(
-          borderRadius: br5, side: BorderSide(color: Colors.transparent)),
+          borderRadius: br5, side: const BorderSide(color: Colors.transparent)),
     );
   }
 }

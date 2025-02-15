@@ -8,12 +8,12 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
 Future<Map<String, String>?> checkFirmwareUpdate() async {
-  final baseUrl =
+  const baseUrl =
       "https://living-alien-polite.ngrok-free.app/v2/firmware/latest";
-  final deviceModel = "1234";
-  final firmwareRevision = "1.0.3";
-  final hardwareRevision = "A1";
-  final manufacturerName = "ExampleCorp";
+  const deviceModel = "1234";
+  const firmwareRevision = "1.0.3";
+  const hardwareRevision = "A1";
+  const manufacturerName = "ExampleCorp";
 
   final url = Uri.parse(
       "$baseUrl?device_model=$deviceModel&firmware_revision=$firmwareRevision&hardware_revision=$hardwareRevision&manufacturer_name=$manufacturerName");
@@ -27,10 +27,8 @@ Future<Map<String, String>?> checkFirmwareUpdate() async {
         "firmwareUrl": data['file_url'],
         "releaseNotes": data['release_notes'],
       };
-    } else {
-
-    }
-  } catch (e) {
+    } else {}
+  } on Exception catch (e) {
     log("Error: $e");
   }
   return null;
@@ -56,7 +54,7 @@ class DownloadController {
       );
 
       progressNotifier.value = 1.0; // Mark as complete
-    } catch (e) {
+    } on Exception catch (e) {
       log("Error during firmware download: $e");
       progressNotifier.value = 0.0; // Reset progress on failure
     }

@@ -84,7 +84,7 @@ class _BackupButtonState extends State<BackupButton> {
               inactiveTrackColor: AppColors.white,
               activeTrackColor: AppColors.purpleDark,
               activeColor: AppColors.commonPink,
-              activeThumbImage: AssetImage(AppImages.appLogo),
+              activeThumbImage: const AssetImage(AppImages.appLogo),
               value: backupsEnabled,
               onChanged: (bool value) {
                 setState(() {
@@ -176,7 +176,7 @@ class _BackupButtonState extends State<BackupButton> {
       // Call your backup API or method here
       await executeManualBackupWithUid(
           uid); // Replace this with your backup method
-    } catch (error) {
+    } on Exception catch (error) {
       // Handle error (e.g., show a snackbar or alert)
       log('Manual backup failed: $error');
     } finally {

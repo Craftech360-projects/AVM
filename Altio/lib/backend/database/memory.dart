@@ -2,10 +2,11 @@
 import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
-import 'package:objectbox/objectbox.dart';
+
 import 'package:altio/backend/database/geolocation.dart';
 import 'package:altio/backend/database/transcript_segment.dart';
 import 'package:flutter/material.dart';
+import 'package:objectbox/objectbox.dart';
 
 enum MemoryType { audio, image }
 
@@ -144,12 +145,12 @@ class Memory {
         return decoded.substring(0, min(maxCount, decoded.length));
       }
       return decoded;
-    } catch (e) {
+    } on Exception {
       return transcript;
     }
   }
 
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'createdAt': createdAt.toIso8601String(),
@@ -161,7 +162,7 @@ class Memory {
       'structured': structured.target!.toJson(),
       'geolocation': geolocation.target?.toJson(), // Add this line
       'pluginsResponse': pluginsResponse
-          .map<Map<String, String?>>((response) => response.toJson())
+          .map<Map<String, String?>>((response) => response.toJson().map((key, value) => MapEntry(key, value as String?)))
           .toList(),
       'discarded': discarded,
       'transcriptSegments':
@@ -201,7 +202,7 @@ class Structured {
     if (conversationMetricsJson == null) return {};
     try {
       return jsonDecode(conversationMetricsJson!);
-    } catch (e) {
+    } on Exception {
       return {};
     }
   }
@@ -230,11 +231,11 @@ class Structured {
     this.conversationMetricsJson,
   });
 
-  getEmoji() {
+  String getEmoji() {
     try {
       if (emoji.isNotEmpty) return utf8.decode(emoji.toString().codeUnits);
       return ['🧠', '😎', '🧑‍💻', '🚀'][Random().nextInt(4)];
-    } catch (e) {
+    } on Exception {
       return ['🧠', '😎', '🧑‍💻', '🎂'][Random().nextInt(4)];
     }
   }
@@ -287,7 +288,7 @@ class Structured {
               description: event['description'] ?? '',
               created: false,
             ));
-          } catch (e) {
+          } on Exception catch (e) {
             debugPrint('Error parsing event: $e');
             // Skip this event if there's an error
           }
@@ -302,7 +303,7 @@ class Structured {
     return 'Structured(id: $id, title: $title, overview: $overview, emoji: $emoji, category: $category, brainstormingQuestions: $brainstormingQuestions, profileInsights: $profileInsights,)';
   }
 
-  toJson() {
+  Map<String, dynamic>toJson() {
     return {
       'title': title,
       'overview': overview,
@@ -347,7 +348,7 @@ class PluginResponse {
 
   PluginResponse(this.content, {this.id = 0, this.pluginId});
 
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'pluginId': pluginId,
       'content': content,
@@ -376,7 +377,7 @@ class Event {
   Event(this.title, this.startsAt, this.duration,
       {this.description = '', this.created = false, this.id = 0});
 
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'title': title,
       'startsAt': startsAt.toIso8601String(),
@@ -402,7 +403,7 @@ class MemoryPhoto {
     return MemoryPhoto(json['base64'], json['description']);
   }
 
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'base64': base64,
       'description': description,

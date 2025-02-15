@@ -40,8 +40,8 @@ class MemoryCardWidget extends StatelessWidget {
           bool isAnyMemorySelected = state.selectedMemories.contains(true);
 
           return isLoading
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 50.0),
+              ? const Padding(
+                  padding: EdgeInsets.only(top: 50.0),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -70,9 +70,10 @@ class MemoryCardWidget extends StatelessWidget {
                                     yesText: "Delete",
                                     yesPressed: () {
                                       try {
-                                        memoryBloc.add(BatchDeleteMemory());
+                                        memoryBloc
+                                            .add(const BatchDeleteMemory());
                                         Navigator.of(context).pop();
-                                      } catch (e) {
+                                      } on Exception catch (e) {
                                         log(e.toString());
                                         avmSnackBar(context,
                                             "Something went wrong! Please try again later");
@@ -80,11 +81,11 @@ class MemoryCardWidget extends StatelessWidget {
                                     });
                               });
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.delete,
                           color: AppColors.red,
                         ),
-                        label: Text(
+                        label: const Text(
                           'Delete',
                           style: TextStyle(color: AppColors.red),
                         ),
@@ -113,8 +114,8 @@ class MemoryCardWidget extends StatelessWidget {
                               key: UniqueKey(),
                               direction: DismissDirection.endToStart,
                               background: Container(
-                                margin: EdgeInsets.only(right: 30),
-                                padding: EdgeInsets.symmetric(
+                                margin: const EdgeInsets.only(right: 30),
+                                padding: const EdgeInsets.symmetric(
                                     vertical: 04, horizontal: 04),
                                 alignment: Alignment.centerRight,
                                 child: Icon(
@@ -157,7 +158,7 @@ class MemoryCardWidget extends StatelessWidget {
                                       context,
                                       PageRouteBuilder(
                                         transitionDuration:
-                                            Duration(milliseconds: 500),
+                                            const Duration(milliseconds: 500),
                                         pageBuilder: (context, animation,
                                                 secondaryAnimation) =>
                                             MemoryDetailPage(

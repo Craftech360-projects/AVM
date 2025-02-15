@@ -56,7 +56,8 @@ Future<BTDeviceStruct?> scanAndConnectDevice(
             try {
               await bleConnectDevice(device.id, autoConnect: autoConnect);
               return device;
-            } catch (e) {
+            } on Exception catch (e) {
+            debugPrint(e.toString());
               continue;
             }
           }
@@ -65,7 +66,8 @@ Future<BTDeviceStruct?> scanAndConnectDevice(
         // If device not found in this scan, wait before next attempt
         await Future.delayed(const Duration(seconds: 2));
         timeoutCounter += 2;
-      } catch (e) {
+      } on Exception catch (e) {
+      debugPrint(e.toString());
         // If scanning fails, wait a bit before retrying
         await Future.delayed(const Duration(seconds: 1));
         timeoutCounter += 1;
@@ -76,7 +78,8 @@ Future<BTDeviceStruct?> scanAndConnectDevice(
         }
       }
     }
-  } catch (e) {
+  } on Exception catch (e) {
+  debugPrint(e.toString());
     return null;
   } finally {
     // Ensure scan is stopped when we exit
@@ -84,7 +87,7 @@ Future<BTDeviceStruct?> scanAndConnectDevice(
       if (await FlutterBluePlus.isScanning.first) {
         await FlutterBluePlus.stopScan();
       }
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint(e.toString());
     }
   }

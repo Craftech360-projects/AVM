@@ -69,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen>
 
       var message = Message(DateTime.now(), '', 'ai', type: 'daySummary');
 
-      MessageProvider().saveMessage(message);
+      await MessageProvider().saveMessage(message);
 
       var result = await dailySummaryNotifications(memories);
 
@@ -78,7 +78,7 @@ class _ChatScreenState extends State<ChatScreen>
 
       message.text = result;
       message.memories.addAll(memories);
-      MessageProvider().updateMessage(message);
+      await MessageProvider().updateMessage(message);
       _chatBloc.add(RefreshMessages());
     });
   }
@@ -122,7 +122,7 @@ class _ChatScreenState extends State<ChatScreen>
           previous.status != current.status,
       builder: (context, state) {
         if (state.status == ChatStatus.loading) {
-          return Center(
+          return const Center(
             child: TypingIndicator(),
           );
         }
@@ -131,14 +131,15 @@ class _ChatScreenState extends State<ChatScreen>
         try {
           pinnedMessage =
               state.messages?.firstWhereOrNull((msg) => msg.isPinned);
-        } catch (e) {
+        } on Exception catch (e) {
+        debugPrint(e.toString());
           pinnedMessage = null;
         }
 
         // Message? pinnedMessage;
         //     try {
         //       pinnedMessage = state.messages?.firstWhere((msg) => msg.isPinned);
-        //     } catch (e) {
+        //     } on Exception catch (e) {
         //       pinnedMessage = null;
         //     }
 
@@ -197,13 +198,13 @@ class _ChatScreenState extends State<ChatScreen>
               right: 0,
               child: Container(
                 color: AppColors.purpleDark,
-                padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      margin: EdgeInsets.symmetric(vertical: 5),
-                      padding: EdgeInsets.symmetric(vertical: 4),
+                      margin: const EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.symmetric(vertical: 4),
                       decoration: BoxDecoration(
                           color: AppColors.white, borderRadius: br5),
                       child: InkWell(
@@ -212,7 +213,7 @@ class _ChatScreenState extends State<ChatScreen>
                           context.read<ChatBloc>().add(UnpinMessage());
                           avmSnackBar(context, "Message unpinned");
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.push_pin_outlined,
                           color: AppColors.grey,
                         ),
@@ -242,8 +243,8 @@ class _ChatScreenState extends State<ChatScreen>
                             pinnedMessage.text.length > 100
                                 ? '${pinnedMessage.text.substring(0, 100)}...'
                                 : pinnedMessage.text,
-                            style:
-                                TextStyle(color: AppColors.white, fontSize: 13),
+                            style: const TextStyle(
+                                color: AppColors.white, fontSize: 13),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),

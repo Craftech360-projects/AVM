@@ -23,7 +23,7 @@ Future<void> bleConnectDevice(String deviceId,
 
     // Step 3: Request the desired MTU size if the platform is Android
     if (Platform.isAndroid) await device.requestMtu(512);
-  } catch (e) {
+  } on Exception catch (e) {
     log('bleConnectDevice failed: $e');
   }
 }
@@ -32,7 +32,7 @@ Future bleDisconnectDevice(BTDeviceStruct btDevice) async {
   final device = BluetoothDevice.fromId(btDevice.id);
   try {
     await device.disconnect();
-  } catch (e) {
+  } on Exception catch (e) {
     log('bleDisconnectDevice failed: $e');
   }
 }

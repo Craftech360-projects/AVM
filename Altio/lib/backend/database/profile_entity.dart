@@ -43,7 +43,7 @@ class Profile {
     }
     try {
       return jsonDecode(conversationMetricsJson!);
-    } catch (e) {
+    } on Exception catch (e) {
       log("❌ Error decoding conversation metrics: $e");
       return {};
     }
@@ -73,7 +73,7 @@ class Profile {
         conversationMetrics =
             Map<String, dynamic>.from(newInsights['conversationMetrics']);
       }
-    } catch (e, stack) {
+    } on Exception catch (e, stack) {
       log('Failed to merge insights: $e', stackTrace: stack);
     }
   }

@@ -50,7 +50,7 @@ Future<String?> uploadFile(File file, {bool prefixTimestamp = false}) async {
     } else {
       log('Failed to upload: ${response.body}');
     }
-  } catch (e) {
+  } on Exception catch (e) {
     log('Error uploading file: $e');
   }
   return null;
@@ -85,7 +85,7 @@ Future<File?> downloadFile(String objectName, String saveFileName) async {
     } else {
       log('Failed to download: ${response.body}');
     }
-  } catch (e) {
+  } on Exception catch (e) {
     log('Error downloading file: $e');
   }
   return null;

@@ -115,7 +115,7 @@ class TermsAndConditionsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      title: FittedBox(
+      title: const FittedBox(
         fit: BoxFit.scaleDown,
         child: Text(
           "Terms and Conditions",

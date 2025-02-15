@@ -2,7 +2,7 @@ import 'package:altio/backend/api_requests/api/pinecone.dart';
 import 'package:altio/backend/database/memory_provider.dart';
 import 'package:altio/backend/preferences.dart';
 
-scriptMemoryVectorsExecuted() async {
+Future<void> scriptMemoryVectorsExecuted() async {
   // FUCK, there was a very stupid issue.
   // vectors were overwritten for each user, as the id of the vector was the memory id of the local db (0,1,2...)
   // This aims to fix that

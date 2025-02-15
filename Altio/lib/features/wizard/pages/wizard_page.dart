@@ -72,7 +72,7 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
   Widget build(BuildContext context) {
     return CustomScaffold(
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: Column(
                 children: [
                   TypingIndicator(),
@@ -173,17 +173,17 @@ class _OnboardingPageContentState extends State<OnboardingPageContent> {
                                       uid: user.uid, hasDevice: false);
                                 }
                                 if (!context.mounted) return;
-                                Navigator.pushAndRemoveUntil(
+                                await Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        HomePageWrapper(tabIndex: 2),
+                                        const HomePageWrapper(tabIndex: 2),
                                   ),
                                   (route) => false,
                                 );
                                 SharedPreferencesUtil().onboardingCompleted =
                                     true;
-                              } catch (e) {
+                              } on Exception catch (e) {
                                 if (!context.mounted) return;
                                 avmSnackBar(context, e.toString());
                               }

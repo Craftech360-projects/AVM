@@ -7,7 +7,7 @@ import 'package:altio/backend/schema/plugin.dart';
 import 'package:altio/utils/other/notifications.dart';
 import 'package:tuple/tuple.dart';
 
-getOnMemoryCreationEvents(Memory memory) async {
+Future<List<Tuple2<Plugin, String>>> getOnMemoryCreationEvents(Memory memory) async {
   var onMemoryCreationPlugins = SharedPreferencesUtil()
       .pluginsList
       .where((element) =>
@@ -26,7 +26,7 @@ getOnMemoryCreationEvents(Memory memory) async {
   return await Future.wait(triggerPluginResult);
 }
 
-getOnTranscriptSegmentReceivedEvents(
+Future<List<Tuple2<Plugin, String>>> getOnTranscriptSegmentReceivedEvents(
     List<TranscriptSegment> segment, String sessionId) async {
   // Filter plugins based on conditions
   var plugins = SharedPreferencesUtil()
@@ -55,13 +55,13 @@ getOnTranscriptSegmentReceivedEvents(
   return results;
 }
 
-triggerMemoryCreatedEvents(
+Future<void> triggerMemoryCreatedEvents(
   Memory memory, {
   Function(Message, Memory?)? sendMessageToChat,
 }) async {
   if (memory.discarded) return;
 
-  webhookOnMemoryCreatedCall(memory).then((s) {
+  await webhookOnMemoryCreatedCall(memory).then((s) {
     if (s.isNotEmpty) {
       createNotification(
           title: 'Developer: On Memory Created', body: s, notificationId: 10);
@@ -69,12 +69,12 @@ triggerMemoryCreatedEvents(
   });
 }
 
-triggerTranscriptSegmentReceivedEvents(
+Future<void> triggerTranscriptSegmentReceivedEvents(
   List<TranscriptSegment> segments,
   String sessionId, {
   Function(Message, Memory?)? sendMessageToChat,
 }) async {
-  webhookOnTranscriptReceivedCall(segments, sessionId).then((s) {
+  await webhookOnTranscriptReceivedCall(segments, sessionId).then((s) {
     if (s.isNotEmpty) {
       createNotification(
           title: 'Developer: On Transcript Received',

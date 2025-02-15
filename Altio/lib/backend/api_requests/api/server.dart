@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:altio/backend/api_requests/api/shared.dart';
@@ -33,57 +34,11 @@ Future<List<TranscriptSegment>> transcribe(File file) async {
       throw Exception(
           'Failed to upload file. Status code: ${response.statusCode} Body: ${response.body}');
     }
-  } catch (e) {
+  } on Exception catch (e) {
+    log(e.toString());
     rethrow;
   }
 }
-
-// Future<bool> userHasSpeakerProfile(String uid) async {
-//   var response = await makeApiCall(
-//     url: '${Env.apiBaseUrl}v1/speech-profile?uid=$uid',
-//     headers: {},
-//     method: 'GET',
-//     body: '',
-//   );
-//   if (response == null) return false;
-
-//   return jsonDecode(response.body)['has_profile'] ?? false;
-// }
-
-// Future<List<SpeakerIdSample>> getUserSamplesState(String uid) async {
-//   var response = await makeApiCall(
-//     url: '${Env.apiBaseUrl}samples?uid=$uid',
-//     headers: {},
-//     method: 'GET',
-//     body: '',
-//   );
-//   if (response == null) return [];
-
-//   return SpeakerIdSample.fromJsonList(jsonDecode(response.body));
-// }
-
-// Future<bool> uploadSample(File file, String uid) async {
-//   var request = http.MultipartRequest(
-//     'POST',
-//     Uri.parse('${Env.apiBaseUrl}samples/upload?uid=$uid'),
-//   );
-//   request.files.add(await http.MultipartFile.fromPath('file', file.path,
-//       filename: basename(file.path)));
-
-//   try {
-//     var streamedResponse = await request.send();
-//     var response = await http.Response.fromStream(streamedResponse);
-
-//     if (response.statusCode == 200) {
-//       return true;
-//     } else {
-//       throw Exception(
-//           'Failed to upload sample. Status code: ${response.statusCode}');
-//     }
-//   } catch (e) {
-//     throw Exception('An error occurred uploadSample: $e');
-//   }
-// }
 
 Future<void> uploadBackupApi(String backup) async {
   await makeApiCall(
@@ -136,7 +91,8 @@ Future<List<Plugin>> retrievePlugins() async {
       var plugins = Plugin.fromJsonList(jsonDecode(response.body));
       SharedPreferencesUtil().pluginsList = plugins;
       return plugins;
-    } catch (e) {
+    } on Exception catch (e) {
+      log(e.toString());
       return SharedPreferencesUtil().pluginsList;
     }
   }

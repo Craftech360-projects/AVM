@@ -25,7 +25,7 @@ class MessageProvider {
   Future<bool> deleteMessage(Message message) async {
     try {
       return _box.remove(message.id);
-    } catch (e) {
+    } on Exception catch (e) {
       log('Error deleting message: $e');
       return false;
     }
@@ -40,7 +40,7 @@ class MessageProvider {
       final ids = messages.map((m) => m.id).toList();
       _box.removeMany(ids);
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       log('Error deleting messages: $e');
       return false;
     }

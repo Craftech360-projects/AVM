@@ -40,7 +40,7 @@ Future transcribeAfterStopiOS({
     filePathsToProcess = [...filePaths];
   }
   if (filePathsToProcess.isNotEmpty) {
-    Future.forEach(filePathsToProcess, (f) async {
+    await Future.forEach(filePathsToProcess, (f) async {
       await processFileToTranscript(File(f));
       final file = File(f);
       if (file.existsSync()) {
@@ -84,7 +84,7 @@ Future transcribeAfterStopAndroid(
     filePathsToProcess = [...filePaths];
   }
   if (filePathsToProcess.isNotEmpty) {
-    Future.forEach(filePathsToProcess, (f) async {
+    await Future.forEach(filePathsToProcess, (f) async {
       await processFileToTranscript(File(f));
       final file = File(f);
       if (file.existsSync()) {
@@ -143,7 +143,7 @@ Future iosBgCallback({
         updateState(currentLength);
       }
     } else {}
-  } catch (e) {
+  } on Exception catch (e) {
     log(e.toString());
   }
 }

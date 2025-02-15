@@ -52,7 +52,7 @@ class _CalendarPageState extends State<CalendarPage> {
   List<Widget> _calendarType() {
     return [
       RadioListTile(
-        fillColor: WidgetStatePropertyAll(AppColors.purpleDark),
+        fillColor: const WidgetStatePropertyAll(AppColors.purpleDark),
         title: Text('Automatic', style: Theme.of(context).textTheme.bodyMedium),
         subtitle: const Text('Altio will auto-schedule your events.'),
         value: 'auto',
@@ -64,7 +64,7 @@ class _CalendarPageState extends State<CalendarPage> {
         },
       ),
       RadioListTile(
-        fillColor: WidgetStatePropertyAll(AppColors.purpleDark),
+        fillColor: const WidgetStatePropertyAll(AppColors.purpleDark),
         title: const Text('Manual'),
         subtitle: const Text(
             'Events will be drafted, but you must confirm their creation.'),
@@ -96,14 +96,14 @@ class _CalendarPageState extends State<CalendarPage> {
           style: textTheme.titleSmall?.copyWith(fontSize: 16.h),
         ),
       ),
-      Text(
+      const Text(
         'Select a calendar for Altio to connect to.',
         textAlign: TextAlign.center,
       ),
       h8,
       for (var calendar in calendars)
         RadioListTile(
-          fillColor: WidgetStatePropertyAll(AppColors.purpleDark),
+          fillColor: const WidgetStatePropertyAll(AppColors.purpleDark),
           title: Text(calendar.name!),
           subtitle: Text(calendar.accountName!),
           value: calendar.id!,
@@ -137,7 +137,7 @@ class _CalendarPageState extends State<CalendarPage> {
               children: [
                 Row(
                   children: [
-                    Icon(Icons.edit_calendar),
+                    const Icon(Icons.edit_calendar),
                     w16,
                     Text(
                       'Enable integration',
@@ -151,7 +151,7 @@ class _CalendarPageState extends State<CalendarPage> {
                     inactiveTrackColor: AppColors.white,
                     activeTrackColor: AppColors.purpleDark,
                     activeColor: AppColors.commonPink,
-                    activeThumbImage: AssetImage(AppImages.appLogo),
+                    activeThumbImage: const AssetImage(AppImages.appLogo),
                     value: calendarEnabled,
                     onChanged: _onSwitchChanged,
                   ),
@@ -161,7 +161,7 @@ class _CalendarPageState extends State<CalendarPage> {
           ),
           if (!calendarEnabled)
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
                 'Altio can auto-schedule events or ask for your confirmation first.',
                 textAlign: TextAlign.center,

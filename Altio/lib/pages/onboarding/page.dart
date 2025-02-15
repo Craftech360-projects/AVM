@@ -59,10 +59,10 @@ class FindDevicesPageState extends State<FindDevicesPage>
         if (FlutterBluePlus.adapterStateNow != BluetoothAdapterState.on) {
           await FlutterBluePlus.turnOn();
         }
-      } catch (e) {
+      } on Exception catch (e) {
         if (e is FlutterBluePlusException && e.code == 11) {
           if (mounted) {
-            showDialog(
+            await showDialog(
               context: context,
               builder: (c) => getDialog(
                 context,
@@ -118,7 +118,7 @@ class FindDevicesPageState extends State<FindDevicesPage>
           });
           _didNotMakeItTimer?.cancel();
         }
-      } catch (e) {
+      } on Exception catch (e) {
         debugPrint('Error during BLE device scanning: $e');
       }
     });

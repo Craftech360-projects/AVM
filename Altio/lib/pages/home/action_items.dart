@@ -44,15 +44,15 @@ class _ActionItemsState extends State<ActionItems> {
                 BoxShadow(
                   color: AppColors.purpleDark.withValues(alpha: 0.3),
                   blurRadius: 4,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
-            margin: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+            margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
             child: ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+              contentPadding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
               leading: Checkbox(
-                side: BorderSide(color: AppColors.purpleDark),
+                side: const BorderSide(color: AppColors.purpleDark),
                 activeColor: AppColors.purpleDark,
                 value: item.completed,
                 fillColor: WidgetStateProperty.all(AppColors.white),
@@ -62,7 +62,7 @@ class _ActionItemsState extends State<ActionItems> {
                     setState(() {
                       item.completed = value;
                       memoryProvider.updateActionItem(item);
-                      _loadActionItems(); // Reload the lists after update
+                      _loadActionItems();
                     });
                   }
                 },
@@ -93,7 +93,7 @@ class _ActionItemsState extends State<ActionItems> {
                         ),
                   ),
                   if (item.completed)
-                    Icon(
+                    const Icon(
                       Icons.check_circle_outline,
                       size: 16,
                       color: Colors.green,

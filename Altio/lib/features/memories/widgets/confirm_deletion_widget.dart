@@ -35,7 +35,8 @@ class _ConfirmDeletionWidgetState extends State<ConfirmDeletionWidget> {
       noText: "Cancel",
       yesText: "Delete",
       yesPressed: () async {
-        MemoryProvider().deleteMemory(widget.memory);
+        await MemoryProvider().deleteMemory(widget.memory);
+        if (!context.mounted) return;
         Navigator.pop(context);
         widget.onDelete?.call();
         MixpanelManager().memoryDeleted(widget.memory);

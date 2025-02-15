@@ -29,7 +29,7 @@ class WavBytesUtil {
     _audioBytes.addAll(bytes);
   }
 
-  void storeFramePacket(value) {
+  void storeFramePacket(List<int> value) {
     int index = value[0] + (value[1] << 8);
     int internal = value[2];
     List<int> content = value.sublist(3);
@@ -82,7 +82,7 @@ class WavBytesUtil {
 
   bool hasFrames() => frames.isNotEmpty;
 
-  static clearTempWavFiles() async {
+  static Future<void> clearTempWavFiles() async {
     final directory = await getApplicationDocumentsDirectory();
     var file0 = File('${directory.path}/temp.wav');
     if (file0.existsSync()) file0.deleteSync();
@@ -93,19 +93,19 @@ class WavBytesUtil {
     // }
   }
 
-  static tempWavExists() async {
+  static Future<bool> tempWavExists() async {
     final directory = await getApplicationDocumentsDirectory();
     var file0 = File('${directory.path}/temp.wav');
     return file0.existsSync();
   }
 
-  static deleteTempWav() async {
+  static Future<void> deleteTempWav() async {
     final directory = await getApplicationDocumentsDirectory();
     var file0 = File('${directory.path}/temp.wav');
     if (file0.existsSync()) file0.deleteSync();
   }
 
-  static getTempWavName() async {
+  static Future<String> getTempWavName() async {
     final directory = await getApplicationDocumentsDirectory();
     var fileName = 'temp.wav';
     // check if temp.wav exists, if so use temp1.wav, temp2.wav, etc.
@@ -313,7 +313,7 @@ class ImageBytesUtil {
           '${directory.path}/image_${DateTime.now().millisecondsSinceEpoch}.jpg');
       await file.writeAsBytes(bytes);
       return file;
-    } catch (e) {
+    } on Exception {
       return null;
     }
   }
@@ -325,7 +325,7 @@ class ImageBytesUtil {
           '${tempDir.path}/image_${DateTime.now().millisecondsSinceEpoch}.jpg');
       await file.writeAsBytes(uint8list);
       return file;
-    } catch (e) {
+    } on Exception {
       return null;
     }
   }

@@ -83,7 +83,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
   void checkTutorialStatus() async {
     bool hasSeen = widget.hasSeenTutorial;
     if (!hasSeen) {
-      _createTutorial();
+      await _createTutorial();
     }
   }
 
@@ -142,9 +142,9 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
       ),
     );
 
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 1500))
-          ..repeat(reverse: true);
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1500))
+      ..repeat(reverse: true);
 
     _scaleAnimation = Tween<double>(begin: 5.0, end: 15.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
@@ -208,7 +208,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
     return Consumer<DeviceProvider>(
       builder: (context, deviceProvider, child) {
         if (deviceProvider.hasDevice == null) {
-          return Scaffold(
+          return const Scaffold(
             body: ScreenSkeleton(),
           );
         }
@@ -221,10 +221,10 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                   ? Stack(
                       children: [
                         SingleChildScrollView(
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               vertical: 25, horizontal: 10),
                           controller: _scrollController,
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           child: Column(
                             children: [
                               if (widget.memoryCreating)
@@ -234,7 +234,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                   decoration: BoxDecoration(
                                     borderRadius: br8,
                                   ),
-                                  child: Column(
+                                  child: const Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -265,7 +265,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                             setState(() {
                                               items.remove(item);
                                             });
-                                          } catch (e) {
+                                          } on Exception catch (e) {
+                                            debugPrint(e.toString());
                                             if (!context.mounted) return;
                                             avmSnackBar(context,
                                                 'Oops! Something went wrong.\nPlease try again.');
@@ -292,7 +293,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                               },
                                             ),
                                             Container(
-                                              padding: EdgeInsets.only(top: 8),
+                                              padding:
+                                                  const EdgeInsets.only(top: 8),
                                               child: Text(
                                                 "Swipe right to create your memory ...",
                                                 textAlign: TextAlign.center,
@@ -321,7 +323,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                   },
                                 ),
 
-                              Divider(),
+                              const Divider(),
 
                               Row(
                                 mainAxisAlignment:
@@ -372,14 +374,14 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                         builder: (BuildContext context) {
                                           return AlertDialog(
                                             contentPadding:
-                                                EdgeInsets.symmetric(
+                                                const EdgeInsets.symmetric(
                                                     vertical: 12,
                                                     horizontal: 8),
                                             shape: RoundedRectangleBorder(
                                                 borderRadius: br12),
                                             backgroundColor:
                                                 AppColors.commonPink,
-                                            title: Row(
+                                            title: const Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
@@ -400,7 +402,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                             content: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Divider(
+                                                const Divider(
                                                   color: AppColors.purpleDark,
                                                   thickness: 1.5,
                                                 ),
@@ -517,7 +519,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                     },
                                     child: Row(
                                       children: [
-                                        Icon(
+                                        const Icon(
                                           Icons.filter_alt_outlined,
                                           size: 15,
                                         ),
@@ -580,7 +582,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                               right: 0,
                               child: _buildScrollGradient()),
                         Positioned(
-                          bottom: MediaQuery.of(context).size.width * 0.010,
+                          bottom: MediaQuery.of(context).size.width * 0.007,
                           right: 10,
                           child: Column(
                             children: [
@@ -615,7 +617,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                               ),
                               h8,
                               if (SharedPreferencesUtil().notificationPlugin)
-                                TypingIndicator(),
+                                const TypingIndicator(),
                             ],
                           ),
                         ),
@@ -623,9 +625,9 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                     )
                   : Center(
                       child: Container(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 12),
-                        margin: EdgeInsets.all(28),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 12),
+                        margin: const EdgeInsets.all(28),
                         decoration: BoxDecoration(
                           color: AppColors.white,
                           borderRadius: br8,
@@ -641,7 +643,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                                 textAlign: TextAlign.center,
                                 "Ohoo! Seems like you don't have Capsaul with you!",
                                 style: TextStyle(
@@ -650,7 +652,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                     fontSize: 14.5,
                                     height: 1.1)),
                             h8,
-                            Text(
+                            const Text(
                               textAlign: TextAlign.center,
                               "Don't worry! Click the button below to get your Capsaul and start capturing memories🤩",
                               style: TextStyle(
@@ -669,7 +671,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                     borderRadius: br30,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Color(0xFFD4AF37)
+                                        color: const Color(0xFFD4AF37)
                                             .withValues(alpha: 0.4),
                                         blurRadius: _scaleAnimation.value,
                                         spreadRadius:
@@ -679,11 +681,11 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                   ),
                                   child: OutlinedButton(
                                     style: OutlinedButton.styleFrom(
-                                      backgroundColor: Color(0xFF001F3F),
-                                      foregroundColor: Color(0xFFD4AF37),
-                                      side: BorderSide(
+                                      backgroundColor: const Color(0xFF001F3F),
+                                      foregroundColor: const Color(0xFFD4AF37),
+                                      side: const BorderSide(
                                           color: Color(0xFFFFC72C), width: 2.5),
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           vertical: 10, horizontal: 24),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: br30,
@@ -698,7 +700,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                         throw 'Could not launch $url';
                                       }
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       "Get Capsaul",
                                       style: TextStyle(
                                         fontFamily: "SpaceGrotesk",
@@ -720,7 +722,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
                                   ..repeat();
                               },
                               errorBuilder: (context, error, stackTrace) {
-                                return Text('Animation failed to load');
+                                return const Text('Animation failed to load');
                               },
                             )
                           ],
@@ -765,8 +767,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
               align: ContentAlign.bottom,
               builder: (context, controller) => Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 30),
-                child: Text(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: const Text(
                   textAlign: TextAlign.center,
                   'While speaking tap this widget to see live transcripts',
                   style: TextStyle(
@@ -787,8 +789,8 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
               align: ContentAlign.bottom,
               builder: (context, controller) => Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 30),
-                child: Text(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: const Text(
                   textAlign: TextAlign.center,
                   'After speaking, swipe right to create your memory',
                   style: TextStyle(
@@ -805,7 +807,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
           contents: [
             TargetContent(
               align: ContentAlign.top,
-              builder: (context, controller) => Text(
+              builder: (context, controller) => const Text(
                 textAlign: TextAlign.center,
                 'Enable Capsaul bot to get real-time responses',
                 style: TextStyle(
@@ -818,7 +820,7 @@ class _CaptureMemoryPageState extends State<CaptureMemoryPage>
 
       void showTutorialFromIndex() {
         final tutorial = TutorialCoachMark(
-          textStyleSkip: TextStyle(
+          textStyleSkip: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 16,
             color: AppColors.white,

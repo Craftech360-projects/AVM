@@ -28,7 +28,7 @@ class MixpanelManager {
 
   MixpanelManager._internal();
 
-  setPeopleValues() {
+  void setPeopleValues() {
     setUserProperty('Dev Mode Enabled', _preferences.devModeEnabled);
     setUserProperty(
         'Plugins Enabled Count', _preferences.pluginsEnabled.length);
@@ -43,7 +43,7 @@ class MixpanelManager {
     setUserProperty('Messages Count', MessageProvider().getMessagesCount());
   }
 
-  setUserProperty(String key, dynamic value) =>
+  void setUserProperty(String key, dynamic value) =>
       _mixpanel?.getPeople().set(key, value);
 
   void optInTracking() {

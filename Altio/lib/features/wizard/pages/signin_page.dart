@@ -8,9 +8,9 @@ import 'package:altio/backend/auth.dart';
 import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
+import 'package:altio/core/widgets/elevated_button.dart';
 import 'package:altio/features/wizard/pages/wizard_page.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
-import 'package:altio/core/widgets/elevated_button.dart';
 import 'package:altio/utils/legal/terms_and_condition.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -42,12 +42,14 @@ class SigninPage extends StatelessWidget {
               ConstrainedBox(
                 constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.9),
-                child: const FittedBox(
+                child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
                     'Your personal growth journey\nwith AI that listens to\nall your queries',
-                    style: TextStyle(
-                        fontSize: 28, fontWeight: FontWeight.w500, height: 1.2),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge
+                        ?.copyWith(height: 1.25),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -75,19 +77,19 @@ class SigninPage extends StatelessWidget {
                             final userCred = await signInWithGoogle();
                             final token = await userCred.user?.getIdToken();
 
-                            if (token != null)  {
-                              prefs.setString('firebase_token', token);
+                            if (token != null) {
+                              await prefs.setString('firebase_token', token);
                               final user = FirebaseAuth.instance.currentUser!;
                               final prevUid = prefs.getString('uid') ?? '';
 
                               if (prevUid.isNotEmpty && prevUid != user.uid) {
                                 await migrateUserServer(prevUid, user.uid);
-                                prefs.setString('last_login_time',
+                                await prefs.setString('last_login_time',
                                     DateTime.now().toIso8601String());
                               }
 
-                              prefs.setString('uid', user.uid);
-                              Navigator.push(
+                              await prefs.setString('uid', user.uid);
+                              await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const OnboardingPage(),
@@ -96,7 +98,7 @@ class SigninPage extends StatelessWidget {
                             } else {
                               log("Sign-in failed or user token is null");
                             }
-                          } catch (e) {
+                          } on Exception catch (e) {
                             log("Google Sign-in failed: $e");
                           }
                         },
@@ -134,19 +136,19 @@ class SigninPage extends StatelessWidget {
                                 : null;
 
                             if (token != null) {
-                              prefs.setString('firebase_token', token);
+                              await prefs.setString('firebase_token', token);
                               final user = FirebaseAuth.instance.currentUser!;
                               final prevUid = prefs.getString('uid') ?? '';
 
                               if (prevUid.isNotEmpty && prevUid != user.uid) {
                                 await migrateUserServer(prevUid, user.uid);
-                                prefs.setString('last_login_time',
+                                await prefs.setString('last_login_time',
                                     DateTime.now().toIso8601String());
                               }
 
-                              prefs.setString('uid', user.uid);
-                              prefs.setString('uid', user.uid);
-                              Navigator.push(
+                              await prefs.setString('uid', user.uid);
+                              await prefs.setString('uid', user.uid);
+                              await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const OnboardingPage(),
@@ -155,7 +157,7 @@ class SigninPage extends StatelessWidget {
                             } else {
                               log("Apple Sign-in failed or user token is null");
                             }
-                          } catch (e) {
+                          } on Exception catch (e) {
                             log("Apple Sign-in failed: $e");
                           }
                         },
@@ -170,7 +172,7 @@ class SigninPage extends StatelessWidget {
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: "SpaceGrotesk",
                         color: AppColors.black,
                         fontWeight: FontWeight.w500,
@@ -181,7 +183,7 @@ class SigninPage extends StatelessWidget {
                                 'By signing up for Altio, you agree to the\n'),
                         TextSpan(
                           text: 'Terms and Conditions',
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: AppColors.purpleDark,
                               fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()
@@ -202,7 +204,7 @@ class SigninPage extends StatelessWidget {
                         const TextSpan(text: ' and '),
                         TextSpan(
                           text: 'Privacy Policy',
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: AppColors.purpleDark,
                               fontWeight: FontWeight.w600),
                           recognizer: TapGestureRecognizer()

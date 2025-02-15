@@ -53,7 +53,7 @@ Future<StreamSubscription<List<int>>?> getBleBatteryLevelListener(
 
   try {
     await batteryLevelCharacteristic.setNotifyValue(true);
-  } catch (e, stackTrace) {
+  } on Exception catch (e, stackTrace) {
     logSubscribeError('Battery level', deviceId, e, stackTrace);
     return null;
   }
@@ -90,7 +90,7 @@ Future<StreamSubscription?> getBleAudioBytesListener(
   try {
     await audioDataStreamCharacteristic
         .setNotifyValue(true); // device could be disconnected here.
-  } catch (e, stackTrace) {
+  } on Exception catch (e, stackTrace) {
     logSubscribeError('Audio data stream', deviceId, e, stackTrace);
     return null;
   }
@@ -219,7 +219,7 @@ Future<StreamSubscription?> getBleImageBytesListener(
   try {
     await imageStreamCharacteristic
         .setNotifyValue(true); // device could be disconnected here.
-  } catch (e, stackTrace) {
+  } on Exception catch (e, stackTrace) {
     logSubscribeError('Image data stream', deviceId, e, stackTrace);
     return null;
   }

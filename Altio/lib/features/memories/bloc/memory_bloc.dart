@@ -51,7 +51,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
       // Filter memories for this week
       final startOfWeek =
           DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
-      final endOfWeek = startOfWeek.add(Duration(days: 6));
+      final endOfWeek = startOfWeek.add(const Duration(days: 6));
 
       filteredMemories = allMemories.where((memory) {
         final createdAt = memory.createdAt;
@@ -70,7 +70,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
       filteredMemories = allMemories.where((memory) {
         final createdAt = memory.createdAt;
         return createdAt.isAfter(startDate) &&
-            createdAt.isBefore(endDate.add(Duration(days: 1)));
+            createdAt.isBefore(endDate.add(const Duration(days: 1)));
       }).toList();
       filteredMemories.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       emit(state.copyWith(
@@ -103,7 +103,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
           memories: mostRecentMemory,
         ),
       );
-    } catch (error) {
+    } on Exception catch (error) {
       emit(
         state.copyWith(
           status: MemoryStatus.failure,
@@ -141,7 +141,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
           failure: "Failed to delete memory",
         ));
       }
-    } catch (error) {
+    } on Exception catch (error) {
       emit(state.copyWith(
         status: MemoryStatus.failure,
         failure: error.toString(),
@@ -151,7 +151,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
 
   FutureOr<void> updatedMemory(
       UpdatedMemory event, Emitter<MemoryState> emit) async {
-    MemoryProvider().updateMemoryStructured(event.structured);
+    await MemoryProvider().updateMemoryStructured(event.structured);
 
     emit(state.copyWith(
       status: MemoryStatus.success,
@@ -209,7 +209,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
           status: MemoryStatus.success, // Maintain success to stop spinner
         ));
       }
-    } catch (e) {
+    } on Exception catch (e) {
       log('Error during batch deletion: $e');
       emit(state.copyWith(
         status: MemoryStatus.failure,
@@ -287,7 +287,7 @@ class MemoryBloc extends Bloc<MemoryEvent, MemoryState> {
         status: MemoryStatus.success,
         memories: filteredMemories,
       ));
-    } catch (error) {
+    } on Exception catch (error) {
       emit(
         state.copyWith(
           status: MemoryStatus.failure,

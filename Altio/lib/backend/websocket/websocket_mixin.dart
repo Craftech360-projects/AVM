@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:altio/backend/database/transcript_segment.dart';
+import 'package:altio/backend/websocket/websockets.dart';
 import 'package:altio/utils/ble/communication.dart';
 import 'package:altio/utils/other/notifications.dart';
-import 'package:altio/backend/websocket/websockets.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
@@ -113,7 +113,7 @@ mixin WebSocketMixin {
         onMessageReceived: onMessageReceived,
         sampleRate: sampleRate ?? (codec == BleAudioCodec.opus ? 16000 : 8000),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       _isConnecting = false;
       onConnectionFailed(e);
     }
@@ -229,7 +229,7 @@ mixin WebSocketMixin {
       return;
     }
 
-    websocketChannel?.sink.close(1000);
+    await websocketChannel?.sink.close(1000);
     await initWebSocket(
       onConnectionSuccess: onConnectionSuccess,
       onConnectionFailed: onConnectionFailed,
@@ -284,7 +284,7 @@ mixin WebSocketMixin {
       _reconnectionAttempts = 0;
       _isConnecting = false;
       _hasNotifiedUser = false;
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint(e.toString());
     }
   }

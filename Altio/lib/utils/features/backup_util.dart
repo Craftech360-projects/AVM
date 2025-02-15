@@ -13,8 +13,8 @@ Future<void> manualBackup(BuildContext context) async {
     // Call your backup API or method here
     await executeManualBackupWithUid(uid);
     log("backup sucess");
-  } catch (error) {
-    // Handle error (e.g., show a snackbar or alert)
+  } on Exception catch (error) {
+    log("backup failed: $error");
   } finally {
     isManualBackupInProgress = false;
   }

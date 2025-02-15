@@ -44,7 +44,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           emit(state.copyWith(status: ChatStatus.failure));
           log('Failed to delete the message.');
         }
-      } catch (error) {
+      } on Exception catch (error) {
         log('Error deleting message: $error');
         emit(state.copyWith(
           status: ChatStatus.failure,
@@ -60,7 +60,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         if (success) {
           emit(state.copyWith(messages: []));
         }
-      } catch (e) {
+      } on Exception catch (e) {
         log('Failed to clear chat: $e');
         emit(state.copyWith(status: ChatStatus.failure));
       }
@@ -79,7 +79,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         await messageProvider.updateMessage(event.message);
 
         emit(state.copyWith(messages: messageProvider.getMessages()));
-      } catch (e) {
+      } on Exception catch (e) {
         log("Failed to pin message: $e");
         emit(state.copyWith(status: ChatStatus.failure));
       }
@@ -96,7 +96,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         }
 
         emit(state.copyWith(messages: messageProvider.getMessages()));
-      } catch (e) {
+      } on Exception catch (e) {
         log("Failed to unpin message: $e");
         emit(state.copyWith(status: ChatStatus.failure));
       }
@@ -113,7 +113,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         status: ChatStatus.loaded,
         messages: messages,
       ));
-    } catch (error) {
+    } on Exception catch (error) {
       log("Failed to refresh messages: $error");
       emit(state.copyWith(
         status: ChatStatus.failure,
@@ -134,11 +134,11 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         await getInitialPluginPrompt(event.plugin),
         _callbackFunctionChatStreaming(ai),
         () async {
-          messageProvider.updateMessage(ai);
+          await messageProvider.updateMessage(ai);
           add(LoadInitialChat());
         },
       );
-    } catch (error) {
+    } on Exception catch (error) {
       emit(state.copyWith(
         status: ChatStatus.failure,
         errorMesage: error.toString(),
@@ -160,7 +160,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           messages: messages,
         ));
       }
-    } catch (error) {
+    } on Exception catch (error) {
       emit(state.copyWith(
         status: ChatStatus.failure,
         errorMesage: error.toString(),
@@ -172,7 +172,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       SendMessage event, Emitter<ChatState> emit) async {
     try {
       var userMessage = Message(DateTime.now(), event.message, 'human');
-      messageProvider.saveMessage(userMessage);
+      await messageProvider.saveMessage(userMessage);
 
       emit(state.copyWith(
         status: ChatStatus.userMessageSent,
@@ -211,7 +211,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
           ));
         },
       );
-    } catch (error) {
+    } on Exception catch (error) {
       emit(state.copyWith(
         status: ChatStatus.failure,
         errorMesage: error.toString(),
@@ -253,17 +253,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Future<void> sendInitialPluginMessage(Plugin? plugin) async {
     try {
       var ai = Message(DateTime.now(), '', 'ai', pluginId: plugin?.id);
-      messageProvider.saveMessage(ai);
+      await messageProvider.saveMessage(ai);
 
       await streamApiResponse(
         await getInitialPluginPrompt(plugin),
         _callbackFunctionChatStreaming(ai),
         () async {
-          messageProvider.updateMessage(ai);
+          await messageProvider.updateMessage(ai);
           add(LoadInitialChat());
         },
       );
-    } catch (error) {
+    } on Exception catch (error) {
       log(error.toString());
     }
   }

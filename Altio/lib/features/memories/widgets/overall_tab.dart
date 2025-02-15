@@ -90,7 +90,7 @@ class OverallTabState extends State<OverallTab> {
               return Padding(
                 padding: const EdgeInsets.symmetric(vertical: 3),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                   decoration: BoxDecoration(
                     color: AppColors.purpleDark,
                     borderRadius: br5,
@@ -119,7 +119,7 @@ class OverallTabState extends State<OverallTab> {
                             ),
                           );
                         },
-                        child: Icon(
+                        child: const Icon(
                           size: 22,
                           Icons.double_arrow_sharp,
                           color: AppColors.white,
@@ -249,7 +249,7 @@ class OverallTabState extends State<OverallTab> {
                       alignment: Alignment.topCenter,
                       child: Checkbox(
                         visualDensity:
-                            VisualDensity(horizontal: -4, vertical: -4.0),
+                            const VisualDensity(horizontal: -4, vertical: -4.0),
                         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         value: actionItem.completed,
                         onChanged: (bool? value) {
@@ -259,7 +259,7 @@ class OverallTabState extends State<OverallTab> {
                           });
                         },
                         activeColor: AppColors.black,
-                        side: BorderSide(width: 1, color: AppColors.black),
+                        side: const BorderSide(width: 1, color: AppColors.black),
                       ),
                     ),
                     w4,
@@ -284,21 +284,21 @@ class OverallTabState extends State<OverallTab> {
           Container(
             decoration: BoxDecoration(
                 border: Border.all(color: AppColors.black), borderRadius: br5),
-            margin: EdgeInsets.symmetric(vertical: 20),
-            padding: EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+            margin: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (widget.geolocation != null &&
                     widget.geolocation!.address != null)
-                  Text(
+                  const Text(
                     'Location 📍',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                Divider(
+                const Divider(
                   color: AppColors.black,
                   thickness: 1,
                 ),
@@ -324,7 +324,7 @@ class OverallTabState extends State<OverallTab> {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.error, size: 50),
+                              const Icon(Icons.error, size: 50),
                               h8,
                               Text(
                                 'Failed to load map image',
@@ -392,7 +392,7 @@ class OverallTabState extends State<OverallTab> {
                     alignment: Alignment.center,
                     width: 32,
                     height: 32,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                     ),
                     child: Center(

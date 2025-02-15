@@ -65,7 +65,7 @@ class _ZapierPageState extends State<ZapierPage> {
                     inactiveTrackColor: AppColors.white,
                     activeTrackColor: AppColors.purpleDark,
                     activeColor: AppColors.commonPink,
-                    activeThumbImage: AssetImage(AppImages.appLogo),
+                    activeThumbImage: const AssetImage(AppImages.appLogo),
                     value: zapierEnabled,
                     onChanged: _onSwitchChanged,
                   ),
@@ -90,7 +90,7 @@ class _ZapierPageState extends State<ZapierPage> {
     return [
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        margin: EdgeInsets.symmetric(vertical: 12.0),
+        margin: const EdgeInsets.symmetric(vertical: 12.0),
         decoration: BoxDecoration(
           color: AppColors.commonPink,
           borderRadius: br8,
@@ -101,7 +101,7 @@ class _ZapierPageState extends State<ZapierPage> {
           style: textTheme.titleSmall?.copyWith(fontSize: 16.h),
         ),
       ),
-      Text(
+      const Text(
         'Enter your Zapier webhook URL and select the type of workflows you want to automate.',
         textAlign: TextAlign.start,
       ),

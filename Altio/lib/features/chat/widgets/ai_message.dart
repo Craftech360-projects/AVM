@@ -35,7 +35,7 @@ class AIMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 2, 20, 2),
+      padding: const EdgeInsets.fromLTRB(0, 2, 20, 2),
       child: GestureDetector(
         onLongPress: () async {
           await showDialog(
@@ -49,13 +49,13 @@ class AIMessage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextButton.icon(
-                          icon: Icon(Icons.check_box_outline_blank_sharp),
+                          icon: const Icon(Icons.check_box_outline_blank_sharp),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          label: Text("Select Message")),
+                          label: const Text("Select Message")),
                       TextButton.icon(
-                        icon: Icon(Icons.delete),
+                        icon: const Icon(Icons.delete),
                         onPressed: () async {
                           try {
                             bool? confirm = await customDialogBox(
@@ -78,7 +78,7 @@ class AIMessage extends StatelessWidget {
                               Navigator.of(context).pop();
                               avmSnackBar(context, "Message deleted");
                             }
-                          } catch (e) {
+                          } on Exception catch (e) {
                             log(e.toString());
 
                             if (context.mounted) {
@@ -87,10 +87,10 @@ class AIMessage extends StatelessWidget {
                             }
                           }
                         },
-                        label: Text("Delete Message"),
+                        label: const Text("Delete Message"),
                       ),
                       TextButton.icon(
-                        icon: Icon(Icons.copy_rounded),
+                        icon: const Icon(Icons.copy_rounded),
                         onPressed: () async {
                           await Clipboard.setData(
                               ClipboardData(text: message.text));
@@ -103,16 +103,16 @@ class AIMessage extends StatelessWidget {
                             'Message copied to clipboard',
                           );
                         },
-                        label: Text("Copy Message"),
+                        label: const Text("Copy Message"),
                       ),
                       TextButton.icon(
-                          icon: Icon(Icons.push_pin_rounded),
+                          icon: const Icon(Icons.push_pin_rounded),
                           onPressed: () async {
                             context.read<ChatBloc>().add(PinMessage(message));
                             Navigator.of(context).pop();
                             avmSnackBar(context, "Message pinned");
                           },
-                          label: Text("Pin Message")),
+                          label: const Text("Pin Message")),
                     ],
                   ),
                 );
@@ -143,9 +143,9 @@ class AIMessage extends StatelessWidget {
                   horizontal: 08.w,
                   vertical: 05.h,
                 ),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0xFFE5E4E2),
-                  borderRadius: const BorderRadius.only(
+                  borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(0),
                     topRight: Radius.circular(8),
                     bottomLeft: Radius.circular(8),
@@ -200,7 +200,7 @@ class AIMessage extends StatelessWidget {
                             );
                           },
                           child: Container(
-                            margin: EdgeInsets.symmetric(vertical: 02),
+                            margin: const EdgeInsets.symmetric(vertical: 02),
                             padding: EdgeInsets.symmetric(
                                 horizontal: 12.w, vertical: 6.h),
                             decoration: BoxDecoration(
@@ -213,7 +213,7 @@ class AIMessage extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     memory.structured.target!.title,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 13.5, color: AppColors.white),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
@@ -224,7 +224,7 @@ class AIMessage extends StatelessWidget {
                                     Text(
                                       DateFormat('HH:mm')
                                           .format(memory.createdAt),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: AppColors.white,
                                         fontSize: 11.0,
                                       ),
@@ -257,15 +257,16 @@ class AIMessage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
         width: double.maxFinite,
         decoration: BoxDecoration(
-          color: Color(0xFFF8F8FF),
+          color: const Color(0xFFF8F8FF),
           borderRadius: br5,
         ),
-        child: Text(optionText, style: TextStyle(fontSize: 13.5, height: 1.2)),
+        child: Text(optionText,
+            style: const TextStyle(fontSize: 13.5, height: 1.2)),
       ),
       onTap: () {
         try {
           BlocProvider.of<ChatBloc>(context).add(SendMessage(optionText));
-        } catch (e) {
+        } on Exception catch (e) {
           log("error,$e");
         }
       },

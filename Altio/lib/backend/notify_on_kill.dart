@@ -14,7 +14,7 @@ class NotifyOnKill {
           'description': "Please keep your app open to continue using Capsaul",
         },
       );
-    } catch (e) {
+    } on Exception catch (e) {
       log('NotifOnKill error: $e');
     }
   }

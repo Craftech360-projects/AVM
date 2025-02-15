@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:altio/backend/database/geolocation.dart';
 import 'package:altio/backend/preferences.dart';
@@ -93,7 +94,7 @@ class LocationService {
   //         googlePlaceId: data['results'][0]['place_id'],
   //       );
   //       return geolocation;
-  //     } catch (e) {
+  //     } on Exception catch (e) {
   //       return Geolocation(
   //           latitude: locationData.latitude, longitude: locationData.longitude);
   //     }
@@ -160,7 +161,8 @@ class LocationService {
           googlePlaceId: data['results'][0]['place_id'] ?? "",
         );
         return geolocation;
-      } catch (e) {
+      } on Exception catch (e) {
+        log(e.toString());
         return Geolocation(
           latitude: locationData.latitude,
           longitude: locationData.longitude,

@@ -4,18 +4,18 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final lightTheme = ThemeData(
-    iconButtonTheme: IconButtonThemeData(
+    iconButtonTheme: const IconButtonThemeData(
         style: ButtonStyle(iconColor: WidgetStatePropertyAll(AppColors.black))),
     textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-      iconColor: WidgetStatePropertyAll(AppColors.black),
+      iconColor: const WidgetStatePropertyAll(AppColors.black),
       textStyle: WidgetStateProperty.all(
-        TextStyle(color: AppColors.black, fontFamily: "Montserrat"),
+        const TextStyle(color: AppColors.black, fontFamily: "Montserrat"),
       ),
       foregroundColor: WidgetStateProperty.all(AppColors.black),
     )),
-    appBarTheme: AppBarTheme(backgroundColor: AppColors.white),
-    iconTheme: IconThemeData(color: AppColors.black),
+    appBarTheme: const AppBarTheme(backgroundColor: AppColors.white),
+    iconTheme: const IconThemeData(color: AppColors.black),
     primaryColor: AppColors.purpleDark,
     brightness: Brightness.light,
     fontFamily: "Montserrat",
@@ -73,7 +73,7 @@ class AppTheme {
         backgroundColor: AppColors.purpleDark,
         shadowColor: Colors.transparent,
         textStyle: const TextStyle(
-            fontSize: 17, fontFamily: "Montserrat", color: AppColors.white),
+            fontSize: 16, fontFamily: "Montserrat", color: AppColors.white),
         shape: RoundedRectangleBorder(borderRadius: br12),
       ),
     ),
@@ -82,13 +82,13 @@ class AppTheme {
   static final darkTheme = ThemeData(
     primaryColor: AppColors.purpleDark,
     scaffoldBackgroundColor: AppColors.black,
-    iconButtonTheme: IconButtonThemeData(
+    iconButtonTheme: const IconButtonThemeData(
         style: ButtonStyle(iconColor: WidgetStatePropertyAll(AppColors.white))),
     textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-      iconColor: WidgetStatePropertyAll(AppColors.white),
+      iconColor: const WidgetStatePropertyAll(AppColors.white),
       textStyle: WidgetStateProperty.all(
-        TextStyle(color: AppColors.white, fontFamily: "Montserrat"),
+        const TextStyle(color: AppColors.white, fontFamily: "Montserrat"),
       ),
       foregroundColor: WidgetStateProperty.all(AppColors.black),
     )),

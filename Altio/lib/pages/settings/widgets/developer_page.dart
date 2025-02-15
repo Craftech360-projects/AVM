@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:altio/backend/database/prompt_provider.dart';
 import 'package:altio/backend/preferences.dart';
+import 'package:altio/backend/websocket/websocket_mixin.dart';
 import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
-import 'package:altio/backend/websocket/websocket_mixin.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
 import 'package:altio/pages/settings/widgets/custom_expandible_widget.dart';
 import 'package:altio/pages/settings/widgets/custom_prompt_page.dart';
@@ -97,7 +97,7 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
             inactiveTrackColor: AppColors.white,
             activeTrackColor: AppColors.purpleDark,
             activeColor: AppColors.commonPink,
-            activeThumbImage: AssetImage(AppImages.appLogo),
+            activeThumbImage: const AssetImage(AppImages.appLogo),
             value: _developerEnabled,
             onChanged: _handleDeveloperModeToggle,
           ),
@@ -107,9 +107,9 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
   }
 
   Widget _buildDeveloperDescription() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: const Text(
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Text(
           'By Enabling Developer Mode You can customize prompts & Transcript Services',
           textAlign: TextAlign.center),
     );
@@ -141,7 +141,7 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
   }
 
   Future<void> _handleServiceSelection(String service) async {
-    closeWebSocket();
+    await closeWebSocket();
     developerModeSelected(modeSelected: service);
     await _reconnectWebSocket();
   }
@@ -154,8 +154,8 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
         ListTile(
           contentPadding: EdgeInsets.zero,
           title: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
               decoration: BoxDecoration(
                   color: AppColors.white,
                   border: Border.all(color: AppColors.greyLight),
@@ -181,8 +181,9 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                 decoration: BoxDecoration(
                     color: AppColors.white,
                     border: Border.all(color: AppColors.greyLight),
@@ -202,8 +203,8 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
         for (final codec in ['pcm', 'opus'])
           ListTile(
             title: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
               decoration: BoxDecoration(
                   color: AppColors.white,
                   border: Border.all(color: AppColors.greyLight),
@@ -222,16 +223,16 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
   Widget _buildFirmwareScreen() {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => FirmwareScreen()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const FirmwareScreen()));
       },
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4),
+        margin: const EdgeInsets.symmetric(vertical: 4),
         width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
+        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 15),
         decoration:
             BoxDecoration(color: AppColors.commonPink, borderRadius: br8),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
@@ -271,8 +272,8 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
               decoration: BoxDecoration(
                   color: AppColors.white,
                   border: Border.all(color: AppColors.greyLight),
@@ -324,7 +325,7 @@ class _DeveloperPageState extends State<DeveloperPage> with WebSocketMixin {
         onConnectionFailed: (_) {},
         onMessageReceived: (_) {},
       );
-    } catch (e) {
+    } on Exception catch (e) {
       log(e.toString());
     }
   }

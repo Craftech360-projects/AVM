@@ -42,7 +42,8 @@ Future<Memory?> reProcessMemory(
           forceProcess: true,
           conversationDate: memory.createdAt,
           customPromptDetails: savedPrompt);
-    } catch (err) {
+    } on Exception catch (err) {
+      log('Reprocessing Error', error: err);
       MixpanelManager().getMemoryEventProperties(memory);
       onFailedProcessing();
       changeLoadingState();
@@ -93,20 +94,20 @@ Future<Memory?> reProcessMemory(
       }
     }
 
-    getEmbeddingsFromInput(structured.toString()).then((vector) {
+    await getEmbeddingsFromInput(structured.toString()).then((vector) {
       // update instead if it wasn't "discarded"
       // upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
     });
 
     // Persist changes
-    MemoryProvider().updateMemoryStructured(structured);
-    MemoryProvider().updateMemory(memory);
+    await MemoryProvider().updateMemoryStructured(structured);
+    await MemoryProvider().updateMemory(memory);
 
     // Analytics
     MixpanelManager().reProcessMemory(memory);
 
     return memory;
-  } catch (err, stack) {
+  } on Exception catch (err, stack) {
     log('Reprocessing Error', error: err, stackTrace: stack);
     MixpanelManager().track(err.toString());
     onFailedProcessing();

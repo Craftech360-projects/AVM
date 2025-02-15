@@ -45,7 +45,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  ble.FlutterBluePlus.setLogLevel(ble.LogLevel.info, color: true);
+  await ble.FlutterBluePlus.setLogLevel(ble.LogLevel.info, color: true);
   try {
     if (F.env == Environment.prod) {
       await Firebase.initializeApp(
@@ -61,7 +61,7 @@ void main() async {
     await SharedPreferencesUtil.init();
     await ObjectBoxUtil.init();
     await MixpanelManager.init();
-  } catch (e, stackTrace) {
+  } on Exception catch (e, stackTrace) {
     log('Initialization failed: $e\n$stackTrace');
   }
 
@@ -71,7 +71,7 @@ void main() async {
 
   try {
     isAuth = (await getIdToken()) != null;
-  } catch (e) {
+  } on Exception catch (e) {
     log(e.toString());
   }
 
@@ -81,14 +81,14 @@ void main() async {
     initOpus(await opus_flutter.load());
     await GrowthbookUtil.init();
     CalendarUtil.init();
-  } catch (e, stackTrace) {
+  } on Exception catch (e, stackTrace) {
     log('Optional initialization failed: $e\n$stackTrace');
   }
 
   if (Env.oneSignalAppId != null) {
-    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+    await OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
     OneSignal.initialize(Env.oneSignalAppId!);
-    OneSignal.login(SharedPreferencesUtil().uid);
+    await OneSignal.login(SharedPreferencesUtil().uid);
   }
 
   _getRunApp(isAuth);

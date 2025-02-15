@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:altio/backend/database/transcript_segment.dart';
 import 'package:altio/backend/schema/plugin.dart';
 import 'package:altio/env/env.dart';
+import 'package:altio/features/capture/logic/wals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesUtil {
@@ -19,6 +20,16 @@ class SharedPreferencesUtil {
 
   static Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
+  }
+
+  set wals(List<Wal> wals) {
+    final List<String> value = wals.map((e) => jsonEncode(e.toJson())).toList();
+    saveStringList('wals', value);
+  }
+
+  List<Wal> get wals {
+    final List<String> value = getStringList('wals') ?? [];
+    return Wal.fromJsonList(value.map((e) => jsonDecode(e)).toList());
   }
 
   static const String _modelKey = 'selectedModel';
@@ -132,7 +143,7 @@ class SharedPreferencesUtil {
   String gptCompletionCache(String key) =>
       getString('gptCompletionCache:$key') ?? '';
 
-  setGptCompletionCache(String key, String value) =>
+  void setGptCompletionCache(String key, String value) =>
       saveString('gptCompletionCache:$key', value);
 
   bool get optInAnalytics => getBool('optInAnalytics') ?? true;
@@ -185,7 +196,7 @@ class SharedPreferencesUtil {
   set pluginsEnabled(List<String> value) =>
       saveStringList('pluginsEnabled', value);
 
-  enablePlugin(String value) {
+  void enablePlugin(String value) {
     final List<String> pluginsId = pluginsEnabled;
     pluginsId.add(value);
     pluginsEnabled = pluginsId;
@@ -196,7 +207,7 @@ class SharedPreferencesUtil {
     pluginsList = plugins;
   }
 
-  disablePlugin(String value) {
+  void disablePlugin(String value) {
     if (value == selectedChatPluginId) selectedChatPluginId = 'no_selected';
     final List<String> pluginsId = pluginsEnabled;
     pluginsId.remove(value);

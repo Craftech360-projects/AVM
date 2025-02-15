@@ -37,7 +37,7 @@ class SplashScreenState extends State<SplashScreen>
                 context,
                 MaterialPageRoute(
                     builder: (BuildContext context) =>
-                        HomePageWrapper(tabIndex: 2)),
+                        const HomePageWrapper(tabIndex: 2)),
               )
             : Navigator.pushReplacement(
                 context,

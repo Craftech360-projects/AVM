@@ -37,7 +37,7 @@ Future<List<BluetoothService>> getBleServices(String deviceId) async {
     // need to be fixed for open glass
     // if (Platform.isAndroid && device.servicesList.isNotEmpty) return device.servicesList;
     return await device.discoverServices();
-  } catch (e, stackTrace) {
+  } on Exception catch (e, stackTrace) {
     logCrashMessage('Get BLE services', deviceId, e, stackTrace);
     return [];
   }

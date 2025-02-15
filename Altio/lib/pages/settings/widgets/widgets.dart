@@ -3,7 +3,7 @@ import 'package:altio/backend/utils.dart';
 import 'package:altio/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
-getNotificationsWidgets(
+List<Widget> getNotificationsWidgets(
   StateSetter setState,
   bool postMemoryNotificationIsChecked,
   bool reconnectNotificationIsChecked,
@@ -116,7 +116,7 @@ getNotificationsWidgets(
   ];
 }
 
-getRecordingSettings(
+List<Widget> getRecordingSettings(
     Function(String?) onLanguageChanged, String selectedLanguage) {
   return [
     const Padding(
@@ -170,7 +170,7 @@ getRecordingSettings(
   ];
 }
 
-getPreferencesWidgets({
+List<Widget> getPreferencesWidgets({
   required VoidCallback onOptInAnalytics,
   required VoidCallback viewPrivacyDetails,
   required bool optInAnalytics,

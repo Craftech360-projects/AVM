@@ -63,18 +63,18 @@ Future streamApiResponse(
   try {
     final http.StreamedResponse response = await client.send(request);
     if (response.statusCode == 401) {
-      callback('Incorrect API Key provided.');
+      await callback('Incorrect API Key provided.');
       return;
     } else if (response.statusCode == 429) {
-      callback('You have reached the API limit.');
+      await callback('You have reached the API limit.');
       return;
     } else if (response.statusCode != 200) {
-      callback('Unknown Error with LLaMA API.');
+      await callback('Unknown Error with LLaMA API.');
       return;
     }
 
     await _processStream(response, callback, onDone);
-  } catch (e) {
+  } on Exception catch (e) {
     log('Error sending request: $e');
   }
 }
@@ -111,7 +111,7 @@ Future<void> _processStream(
                   // Call the callback with the content
                   await callback(content);
                 }
-              } catch (e) {
+              } on Exception catch (e) {
                 log('Error processing chunk: $e');
               }
             }
@@ -125,49 +125,12 @@ Future<void> _processStream(
       .asFuture();
 }
 
-// Future<void> _processStream(
-//   http.StreamedResponse response,
-//   Future<dynamic> Function(String) callback,
-//   VoidCallback onDone,
-// ) async {
-//   await response.stream
-//       .transform(utf8.decoder)
-//       .transform(const LineSplitter())
-//       .listen(
-//         (String line) async {
-//           if (line.startsWith('data: ')) {
-//             String jsonData = line.substring(6).trim();
-//             if (jsonData == '[DONE]') {
-//               onDone();
-
-//             } else {
-//               try {
-//                 var data = jsonDecode(jsonData);
-//                 print(data);
-
-//                 String content = data['choices'][0]['delta']['content'] ?? '';
-//                 if (content.isNotEmpty) {
-//                   await callback(content);
-//                 }
-//               } catch (e) {
-//                 log('Error processing chunk: $e');
-//               }
-//             }
-//           }
-//         },
-//         onDone: onDone,
-//         onError: (error) {
-//           log('Error in stream: $error');
-//         },
-//       )
-//       .asFuture();
-// }
-
 bool isValidJson(String jsonString) {
   try {
     json.decode(jsonString);
     return true;
-  } catch (e) {
+  } on Exception catch (e) {
+    log(e.toString());
     return false;
   }
 }
@@ -189,7 +152,7 @@ void handlePartialResponseContent(
         contentResponse.choices![0].delta != null &&
         contentResponse.choices![0].delta!.content != null) {
       String content =
-          jsonEncodeString(contentResponse.choices![0].delta!.content!)!;
+          jsonEncodeString(contentResponse.choices![0].delta!.content)!;
       callback(content);
     }
   }

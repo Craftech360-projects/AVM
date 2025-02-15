@@ -31,7 +31,7 @@ final Map<String, String> availableLanguages = {
   'Vietnamese': 'vi',
 };
 
-getLanguageName(String code) {
+String getLanguageName(String code) {
   return availableLanguages.entries
       .firstWhere((element) => element.value == code)
       .key;

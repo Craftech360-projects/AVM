@@ -56,7 +56,7 @@ class CustomExpansionTileState extends State<CustomExpansionTile>
                 contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
                 title: Text(
                   widget.title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
                   ),
@@ -65,7 +65,7 @@ class CustomExpansionTileState extends State<CustomExpansionTile>
                     (widget.subtitle != null && widget.subtitle!.isNotEmpty)
                         ? Text(
                             widget.subtitle ?? '',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                             ),
                           )

@@ -222,7 +222,7 @@ I will respond in the following JSON format:
     if (structured.title.isEmpty) return SummaryResult(structured, []);
 
     return SummaryResult(structured, pluginsResponse);
-  } catch (e) {
+  } on Exception catch (e) {
     log("error, $e");
     return SummaryResult(Structured('', ''), []);
   }
@@ -260,7 +260,7 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
 
         return Tuple2(
             plugin, response.replaceAll('```', '').replaceAll('""', '').trim());
-      } catch (e) {
+      } on Exception catch (e) {
         log('Error executing plugin ${plugin.id},$e');
         return Tuple2(plugin, '');
       }
@@ -272,7 +272,8 @@ Future<List<Tuple2<Plugin, String>>> executePlugins(String transcript) async {
   try {
     var responses = await allPluginResponses;
     return responses.where((e) => e.item2.length > 5).toList();
-  } catch (e) {
+  } on Exception catch (e) {
+    log(e.toString());
     return [];
   }
 }
@@ -478,7 +479,8 @@ Future<Tuple2<List<String>, List<DateTime>>?> determineRequiresContext(
     List<DateTime> dates = datesRange.map((e) => DateTime.parse(e)).toList();
 
     return Tuple2<List<String>, List<DateTime>>(topics, dates);
-  } catch (e) {
+  } on Exception catch (e) {
+    log(e.toString());
     return null;
   }
 }

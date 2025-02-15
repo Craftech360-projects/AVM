@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:altio/backend/auth.dart';
 import 'package:altio/backend/preferences.dart';
@@ -36,7 +37,8 @@ Future<http.Response?> makeApiCall({
     } else {
       throw Exception('Unsupported HTTP method: $method');
     }
-  } catch (e) {
+  } on Exception catch (e) {
+    log(e.toString());
     return null;
   } finally {}
 }

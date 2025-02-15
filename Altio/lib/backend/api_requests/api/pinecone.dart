@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:altio/backend/api_requests/api/llm.dart';
 import 'package:altio/backend/api_requests/api/shared.dart';
@@ -49,7 +50,8 @@ Future<bool> upsertPineconeVector(
         await pineconeApiCall(urlSuffix: 'vectors/upsert', body: body);
 
     return (responseBody['upserted_count'] ?? 0) > 0;
-  } catch (e) {
+  } on Exception catch (e) {
+    log(e.toString());
     return false;
   }
 }

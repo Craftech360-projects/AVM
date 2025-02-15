@@ -81,7 +81,7 @@ Future<SummaryResult?> _retrieveStructure(
       summary = await summarizeMemory(transcript, [],
           ignoreCache: ignoreCache, customPromptDetails: savedPrompt);
     }
-  } catch (e) {
+  } on Exception catch (e) {
     log('Error: $e');
     return null;
   }
@@ -151,7 +151,7 @@ Future<Memory?> memoryCreationBlock(
     photos,
   );
 
-  updateUserProfile(structured);
+  await updateUserProfile(structured);
 
   if (!retrievedFromCache) {
     if (structured.title.isEmpty && !failed) {
@@ -165,7 +165,7 @@ Future<Memory?> memoryCreationBlock(
         avmSnackBar(context, "New memory created!");
       }
       if (backupsEnabled && context.mounted) {
-        manualBackup(context);
+        await manualBackup(context);
       }
     } else {
       if (context.mounted) {
@@ -209,7 +209,7 @@ Future<void> updateUserProfile(Structured structured) async {
     }
 
     box.put(profile);
-  } catch (e, stack) {
+  } on Exception catch (e, stack) {
     log("❌ Error updating profile: $e", stackTrace: stack);
   }
 }
@@ -258,12 +258,13 @@ Future<Memory> finalizeMemoryRecord(
   for (var r in pluginsResponse) {
     memory.pluginsResponse.add(PluginResponse(r.item2, pluginId: r.item1.id));
   }
-  zapWebhookOnMemoryCreatedCall(memory, returnRawBody: true);
+  await zapWebhookOnMemoryCreatedCall(memory, returnRawBody: true);
 
   try {
     // Save the memory object
     MemoryProvider().saveMemory(memory);
-  } catch (e) {
+  } on Exception catch (e) {
+    log(e.toString());
     // Handle the error as needed
   }
 

@@ -35,13 +35,11 @@ class FinalizePage extends StatelessWidget {
               ConstrainedBox(
                 constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.9),
-                child: const FittedBox(
+                child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Text(
                     'You are all set 🎉',
-                    style: TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.w500, height: 1.2),
-                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
               ),
@@ -55,7 +53,7 @@ class FinalizePage extends StatelessWidget {
                   backgroundColor: AppColors.white,
                   onPressed: () async {
                     if (SharedPreferencesUtil().onboardingCompleted) {
-                      Navigator.pushReplacement(
+                      await Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
@@ -64,11 +62,8 @@ class FinalizePage extends StatelessWidget {
                       );
                     }
                   },
-                  child: const Text('Get Started',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.black,
-                          fontSize: 18)),
+                  child: Text('Get Started',
+                      style: Theme.of(context).textTheme.bodyLarge),
                 ),
               ),
             ],

@@ -36,7 +36,8 @@ class RestoreButtonState extends State<RestoreButton> {
                 ? 'Backup restored successfully!'
                 : 'Failed to restore backup');
       }
-    } catch (e) {
+    } on Exception catch (e) {
+    debugPrint(e.toString());
       if (mounted) {
         setState(() {
           isRestoreInProgress = false;

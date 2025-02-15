@@ -150,10 +150,8 @@ Future<String> triggerMemoryRequestAtEndpoint(String url, Memory memory,
 
     var body = jsonDecode(response?.body ?? '{}');
     return body['message'] ?? '';
-  } catch (e) {
-    // CrashReporting.reportHandledCrash(e, StackTrace.current, level: NonFatalExceptionLevel.warning, userAttributes: {
-    //   'url': url,
-    // });
+  } on Exception catch (e) {
+    log(e.toString());
     return '';
   }
 }
@@ -168,7 +166,7 @@ Future<void> sendTaskToZapier(
   }
 
   final startTime = DateTime.parse(time);
-  final endTime = startTime.add(Duration(minutes: 30));
+  final endTime = startTime.add(const Duration(minutes: 30));
 
   final data = {
     'title': title,
@@ -186,7 +184,7 @@ Future<void> sendTaskToZapier(
 
     if (response.statusCode == 200) {
     } else {}
-  } catch (e) {
+  } on Exception catch (e) {
     log(e.toString());
   }
 }
@@ -211,7 +209,8 @@ Future<String> triggerTranscriptSegmentsRequest(
     );
     var body = jsonDecode(response?.body ?? '{}');
     return body['message'] ?? '';
-  } catch (e) {
+  } on Exception catch (e) {
+    log(e.toString());
     return '';
   }
 }
@@ -230,7 +229,8 @@ Future<String?> wavToBase64(String filePath) async {
     String base64Encoded = base64Encode(fileBytes);
 
     return base64Encoded;
-  } catch (e) {
-    return null; // Handle error gracefully in your application
+  } on Exception catch (e) {
+    log(e.toString());
+    return null;
   }
 }

@@ -21,8 +21,7 @@ Future<void> initializeBackgroundService({bool isStream = false}) async {
   final service = FlutterBackgroundService();
   createNotification(
     title: 'Capsaul is quietly listening',
-    body:
-        'Capturing every word and transcribing with ease.',
+    body: 'Capturing every word and transcribing with ease.',
   );
 
   await service.configure(
@@ -52,7 +51,7 @@ void onStart(ServiceInstance service, bool isStream) async {
   } else {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
-        service.setForegroundNotificationInfo(
+        await service.setForegroundNotificationInfo(
           title: 'Altio is running in background',
           content:
               'Altio is listening and transcribing your conversations in the background',

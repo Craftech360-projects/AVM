@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/bt_device.dart';
@@ -37,7 +38,8 @@ StreamSubscription<OnConnectionStateChangedEvent> getConnectionStateListener({
             // add firmware version
           );
           onStateChanged(BluetoothConnectionState.connected, deviceInfo);
-        } catch (e) {
+        } on Exception catch (e) {
+          log(e.toString());
           onStateChanged(BluetoothConnectionState.disconnected, null);
         }
       }
@@ -69,7 +71,7 @@ Future<StreamSubscription<List<int>>?> getBleBatteryLevelListener(
 
   try {
     await batteryLevelCharacteristic.setNotifyValue(true);
-  } catch (e, stackTrace) {
+  } on Exception catch (e, stackTrace) {
     logSubscribeError('Battery level', deviceId, e, stackTrace);
     return null;
   }

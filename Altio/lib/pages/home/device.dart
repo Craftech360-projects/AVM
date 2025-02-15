@@ -89,7 +89,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
     return CustomScaffold(
       showBackBtn: true,
       showGearIcon: true,
-      title: Text("Manage Device",
+      title: const Text("Manage Device",
           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19)),
       body: FutureBuilder<_DeviceInfo>(
         future: _DeviceInfo.getDeviceInfo(widget.device),
@@ -126,11 +126,11 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                                 Container(
                                   width: 20,
                                   height: 20,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     color: AppColors.orange,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.electric_bolt,
                                     size: 13,
                                     color: AppColors.white,
@@ -163,7 +163,7 @@ class _ConnectedDeviceState extends State<ConnectedDevice> {
                         Navigator.of(context).pop();
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 22.0),
                         decoration: BoxDecoration(
                           color: AppColors.purpleDark.withValues(alpha: 0.9),

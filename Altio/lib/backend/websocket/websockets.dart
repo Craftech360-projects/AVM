@@ -50,7 +50,7 @@ Future<IOWebSocketChannel?> streamingTranscript({
     );
 
     return channel;
-  } catch (e) {
+  } on Exception catch (e) {
     log('Error receiving data: $e');
   } finally {}
 
@@ -124,7 +124,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
           await channel.ready;
           final keepAliveMsg = jsonEncode({'type': 'KeepAlive'});
           channel.sink.add(keepAliveMsg);
-        } catch (e) {
+        } on Exception catch (e) {
           log('Error sending KeepAlive message: $e');
         }
       });
@@ -214,7 +214,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
           } else {
             log('Unknown event type: ${data['type']}');
           }
-        } catch (e) {
+        } on Exception catch (e) {
           log('Error processing event: $e');
         }
       },
@@ -231,7 +231,7 @@ Future<IOWebSocketChannel?> _initWebsocketStream(
     await channel.ready;
     onWebsocketConnectionSuccess();
     return channel;
-  } catch (err) {
+  } on Exception catch (err) {
     onWebsocketConnectionFailed(err);
     return null;
   }

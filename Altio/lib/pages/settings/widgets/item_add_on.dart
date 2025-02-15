@@ -29,6 +29,7 @@ class ItemAddOn extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const Spacer(),
+                // ignore: prefer_const_constructors
                 SizedBox(
                   width: 32,
                   height: 32,

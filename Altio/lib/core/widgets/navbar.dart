@@ -124,15 +124,15 @@ class _CustomNavBarState extends State<CustomNavBar> {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 600),
                 height: 55,
-                padding: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 3),
                 decoration: BoxDecoration(
                   borderRadius: br15,
                   border: Border.all(
                     color: AppColors.white,
                     width: 2,
                   ),
-                  boxShadow: const [
-                    BoxShadow(
+                  boxShadow: [
+                    const BoxShadow(
                       color: Color.fromARGB(118, 122, 122, 122),
                       blurRadius: 5,
                       offset: Offset(0, 5),
@@ -166,7 +166,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   Widget _buildHomeBtn() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: GestureDetector(
         onTap: () {
           if (widget.onTabChange != null) {
@@ -185,7 +185,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   Widget _actionItems() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: GestureDetector(
         onTap: () {
           if (widget.onTabChange != null) {
@@ -204,12 +204,11 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   Widget _aboutYou() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: GestureDetector(
         onTap: () {
           if (widget.onTabChange != null) {
             widget.onTabChange!(3);
-            collapse();
             _currentTabIndex = 3;
           }
         },
@@ -223,7 +222,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   Widget _buildSearchButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: CustomIconButton(
         iconPath: AppImages.search,
         size: 24.h,
@@ -234,7 +233,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
 
   Widget _buildMessageButton() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: CustomIconButton(
         iconPath: AppImages.message,
         size: 24.h,
@@ -257,7 +256,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
           children: [
             Expanded(
               child: TextField(
-                style: TextStyle(fontSize: 14, height: 1.2),
+                style: const TextStyle(fontSize: 14, height: 1.2),
                 textAlign: TextAlign.start,
                 textAlignVertical: TextAlignVertical.center,
                 maxLines: 3,
@@ -267,7 +266,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     : (isMemoryVisible ? _searchController : null),
                 decoration: InputDecoration(
                   contentPadding:
-                      EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   isDense: true,
                   hintText: isChatVisible
                       ? 'Ask Capsaul anything...'
@@ -279,13 +278,13 @@ class _CustomNavBarState extends State<CustomNavBar> {
               ),
             ),
             widget.isUserMessageSent
-                ? TypingIndicator(dotWidth: 6, dotHeight: 6)
+                ? const TypingIndicator(dotWidth: 6, dotHeight: 6)
                 : ClipRRect(
                     borderRadius: br8,
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           shape: BoxShape.rectangle, color: AppColors.white),
-                      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                       child: CustomIconButton(
                         size: 24.h,
                         iconPath: AppImages.send,

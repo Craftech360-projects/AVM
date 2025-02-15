@@ -48,7 +48,7 @@ class _RecordSampleTabState extends State<RecordSampleTab>
   }
 
   Future<void> startRecording() async {
-    audioBytesStream?.cancel();
+    await audioBytesStream?.cancel();
     if (widget.btDevice == null) return;
     WavBytesUtil wavBytesUtil = WavBytesUtil();
 
@@ -83,7 +83,7 @@ class _RecordSampleTabState extends State<RecordSampleTab>
 
     await Future.delayed(
         const Duration(seconds: 2)); // wait for bytes streaming to stream all
-    audioBytesStream?.cancel();
+    await audioBytesStream?.cancel();
     // File file = await WavBytesUtil()
     //     .createWavByCodec([bytes], filename: '${widget.sample.id}.wav');
     // File file = await WavBytesUtil.createWavFile(bytes,
@@ -93,7 +93,7 @@ class _RecordSampleTabState extends State<RecordSampleTab>
   }
 
   Future<void> cancelRecording() async {
-    audioBytesStream?.cancel();
+    await audioBytesStream?.cancel();
     audioStorage?.clearAudioBytes();
     setState(() {
       recording = false;
@@ -101,8 +101,6 @@ class _RecordSampleTabState extends State<RecordSampleTab>
       // bucket = List.filled(40000, 0).toList(growable: true);
     });
   }
-
-  listenRecording() async {}
 
   @override
   void dispose() {

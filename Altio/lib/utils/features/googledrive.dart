@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,7 +33,8 @@ class GoogleDriveService {
 
       final result = await driveApi.files.create(folder);
       return result.id;
-    } catch (e) {
+    } on Exception catch (e) {
+    log(e.toString());
       return null;
     }
   }
@@ -62,7 +64,8 @@ class GoogleDriveService {
       final GoogleSignInAuthentication auth = await account.authentication;
       final authenticatedClient = AuthClient(auth.accessToken!);
       return drive.DriveApi(authenticatedClient);
-    } catch (e) {
+    } on Exception catch (e) {
+    log(e.toString());
       return null;
     }
   }
@@ -138,7 +141,6 @@ class GoogleDriveService {
       final fileUrl = fileMetadata.webViewLink;
       final downloadUrl = fileMetadata.webContentLink;
 
-
       return {
         'success': true,
         'fileId': fileId,
@@ -147,7 +149,8 @@ class GoogleDriveService {
         'fileUrl': fileUrl,
         'downloadUrl': downloadUrl,
       };
-    } catch (e) {
+    } on Exception catch (e) {
+    log(e.toString());
       return {'success': false, 'url': null};
     }
   }
@@ -191,7 +194,8 @@ class GoogleDriveService {
       final List<dynamic> jsonData = json.decode(jsonString);
 
       return jsonData.cast<Map<String, dynamic>>();
-    } catch (e) {
+    } on Exception catch (e) {
+    log(e.toString());
       return null;
     }
   }
@@ -216,7 +220,8 @@ class GoogleDriveService {
         return fileList.files!.first.id;
       }
       return null;
-    } catch (e) {
+    } on Exception catch (e) {
+    log(e.toString());
       return null;
     }
   }

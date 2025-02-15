@@ -6,10 +6,10 @@ import 'package:altio/backend/schema/bt_device.dart';
 import 'package:altio/backend/services/device_flag.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
+import 'package:altio/core/widgets/elevated_button.dart';
 import 'package:altio/features/bluetooth_bloc/bluetooth_bloc.dart';
 import 'package:altio/features/wizard/pages/finalize_page.dart';
 import 'package:altio/pages/home/page.dart';
-import 'package:altio/core/widgets/elevated_button.dart';
 import 'package:altio/utils/ble/communication.dart';
 import 'package:altio/utils/ble/connect.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -69,12 +69,14 @@ class FoundDevicesState extends State<FoundDevices>
       if (mounted) {
         // Use the provided callback for navigation.
         if (SharedPreferencesUtil().onboardingCompleted) {
-          Navigator.pushReplacement(context, MaterialPageRoute(
-            builder: (context) => const HomePageWrapper(tabIndex: 0),
-          ));
+          await Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePageWrapper(tabIndex: 0),
+              ));
         } else {
           SharedPreferencesUtil().onboardingCompleted = true;
-          Navigator.pushReplacement(
+          await Navigator.pushReplacement(
             context,
             PageRouteBuilder(
               transitionDuration: const Duration(milliseconds: 500),
@@ -92,7 +94,7 @@ class FoundDevicesState extends State<FoundDevices>
           );
         }
       }
-    } catch (e) {
+    } on Exception catch (e) {
       log("Error fetching battery level: $e");
       setState(() {
         _isClicked = false;
@@ -110,7 +112,7 @@ class FoundDevicesState extends State<FoundDevices>
     await bleConnectDevice(device.id);
     deviceId = device.id;
     deviceName = device.name;
-    setBatteryPercentage(device);
+    await setBatteryPercentage(device);
   }
 
   @override
@@ -139,7 +141,7 @@ class FoundDevicesState extends State<FoundDevices>
                     fontSize: 12,
                   ),
                 ),
-          if (widget.deviceList.isNotEmpty) SizedBox(height: 16),
+          if (widget.deviceList.isNotEmpty) const SizedBox(height: 16),
           if (!_isConnected) ..._devicesList(),
           if (_isConnected)
             Container(
@@ -153,7 +155,7 @@ class FoundDevicesState extends State<FoundDevices>
                 backgroundColor: AppColors.white,
                 onPressed: () async {
                   if (SharedPreferencesUtil().onboardingCompleted) {
-                    Navigator.pushReplacement(
+                    await Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const HomePageWrapper()),

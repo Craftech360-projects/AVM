@@ -101,7 +101,7 @@ Future<dynamic> llamaApiCall({
       log("Error ---->: ${response.statusCode} ${response.reasonPhrase}");
       return null;
     }
-  } catch (e) {
+  } on Exception catch (e) {
     log("Error making LLaMA API call: $e");
     return null;
   }
@@ -152,7 +152,7 @@ Future<dynamic> llamaPluginApiCall({
       log("Error ---->: ${response.statusCode} ${response.reasonPhrase}");
       return null;
     }
-  } catch (e) {
+  } on Exception catch (e) {
     log("Error making LLaMA API call: $e");
     return null;
   }
@@ -221,7 +221,7 @@ Future<dynamic> llamaPluginApiCallPlainText({
       log("Error ---->: ${response.statusCode} ${response.reasonPhrase}");
       return null;
     }
-  } catch (e) {
+  } on Exception catch (e) {
     log("Error making LLaMA API call: $e");
     return null;
   }

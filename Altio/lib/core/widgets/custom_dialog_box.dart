@@ -16,38 +16,38 @@ Future<bool> customDialogBox(BuildContext context,
         borderRadius: br12,
       ),
       backgroundColor: AppColors.white,
-      title: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Row(
-          children: [
-            Icon(icon, color: iconColor ?? AppColors.blue),
-            w8,
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: AppColors.blueGreyDark,
+      title: Container(
+        alignment: Alignment.topLeft,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            children: [
+              Icon(icon, color: iconColor ?? AppColors.blue),
+              w8,
+              Text(
+                title,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: AppColors.blueGreyDark, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             message,
-            style: TextStyle(
-              fontSize: 15,
-              height: 1.2,
-              color: AppColors.blueGreyDark,
-            ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  height: 1.2,
+                  color: AppColors.blueGreyDark,
+                ),
           ),
           h8,
         ],
       ),
-      actionsAlignment: MainAxisAlignment.spaceAround,
+      actionsAlignment: MainAxisAlignment.start,
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -62,8 +62,15 @@ Future<bool> customDialogBox(BuildContext context,
             Navigator.of(c).pop();
           },
           icon: const Icon(Icons.close, color: AppColors.white),
-          label: const Text('No'),
+          label: Text(
+            'No',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: AppColors.white),
+          ),
         ),
+        w16,
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.green,
@@ -77,7 +84,13 @@ Future<bool> customDialogBox(BuildContext context,
             Navigator.of(c).pop();
           },
           icon: const Icon(Icons.check, color: AppColors.white),
-          label: const Text('Yes'),
+          label: Text(
+            'Yes',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: AppColors.white),
+          ),
         ),
       ],
     ),
@@ -94,38 +107,38 @@ void showPermissionDeniedDialog(
         borderRadius: br12,
       ),
       backgroundColor: AppColors.white,
-      title: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Row(
-          children: [
-            Icon(Icons.location_on, color: AppColors.red),
-            w8,
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: AppColors.blueGreyDark,
+      title: Container(
+      alignment: Alignment.topLeft,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            children: [
+              const Icon(Icons.location_on, color: AppColors.red),
+              w8,
+              Text(
+                title,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: AppColors.blueGreyDark, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       content: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             message,
-            style: TextStyle(
-              fontSize: 15,
-              height: 1.2,
-              color: AppColors.blueGreyDark,
-            ),
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(height: 1.2, color: AppColors.blueGreyDark),
           ),
           h8,
         ],
       ),
-      actionsAlignment: MainAxisAlignment.spaceAround,
+      actionsAlignment: MainAxisAlignment.start,
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -138,7 +151,9 @@ void showPermissionDeniedDialog(
             Navigator.of(c).pop();
           },
           icon: const Icon(Icons.check, color: AppColors.white),
-          label: const Text('Ok'),
+          label: Text('Ok',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.white, fontWeight: FontWeight.bold)),
         ),
       ],
     ),
@@ -178,31 +193,35 @@ class CustomDialogWidget extends StatelessWidget {
         borderRadius: br12,
       ),
       backgroundColor: AppColors.white,
-      title: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(icon, color: iconColor ?? AppColors.blue),
-            w8,
-            Text(
-              maxLines: 2,
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: AppColors.blueGreyDark,
+      title: Container(
+      alignment: Alignment.topLeft,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Icon(icon, color: iconColor ?? AppColors.blue),
+              w8,
+              Text(
+                maxLines: 2,
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: AppColors.blueGreyDark,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       content: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             message,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 15,
               height: 1.2,
               color: AppColors.blueGreyDark,
@@ -211,19 +230,19 @@ class CustomDialogWidget extends StatelessWidget {
           if (showTextField) ...[
             h8,
             TextField(
-              style: TextStyle(color: AppColors.white),
+              style: const TextStyle(color: AppColors.white),
               controller: textFieldController,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: AppColors.blueGreyDark.withValues(alpha: 0.5),
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 border: OutlineInputBorder(
                   borderRadius: br8,
                   borderSide: BorderSide.none,
                 ),
                 hintText: 'Your name here...',
-                hintStyle: TextStyle(
+                hintStyle: const TextStyle(
                   color: AppColors.white,
                 ),
               ),
@@ -231,7 +250,7 @@ class CustomDialogWidget extends StatelessWidget {
           ],
         ],
       ),
-      actionsAlignment: MainAxisAlignment.spaceAround,
+      actionsAlignment: MainAxisAlignment.start,
       actions: [
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
@@ -249,9 +268,10 @@ class CustomDialogWidget extends StatelessWidget {
           icon: const Icon(Icons.close, color: AppColors.white, size: 17),
           label: Text(
             noText ?? 'No',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
         ),
+        w16,
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
@@ -266,7 +286,7 @@ class CustomDialogWidget extends StatelessWidget {
           icon: const Icon(Icons.check, color: AppColors.white, size: 17),
           label: Text(
             yesText ?? 'Yes',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
         ),
       ],

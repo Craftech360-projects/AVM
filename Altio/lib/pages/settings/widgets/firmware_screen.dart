@@ -24,7 +24,7 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
   String? latestVersion;
   String? firmwareUrl;
   bool isDownloading = false;
-  var deviceId = SharedPreferencesUtil().deviceId;
+  String? deviceId = SharedPreferencesUtil().deviceId;
 
   void handleCheckForUpdates() async {
     final firmwareData = await checkFirmwareUpdate();
@@ -56,7 +56,8 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
         setState(() {
           buttonText = "Install Firmware";
         });
-      } catch (e) {
+      } on Exception catch (e) {
+      debugPrint(e.toString());
         setState(() {
           buttonText = "Download Update";
         });
@@ -96,7 +97,8 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
         buttonText = "Installation Complete";
         isDownloading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
+    debugPrint(e.toString());
       setState(() {
         buttonText = "Install Firmware";
         isDownloading = false;
@@ -123,7 +125,7 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
 
       log("Service found: $serviceUuid");
       return service;
-    } catch (e) {
+    } on Exception catch (e) {
       log("Error during service discovery: $e");
       rethrow;
     }
@@ -158,7 +160,7 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
 
       log("Characteristic found: $characteristicUuid");
       return characteristic;
-    } catch (e) {
+    } on Exception catch (e) {
       log("Error during characteristic discovery: $e");
       rethrow;
     }
@@ -169,16 +171,16 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
     return CustomScaffold(
       showBackBtn: true,
       showGearIcon: true,
-      title: Text(
+      title: const Text(
         "Firmware Settings",
         style: TextStyle(fontWeight: FontWeight.w500, fontSize: 19),
       ),
       body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
               decoration: BoxDecoration(
                 color: AppColors.greyOffWhite,
                 borderRadius: br8,
@@ -191,7 +193,7 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
                     "Keep your device running smoothly by updating to the latest firmware. This ensures you have the newest features and bug fixes.",
                     style: TextStyle(fontSize: 14),
                   ),
-                  Divider(height: 32),
+                  const Divider(height: 32),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -257,7 +259,7 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
                   ),
                 ],
               ),
-            Spacer(),
+            const Spacer(),
             Center(
               child: ElevatedButton(
                 onPressed: () async {
@@ -268,7 +270,7 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
 
                     try {
                       // Get the BluetoothDevice object using deviceId
-                      final device = await getConnectedDevice(deviceId);
+                      final device = await getConnectedDevice(deviceId ?? '');
 
                       // Replace the hardcoded UUIDs with the actual service and characteristic UUIDs
                       final service = await getService(device, "serviceUuid");
@@ -286,7 +288,8 @@ class _FirmwareScreenState extends State<FirmwareScreen> {
                         service: service,
                         characteristic: characteristic,
                       );
-                    } catch (e) {
+                    } on Exception catch (e) {
+                    debugPrint(e.toString());
                       if (context.mounted) {
                         avmSnackBar(context,
                             "Failed to install firmware! Please try again");

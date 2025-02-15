@@ -21,7 +21,7 @@ class MemoryState extends Equatable {
     this.isCheckboxVisible = false, // Default to false
   });
 
-  factory MemoryState.initial() => MemoryState(
+  factory MemoryState.initial() => const MemoryState(
         status: MemoryStatus.initial,
         memories: [],
         selectedMemories: [],

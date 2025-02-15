@@ -6,7 +6,6 @@ import 'package:altio/core/widgets/custom_dialog_box.dart';
 import 'package:altio/core/widgets/typing_indicator.dart';
 import 'package:altio/features/wizard/pages/signin_page.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
-import 'package:altio/pages/settings/widgets/about_you.dart';
 import 'package:altio/pages/settings/widgets/backup_btn.dart';
 import 'package:altio/pages/settings/widgets/change_name_widget.dart';
 import 'package:altio/pages/settings/widgets/restore_btn.dart';
@@ -41,11 +40,11 @@ class _ProfilePageState extends State<ProfilePage> {
       showBatteryLevel: false,
       showGearIcon: true,
       body: isLoading
-          ? TypingIndicator()
+          ? const TypingIndicator()
           : ListView(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
               children: <Widget>[
-                _buildProfileTile(),
+                // _buildProfileTile(),
                 _buildNameTile(),
                 h16,
                 if (widget.hasDevice)
@@ -61,52 +60,51 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  ListTile _buildProfileTile() {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(
-        'About You',
-        style: Theme.of(context).textTheme.bodyMedium,
-      ),
-      subtitle: Text(
-        'What Altio has learned about you',
-        style: Theme.of(context).textTheme.bodySmall,
-      ),
-      trailing: CircleAvatar(
-        backgroundColor: AppColors.purpleDark,
-        child: Icon(
-          Icons.self_improvement,
-          size: 22.h,
-          color: AppColors.commonPink,
-        ),
-      ),
-      onTap: () {
-        widget.hasDevice
-            ? Navigator.push(
-                context,
-                PageRouteBuilder(
-                  transitionDuration: Duration(milliseconds: 500),
-                  pageBuilder: (context, animation, secondaryAnimation) =>
-                      AboutYouScreen(),
-                  // NeuralScreen(),
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) {
-                    var zoomInAnimation = Tween(begin: 0.9, end: 1.0).animate(
-                      CurvedAnimation(parent: animation, curve: Curves.easeOut),
-                    );
-
-                    return ScaleTransition(
-                      scale: zoomInAnimation,
-                      child: child,
-                    );
-                  },
-                ),
-              )
-            : avmSnackBar(context,
-                "Altio couldn't find an active device associated with your account! Please connect a device.");
-      },
-    );
-  }
+  // ListTile _buildProfileTile() {
+  //   return ListTile(
+  //     contentPadding: EdgeInsets.zero,
+  //     title: Text(
+  //       'About You',
+  //       style: Theme.of(context).textTheme.bodyMedium,
+  //     ),
+  //     subtitle: Text(
+  //       'What Altio has learned about you',
+  //       style: Theme.of(context).textTheme.bodySmall,
+  //     ),
+  //     trailing: CircleAvatar(
+  //       backgroundColor: AppColors.purpleDark,
+  //       child: Icon(
+  //         Icons.self_improvement,
+  //         size: 22.h,
+  //         color: AppColors.commonPink,
+  //       ),
+  //     ),
+  //     onTap: () {
+  //       widget.hasDevice
+  //           ? Navigator.push(
+  //               context,
+  //               PageRouteBuilder(
+  //                 transitionDuration: Duration(milliseconds: 500),
+  //                 pageBuilder: (context, animation, secondaryAnimation) =>
+  //                     AboutYouScreen(),
+  //                 // NeuralScreen(),
+  //                 transitionsBuilder:
+  //                     (context, animation, secondaryAnimation, child) {
+  //                   var zoomInAnimation = Tween(begin: 0.9, end: 1.0).animate(
+  //                     CurvedAnimation(parent: animation, curve: Curves.easeOut),
+  //                   )
+  //                   return ScaleTransition(
+  //                     scale: zoomInAnimation,
+  //                     child: child,
+  //                   );
+  //                 },
+  //               ),
+  //             )
+  //           : avmSnackBar(context,
+  //               "Altio couldn't find an active device associated with your account! Please connect a device.");
+  //     },
+  //   );
+  // }
 
   ListTile _buildNameTile() {
     return ListTile(
@@ -184,7 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
         showDialog(
           context: context,
           builder: (ctx) {
-            return SizedBox();
+            return const SizedBox();
           },
         );
       },
@@ -204,9 +202,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (!mounted) return;
 
-      Navigator.pushAndRemoveUntil(
+      await Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => SigninPage()),
+        MaterialPageRoute(builder: (context) => const SigninPage()),
         (route) => false,
       );
 
@@ -214,8 +212,9 @@ class _ProfilePageState extends State<ProfilePage> {
         isLoading = false;
       });
 
+      if (!mounted) return;
       avmSnackBar(context, "Signed out successfully");
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint(e.toString());
 
       if (!mounted) return;

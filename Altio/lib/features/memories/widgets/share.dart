@@ -172,7 +172,7 @@ void showShareBottomSheet(
   BottomSheetView currentView = BottomSheetView.share;
   ExportType? exportType;
 
-  showModalBottomSheet(
+  await showModalBottomSheet(
     context: context,
     isScrollControlled: true,
     shape: const RoundedRectangleBorder(
@@ -196,9 +196,9 @@ void showShareBottomSheet(
           }
 
           return Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.white,
-              borderRadius: const BorderRadius.only(
+              borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16), topRight: Radius.circular(16)),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -221,7 +221,7 @@ void showShareBottomSheet(
                           maxLines: 2,
                           '${memory.discarded ? 'Discarded Memory' : memory.structured.target?.title}',
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             height: 1.3,
                           ),
@@ -307,8 +307,8 @@ void showShareBottomSheet(
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
                         child: Text('Export Transcript',
                             style: TextStyle(fontSize: 18, height: 1.3)),
                       ),
@@ -358,7 +358,7 @@ void showShareBottomSheet(
                             break;
                         }
                       },
-                      child: Text('Export',
+                      child: const Text('Export',
                           style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
@@ -370,8 +370,8 @@ void showShareBottomSheet(
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                      const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12.0),
                           child: Text('Export Summary',
                               style: TextStyle(fontSize: 18, height: 1.3))),
                       IconButton(
@@ -431,7 +431,7 @@ void showShareBottomSheet(
                             break;
                         }
                       },
-                      child: Text(
+                      child: const Text(
                         'Export',
                         style: TextStyle(
                             fontSize: 17, fontWeight: FontWeight.w500),

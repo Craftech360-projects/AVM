@@ -11,6 +11,7 @@ import 'package:altio/backend/schema/bt_device.dart';
 import 'package:altio/backend/websocket/websockets.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/widgets/custom_dialog_box.dart';
+import 'package:altio/features/capture/logic/wals.dart';
 import 'package:altio/features/capture/presentation/capture_memory_page.dart';
 import 'package:altio/features/memories/bloc/memory_bloc.dart';
 import 'package:altio/pages/capture/location_service.dart';
@@ -38,14 +39,15 @@ class CapturePage extends StatefulWidget {
   final bool hasSeenTutorial;
   final TabController? tabController;
 
-  const CapturePage(
-      {super.key,
-      required this.device,
-      required this.refreshMemories,
-      required this.refreshMessages,
-      this.batteryLevel = -1,
-      required this.hasSeenTutorial,
-      this.tabController});
+  const CapturePage({
+    super.key,
+    required this.device,
+    required this.refreshMemories,
+    required this.refreshMessages,
+    this.batteryLevel = -1,
+    required this.hasSeenTutorial,
+    this.tabController,
+  });
 
   @override
   State<CapturePage> createState() => CapturePageState();
@@ -56,7 +58,8 @@ class CapturePageState extends State<CapturePage>
         AutomaticKeepAliveClientMixin,
         WidgetsBindingObserver,
         PhoneRecorderMixin,
-        WebSocketMixin {
+        WebSocketMixin,
+        IWalSyncListener {
   final ScrollController _scrollController = ScrollController();
   @override
   bool get wantKeepAlive => true;
@@ -64,6 +67,7 @@ class CapturePageState extends State<CapturePage>
   List<bool> dismissedList = [];
   BTDeviceStruct? btDevice;
   bool _hasTranscripts = false;
+  final bool _isWalSupported = true;
   static const defaultQuietSecondsForMemoryCreation = 60;
   StreamSubscription? _bleBytesStream;
   WavBytesUtil? audioStorage;
@@ -75,11 +79,17 @@ class CapturePageState extends State<CapturePage>
   DateTime? currentTranscriptFinishedAt;
   static const quietSecondsForMemoryCreation = 60;
 
+  bool isGlasses = false;
   String conversationId = const Uuid().v4();
 
   double? streamStartedAtSecond;
   DateTime? firstStreamReceivedAt;
   int? secondsMissedOnReconnect;
+
+  static const chunkSizeInSeconds = 60;
+  static const flushIntervalInSeconds = 90;
+
+  late WalSyncs _walSyncs;
 
   @override
   void didChangeDependencies() {
@@ -87,11 +97,9 @@ class CapturePageState extends State<CapturePage>
   }
 
   Future<bool> getNotificationPluginValue() async {
-    // Implement the logic to get the notification plugin value
     return SharedPreferencesUtil().notificationPlugin;
   }
 
-  // ignore: unused_element
   void _pluginNotification() async {
     String transcript = TranscriptSegment.segmentsAsString(segments);
     String friendlyReplyJson = await generateAltioReply(transcript);
@@ -164,7 +172,8 @@ class CapturePageState extends State<CapturePage>
           toRemoveSeconds: streamStartedAtSecond ?? 0,
           toAddSeconds: secondsMissedOnReconnect ?? 0,
         );
-        triggerTranscriptSegmentReceivedEvents(newSegments, conversationId,
+        await triggerTranscriptSegmentReceivedEvents(
+            newSegments, conversationId,
             sendMessageToChat: sendMessageToChat);
         SharedPreferencesUtil().transcriptSegments = segments;
         setHasTranscripts(true);
@@ -173,17 +182,17 @@ class CapturePageState extends State<CapturePage>
         bool notificationPluginValue = await getNotificationPluginValue();
         if (notificationPluginValue) {
           _memoryCreationTimer =
-              Timer(Duration(seconds: 10), () => _pluginNotification());
+              Timer(const Duration(seconds: 10), () => _pluginNotification());
         } else {
           _memoryCreationTimer = Timer(
-            Duration(seconds: 60),
+            const Duration(seconds: 60),
             () => _createMemory(),
           );
         }
         currentTranscriptStartedAt ??= DateTime.now();
         currentTranscriptFinishedAt = DateTime.now();
         if (_scrollController.hasClients) {
-          _scrollController.animateTo(
+          await _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,
             duration: const Duration(milliseconds: 100),
             curve: Curves.easeOut,
@@ -205,10 +214,17 @@ class CapturePageState extends State<CapturePage>
       btDevice!.id,
       onAudioBytesReceived: (List<int> value) {
         if (value.isEmpty) return;
+
+        // Send to WalSync for immediate processing
+        if (_isWalSupported) {
+          _walSyncs.phone.onByteStream(value);
+        }
+
         audioStorage!.storeFramePacket(value);
-        value.removeRange(0, 3);
+        List<int> trimmedValue = List<int>.from(value);
+        trimmedValue.removeRange(0, 3);
         if (wsConnectionState == WebsocketConnectionStatus.connected) {
-          websocketChannel?.sink.add(value);
+          websocketChannel?.sink.add(trimmedValue);
         }
       },
     );
@@ -265,7 +281,8 @@ class CapturePageState extends State<CapturePage>
         geolocation: geolocation,
         sendMessageToChat: sendMessageToChat,
       );
-    } catch (e) {
+    } on Exception catch (e) {
+      debugPrint("Error creating memory: $e");
       if (mounted) {
         avmSnackBar(context, "Something went wrong while creating the memory.");
       }
@@ -279,7 +296,7 @@ class CapturePageState extends State<CapturePage>
     }
 
     if (!memory.discarded) {
-      executeBackupWithUid();
+      await executeBackupWithUid();
       if (!mounted) return;
       context
           .read<MemoryBloc>()
@@ -293,7 +310,7 @@ class CapturePageState extends State<CapturePage>
               'New Memory Created! ${memory.structured.target?.getEmoji() ?? ''}',
         );
       }
-      backupsEnabled ? manualBackup(context) : null; // Call manualBackup here
+      unawaited(backupsEnabled ? manualBackup(context) : null);
     }
 
     await widget.refreshMemories();
@@ -315,20 +332,20 @@ class CapturePageState extends State<CapturePage>
     conversationId = const Uuid().v4();
   }
 
-  setHasTranscripts(bool hasTranscripts) {
+  void setHasTranscripts(bool hasTranscripts) {
     if (_hasTranscripts == hasTranscripts) return;
     if (mounted) {
       setState(() => _hasTranscripts = hasTranscripts);
     }
   }
 
-  processCachedTranscript() async {
+  void processCachedTranscript() async {
     var segments = SharedPreferencesUtil().transcriptSegments;
     if (segments.isEmpty) return;
     String transcript = TranscriptSegment.segmentsAsString(
         SharedPreferencesUtil().transcriptSegments);
     if (!mounted) return;
-    processTranscriptContent(
+    await processTranscriptContent(
       context,
       transcript,
       SharedPreferencesUtil().transcriptSegments,
@@ -349,7 +366,12 @@ class CapturePageState extends State<CapturePage>
   @override
   void initState() {
     super.initState();
+
+    _walSyncs = WalSyncs(this);
+    _walSyncs.start();
+
     btDevice = widget.device;
+
     WavBytesUtil.clearTempWavFiles();
     initiateWebsocket();
     initiateBytesStreamingProcessing();
@@ -361,7 +383,7 @@ class CapturePageState extends State<CapturePage>
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       if (await LocationService().displayPermissionsDialog()) {
         if (!mounted) return;
-        showDialog(
+        await showDialog(
           context: context,
           builder: (c) => CustomDialogWidget(
             icon: Icons.location_on_rounded,
@@ -381,6 +403,7 @@ class CapturePageState extends State<CapturePage>
 
   @override
   void dispose() {
+    _walSyncs.stop();
     _memoryCreationTimer?.cancel();
     _bleBytesStream?.cancel();
     _scrollController.dispose();
@@ -410,6 +433,9 @@ class CapturePageState extends State<CapturePage>
   }
 
   @override
+  void onMissingWalUpdated() {}
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     if (!mounted) return Container();
@@ -429,5 +455,11 @@ class CapturePageState extends State<CapturePage>
       },
       hasSeenTutorial: widget.hasSeenTutorial,
     );
+  }
+
+  @override
+  @override
+  bool isInternetAvailable() {
+    return wsConnectionState == WebsocketConnectionStatus.connected;
   }
 }

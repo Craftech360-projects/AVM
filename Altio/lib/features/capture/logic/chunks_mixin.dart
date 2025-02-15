@@ -51,10 +51,10 @@ mixin AudioChunksMixin {
                 await _processFileToTranscript(data.item1);
             setIsTranscribing(false);
             onNewSegments(newSegments, data.item2);
-          } catch (e) {
+          } on Exception {
             toProcessBytes2.insertAudioBytes(data.item2);
           }
-          WavBytesUtil.deleteTempWav();
+          await WavBytesUtil.deleteTempWav();
         }
       },
     );

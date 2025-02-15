@@ -31,8 +31,7 @@ class OnboardingButton extends StatelessWidget {
                 fit: BoxFit.scaleDown,
                 child: Text(
                   message,
-                  style: const TextStyle(
-                      fontSize: 28, fontWeight: FontWeight.w500, height: 1.2),
+                  style: textTheme.bodyLarge?.copyWith(height: 1.2),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -40,7 +39,7 @@ class OnboardingButton extends StatelessWidget {
           ),
         ),
         Container(
-          padding: EdgeInsets.all(4),
+          padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
               color: AppColors.white,
               borderRadius: br15,
@@ -49,7 +48,7 @@ class OnboardingButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.close,
                   size: 24,
                   color: AppColors.black,

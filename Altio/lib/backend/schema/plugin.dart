@@ -22,7 +22,7 @@ class PluginReview {
     );
   }
 
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'uid': uid,
       'rated_at': ratedAt.toIso8601String(),
@@ -69,7 +69,7 @@ class ExternalIntegration {
     }
   }
 
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'triggers_on': triggersOn,
       'webhook_url': webhookUrl,

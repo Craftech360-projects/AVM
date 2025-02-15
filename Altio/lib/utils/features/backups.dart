@@ -46,21 +46,21 @@ Future<bool> executeBackupWithUid({String? uid}) async {
   return true;
 }
 
-Future<Object> executeManualBackupWithUid(uid) async {
+Future<Object> executeManualBackupWithUid(String uid) async {
   if (!SharedPreferencesUtil().backupsEnabled) return false;
   var memories = MemoryProvider().getMemories();
 
   if (memories.isEmpty) return true;
 
-  var rawData =
-      memories.map((e) => e.toJson() as Map<String, dynamic>).toList();
+  var rawData = memories.map((e) => e.toJson()).toList();
 
   try {
     final googleDriveService = GoogleDriveService();
     Map<String, dynamic> result =
         await googleDriveService.uploadBackupToGoogleDrive(rawData);
     return result;
-  } catch (e) {
+  } on Exception catch (e) {
+  debugPrint(e.toString());
     return false;
   }
 }
@@ -79,7 +79,8 @@ Future<List<Memory>> restoreFromBackup(
         final currentUid = uid ?? SharedPreferencesUtil().uid;
         decodedData =
             List<Map<String, dynamic>>.from(decodeJson(backupData, currentUid));
-      } catch (e) {
+      } on Exception catch (e) {
+      debugPrint(e.toString());
         return [];
       }
     } else if (backupData is List) {
@@ -107,13 +108,15 @@ Future<List<Memory>> restoreFromBackup(
         }
 
         return Memory.fromJson(json);
-      } catch (e) {
+      } on Exception catch (e) {
+      debugPrint(e.toString());
         rethrow;
       }
     }).toList();
 
     return memoriesToRestore;
-  } catch (e) {
+  } on Exception catch (e) {
+  debugPrint(e.toString());
     return [];
   }
 }
@@ -136,10 +139,12 @@ Future<bool> retrieveBackup(String? uid) async {
         MemoryProvider().storeMemories(memories);
       }
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
+    debugPrint(e.toString());
       return false;
     }
-  } catch (e) {
+  } on Exception catch (e) {
+  debugPrint(e.toString());
     return false;
   }
 }
@@ -150,7 +155,8 @@ Future<List<Memory>> getDecodedMemories(
   try {
     var decoded = decodeJson(encodedMemories, password);
     return decoded.map((e) => Memory.fromJson(e)).toList();
-  } catch (e) {
+  } on Exception catch (e) {
+  debugPrint(e.toString());
     throw Exception('The password is incorrect.');
   }
 }

@@ -73,7 +73,7 @@ class _TestPromptsPageState extends State<TestPromptsPage> {
 
   bool loading = false;
 
-  onTap() async {
+  void onTap() async {
     if (loading) return;
     loading = true;
     var response = await triggerTestMemoryPrompt(

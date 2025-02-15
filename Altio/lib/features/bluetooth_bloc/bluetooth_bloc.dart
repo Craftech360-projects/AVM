@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:altio/backend/schema/bt_device.dart';
 import 'package:altio/utils/ble/connected.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -89,12 +89,12 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
       deviceId: deviceId,
       onStateChanged: (state, device) {
         if (state == BluetoothConnectionState.disconnected) {
-          add(BluetoothDisconnectedEvent());
+          add(const BluetoothDisconnectedEvent());
           if (retryCount < maxRetries) {
             retryCount++;
             startListening(deviceId);
           } else {
-            add(BluetoothDisconnectedEvent());
+            add(const BluetoothDisconnectedEvent());
           }
         } else if (state == BluetoothConnectionState.connected &&
             device != null) {
@@ -109,7 +109,7 @@ class BluetoothBloc extends Bloc<BluetoothEvent, BluetoothState> {
 
   Future<void> _initiateBleBatteryListener(
       String deviceId, Emitter<BluetoothState> emit) async {
-    batteryLevelListener?.cancel();
+    await batteryLevelListener?.cancel();
     batteryLevelListener = await getBleBatteryLevelListener(
       deviceId,
       onBatteryLevelChange: (int value) {

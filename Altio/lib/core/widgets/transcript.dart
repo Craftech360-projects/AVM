@@ -45,8 +45,8 @@ class _TranscriptWidgetState extends State<TranscriptWidget> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 6, horizontal: 2),
-        decoration: BoxDecoration(color: AppColors.purpleDark),
+        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+        decoration: const BoxDecoration(color: AppColors.purpleDark),
         child: ListView.separated(
           padding: EdgeInsets.zero,
           shrinkWrap: true,

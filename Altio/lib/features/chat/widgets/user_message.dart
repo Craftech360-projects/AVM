@@ -23,7 +23,7 @@ class UserMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, 2, 0, 2),
+      padding: const EdgeInsets.fromLTRB(20, 2, 0, 2),
       child: GestureDetector(
         onLongPress: () async {
           await showDialog(
@@ -37,14 +37,14 @@ class UserMessage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextButton.icon(
-                        icon: Icon(Icons.check_box_outline_blank_sharp),
+                        icon: const Icon(Icons.check_box_outline_blank_sharp),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        label: Text("Select Message"),
+                        label: const Text("Select Message"),
                       ),
                       TextButton.icon(
-                        icon: Icon(Icons.delete),
+                        icon: const Icon(Icons.delete),
                         onPressed: () async {
                           try {
                             bool? confirm = await customDialogBox(
@@ -67,7 +67,7 @@ class UserMessage extends StatelessWidget {
                               Navigator.of(context).pop();
                               avmSnackBar(context, "Message deleted");
                             }
-                          } catch (e) {
+                          } on Exception catch (e) {
                             log(e.toString());
 
                             if (context.mounted) {
@@ -76,10 +76,10 @@ class UserMessage extends StatelessWidget {
                             }
                           }
                         },
-                        label: Text("Delete Message"),
+                        label: const Text("Delete Message"),
                       ),
                       TextButton.icon(
-                        icon: Icon(Icons.copy_rounded),
+                        icon: const Icon(Icons.copy_rounded),
                         onPressed: () async {
                           await Clipboard.setData(
                               ClipboardData(text: message!.text));
@@ -92,16 +92,16 @@ class UserMessage extends StatelessWidget {
                             'Message copied to clipboard',
                           );
                         },
-                        label: Text("Copy Message"),
+                        label: const Text("Copy Message"),
                       ),
                       TextButton.icon(
-                          icon: Icon(Icons.push_pin_rounded),
+                          icon: const Icon(Icons.push_pin_rounded),
                           onPressed: () async {
                             // context.read<ChatBloc>().add(PinMessage(message!));
                             Navigator.of(context).pop();
                             avmSnackBar(context, "Message pinned");
                           },
-                          label: Text("Pin Message")),
+                          label: const Text("Pin Message")),
                     ],
                   ),
                 );
@@ -117,7 +117,7 @@ class UserMessage extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: AppColors.purpleDark,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(8),
                       topRight: Radius.circular(8),
                       bottomLeft: Radius.circular(8),

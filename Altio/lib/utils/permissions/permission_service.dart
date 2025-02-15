@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:altio/backend/preferences.dart';
 import 'package:altio/core/widgets/custom_dialog_box.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:altio/backend/preferences.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart' as location_handler;
@@ -41,7 +41,7 @@ class PermissionsService {
     // Check if location services are enabled
     bool serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {
-       if(!context.mounted) return false;
+      if (!context.mounted) return false;
       bool userResponse = await customDialogBox(
         context,
         icon: Icons.location_on_rounded,
@@ -70,7 +70,7 @@ class PermissionsService {
     if (permissionStatus == location_handler.PermissionStatus.denied ||
         permissionStatus == location_handler.PermissionStatus.deniedForever) {
       // Prominent Disclosure BEFORE requesting permission
-       if(!context.mounted) return false;
+      if (!context.mounted) return false;
       bool userResponse = await customDialogBox(
         context,
         icon: Icons.location_on_rounded,
@@ -100,7 +100,7 @@ class PermissionsService {
 
     // Request Background Location Permission if Foreground Permission is granted
     if (permissionStatus == location_handler.PermissionStatus.granted) {
-       if(!context.mounted) return false;
+      if (!context.mounted) return false;
       bool backgroundUserResponse = await customDialogBox(
         context,
         icon: Icons.location_on_rounded,
@@ -177,7 +177,8 @@ class PermissionsService {
 
         // Mark the permission as requested
         SharedPreferencesUtil().bluetoothPermissionRequested = true;
-      } catch (e) {
+      } on Exception catch (e) {
+      debugPrint(e.toString());
         if (context.mounted) {
           showPermissionDeniedDialog(
             context,
@@ -210,7 +211,8 @@ class PermissionsService {
       }
 
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
+    debugPrint(e.toString());
       if (context.mounted) {
         showPermissionDeniedDialog(
           context,

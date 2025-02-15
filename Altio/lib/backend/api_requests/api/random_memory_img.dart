@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:typed_data';
+
 import 'package:http/http.dart' as http;
 
 Future<Uint8List> getImage() async {
@@ -22,7 +24,7 @@ Future<Uint8List> getImage() async {
 }
 
 Future<Uint8List> getImageFromPollinations(String prompt,
-    {int width = 333, int height = 333, nologo = true}) async {
+    {int width = 333, int height = 333, bool nologo = true}) async {
   // Replace spaces with underscores in the prompt
   String formattedPrompt = prompt.replaceAll(' ', '_');
 
@@ -48,8 +50,8 @@ Future<Uint8List> generateImageWithFallback(String prompt) async {
   try {
     // Try to get the image from Pollinations
     return await getImageFromPollinations(prompt);
-  } catch (e) {
-    // If Pollinations API fails, fallback to getImage()
+  } on Exception catch (e) {
+    log(e.toString());
     return await getImage();
   }
 }

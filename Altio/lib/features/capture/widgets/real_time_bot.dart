@@ -12,7 +12,7 @@ Widget buildPopupContent(
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Text(
+      const Text(
         'Enable to get real time\nresponses from Altio AI',
         maxLines: 2,
         style: TextStyle(fontSize: 14),
@@ -24,7 +24,7 @@ Widget buildPopupContent(
           inactiveTrackColor: AppColors.white,
           activeTrackColor: AppColors.purpleDark,
           activeColor: AppColors.commonPink,
-          activeThumbImage: AssetImage(AppImages.appLogo),
+          activeThumbImage: const AssetImage(AppImages.appLogo),
           value: switchValue,
           onChanged: (value) {
             SharedPreferencesUtil().notificationPlugin = value;

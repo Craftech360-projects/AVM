@@ -127,7 +127,7 @@ class _SettingsPageState extends State<SettingsPage> {
         children: [
           Expanded(
             child: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
               children: [
                 BlocBuilder<BluetoothBloc, BluetoothState>(
                   builder: (context, state) {
@@ -166,11 +166,11 @@ class _SettingsPageState extends State<SettingsPage> {
                             Container(
                               width: 20,
                               height: 20,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: AppColors.orange,
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.electric_bolt,
                                 size: 13,
                                 color: AppColors.white,
@@ -182,14 +182,14 @@ class _SettingsPageState extends State<SettingsPage> {
                             deviceInfo,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
-                          Spacer(),
-                          Icon(Icons.arrow_forward_ios_rounded, size: 14),
+                          const Spacer(),
+                          const Icon(Icons.arrow_forward_ios_rounded, size: 14),
                         ],
                       ),
                     );
                   },
                 ),
-                Divider(color: AppColors.black),
+                const Divider(color: AppColors.black),
                 h4,
                 Text(
                   'AI Model',
@@ -210,7 +210,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       .bodyLarge
                       ?.copyWith(fontWeight: FontWeight.w600),
                 ),
-                Divider(color: AppColors.black),
+                const Divider(color: AppColors.black),
                 h4,
                 ItemAddOn(
                   title: 'Profile',
@@ -247,11 +247,14 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Text(
-              'Version: $version+$buildVersion',
-              style: Theme.of(context).textTheme.labelMedium,
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Text(
+                'Version: $version+$buildVersion',
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
             ),
           ),
         ],

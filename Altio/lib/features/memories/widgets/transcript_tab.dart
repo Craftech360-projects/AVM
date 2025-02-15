@@ -27,7 +27,7 @@ class TranscriptTab extends StatelessWidget {
         final started =
             state.memories[memoryAtIndex].startedAt ?? DateTime.now();
 
-        final segmentDuration = Duration(seconds: 7);
+        const segmentDuration = Duration(seconds: 7);
         final dummyTimes = List<DateTime>.generate(
           transcriptSegments.length,
           (index) => started.subtract(
@@ -40,7 +40,7 @@ class TranscriptTab extends StatelessWidget {
             nodePosition: 0.0,
             indicatorPosition: 0.0,
           ),
-          padding: EdgeInsets.symmetric(vertical: 20),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           builder: TimelineTileBuilder.connected(
             contentsBuilder: (context, index) => _TranscriptContent(
               segment: transcriptSegments[index],

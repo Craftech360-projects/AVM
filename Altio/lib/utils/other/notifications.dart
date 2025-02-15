@@ -33,7 +33,7 @@ Future<void> initializeNotifications() async {
             channelGroupName: 'Altio Notifications')
       ],
       debug: false);
-  NotifyOnKill.register();
+  await NotifyOnKill.register();
 }
 
 Future<void> requestNotificationPermissions() async {
@@ -42,7 +42,7 @@ Future<void> requestNotificationPermissions() async {
     // This is just a basic example. For real apps, you must show some
     // friendly dialog box before call the request method.
     // This is very important to not harm the user experience
-    AwesomeNotifications().requestPermissionToSendNotifications();
+    await AwesomeNotifications().requestPermissionToSendNotifications();
   }
 }
 
@@ -101,7 +101,7 @@ void createNotification({
     return;
   }
 
-  AwesomeNotifications().createNotification(
+  await AwesomeNotifications().createNotification(
     content: NotificationContent(
       id: notificationId,
       channelKey: 'channel',
@@ -115,7 +115,7 @@ void createNotification({
   );
 }
 
-clearNotification(int id) => AwesomeNotifications().cancel(id);
+void clearNotification(int id) => AwesomeNotifications().cancel(id);
 void createMessagingNotification(String sender, String message) async {
   bool allowed = await AwesomeNotifications().isNotificationAllowed();
   if (!allowed) {
@@ -127,7 +127,7 @@ void createMessagingNotification(String sender, String message) async {
   String fixedMessage = message.replaceAllMapped(
       RegExp(r'[\uD800-\uDFFF]'), (match) => match.group(0) ?? '');
 
-  AwesomeNotifications().createNotification(
+  await AwesomeNotifications().createNotification(
     content: NotificationContent(
       id: 2,
       channelKey: 'channel',
@@ -161,7 +161,7 @@ class NotificationUtil {
 
   static Future<void> initializeNotificationsEventListeners() async {
     // Only after at least the action method is set, the notification events are delivered
-    AwesomeNotifications().setListeners(
+    await AwesomeNotifications().setListeners(
         onActionReceivedMethod: NotificationUtil.onActionReceivedMethod);
   }
 
@@ -219,7 +219,7 @@ class NotificationUtil {
     }
     SharedPreferencesUtil().pageToShowFromNotification =
         screensWithRespectToPath[payload?['path']] ?? 1;
-    MyApp.navigatorKey.currentState?.pushReplacement(
+    await MyApp.navigatorKey.currentState?.pushReplacement(
         MaterialPageRoute(builder: (context) => const HomePageWrapper()));
   }
 }

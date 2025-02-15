@@ -111,7 +111,7 @@ class _ExpandableTextState extends State<ExpandableText> {
               onTap: _toggleExpanded,
               child: Text(
                 _expanded ? 'See less..' : 'Read more..',
-                style: TextStyle(
+                style: const TextStyle(
                   color: AppColors.blue,
                   fontWeight: FontWeight.w500,
                 ),

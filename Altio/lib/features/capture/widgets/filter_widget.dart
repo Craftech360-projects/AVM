@@ -19,8 +19,8 @@ class FilterOptionWidget extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.purpleDark.withValues(alpha: 0.8)

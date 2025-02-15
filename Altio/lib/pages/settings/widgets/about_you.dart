@@ -14,7 +14,8 @@ import 'package:provider/provider.dart';
 String fixEmoji(String brokenEmoji) {
   try {
     return utf8.decode(latin1.encode(brokenEmoji));
-  } catch (e) {
+  } on Exception catch (e) {
+  debugPrint(e.toString());
     return brokenEmoji;
   }
 }
@@ -43,7 +44,7 @@ class _ProfileView extends StatelessWidget {
       slivers: [
         _buildProfileHeader(),
         SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           sliver: SliverGrid(
             delegate: SliverChildListDelegate([
               _buildSentimentRadar(profile),
@@ -51,7 +52,7 @@ class _ProfileView extends StatelessWidget {
               _buildProductivityChart(),
               _buildInteractionHeatmap(),
             ]),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 1,
               childAspectRatio: 1.2,
               mainAxisSpacing: 40,
@@ -72,7 +73,7 @@ class _ProfileView extends StatelessWidget {
                 profile.core.isEmpty
                     ? "No identity information available yet."
                     : profile.core,
-                style: TextStyle(height: 1.2, fontSize: 13.5),
+                style: const TextStyle(height: 1.2, fontSize: 13.5),
               ),
             ],
           ),
@@ -123,7 +124,7 @@ class _ProfileView extends StatelessWidget {
               ),
             ],
             radarBackgroundColor: Colors.transparent,
-            radarBorderData: BorderSide(color: AppColors.grey, width: 1),
+            radarBorderData: const BorderSide(color: AppColors.grey, width: 1),
             titlePositionPercentageOffset: 0.2,
             getTitle: (index, angle) {
               final titles = [
@@ -138,17 +139,18 @@ class _ProfileView extends StatelessWidget {
                 angle: angle,
               );
             },
-            titleTextStyle: TextStyle(
+            titleTextStyle: const TextStyle(
               color: AppColors.black,
               fontSize: 11,
               fontWeight: FontWeight.bold,
             ),
             tickCount: 5,
-            ticksTextStyle: TextStyle(color: AppColors.grey, fontSize: 10),
-            tickBorderData: BorderSide(color: AppColors.grey, width: 0.5),
-            gridBorderData: BorderSide(color: AppColors.grey, width: 1),
+            ticksTextStyle:
+                const TextStyle(color: AppColors.grey, fontSize: 10),
+            tickBorderData: const BorderSide(color: AppColors.grey, width: 0.5),
+            gridBorderData: const BorderSide(color: AppColors.grey, width: 1),
           ),
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         ),
       ),
@@ -165,7 +167,7 @@ class _ProfileView extends StatelessWidget {
             Container(
               width: constraints.maxWidth * 1,
               height: constraints.maxWidth * 0.8,
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                 maxHeight: 300,
               ),
               child: Row(
@@ -220,7 +222,7 @@ class _ProfileView extends StatelessWidget {
     final metrics = profile.conversationMetrics;
 
     return LineChart(
-      duration: Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       LineChartData(
         lineBarsData: [
@@ -273,7 +275,8 @@ class _ProfileView extends StatelessWidget {
     try {
       DateFormat('yyyy-MM-dd').parseStrict(key);
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
+    debugPrint(e.toString());
       return false;
     }
   }
@@ -297,7 +300,7 @@ class _ProfileView extends StatelessWidget {
     final metrics = profile.conversationMetrics;
 
     return SliverPadding(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       sliver: SliverToBoxAdapter(
         child: Card(
           child: Column(
@@ -346,14 +349,14 @@ class _ProfileView extends StatelessWidget {
 
   Widget _buildWorkSection() {
     return SliverPadding(
-      padding: EdgeInsets.only(left: 16, right: 16, bottom: 50),
+      padding: const EdgeInsets.only(left: 16, right: 16, bottom: 50),
       sliver: SliverToBoxAdapter(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Your Work... 💼",
                 style: TextStyle(
                   fontSize: 16,
@@ -382,7 +385,7 @@ class _ProfileView extends StatelessWidget {
         child: ExpansionTile(
           title: Text(
             '$title (${items.length})',
-            style: TextStyle(fontSize: 15),
+            style: const TextStyle(fontSize: 15),
           ),
           children: [
             Wrap(
@@ -390,9 +393,9 @@ class _ProfileView extends StatelessWidget {
               runSpacing: 4,
               children: items
                   .map((item) => Container(
-                        margin: EdgeInsets.only(bottom: 5),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                        margin: const EdgeInsets.only(bottom: 5),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 0),
                         decoration: BoxDecoration(
                           border: Border.all(color: AppColors.black),
                           color: AppColors.commonPink,
@@ -402,11 +405,11 @@ class _ProfileView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text("🔹"),
+                            const Text("🔹"),
                             Flexible(
                               child: Text(
                                 item,
-                                style: TextStyle(fontSize: 13),
+                                style: const TextStyle(fontSize: 13),
                               ),
                             ),
                           ],

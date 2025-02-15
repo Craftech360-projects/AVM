@@ -152,7 +152,7 @@ Future<UserCredential> signInWithGoogle() async {
   return result;
 }
 
-listenAuthTokenChanges() {
+void listenAuthTokenChanges() {
   FirebaseAuth.instance.idTokenChanges().listen((User? user) async {
     SharedPreferencesUtil().authToken = '123:/';
   });
@@ -167,7 +167,7 @@ Future<String?> getIdToken() async {
   return newToken?.token;
 }
 
-listenAuthStateChanges() {
+void listenAuthStateChanges() {
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
       SharedPreferencesUtil().onboardingCompleted = false;
@@ -179,7 +179,7 @@ Future isSignedIn() async {
   return FirebaseAuth.instance.currentUser != null;
 }
 
-getFirebaseUser() {
+User? getFirebaseUser() {
   return FirebaseAuth.instance.currentUser;
 }
 

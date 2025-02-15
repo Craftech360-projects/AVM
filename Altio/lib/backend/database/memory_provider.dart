@@ -63,7 +63,7 @@ class MemoryProvider {
     }
   }
 
-  setEventCreated(Event event) {
+  void setEventCreated(Event event) {
     event.created = true;
     _boxEvent.put(event);
   }
@@ -90,7 +90,8 @@ class MemoryProvider {
       if (fetchedMemory.geolocation.target != null) {
       } else {}
       return id;
-    } catch (e) {
+    } on Exception catch (e) {
+      log(e.toString());
       return -1; // Return an error indicator
     }
   }
@@ -99,7 +100,7 @@ class MemoryProvider {
   Future<bool> deleteMemory(Memory memory) async {
     try {
       return _box.remove(memory.id);
-    } catch (e) {
+    } on Exception catch (e) {
       log('Error deleting memory: $e');
       return false;
     }
@@ -111,7 +112,7 @@ class MemoryProvider {
       final ids = memories.map((m) => m.id).toList();
       _box.removeMany(ids);
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
       log('Error in batchDeleteMemories: $e');
       return false;
     }
@@ -195,7 +196,7 @@ class MemoryProvider {
   }
 }
 
-String getPrettyJSONString(jsonObject) {
+String getPrettyJSONString(dynamic jsonObject) {
   var encoder = const JsonEncoder.withIndent("     ");
   return encoder.convert(jsonObject);
 }

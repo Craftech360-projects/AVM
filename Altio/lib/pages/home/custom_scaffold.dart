@@ -6,6 +6,7 @@ import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
 import 'package:altio/core/widgets/battery_widget.dart';
+import 'package:altio/pages/home/local_sync.dart';
 import 'package:altio/pages/settings/presentation/pages/settings_page.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +26,15 @@ class CustomScaffold extends StatefulWidget {
   final bool showGearIcon;
   final bool? showRefreshIcon;
   final bool? showProfileIcon;
-  final bool showDateTime;
+  final bool? showLocalSync;
+
   final bool? showAppBar;
   final bool? centerTitle;
   final double? titleSpacing;
   final VoidCallback? onBackBtnPressed;
   final VoidCallback? onRefresh;
   final VoidCallback? onProfileIconPressed;
+  final List<Widget>? actions;
 
   const CustomScaffold({
     super.key,
@@ -47,15 +50,16 @@ class CustomScaffold extends StatefulWidget {
     this.showBackBtn = false,
     this.showBatteryLevel = false,
     this.showGearIcon = false,
-    this.showDateTime = false,
     this.showAppBar = true,
     this.showRefreshIcon = false,
     this.showProfileIcon = false,
+    this.showLocalSync = false,
     this.centerTitle,
     this.titleSpacing,
     this.onBackBtnPressed,
     this.onRefresh,
     this.onProfileIconPressed,
+    this.actions,
   });
 
   @override
@@ -90,10 +94,10 @@ class CustomScaffoldState extends State<CustomScaffold> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Scaffold(
       appBar: widget.showAppBar == true
           ? AppBar(
+              leadingWidth: 35.0,
               titleSpacing: widget.titleSpacing ?? 10,
               surfaceTintColor: AppColors.white,
               centerTitle: widget.centerTitle ?? true,
@@ -108,7 +112,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
                           widget.onBackBtnPressed!();
                         }
                       },
-                      child: Icon(Icons.arrow_back_ios_new_rounded),
+                      child: const Icon(Icons.arrow_back_ios_new_rounded),
                     )
                   : null,
               title: widget.title,
@@ -121,16 +125,48 @@ class CustomScaffoldState extends State<CustomScaffold> {
                 if (widget.showRefreshIcon == true)
                   GestureDetector(
                     onTap: widget.onRefresh,
-                    child: Icon(
+                    child: const Icon(
                       Icons.refresh_rounded,
-                      color: AppColors.black,
+                      color: AppColors.purpleDark,
                     ),
                   ),
                 if (widget.showProfileIcon == true)
                   GestureDetector(
                     onTap: widget.onProfileIconPressed,
-                    child: Icon(
+                    child: const Icon(
                       Icons.account_circle_rounded,
+                      size: 33,
+                      color: AppColors.purpleDark,
+                    ),
+                  ),
+                ...?widget.actions,
+                if (widget.showLocalSync == true)
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          transitionDuration: const Duration(milliseconds: 500),
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  const LocalSync(),
+                          transitionsBuilder:
+                              (context, animation, secondaryAnimation, child) {
+                            var fadeInAnimation =
+                                Tween(begin: 0.0, end: 1.0).animate(
+                              CurvedAnimation(
+                                  parent: animation, curve: Curves.easeOut),
+                            );
+                            return FadeTransition(
+                              opacity: fadeInAnimation,
+                              child: child,
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    child: const Icon(
+                      Icons.sync_rounded,
                       size: 33,
                       color: AppColors.purpleDark,
                     ),
@@ -142,10 +178,10 @@ class CustomScaffoldState extends State<CustomScaffold> {
                       Navigator.push(
                         context,
                         PageRouteBuilder(
-                          transitionDuration: Duration(milliseconds: 500),
+                          transitionDuration: const Duration(milliseconds: 500),
                           pageBuilder:
                               (context, animation, secondaryAnimation) =>
-                                  SettingsPage(),
+                                  const SettingsPage(),
                           transitionsBuilder:
                               (context, animation, secondaryAnimation, child) {
                             var fadeInAnimation =
@@ -153,7 +189,6 @@ class CustomScaffoldState extends State<CustomScaffold> {
                               CurvedAnimation(
                                   parent: animation, curve: Curves.easeOut),
                             );
-
                             return FadeTransition(
                               opacity: fadeInAnimation,
                               child: child,

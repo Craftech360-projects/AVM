@@ -111,7 +111,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
         ),
         centerTitle: false,
         backgroundColor: AppColors.white,
@@ -155,7 +155,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
         ],
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 22),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 22),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,

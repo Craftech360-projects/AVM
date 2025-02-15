@@ -33,7 +33,8 @@ class PromptProvider {
       int id = _box.put(prompt);
 
       return id;
-    } catch (e) {
+    } on Exception catch (e) {
+      log(e.toString());
       return -1; // Return an error indicator
     }
   }
@@ -42,7 +43,8 @@ class PromptProvider {
     try {
       _box.remove(id);
       return true;
-    } catch (e) {
+    } on Exception catch (e) {
+      log(e.toString());
       return false;
     }
   }
@@ -51,7 +53,7 @@ class PromptProvider {
   void removeAllPrompts() {
     try {
       _box.removeAll();
-    } catch (e) {
+    } on Exception catch (e) {
       log(e.toString());
     }
   }

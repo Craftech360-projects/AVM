@@ -4,9 +4,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:altio/backend/database/transcript_segment.dart';
+import 'package:altio/backend/websocket/websockets.dart';
 import 'package:altio/pages/capture/background_service.dart';
 import 'package:altio/utils/other/enums.dart';
-import 'package:altio/backend/websocket/websockets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
@@ -31,9 +31,9 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
   List<Uint8List> audioChunks = [];
   int totalBytes = 0;
   Timer? timer;
-  var record = AudioRecorder();
+  AudioRecorder record = AudioRecorder();
 
-  startStreamRecording(WebsocketConnectionStatus wsConnectionState,
+  void startStreamRecording(WebsocketConnectionStatus wsConnectionState,
       IOWebSocketChannel? websocketChannel) async {
     await Permission.microphone.request();
     InputDevice? inputDevice;
@@ -54,7 +54,7 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
     });
   }
 
-  stopStreamRecording(WebsocketConnectionStatus wsConnectionState,
+  void stopStreamRecording(WebsocketConnectionStatus wsConnectionState,
       IOWebSocketChannel? websocketChannel) async {
     if (timer != null) {
       timer?.cancel();
@@ -64,13 +64,13 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
     }
 
     if (wsConnectionState == WebsocketConnectionStatus.connected) {
-      websocketChannel?.sink.close();
+      await websocketChannel?.sink.close();
     }
 
     setState(() => recordingState = RecordingState.stop);
   }
 
-  startRecording(Function processFileToTranscript) async {
+  void startRecording(Function processFileToTranscript) async {
     setState(() {
       fileCount = 0;
     });
@@ -115,7 +115,7 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
     }
   }
 
-  stopRecording(Function processFileToTranscript,
+  void stopRecording(Function processFileToTranscript,
       List<TranscriptSegment> segments, VoidCallback memoryUpdate) async {
     final service = FlutterBackgroundService();
     service.invoke("stop");
@@ -272,7 +272,7 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
             });
           },
         );
-      } catch (e) {
+      } on Exception catch (e) {
         log('Error for file: $filePath');
         log('Error reading and splitting file content: $e');
       }
@@ -298,7 +298,7 @@ mixin PhoneRecorderMixin<T extends StatefulWidget> on State<T> {
             },
             processFileToTranscript: processFileToTranscript,
           );
-        } catch (e) {
+        } on Exception catch (e) {
           log('Error changing recorder to new file: $e');
         }
       } else {

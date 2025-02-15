@@ -18,7 +18,7 @@ class CalendarUtil {
     _calendarPlugin = DeviceCalendarPlugin();
   }
 
-  enableCalendarAccess() async {
+  Future<bool> enableCalendarAccess() async {
     var permissionsGranted = await _calendarPlugin!.hasPermissions();
     if (permissionsGranted.isSuccess &&
         (permissionsGranted.data == null || permissionsGranted.data == false)) {
@@ -41,7 +41,7 @@ class CalendarUtil {
       if (calendarsResult.isSuccess && calendarsResult.data != null) {
         return calendarsResult.data!;
       }
-    } catch (e) {
+    } on Exception catch (e) {
       log(e.toString());
     }
     return [];

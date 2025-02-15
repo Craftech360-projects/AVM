@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:altio/backend/preferences.dart';
 import 'package:objectbox/objectbox.dart';
@@ -34,7 +35,8 @@ class TranscriptSegment {
       } else {
         speakerId = 0; // Default value if parsing fails
       }
-    } catch (e) {
+    } on Exception catch (e) {
+      log(e.toString());
       speakerId = 0; // Default value in case of an error
     }
   }
@@ -64,7 +66,7 @@ class TranscriptSegment {
     );
   }
 
-  get timestamp => null;
+  DateTime? get timestamp => null;
 
   // Method to convert a Message instance into a map
   Map<String, dynamic> toJson() {
@@ -83,7 +85,7 @@ class TranscriptSegment {
     return jsonList.map((e) => TranscriptSegment.fromJson(e)).toList();
   }
 
-  static cleanSegments(List<TranscriptSegment> segments) {
+  static void cleanSegments(List<TranscriptSegment> segments) {
     var hallucinations = [
       'Thank you.',
       'I don\'t know what to do,',
@@ -107,7 +109,7 @@ class TranscriptSegment {
     segments.removeWhere((element) => element.text.isEmpty);
   }
 
-  static combineSegments(
+  static void combineSegments(
     List<TranscriptSegment> segments,
     List<TranscriptSegment> newSegments, {
     int toAddSeconds = 0,
