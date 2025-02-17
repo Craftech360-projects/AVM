@@ -55,77 +55,77 @@ class _LocalSyncState extends State<LocalSync> {
     });
   }
 
-  Future<void> _sendFile(File file) async {
-    setState(() => _loading = true);
-    try {
-      var uri = Uri.parse('http://139.59.94.45:8080/v1/sync-local-files')
-          .replace(queryParameters: {'pipeline': 'deepgram'});
-      var request = http.MultipartRequest('POST', uri);
-      request.headers['uid'] = SharedPreferencesUtil().uid;
+  // Future<void> _sendFile(File file) async {
+  //   setState(() => _loading = true);
+  //   try {
+  //     var uri = Uri.parse('http://139.59.94.45:8080/v1/sync-local-files')
+  //         .replace(queryParameters: {'pipeline': 'deepgram'});
+  //     var request = http.MultipartRequest('POST', uri);
+  //     request.headers['uid'] = SharedPreferencesUtil().uid;
 
-      var fileName = file.path.split('/').last;
-      var multipartFile = await http.MultipartFile.fromPath('files', file.path,
-          filename: fileName);
-      request.files.add(multipartFile);
+  //     var fileName = file.path.split('/').last;
+  //     var multipartFile = await http.MultipartFile.fromPath('files', file.path,
+  //         filename: fileName);
+  //     request.files.add(multipartFile);
 
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
+  //     var streamedResponse = await request.send();
+  //     var response = await http.Response.fromStream(streamedResponse);
 
-      // print(response.body);
-      // print(response.statusCode);
+  //     // print(response.body);
+  //     // print(response.statusCode);
 
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        List<String> taskIds = [];
-        if (jsonResponse['task_id'] != null) {
-          taskIds.add(jsonResponse['task_id']);
-        } else if (jsonResponse['task_ids'] != null) {
-          taskIds = List<String>.from(jsonResponse['task_ids']);
-        }
+  //     if (response.statusCode == 200) {
+  //       var jsonResponse = jsonDecode(response.body);
+  //       List<String> taskIds = [];
+  //       if (jsonResponse['task_id'] != null) {
+  //         taskIds.add(jsonResponse['task_id']);
+  //       } else if (jsonResponse['task_ids'] != null) {
+  //         taskIds = List<String>.from(jsonResponse['task_ids']);
+  //       }
 
-        if (taskIds.isNotEmpty) {
-          setState(() {
-            for (var taskId in taskIds) {
-              _taskStatuses[taskId] = 'Processing';
-            }
-          });
-          startTaskStatusCheck(taskIds);
-          if (mounted) {
-            avmSnackBar(context,
-                "File uploaded successfully. Task IDs: ${taskIds.join(", ")}");
-          }
-        } else {
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('File uploaded successfully')),
-            );
-          }
-        }
+  //       if (taskIds.isNotEmpty) {
+  //         setState(() {
+  //           for (var taskId in taskIds) {
+  //             _taskStatuses[taskId] = 'Processing';
+  //           }
+  //         });
+  //         startTaskStatusCheck(taskIds);
+  //         if (mounted) {
+  //           avmSnackBar(context,
+  //               "File uploaded successfully. Task IDs: ${taskIds.join(", ")}");
+  //         }
+  //       } else {
+  //         if (mounted) {
+  //           ScaffoldMessenger.of(context).showSnackBar(
+  //             const SnackBar(content: Text('File uploaded successfully')),
+  //           );
+  //         }
+  //       }
 
-        // Check if the file exists before attempting to delete it
-        if (await file.exists()) {
-          // Delete the file from the device
-          try {
-            await file.delete();
-            // print('Deleted file: ${file.path}');
-          } on Exception catch (e) {
-            debugPrint('Error deleting file: ${file.path} - $e');
-          }
-        } else {
-          debugPrint('File does not exist: ${file.path}');
-        }
-      } else {
-        throw Exception(
-            'Upload failed: ${response.statusCode} - ${response.body}');
-      }
-    } on Exception catch (e) {
-      if (mounted) {
-        avmSnackBar(context, 'Error: $e');
-      }
-    } finally {
-      setState(() => _loading = false);
-    }
-  }
+  //       // Check if the file exists before attempting to delete it
+  //       if (await file.exists()) {
+  //         // Delete the file from the device
+  //         try {
+  //           await file.delete();
+  //           // print('Deleted file: ${file.path}');
+  //         } on Exception catch (e) {
+  //           debugPrint('Error deleting file: ${file.path} - $e');
+  //         }
+  //       } else {
+  //         debugPrint('File does not exist: ${file.path}');
+  //       }
+  //     } else {
+  //       throw Exception(
+  //           'Upload failed: ${response.statusCode} - ${response.body}');
+  //     }
+  //   } on Exception catch (e) {
+  //     if (mounted) {
+  //       avmSnackBar(context, 'Error: $e');
+  //     }
+  //   } finally {
+  //     setState(() => _loading = false);
+  //   }
+  // }
 
   Future<void> _sendAllFiles() async {
     setState(() => _loading = true);
@@ -194,7 +194,6 @@ class _LocalSyncState extends State<LocalSync> {
           }
         }
 
-        // Clear the _files list
         setState(() {
           _files.clear();
         });
@@ -409,22 +408,27 @@ class _LocalSyncState extends State<LocalSync> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ElevatedButton(
-                    style:
-                        Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                              shape: WidgetStateProperty.all(
-                                  RoundedRectangleBorder(borderRadius: br5)),
-                              minimumSize:
-                                  WidgetStateProperty.all(const Size(100, 30)),
-                              maximumSize:
-                                  WidgetStateProperty.all(const Size(120, 30)),
-                            ),
-                    onPressed: _files.isEmpty ? null : _sendAllFiles,
-                    child: const FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        'Sync Now',
-                        textAlign: TextAlign.center,
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: ElevatedButton(
+                      style: Theme.of(context)
+                          .elevatedButtonTheme
+                          .style
+                          ?.copyWith(
+                            shape: WidgetStateProperty.all(
+                                RoundedRectangleBorder(borderRadius: br5)),
+                            minimumSize:
+                                WidgetStateProperty.all(const Size(100, 30)),
+                            maximumSize:
+                                WidgetStateProperty.all(const Size(120, 30)),
+                          ),
+                      onPressed: _files.isEmpty ? null : _sendAllFiles,
+                      child: const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'Sync Now',
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
@@ -437,13 +441,15 @@ class _LocalSyncState extends State<LocalSync> {
                         final fileName = file.path.split('/').last;
                         final fileSize = _formatFileSize(file.lengthSync());
                         return Container(
+                          margin: const EdgeInsets.symmetric(vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 08),
                           decoration: BoxDecoration(
                               shape: BoxShape.rectangle,
                               border: Border.all(color: AppColors.blueGreyDark),
                               borderRadius: br5),
                           child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 2, horizontal: 0),
+                            contentPadding: EdgeInsets.zero,
                             title: Text(fileName,
                                 style: theme.bodyMedium?.copyWith(height: 1.2)),
                             subtitle:
@@ -454,10 +460,6 @@ class _LocalSyncState extends State<LocalSync> {
                                 IconButton(
                                   icon: const Icon(Icons.delete),
                                   onPressed: () => _deleteFile(file),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.send_rounded),
-                                  onPressed: () => _sendFile(file),
                                 ),
                               ],
                             ),

@@ -12,7 +12,6 @@ import 'package:altio/features/memories/widgets/widgets.dart';
 import 'package:altio/objectbox.g.dart';
 import 'package:altio/utils/memories/reprocess.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class MemoryDetailPage extends StatefulWidget {
@@ -20,12 +19,11 @@ class MemoryDetailPage extends StatefulWidget {
   final int memoryAtIndex;
   final TabController? tabController;
 
-  const MemoryDetailPage({
-    super.key,
-    required this.memoryBloc,
-    required this.memoryAtIndex,
-    this.tabController
-  });
+  const MemoryDetailPage(
+      {super.key,
+      required this.memoryBloc,
+      required this.memoryAtIndex,
+      this.tabController});
 
   static const String name = 'memoryDetailPage';
 
@@ -107,6 +105,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
 
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 35.0,
         leading: IconButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -155,7 +154,7 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
         ],
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 22),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -177,8 +176,8 @@ class _MemoryDetailPageState extends State<MemoryDetailPage>
             h8,
             if (categories.isNotEmpty)
               Wrap(
-                spacing: 4.w,
-                runSpacing: 4.h,
+                spacing: 4,
+                runSpacing: 4,
                 children: categories
                     .map(
                       (category) => CategoryChip(

@@ -23,7 +23,6 @@ import 'package:altio/main.dart';
 import 'package:altio/pages/home/action_items.dart';
 import 'package:altio/pages/home/custom_scaffold.dart';
 import 'package:altio/pages/settings/presentation/pages/settings_page.dart';
-import 'package:altio/pages/settings/widgets/about_you.dart';
 import 'package:altio/pages/skeleton/screen_skeleton.dart';
 import 'package:altio/scripts.dart';
 import 'package:altio/utils/audio/foreground.dart';
@@ -79,7 +78,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     });
 
     _controller = TabController(
-        length: 5, initialIndex: widget.tabIndex ?? 2, vsync: this);
+        length: 4, initialIndex: widget.tabIndex ?? 2, vsync: this);
 
     Future.delayed(const Duration(seconds: 2), () {
       var tutorialSeen = SharedPreferencesUtil().hasSeenTutorial;
@@ -319,7 +318,7 @@ class _HomePageWrapperState extends State<HomePageWrapper>
                             ChatScreen(
                               textFieldFocusNode: chatTextFieldFocusNode,
                             ),
-                            const AboutYouScreen(),
+                            // const AboutYouScreen(),
                             const SettingsPage(),
                           ],
                         ),

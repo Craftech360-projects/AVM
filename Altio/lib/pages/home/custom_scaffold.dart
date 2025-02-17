@@ -167,7 +167,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
                     },
                     child: const Icon(
                       Icons.sync_rounded,
-                      size: 33,
+                      size: 28,
                       color: AppColors.purpleDark,
                     ),
                   ),
@@ -198,7 +198,7 @@ class CustomScaffoldState extends State<CustomScaffold> {
                       );
                     },
                     child: Image.asset(
-                      width: 27,
+                      width: 23,
                       AppImages.gearIcon,
                     ),
                   ),

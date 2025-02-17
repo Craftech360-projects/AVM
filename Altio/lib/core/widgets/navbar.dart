@@ -150,8 +150,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     if (!isExpanded && deviceProvider.hasDevice == true)
                       _buildSearchButton(),
                     if (!isExpanded) _buildMessageButton(),
-                    if (!isExpanded && deviceProvider.hasDevice == true)
-                      _aboutYou(),
+                    // if (!isExpanded && deviceProvider.hasDevice == true)
+                    //   _aboutYou(),
                     if (isExpanded && (isMemoryVisible || isChatVisible))
                       _buildExpandedSection(textTheme),
                   ],
@@ -202,23 +202,23 @@ class _CustomNavBarState extends State<CustomNavBar> {
     );
   }
 
-  Widget _aboutYou() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: GestureDetector(
-        onTap: () {
-          if (widget.onTabChange != null) {
-            widget.onTabChange!(3);
-            _currentTabIndex = 3;
-          }
-        },
-        child: Image.asset(
-          AppImages.user,
-          width: 25.h,
-        ),
-      ),
-    );
-  }
+  // Widget _aboutYou() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 10),
+  //     child: GestureDetector(
+  //       onTap: () {
+  //         if (widget.onTabChange != null) {
+  //           widget.onTabChange!(3);
+  //           _currentTabIndex = 3;
+  //         }
+  //       },
+  //       child: Image.asset(
+  //         AppImages.user,
+  //         width: 25.h,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildSearchButton() {
     return Padding(
@@ -284,7 +284,8 @@ class _CustomNavBarState extends State<CustomNavBar> {
                     child: Container(
                       decoration: const BoxDecoration(
                           shape: BoxShape.rectangle, color: AppColors.white),
-                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 6),
                       child: CustomIconButton(
                         size: 24.h,
                         iconPath: AppImages.send,

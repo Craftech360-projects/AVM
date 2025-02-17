@@ -70,7 +70,7 @@ Future<bool> customDialogBox(BuildContext context,
                 ?.copyWith(color: AppColors.white),
           ),
         ),
-        w16,
+        w8,
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.green,
@@ -271,7 +271,7 @@ class CustomDialogWidget extends StatelessWidget {
             style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
           ),
         ),
-        w16,
+        w8,
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),

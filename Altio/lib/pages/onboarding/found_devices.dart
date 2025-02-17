@@ -147,7 +147,7 @@ class FoundDevicesState extends State<FoundDevices>
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: AppColors.black),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: br12,
               ),
               height: 50,
               width: double.infinity,
@@ -197,9 +197,10 @@ class FoundDevicesState extends State<FoundDevices>
   List<Widget> _devicesList() {
     return widget.deviceList.map((device) {
       return Container(
+        margin: const EdgeInsets.symmetric(vertical: 3),
         decoration: BoxDecoration(
           border: Border.all(color: AppColors.black),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: br12,
         ),
         height: 55,
         width: double.infinity,

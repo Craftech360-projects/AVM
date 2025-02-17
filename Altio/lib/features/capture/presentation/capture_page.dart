@@ -215,16 +215,16 @@ class CapturePageState extends State<CapturePage>
       onAudioBytesReceived: (List<int> value) {
         if (value.isEmpty) return;
 
-        // Send to WalSync for immediate processing
-        if (_isWalSupported) {
-          _walSyncs.phone.onByteStream(value);
-        }
-
         audioStorage!.storeFramePacket(value);
-        List<int> trimmedValue = List<int>.from(value);
-        trimmedValue.removeRange(0, 3);
+
         if (wsConnectionState == WebsocketConnectionStatus.connected) {
+          List<int> trimmedValue = List<int>.from(value);
+          trimmedValue.removeRange(0, 3);
           websocketChannel?.sink.add(trimmedValue);
+        } else {
+          if (_isWalSupported) {
+            _walSyncs.phone.onByteStream(value);
+          }
         }
       },
     );
@@ -457,7 +457,6 @@ class CapturePageState extends State<CapturePage>
     );
   }
 
-  @override
   @override
   bool isInternetAvailable() {
     return wsConnectionState == WebsocketConnectionStatus.connected;
