@@ -248,8 +248,12 @@ class _LocalSyncState extends State<LocalSync> {
           null,
           retrievedFromCache: true,
           sendMessageToChat: sendMessageToChat,
-        ).then((m) {
-          if (mounted && m != null && !m.discarded) executeBackupWithUid();
+        ).then((m) async {
+          if (mounted && m != null && !m.discarded) {
+            var uid = SharedPreferencesUtil().uid;
+            // Call your backup API or method here
+            await executeManualBackupWithUid(uid);
+          }
         });
       }
 
@@ -432,64 +436,64 @@ class _LocalSyncState extends State<LocalSync> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: _files.length,
-                      itemBuilder: (context, index) {
-                        final file = File(_files[index].path);
-                        final fileName = file.path.split('/').last;
-                        final fileSize = _formatFileSize(file.lengthSync());
-                        return Container(
-                          margin: const EdgeInsets.symmetric(vertical: 2),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 08),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              border: Border.all(color: AppColors.blueGreyDark),
-                              borderRadius: br5),
-                          child: ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: Text(fileName,
-                                style: theme.bodyMedium?.copyWith(height: 1.2)),
-                            subtitle:
-                                Text('Size: $fileSize', style: theme.bodySmall),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () => _deleteFile(file),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  if (_taskStatuses.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Task Status:", style: theme.titleSmall),
-                          ..._taskStatuses.entries.map(
-                            (entry) => ListTile(
-                              title: Text(
-                                "Task ID: ${entry.key}",
-                                style: theme.bodyMedium,
-                              ),
-                              subtitle: Text(
-                                "Status: ${entry.value}",
-                                style: theme.bodySmall,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  // Expanded(
+                  //   child: ListView.builder(
+                  //     padding: EdgeInsets.zero,
+                  //     itemCount: _files.length,
+                  //     itemBuilder: (context, index) {
+                  //       final file = File(_files[index].path);
+                  //       final fileName = file.path.split('/').last;
+                  //       final fileSize = _formatFileSize(file.lengthSync());
+                  //       return Container(
+                  //         margin: const EdgeInsets.symmetric(vertical: 2),
+                  //         padding: const EdgeInsets.symmetric(
+                  //             vertical: 2, horizontal: 08),
+                  //         decoration: BoxDecoration(
+                  //             shape: BoxShape.rectangle,
+                  //             border: Border.all(color: AppColors.blueGreyDark),
+                  //             borderRadius: br5),
+                  //         child: ListTile(
+                  //           contentPadding: EdgeInsets.zero,
+                  //           title: Text(fileName,
+                  //               style: theme.bodyMedium?.copyWith(height: 1.2)),
+                  //           subtitle:
+                  //               Text('Size: $fileSize', style: theme.bodySmall),
+                  //           trailing: Row(
+                  //             mainAxisSize: MainAxisSize.min,
+                  //             children: [
+                  //               IconButton(
+                  //                 icon: const Icon(Icons.delete),
+                  //                 onPressed: () => _deleteFile(file),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
+                  // if (_taskStatuses.isNotEmpty)
+                  //   Padding(
+                  //     padding: const EdgeInsets.all(8.0),
+                  //     child: Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         Text("Task Status:", style: theme.titleSmall),
+                  //         ..._taskStatuses.entries.map(
+                  //           (entry) => ListTile(
+                  //             title: Text(
+                  //               "Task ID: ${entry.key}",
+                  //               style: theme.bodyMedium,
+                  //             ),
+                  //             subtitle: Text(
+                  //               "Status: ${entry.value}",
+                  //               style: theme.bodySmall,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
                 ],
               ),
             ),

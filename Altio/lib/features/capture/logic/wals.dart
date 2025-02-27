@@ -373,7 +373,6 @@ class WalService implements IWalService, IWalSyncListener {
 
   @override
   bool isInternetAvailable() {
-    // TODO: implement isInternetAvailable
     throw UnimplementedError();
   }
 }

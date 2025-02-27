@@ -11,7 +11,6 @@ import 'package:altio/backend/preferences.dart';
 import 'package:altio/backend/schema/bt_device.dart';
 import 'package:altio/backend/schema/plugin.dart';
 import 'package:altio/backend/services/device_flag.dart';
-import 'package:altio/backend/websocket/websocket_mixin.dart';
 import 'package:altio/core/assets/app_images.dart';
 import 'package:altio/core/widgets/navbar.dart';
 import 'package:altio/features/bluetooth_bloc/bluetooth_bloc.dart';
@@ -46,7 +45,8 @@ class HomePageWrapper extends StatefulWidget {
 }
 
 class _HomePageWrapperState extends State<HomePageWrapper>
-    with WidgetsBindingObserver, TickerProviderStateMixin, WebSocketMixin {
+    with WidgetsBindingObserver, TickerProviderStateMixin {
+    
   ForegroundUtil foregroundUtil = ForegroundUtil();
   late TabController _controller;
   late bool _isLoading;
@@ -110,19 +110,20 @@ class _HomePageWrapperState extends State<HomePageWrapper>
       });
     }
 
-    createNotification(
-      title: 'Suit up with Capsaul today',
-      body: 'Your memories await. Don’t forget to wear Capsaul!',
-      notificationId: 4,
-      isMorningNotification: true,
-    );
-    createNotification(
-      title: 'Plan ahead for success.',
-      body: 'Crush tomorrow’s goals—see your action plan now.',
-      notificationId: 5,
-      isDailySummaryNotification: true,
-      payload: {'path': '/chat'},
-    );
+    // createNotification(
+    //   title: 'Suit up with Capsaul today',
+    //   body: 'Your memories await. Don’t forget to wear Capsaul!',            ------> Why is it in the initState?
+    //   notificationId: 4,
+    //   isMorningNotification: true,
+    // );
+    // createNotification(
+    //   title: 'Plan ahead for success.',
+    //   body: 'Crush tomorrow’s goals—see your action plan now.',
+    //   notificationId: 5,
+    //   isDailySummaryNotification: true,
+    //   payload: {'path': '/chat'},
+    // );
+
     if (SharedPreferencesUtil().subPageToShowFromNotification != '') {
       final subPageRoute =
           SharedPreferencesUtil().subPageToShowFromNotification;
@@ -138,11 +139,11 @@ class _HomePageWrapperState extends State<HomePageWrapper>
     }
   }
 
-  void someMethod() {
-    if (capturePageKey.currentState != null) {
-      capturePageKey.currentState!.initiateBytesStreamingProcessing();
-    }
-  }
+  // void someMethod() {
+  //   if (capturePageKey.currentState != null) {
+  //     capturePageKey.currentState!.initiateBytesStreamingProcessing();
+  //   }
+  // }
 
   _initiateMemories() async {
     memories = MemoryProvider()

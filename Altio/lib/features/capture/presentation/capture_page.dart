@@ -296,7 +296,9 @@ class CapturePageState extends State<CapturePage>
     }
 
     if (!memory.discarded) {
-      await executeBackupWithUid();
+      var uid = SharedPreferencesUtil().uid;
+      // Call your backup API or method here
+      await executeManualBackupWithUid(uid);
       if (!mounted) return;
       context
           .read<MemoryBloc>()
@@ -352,10 +354,12 @@ class CapturePageState extends State<CapturePage>
       null,
       retrievedFromCache: true,
       sendMessageToChat: sendMessageToChat,
-    ).then((m) {
+    ).then((m) async {
       if (m != null && !m.discarded) {
         if (mounted) {
-          executeBackupWithUid();
+          var uid = SharedPreferencesUtil().uid;
+          // Call your backup API or method here
+          await executeManualBackupWithUid(uid);
         }
       }
     });
