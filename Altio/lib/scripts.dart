@@ -13,17 +13,17 @@ Future<void> scriptMemoryVectorsExecuted() async {
     SharedPreferencesUtil().scriptMemoryVectorsExecuted = true;
     return;
   }
-  for (var i = 0; i < memories.length; i++) {
-    var f = getEmbeddingsFromInput(memories[i].structured.toString())
-        .then((vector) {
-      upsertPineconeVector(
-          memories[i].id.toString(), vector, memories[i].createdAt);
-    });
-    if (i % 10 == 0) {
-      await f;
-      await Future.delayed(const Duration(seconds: 1));
-    }
-  }
+  // for (var i = 0; i < memories.length; i++) {
+  //   var f = getEmbeddingsFromInput(memories[i].structured.toString())
+  //       .then((vector) {
+  //     upsertPineconeVector(
+  //         memories[i].id.toString(), vector, memories[i].createdAt);
+  //   });
+  //   if (i % 10 == 0) {
+  //     await f;
+  //     await Future.delayed(const Duration(seconds: 1));
+  //   }
+  // }
 
   SharedPreferencesUtil().scriptMemoryVectorsExecuted = true;
 }

@@ -94,10 +94,10 @@ Future<Memory?> reProcessMemory(
       }
     }
 
-    await getEmbeddingsFromInput(structured.toString()).then((vector) {
-      // update instead if it wasn't "discarded"
-      // upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
-    });
+    // await getEmbeddingsFromInput(structured.toString()).then((vector) {
+    //   // update instead if it wasn't "discarded"
+    //   // upsertPineconeVector(memory.id.toString(), vector, memory.createdAt);
+    // });
 
     // Persist changes
     await MemoryProvider().updateMemoryStructured(structured);

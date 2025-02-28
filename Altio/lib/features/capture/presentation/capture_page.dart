@@ -29,7 +29,7 @@ import 'package:location/location.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../backend/websocket/websocket_mixin.dart';
-import '../../../pages/capture/phone_recorder_mixin.dart';
+// import '../../../pages/capture/phone_recorder_mixin.dart';
 
 class CapturePage extends StatefulWidget {
   final Function refreshMemories;
@@ -57,7 +57,7 @@ class CapturePageState extends State<CapturePage>
     with
         AutomaticKeepAliveClientMixin,
         WidgetsBindingObserver,
-        PhoneRecorderMixin,
+       // PhoneRecorderMixin,
         WebSocketMixin,
         IWalSyncListener {
   final ScrollController _scrollController = ScrollController();

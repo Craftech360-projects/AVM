@@ -435,3 +435,5 @@ String getDeepgramApiKeyForUsage() =>
     SharedPreferencesUtil().deepgramApiKey.isEmpty
         ? Env.deepgramApiKey!
         : SharedPreferencesUtil().deepgramApiKey;
+
+

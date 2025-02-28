@@ -1,10 +1,5 @@
-import 'dart:async';
-
-import 'package:altio/backend/api_requests/api/prompt.dart';
 import 'package:altio/backend/database/memory.dart';
-import 'package:altio/backend/database/memory_provider.dart';
 import 'package:altio/backend/database/message.dart';
-import 'package:altio/backend/database/message_provider.dart';
 import 'package:altio/backend/preferences.dart';
 import 'package:altio/core/constants/constants.dart';
 import 'package:altio/core/theme/app_colors.dart';
@@ -35,54 +30,61 @@ class _ChatScreenState extends State<ChatScreen>
     with SingleTickerProviderStateMixin {
   late ChatBloc _chatBloc;
   late AnimationController _animationController;
-  late Timer _dailySummaryTimer;
+  // late Timer _dailySummaryTimer;
   late ScrollController _scrollController;
   final Map<int, GlobalKey> _messageKeys = {};
 
-  _initDailySummary() {
-    var now = DateTime.now();
-    _dailySummaryTimer =
-        Timer.periodic(const Duration(minutes: 1), (timer) async {
-      if (now.hour < 20) return;
+//  _initDailySummary() {
+//     var now = DateTime.now();
+//        debugPrint("Daily Summary Timer Initialized $now"); // Added debugPrint
+//     _dailySummaryTimer =
+//         Timer.periodic(const Duration(minutes: 1), (timer) async {
+//       debugPrint("Daily Summary Timer Tick"); // Added debugPrint
+//       if (now.hour < 20) {
+//         debugPrint("Skipping Daily Summary: Before 8 PM"); // Added debugPrint
+//         return;
+//       }
 
-      if (SharedPreferencesUtil().lastDailySummaryDay != '') {
-        var secondsFrom8pm = now
-            .difference(DateTime(now.year, now.month, now.day, 20))
-            .inSeconds;
-        var at = DateTime.parse(SharedPreferencesUtil().lastDailySummaryDay);
-        var secondsFromLast = now.difference(at).inSeconds;
-        if (secondsFromLast < secondsFrom8pm) {
-          timer.cancel();
-          return;
-        }
-      }
+//       if (SharedPreferencesUtil().lastDailySummaryDay != '') {
+//         var secondsFrom8pm = now
+//             .difference(DateTime(now.year, now.month, now.day, 20))
+//             .inSeconds;
+//         var at = DateTime.parse(SharedPreferencesUtil().lastDailySummaryDay);
+//         var secondsFromLast = now.difference(at).inSeconds;
+//         if (secondsFromLast < secondsFrom8pm) {
+//           debugPrint("Skipping Daily Summary: Already ran today"); // Added debugPrint
+//           timer.cancel();
+//           return;
+//         }
+//       }
 
-      timer.cancel();
+//       debugPrint("Running Daily Summary"); // Added debugPrint
+//       timer.cancel();
 
-      var memories = MemoryProvider().retrieveDayMemories(now);
+//       var memories = MemoryProvider().retrieveDayMemories(now);
 
-      if (memories.isEmpty) {
-        SharedPreferencesUtil().lastDailySummaryDay =
-            DateTime.now().toIso8601String();
-        return;
-      }
+//       if (memories.isEmpty) {
+//         debugPrint("No memories found for today, skipping summary"); // Added debugPrint
+//         SharedPreferencesUtil().lastDailySummaryDay =
+//             DateTime.now().toIso8601String();
+//         return;
+//       }
 
-      var message = Message(DateTime.now(), '', 'ai', type: 'daySummary');
+//       var message = Message(DateTime.now(), '', 'ai', type: 'daySummary');
 
-      await MessageProvider().saveMessage(message);
+//       await MessageProvider().saveMessage(message);
 
-      var result = await dailySummaryNotifications(memories);
+//       var result = await dailySummaryNotifications(memories);
 
-      SharedPreferencesUtil().lastDailySummaryDay =
-          DateTime.now().toIso8601String();
+//       SharedPreferencesUtil().lastDailySummaryDay =
+//           DateTime.now().toIso8601String();
 
-      message.text = result;
-      message.memories.addAll(memories);
-      await MessageProvider().updateMessage(message);
-      _chatBloc.add(RefreshMessages());
-    });
-  }
-
+//       message.text = result;
+//       message.memories.addAll(memories);
+//       await MessageProvider().updateMessage(message);
+//       _chatBloc.add(RefreshMessages());
+//     });
+//   }
   @override
   void initState() {
     super.initState();
@@ -97,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen>
       _chatBloc.add(LoadInitialChat());
     }
 
-    _initDailySummary();
+    // _initDailySummary();
 
     _animationController = AnimationController(
       vsync: this,
@@ -107,7 +109,7 @@ class _ChatScreenState extends State<ChatScreen>
 
   @override
   void dispose() {
-    _dailySummaryTimer.cancel();
+    // _dailySummaryTimer.cancel();
     _animationController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -132,7 +134,7 @@ class _ChatScreenState extends State<ChatScreen>
           pinnedMessage =
               state.messages?.firstWhereOrNull((msg) => msg.isPinned);
         } on Exception catch (e) {
-        debugPrint(e.toString());
+          debugPrint(e.toString());
           pinnedMessage = null;
         }
 
